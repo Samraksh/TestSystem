@@ -17,3 +17,12 @@ $saleae = [Reflection.Assembly]::LoadFile("C:\Users\Nick\Desktop\SaleaeDeviceSdk
 $tester = [Reflection.Assembly]::LoadFile("C:\Users\Nick\Desktop\SaleaeDeviceSdk-1.1.9\C#.NET\ConsoleDemo\ConsoleDemo.dll")
 $face = new-object Tester.TestInstance
 
+cd C:\SamTest
+$compiler = "$env:windir/Microsoft.NET/Framework/v2.0.50727/csc"
+&$compiler /debug /target:library /lib:C:\SamTest\powershell /out:SamTest.dll /r:SaleaeDeviceSdkDotNet.dll *.cs
+
+cd C:\SamTest
+. .\full.ps1
+
+cd C:\SamTest\powershell
+. .\debugging.ps1
