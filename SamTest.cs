@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Xml;
 // external
 using SaleaeDeviceSdkDotNet;
-// Pins type
-using Pins = System.UInt32;
 
 /********************
 	SamTest Namespace
@@ -22,8 +21,9 @@ namespace SamTest {
 		/* CONSTRUCTOR */
 		private OpenOCD(){
 		}
-		public static OpenOCD Instance{ get { return instance; }}
+		internal static OpenOCD Instance{ get { return instance; }}
 		/* PROCESS HANDLERS */
+		private StreamWriter input = null;
 		private void StandardOutputHandler(object sendingProcess, DataReceivedEventArgs outLine) {
 			stdOutput.WriteLine(outLine.Data);
 		}
@@ -37,15 +37,57 @@ namespace SamTest {
 		private StringWriter stdError = new StringWriter();
 		public StringWriter Error{ get { return stdError; }}
 
+		/********************
+			Controller
+		*********************/
+		public class Controller {
+			/* CONTROLLER PROPERTIES */
+			private bool m_haveControl = false;
+			public bool haveControl{ get { return m_haveControl; }}
+			private OpenOCD openocd = null;
+			public OpenOCD handle{ get { return openocd; }}
+
+			/* CONTROLLER METHODS */
+			public bool Request() {
+				m_haveControl = OpenOCD.Request(this, out openocd);
+				return m_haveControl;
+			}
+			public bool Relinquish() {
+				m_haveControl = OpenOCD.Relinquish(this, out openocd);
+				return m_haveControl;
+			}
+		}/** Controller **/
+		/* CONTROLLER INTERNAL */
+		private static Controller nullController = new Controller();
+		private static Controller currentController = nullController;
+		internal static bool Request(Controller r, out OpenOCD rInstance) {
+			if(object.ReferenceEquals(currentController, nullController)) {
+				currentController = r;
+				rInstance = instance;
+				return true;
+			} else {
+				rInstance = null;
+				return false;
+			}
+		}
+		internal static bool Relinquish(Controller r, out OpenOCD rInstance) {
+			if(object.ReferenceEquals(currentController, r)) {
+				currentController = nullController;
+			}
+			rInstance = null;
+			return false;
+		}
+
 		/* PROPERTIES */
-		private string openocd_interface_cfg = "olimex-jtag-tiny.cfg";
-		private string openocd_board_cfg = "stm3210e_eval.cfg";
+		private string openocd_interface_cfg = @"interface\olimex-jtag-tiny.cfg";
+		private string openocd_board_cfg = @"board\stm3210e_eval.cfg";
 
 		/* PUBLIC METHODS */
-		public bool Start() {
+		public bool Start() { //(string[] cfgs)
 			Process process = new System.Diagnostics.Process();
 			process.StartInfo.FileName = @"openocd.exe";
-			process.StartInfo.Arguments = @"-f interface\"+openocd_interface_cfg+@" -f board\"+openocd_board_cfg;
+			// foreach cfg in cfgs
+			process.StartInfo.Arguments = @"-f "+openocd_interface_cfg+@" -f "+openocd_board_cfg;
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			// Streams
@@ -55,7 +97,7 @@ namespace SamTest {
 			// Start
 			process.Start();
 			// StandardInput stream
-			StreamWriter input = process.StandardInput;
+			input = process.StandardInput;
 			// StandardOutput stream
 			process.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
 			process.BeginOutputReadLine();
@@ -64,8 +106,7 @@ namespace SamTest {
 			process.BeginErrorReadLine();	
 			return true;		
 		}
-		/* PRIVATE METHODS */
-	}
+	}/** OpenOCD **/
 
 	/********************
 		GDB - Singleton
@@ -75,18 +116,21 @@ namespace SamTest {
 		/* CONSTRUCTOR */
 		private GDB(){
 		}
-		public static GDB Instance{ get { return instance; }}
+		internal static GDB Instance{ get { return instance; }}
 		/* PROCESS HANDLERS */
+		private StreamWriter input = null;
+		private Regex ResultRegEx = new Regex(@"[\^]*");
+		private Regex AsyncRegEx = new Regex(@"[\*\+=]*");
 		private void StandardOutputHandler(object sendingProcess, DataReceivedEventArgs outLine) {
 			stdOutput.WriteLine(outLine.Data);
 			if(!String.IsNullOrEmpty(outLine.Data)) {
 				// ResultRecordReceived
 				if(ResultRegEx.IsMatch(outLine.Data)) {
-					//ParseResultRecord(outLine.Data);
+					ParseResultRecord(@outLine.Data);
 				}
 				// AsyncRecordReceived
 				if(AsyncRegEx.IsMatch(outLine.Data)) {
-					//ParseAsyncRecord(outLine.Data);
+					ParseAsyncRecord(@outLine.Data);
 				}
 			}
 		}
@@ -100,9 +144,52 @@ namespace SamTest {
 		private StringWriter stdError = new StringWriter();
 		public StringWriter Error{ get { return stdError; }}
 
+		/********************
+			Controller
+		*********************/
+		public class Controller {
+			/* CONTROLLER PROPERTIES */
+			private bool m_haveControl = false;
+			public bool haveControl{ get { return m_haveControl; }}
+			private GDB gdb = null;
+			public GDB handle{ get { return gdb; }}
+
+			/* CONTROLLER METHODS */
+			public bool Request() {
+				m_haveControl = GDB.Request(this, out gdb);
+				return m_haveControl;
+			}
+			public bool Relinquish() {
+				m_haveControl = GDB.Relinquish(this, out gdb);
+				return m_haveControl;
+			}
+		}/** Controller **/
+		/* CONTROLLER INTERNAL */
+		private static Controller nullController = new Controller();
+		private static Controller currentController = nullController;
+		internal static bool Request(Controller r, out GDB rInstance) {
+			if(object.ReferenceEquals(currentController, nullController)) {
+				currentController = r;
+				rInstance = instance;
+				return true;
+			} else {
+				rInstance = null;
+				return false;
+			}
+		}
+		internal static bool Relinquish(Controller r, out GDB rInstance) {
+			if(object.ReferenceEquals(currentController, r)) {
+				currentController = nullController;
+			}
+			rInstance = null;
+			return false;
+		}
+
 		/* PROPERTIES */
-		Regex ResultRegEx = new Regex(@"[\^]*");
-		Regex AsyncRegEx = new Regex(@"[\*\+=]*");
+		// TODO make private with gets{}
+		private GdbCommandResult lastResult;
+		private GdbEvent ev;
+		private bool running;
 
 		/* EVENT: ResultRecord */
 		public class ResultRecordEventArgs: EventArgs {
@@ -134,7 +221,7 @@ namespace SamTest {
 			// Start
 			process.Start();
 			// StandardInput stream
-			StreamWriter input = process.StandardInput;
+			input = process.StandardInput;
 			// StandardOutput stream
 			process.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
 			process.BeginOutputReadLine();
@@ -144,81 +231,22 @@ namespace SamTest {
 			return true;
 		}
 
+		public GDBCommandResult RunCommand(string com) {
+			input.WriteLine(com);
+			new Thread(WaitCommand);
+			return lastResult;
+		}
+
 		/* PRIVATE METHODS */
-		/*
-		private void ParseResultRecord(string s) {
-			XmlDocument resultRecord = new XmlDocument();
-			ParseRecord(out resultRecord, out s);
+		public void ParseResultRecord(string s) {
+			lastResult = new GdbCommandResult(s);
+			running = (lastResult.Status == CommandStatus.Running);
 		}
-		private void ParseAsyncRecord(string s) {
-			XmlDocument asyncRecord = new XmlDocument();
-			ParseRecord(out asyncRecord, out s);
+		public void ParseAsyncRecord(string s) {
+			running = false;
+			ev = new GdbEvent(s);
 		}
-		private XmlElement ParseRecord(out XmlDocument doc, out string s) {
-			XmlElement rootElement = doc.CreateElement();
-			//s = s.TrimStart('^')
-			XmlElement resultClass = ParseResultClass(out s);
-			while(!String.IsNullOrEmpty(s)) {
-				if(s.StartsWith(',')) { s = s.TrimStart(','); }
-				XmlElement result = ParseResult(out s);
-				resultClass.AppendChild(result);
-			}
-			rootElement.AppendChild(resultClass);
-			return rootElement;
-		}
-		private XmlElement ParseResultClass(out XmlDocument doc, out string s) {
-			XmlElement resultClass = new XmlElement();
-    	string[] split = s.Split(",", 2) // resultclass, s
-    	resultClass = split[0];
-    	s = split[1];
-    	return resultClass;
-		}
-
-		private XmlElement ParseResult(out XmlDocument doc, out string s) {
-			XmlElement result = new XmlElement();
-	    $result = @{} 
-	    string[] split = s.Split("=", 2);
-	    string variable = split[0];
-	    s = split[1];
-	    string value = ParseValue(out s);
-	    $result += @{$variable=$value}
-	    $result
-	    $string
-		}
-
-		Function Parse-Value-GDB {
-		    param($string)
-		    if($string.StartsWith('{')) {
-		        $value = @{}
-		        $string = $string.TrimStart('{')
-		        if($string.StartsWith('}')) { $null; $string.TrimStart('}'); return }
-		        do {
-		            if($string.StartsWith(',')) { $string = $string.TrimStart(',');  }
-		            $result, $string = Parse-Result-GDB $string
-		            $value += $result
-		        } while($string.StartsWith(','))
-		        $value
-		        $string.TrimStart('}')
-		    } elseif($string.StartsWith("[")) {
-		        $value = @{}
-		        $string = $string.TrimStart('[')
-		        if($string.StartsWith(']')) { $null; $string.TrimStart(']'); return }
-		        do {
-		            if($string.StartsWith(',')) { $string = $string.TrimStart(',');  }
-		            $result, $string = Parse-Value-GDB $string
-		            $value += $result
-		        } while($string.StartsWith(','))
-		        $value
-		        $string.TrimStart(']')
-		    } elseif($string.StartsWith('"')) {
-		        $string = $string.TrimStart('"')
-		        $string.Split('"', 2)
-		    } else {
-		        Parse-Result-GDB $string
-		    }
-		}
-			*/
-	}
+	}/** GDB **/
 
 	/********************
 		MSBuild - Singleton
@@ -228,7 +256,19 @@ namespace SamTest {
 		/* CONSTRUCTOR */
 		private MSBuild(){
 		}
-		public static MSBuild Instance{ get { return instance; }}
+		internal static MSBuild Instance{ get { return instance; }}
+		/* PROCESS HANDLERS */
+		private StreamWriter input = null;
+		private Regex buildRegEx = new Regex(@"(build complete|build failed)");
+		private void StandardOutputHandler(object sendingProcess, DataReceivedEventArgs outLine) {
+			stdOutput.WriteLine(outLine.Data);
+			if(buildRegEx.IsMatch(outLine.Data)) {
+				ARE_build.Set();
+			}
+		}
+		private void StandardErrorHandler(object sendingProcess, DataReceivedEventArgs errLine){
+			stdError.WriteLine(errLine.Data);
+		}
 
 		/* OUTPUT */
 		private StringWriter stdOutput = new StringWriter();
@@ -236,10 +276,95 @@ namespace SamTest {
 		private StringWriter stdError = new StringWriter();
 		public StringWriter Error{ get { return stdError; }}
 
+		/********************
+			Controller
+		*********************/
+		public class Controller {
+			/* CONTROLLER PROPERTIES */
+			private bool m_haveControl = false;
+			public bool haveControl{ get { return m_haveControl; }}
+			private MSBuild msbuild = null;
+			public MSBuild handle{ get { return msbuild; }}
+
+			/* CONTROLLER METHODS */
+			public bool Request() {
+				m_haveControl = MSBuild.Request(this, out msbuild);
+				return m_haveControl;
+			}
+			public bool Relinquish() {
+				m_haveControl = MSBuild.Relinquish(this, out msbuild);
+				return m_haveControl;
+			}
+		}/** Controller **/
+		/* CONTROLLER INTERNAL */
+		private static Controller nullController = new Controller();
+		private static Controller currentController = nullController;
+		internal static bool Request(Controller r, out MSBuild rInstance) {
+			if(object.ReferenceEquals(currentController, nullController)) {
+				currentController = r;
+				rInstance = instance;
+				return true;
+			} else {
+				rInstance = null;
+				return false;
+			}
+		}
+		internal static bool Relinquish(Controller r, out MSBuild rInstance) {
+			if(object.ReferenceEquals(currentController, r)) {
+				currentController = nullController;
+			}
+			rInstance = null;
+			return false;
+		}
+
 		/* PROPERTIES */
+		private static AutoResetEvent ARE_build = new AutoResetEvent(false);
+
 		/* PUBLIC METHODS */
+		public bool Start() {
+			Process process = new System.Diagnostics.Process();
+			process.StartInfo.FileName = @"cmd.exe";
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+			// Streams
+			process.StartInfo.RedirectStandardInput = true;
+			process.StartInfo.RedirectStandardOutput = true;
+			process.StartInfo.RedirectStandardError = true;
+			// Start
+			process.Start();
+			// StandardInput stream
+			input = process.StandardInput;
+			// StandardOutput stream
+			process.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
+			process.BeginOutputReadLine();
+			// StandardError stream
+			process.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);
+			process.BeginErrorReadLine();
+			return true;
+		}
+		public bool SetEnv(string gdb_path_root) {
+			input.WriteLine(@"setenv_gcc.cmd "+@gdb_path_root);
+			return true;
+		}
+		public bool Clean(string root, string proj) {
+			input.WriteLine(@"msbuild "+@root+@"\"+@proj+@" /target:clean");
+			new Thread(WaitClean);
+			return true;
+		}
+		public bool Build(string root, string proj) {
+			input.WriteLine(@"msbuild "+@root+@"\"+@proj+@" /target:clean");
+			new Thread(WaitBuild);
+			return true;
+		}
+
 		/* PRIVATE METHODS */
-	}
+		private void WaitClean() {
+			ARE_build.WaitOne();
+		}
+		private void WaitBuild() {
+			ARE_build.WaitOne();
+		}
+	}/** MSBuild **/
 
 	/********************
 		Logic - Singleton
@@ -249,7 +374,7 @@ namespace SamTest {
 		/* CONSTRUCTOR */
 		private Logic(){
 		}
-		public static Logic Instance{ get { return instance; }}
+		internal static Logic Instance{ get { return instance; }}
 
 		/* OUTPUT */
 		private StringWriter stdOutput = new StringWriter();
@@ -258,9 +383,9 @@ namespace SamTest {
 		public StringWriter Error{ get { return stdError; }}
 
 		/********************
-			LogicController
+			Controller
 		*********************/
-		public class LogicController {
+		public class Controller {
 			/* CONTROLLER PROPERTIES */
 			private bool m_haveControl = false;
 			public bool haveControl{ get { return m_haveControl; }}
@@ -268,21 +393,39 @@ namespace SamTest {
 			public Logic handle{ get { return logic; }}
 
 			/* CONTROLLER METHODS */
-			public bool RequestControl() {
-				m_haveControl = Logic.RequestControl(this, out logic);
+			public bool Request() {
+				m_haveControl = Logic.Request(this, out logic);
 				return m_haveControl;
 			}
-			public bool ReturnControl() {
-				m_haveControl = Logic.ReturnControl(this, out logic);
+			public bool Relinquish() {
+				m_haveControl = Logic.Relinquish(this, out logic);
 				return m_haveControl;
 			}
+		}/** Controller **/
+		/* CONTROLLER INTERNAL */
+		private static Controller nullController = new Controller();
+		private static Controller currentController = nullController;
+		internal static bool Request(Controller r, out Logic rInstance) {
+			if(object.ReferenceEquals(currentController, nullController)) {
+				currentController = r;
+				rInstance = instance;
+				return true;
+			} else {
+				rInstance = null;
+				return false;
+			}
+		}
+		internal static bool Relinquish(Controller r, out Logic rInstance) {
+			if(object.ReferenceEquals(currentController, r)) {
+				currentController = nullController;
+			}
+			rInstance = null;
+			return false;
 		}
 
 		/* PROPERTIES */
 		private UInt32 mSampleRateHz = 4000000;
 		private MLogic mLogic;
-		private static LogicController nullController = new LogicController();
-		private static LogicController currentController = nullController;
 		//mLogic.IsStreaming();
 		//mLogic.SampleRateHz = mSampleRateHz;
 		//mLogic.SetOutput(mWriteValue);
@@ -298,26 +441,6 @@ namespace SamTest {
 				Connected(this, e);
 		}
 
-		/* INTERNAL METHODS */
-		internal static bool RequestControl(LogicController r, out Logic rInstance) {
-			//if(object.ReferenceEquals(currentController, nullController)) {
-				if(currentController == nullController) {
-				currentController = r;
-				rInstance = instance;
-				return true;
-			} else {
-				rInstance = null;
-				return false;
-			}
-		}
-		internal static bool ReturnControl(LogicController r, out Logic rInstance) {
-			if(object.ReferenceEquals(currentController, r)) {
-				currentController = nullController;
-			}
-			rInstance = null;
-			return false;
-		}
-
 		/* PUBLIC METHODS */
 		public bool Start() {
 			MSaleaeDevices devices = new MSaleaeDevices();
@@ -327,9 +450,10 @@ namespace SamTest {
 			stdOutput.WriteLine("Waiting for Logic connection.");
 			return true;
 		}
-		public void AttachOnReadData(MLogic.OnReadDataDelegate ReadDelegate) {
-			mLogic.OnReadData += ReadDelegate;
+		public void AttachOnReadData(MLogic.OnReadDataDelegate fn) {
+			mLogic.OnReadData += new MLogic.OnReadDataDelegate(fn);
 		}
+		// TODO detach
 		public bool SetSampleRate(UInt32 mSampleRateHz) {
 			if(!isRunning()) {
 				mLogic.SampleRateHz = mSampleRateHz;
@@ -339,7 +463,7 @@ namespace SamTest {
 				return false;
 			}
 		}
-		public bool Start() {
+		public bool ReadStart() {
 			if(!isRunning()) {
 				mLogic.ReadStart();
 				return true;
@@ -348,7 +472,7 @@ namespace SamTest {
 				return false;
 			}
 		}
-		public bool Stop() {
+		public bool ReadStop() {
 			if(isRunning()) {
 				mLogic.Stop();
 				return true;
@@ -393,7 +517,7 @@ namespace SamTest {
 		}
 		private void mLogic_OnError(ulong device_id){
 		}
-	}
+	}/** Logic **/
 
 	/********************
 		Parser - Singleton
@@ -403,7 +527,7 @@ namespace SamTest {
 		/* CONSTRUCTOR */
 		private Parser() {
 		}
-		public static Parser Instance{ get { return instance; }}
+		internal static Parser Instance{ get { return instance; }}
 		/* PROCESS HANDLERS */
 		private StreamWriter input = null;
 		private void StandardOutputHandler(object sendingProcess, DataReceivedEventArgs outLine) {
@@ -415,8 +539,8 @@ namespace SamTest {
 					OnParsed(e);
 					return;
 				}
-				// Add to instance ERList
-				m_ERlist.Add(new TestInstance.EventRep(outLine.Data.Split('\t')));
+				// Invoke the EventParsed event
+				OnEventParsed(outLine.Data);
 			}
 		}
 		private void StandardErrorHandler(object sendingProcess, DataReceivedEventArgs errLine){
@@ -430,9 +554,9 @@ namespace SamTest {
 		public StringWriter Error{ get { return stdError; }}
 
 		/********************
-			ParserController
+			Controller
 		*********************/
-		public class ParserController {
+		public class Controller {
 			/* CONTROLLER PROPERTIES */
 			private bool m_haveControl = false;
 			public bool haveControl{ get { return m_haveControl; }}
@@ -440,34 +564,20 @@ namespace SamTest {
 			public Parser handle{ get { return parser; }}
 
 			/* CONTROLLER METHODS */
-			public bool RequestControl() {
-				m_haveControl = Parser.RequestControl(this, out parser);
+			public bool Request() {
+				m_haveControl = Parser.Request(this, out parser);
 				return m_haveControl;
 			}
-			public bool ReturnControl() {
-				m_haveControl = Parser.ReturnControl(this, out parser);
+			public bool Relinquish() {
+				m_haveControl = Parser.Relinquish(this, out parser);
 				return m_haveControl;
 			}
-		}
-
-		/* PROPERTIES */
-		private string script = @"C:\SamTest\parser\parser.py";
-		private static ParserController nullController = new ParserController();
-		private static ParserController currentController = nullController;
-		private List<TestInstance.EventRep> m_ERlist = new List<TestInstance.EventRep>();
-		public List<TestInstance.EventRep> ERlist{ get {return m_ERlist; }}
-
-		/* EVENT: Parsed */
-		public event EventHandler<EventArgs> Parsed;
-		private void OnParsed(EventArgs e){
-			if(Parsed != null)
-				Parsed(this, e);
-		}
-
-		/* INTERNAL METHODS */
-		internal static bool RequestControl(ParserController r, out Parser rInstance) {
-			//if(object.ReferenceEquals(currentController, nullController)) {
-				if(currentController == nullController) {
+		}/** Controller **/
+		/* CONTROLLER INTERNAL */
+		private static Controller nullController = new Controller();
+		private static Controller currentController = nullController;
+		internal static bool Request(Controller r, out Parser rInstance) {
+			if(object.ReferenceEquals(currentController, nullController)) {
 				currentController = r;
 				rInstance = instance;
 				return true;
@@ -476,7 +586,7 @@ namespace SamTest {
 				return false;
 			}
 		}
-		internal static bool ReturnControl(ParserController r, out Parser rInstance) {
+		internal static bool Relinquish(Controller r, out Parser rInstance) {
 			if(object.ReferenceEquals(currentController, r)) {
 				currentController = nullController;
 			}
@@ -484,7 +594,25 @@ namespace SamTest {
 			return false;
 		}
 
+		/* PROPERTIES */
+		private string script = @"C:\SamTest\parser\parser.py";
+
+		/* EVENT: Parsed */
+		public event EventHandler<EventArgs> Parsed;
+		private void OnParsed(EventArgs e){
+			if(Parsed != null)
+				Parsed(this, e);
+		}
+		/* EVENT: EventParsed */
+		public delegate void EventParsedDelegate(string eventLine);
+		public event EventParsedDelegate EventParsed;
+		private void OnEventParsed(string eventLine){
+			if(EventParsed != null)
+				EventParsed(eventLine);
+		}
+
 		/* PUBLIC METHODS */
+		// TODO RDP in c sharp
 		public bool Start() {
 			Process process = new Process();
 			process.StartInfo.FileName = @"C:\Python32\python.exe";
@@ -509,9 +637,51 @@ namespace SamTest {
 		public void Parse(string path, string filename) {
 			input.WriteLine(@script+' '+@path+' '+@filename);
 		}
+		public void AttachEventParsed(EventParsedDelegate fn) {
+			EventParsed += new EventParsedDelegate(fn);
+		}
+		// TODO detach event
 
 		/* PRIVATE METHODS */
-	}
+	}/** Parser **/
+
+	/********************
+		SuiteInstance
+	*********************/
+	public class SuiteInstance {
+		/* PROPERTIES */
+		public OpenOCD openocd = OpenOCD.Instance;
+		public GDB gdb = GDB.Instance;
+		public MSBuild msbuild = MSBuild.Instance;
+		public Logic logic = Logic.Instance;
+		public Parser parser = Parser.Instance;
+
+		/* PUBLIC METHODS */
+		public bool StartAll() {
+			if(!openocd.Start()) {
+				return false;
+			}
+			if(!gdb.Start()) {
+				return false;
+			}
+			if(!msbuild.Start()) {
+				return false;
+			}
+			if(!logic.Start()) {
+				return false;
+			}
+			if(!parser.Start()) {
+				return false;
+			}
+			return true;
+		}
+		public bool Compile(string gdb_path_root, string root, string proj) {
+			msbuild.SetEnv(gdb_path_root);
+			msbuild.Clean(root, proj);
+			msbuild.Build(root, proj);
+			return true;
+		}
+	}/** SuiteInstance **/
 
 	/********************
 		TestInstance
@@ -520,172 +690,91 @@ namespace SamTest {
 		public TestInstance(string root, XmlElement config) {
 			this.root = root;
 			this.name = config["name"].Value;
-			this.entry = config["entryPoint"].Value;
-			this.edf = config["edf"].Value;
-			this.hkp = config["hkp"].Value;
+			this.entry = config["entry"].Value;
 		}
 
 		/* OUTPUT */
-		private StringWriter stdOutput = new StringWriter();
+		protected StringWriter stdOutput = new StringWriter();
 		public StringWriter Output{ get { return stdOutput; }}
-		private StringWriter stdError = new StringWriter();
+		protected StringWriter stdError = new StringWriter();
 		public StringWriter Error{ get { return stdError; }}
 
-		/********************
-			EventRep
-		*********************/
-		public class EventRep {
-			/* CONSTRUCTORS */
-			public EventRep(string Name, Pins X, Pins T, Pins S) {
-				this.iName = Name;
-				this.iX = X;
-				this.iT = T;
-				this.iS = S;
-			}
-			public EventRep(string Name, string X, string T, string S) {
-				this.iName = Name;
-				this.iX = Convert.ToUInt32(X);
-				this.iT = Convert.ToUInt32(T);
-				this.iS = Convert.ToUInt32(S);
-			}
-			public EventRep(string[] testevent) {
-				this.iName = testevent[0];
-				this.iX = Convert.ToUInt32(testevent[1]);
-				this.iT = Convert.ToUInt32(testevent[2]);
-				this.iS = Convert.ToUInt32(testevent[3]);
-			}
-
-			/* PROPERTIES */
-			private String iName;
-			private Pins iX;
-			private Pins iT;
-			private Pins iS;
-
-			/* ACCESS METHODS */
-			public String Name{
-				get { return this.iName; }
-			}
-			public Pins X{
-				get { return this.iX; }
-			}
-			public Pins T{
-				get { return this.iT; }
-			}
-			public Pins S{
-				get { return this.iS; }
-			}
-		}
-
-		/********************
-			EventTime
-		*********************/
-		public class EventTime {
-			/* CONSTRUCTORS */
-			public EventTime(EventRep ER, UInt64 offset) {
-				this.ER = ER;
-				this.offset = offset;
-				// TODO: computer clientOffset and time
-			}
-
-			/* PROPERTIES */
-			public EventRep ER;
-			public UInt64 offset;
-			public UInt64 clientOffset;
-			public UInt64 time;
-		}
-
 		/* PROPERTIES */
-		private string root;
-		private string name;
-		private string entry;
-		private string edf;
-		private string hkp;
-
-		private UInt64 offset;
-		private List<EventRep> ERlist = new List<EventRep>();
-		public List<EventRep> ERs{ get{ return ERlist; }}
-		private List<EventTime> ETlist = new List<EventTime>();
-		public List<EventTime> ETs{ get{ return ETlist; }}
-
-		private bool firstCall = true;
-		private Pins last;
+		protected string root;
+		protected string name;
+		protected string entry;
 
 		// TODO change to private
-		public Logic.LogicController cLogic = new Logic.LogicController();
-		public Parser.ParserController cParser = new Parser.ParserController();
+		public GDB.Controller gdb = new GDB.Controller();
+		public Logic.Controller logic = new Logic.Controller();
+		public Parser.Controller parser = new Parser.Controller();
 
-		/* EVENT: Stopped */
-		public class StoppedEventArgs: EventArgs {
-			public StoppedEventArgs(List<EventTime> ETlist) {
-				this.ETlist = ETlist;
-			}
-			public List<EventTime> ETlist;
+		/* OVERRIDE PUBLIC METHODS */
+		// Setup() this test instance
+		// called from _setup()
+		protected bool Setup() {
+			return true;
 		}
-		public event EventHandler<StoppedEventArgs> Stopped;
-		protected virtual void OnStopped(StoppedEventArgs e){
-			if(Stopped != null)
-				Stopped(this, e);
+		// Execute() this test, Logic runs after
+		// called from _execute()
+		protected bool Execute() {
+			return true;
+		}
+		// alled after the Logic returns
+		// called from _process()
+		protected bool Process() {
+			return true;
+		}
+		// Teardown() from user Setup()
+		// called from _teardown()
+		protected bool Teardown() {
+			return true;
 		}
 
 		/* PUBLIC METHODS */
-		public bool Activate() {
-			if(cLogic.RequestControl() && cParser.RequestControl()) {
-				return true;
+		public void _Setup() {
+			if(!Request()) {
+				// control was not granted
 			}
-			return false;
-		}
-		public void DeActivate() {
-			cLogic.ReturnControl();
-			cParser.ReturnControl();
-		}
-		public void Parse() {
-			if(cParser.haveControl) {
-				stdOutput.WriteLine("Parsing.");
-				cParser.handle.Parse(root, edf);
+			if(!Setup()) {
+				// user setup returned false
 			}
 		}
-		public void Start() {
-			if(cLogic.haveControl) {
-				stdOutput.WriteLine("Starting.");
-				cLogic.handle.Start();
+		public void _Execute() {
+			if(!Execute()) {
+				// user execute failed
+			}
+			if(!Process()) {
+				// user process failed
 			}
 		}
-		public void Stop() {
-			if(cLogic.haveControl) {
-				stdOutput.WriteLine("Stopping.");
-				cLogic.handle.Stop();
-				// Invoke the Stopped event
-				StoppedEventArgs e = new StoppedEventArgs(this.ETlist);
-				OnStopped(e);
+		public void _Teardown() {
+			if(!Teardown()) {
+				// user teardown failed
+			}
+			if(!Relinquish()) {
+				// control was not returned
 			}
 		}
 
 		/* PRIVATE METHODS */
-		private void mLogic_OnReadData(ulong device_id, byte[] data){
-			Pins Tc = 0;
-			Pins Sc = 0;
-			Pins Tcp = 0;
-			if(firstCall){
-				last = (Pins)data[0];
-				firstCall = false;
+		protected bool Request() {
+			if(!gdb.Request()) {
+				return false;
 			}
-			// On each byte of data
-			for(int dI = 1; dI < data.Length; dI++){
-				offset++;
-				Sc = (Pins)data[dI];
-				Tc = last ^ Sc;
-				// On each event
-				for(int eI = 0; eI < ERlist.Count; eI++){
-					EventRep Ec = ERlist[eI];
-					Tcp = Tc & Ec.X;
-					if (Tcp != (Pins)0){
-						if (((Sc & Ec.X) == Ec.S) && ((Tcp & Ec.T) == Ec.T)) {
-							ETlist.Add(new EventTime(Ec, offset));
-						}
-					}
-				}
-				last = Sc;
+			if(!logic.Request()) {
+				return false;
 			}
+			if(!parser.Request()) {
+				return false;
+			}
+			return true;
 		}
-	}
-}
+		protected bool Relinquish() {
+			gdb.Relinquish();
+			logic.Relinquish();
+			parser.Relinquish();
+			return true;
+		}
+	}/** TestInstance **/
+}/** SamTest **/
