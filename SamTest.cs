@@ -231,7 +231,7 @@ namespace SamTest {
 			return true;
 		}
 
-		public GDBCommandResult RunCommand(string com) {
+		public GdbCommandResult RunCommand(string com) {
 			input.WriteLine(com);
 			new Thread(WaitCommand);
 			return lastResult;
