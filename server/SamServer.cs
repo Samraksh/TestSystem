@@ -136,7 +136,7 @@ namespace SamServer {
 		}
 		public void Checkout(string root, string branch) {
 			input.WriteLine(@"cd "+root);
-			input.WriteLine(@"git fetch")
+			input.WriteLine(@"git fetch");
 			input.WriteLine(@"git checkout "+branch);
 		}
 	}

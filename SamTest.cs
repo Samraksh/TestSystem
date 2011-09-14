@@ -79,12 +79,13 @@ namespace SamTest {
 		}
 
 		/* PROPERTIES */
+		private Process process;
 		private string openocd_interface_cfg = @"interface\olimex-jtag-tiny.cfg";
-		private string openocd_board_cfg = @"board\stm3210e_eval.cfg";
+		private string openocd_board_cfg = @"target\stm32.cfg";
 
 		/* PUBLIC METHODS */
-		public bool Start() { //(string[] cfgs)
-			Process process = new System.Diagnostics.Process();
+		public void Start() { //TODO (string[] cfgs)
+			process = new System.Diagnostics.Process();
 			process.StartInfo.FileName = @"openocd.exe";
 			// foreach cfg in cfgs
 			process.StartInfo.Arguments = @"-f "+openocd_interface_cfg+@" -f "+openocd_board_cfg;
@@ -104,7 +105,9 @@ namespace SamTest {
 			// StandardError stream
 			process.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);
 			process.BeginErrorReadLine();	
-			return true;		
+		}
+		public void Kill() {
+			process.Kill();
 		}
 	}/** OpenOCD **/
 
@@ -119,18 +122,23 @@ namespace SamTest {
 		internal static GDB Instance{ get { return instance; }}
 		/* PROCESS HANDLERS */
 		private StreamWriter input = null;
-		private Regex ResultRegEx = new Regex(@"[\^]*");
-		private Regex AsyncRegEx = new Regex(@"[\*\+=]*");
 		private void StandardOutputHandler(object sendingProcess, DataReceivedEventArgs outLine) {
 			stdOutput.WriteLine(outLine.Data);
 			if(!String.IsNullOrEmpty(outLine.Data)) {
-				// ResultRecordReceived
-				if(ResultRegEx.IsMatch(outLine.Data)) {
-					ParseResultRecord(@outLine.Data);
-				}
-				// AsyncRecordReceived
-				if(AsyncRegEx.IsMatch(outLine.Data)) {
-					ParseAsyncRecord(@outLine.Data);
+				switch (outLine.Data [0]) {
+					case '^':
+						lastResult = new GdbCommandResult (outLine.Data);
+						running = (lastResult.Status == CommandStatus.Running);
+						ARE_result.Set();
+						break;
+					case '~':
+					case '&':
+						break;
+					case '*':
+						running = false;
+						ev = new GdbEvent (outLine.Data);
+						ARE_async.Set();
+						break;
 				}
 			}
 		}
@@ -186,10 +194,12 @@ namespace SamTest {
 		}
 
 		/* PROPERTIES */
+		private static AutoResetEvent ARE_result = new AutoResetEvent(false);
+		private static AutoResetEvent ARE_async = new AutoResetEvent(false);
 		// TODO make private with gets{}
-		private GdbCommandResult lastResult;
-		private GdbEvent ev;
-		private bool running;
+		public GdbCommandResult lastResult;
+		public GdbEvent ev;
+		public bool running;
 
 		/* EVENT: ResultRecord */
 		public class ResultRecordEventArgs: EventArgs {
@@ -198,20 +208,24 @@ namespace SamTest {
 		}
 		public event EventHandler<ResultRecordEventArgs> ResultRecordRecieved;
 		private void OnResultRecordRecieved(ResultRecordEventArgs e){
-			if(ResultRecordRecieved != null)
+			if(ResultRecordRecieved != null) {
 				ResultRecordRecieved(this, e);
+			}
 		}
 		/* EVENT: Connected */
+		private Process process;
 		public event EventHandler<EventArgs> AsyncRecordRecieved;
 		private void OnAsyncRecordRecieved(EventArgs e){
-			if(AsyncRecordRecieved != null)
+			if(AsyncRecordRecieved != null) {
 				AsyncRecordRecieved(this, e);
+			}
 		}
 		/* PUBLIC METHODS */
-		public bool Start() {
-			Process process = new System.Diagnostics.Process();
+		public void Start(object root) {
+			process = new System.Diagnostics.Process();
 			process.StartInfo.FileName = @"arm-none-eabi-gdb.exe";
 			process.StartInfo.Arguments = @"-quiet -fullname --interpreter=mi2";
+			process.StartInfo.WorkingDirectory = (string)root;
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			// Streams
@@ -228,23 +242,54 @@ namespace SamTest {
 			// StandardError stream
 			process.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);
 			process.BeginErrorReadLine();
-			return true;
 		}
-
-		public GdbCommandResult RunCommand(string com) {
-			input.WriteLine(com);
-			new Thread(WaitCommand);
-			return lastResult;
+		public void Kill() {
+			process.Kill();
+		}
+		public void Connect(string axf) {
+			RunCommand("-file-exec-and-symbols", Escape(axf));
+			RunCommand("-target-select remote localhost:3333");
+			RunCommand("monitor reset init");
+		}
+		public void Load() {
+			RunCommand("monitor stm32x unlock 0");
+			RunCommand("monitor reset init");
+			RunCommand("-target-download");
+		}
+		public void ContinueTo(string entry) {
+			RunCommand("-break-insert", Escape(entry));
+			RunCommand("-exec-continue");
+			ARE_async.WaitOne();
+			ARE_async.WaitOne();
+		}
+		public void JumpTo(string entry) {
+			RunCommand("-break-insert", Escape(entry));
+			RunCommand("-exec-jump", Escape(entry));
+			ARE_async.WaitOne();
+			ARE_async.WaitOne();
+		}
+		public void Execute() {
+			RunCommand("-exec-finish");
+			ARE_async.WaitOne();
+			ARE_async.WaitOne();
 		}
 
 		/* PRIVATE METHODS */
-		public void ParseResultRecord(string s) {
-			lastResult = new GdbCommandResult(s);
-			running = (lastResult.Status == CommandStatus.Running);
+		private static string Escape(string str)
+		{
+			if (str == null)
+				return null;
+			else if (str.IndexOf (' ') != -1 || str.IndexOf ('"') != -1) {
+				str = str.Replace ("\"", "\\\"");
+				return "\"" + str + "\"";
+			}
+			else
+				return str;
 		}
-		public void ParseAsyncRecord(string s) {
-			running = false;
-			ev = new GdbEvent(s);
+		private GdbCommandResult RunCommand(string command, params string[] args) {
+			input.WriteLine(command + " " + String.Join (" ", args));
+			ARE_result.WaitOne();
+			return lastResult;
 		}
 	}/** GDB **/
 
@@ -259,10 +304,11 @@ namespace SamTest {
 		internal static MSBuild Instance{ get { return instance; }}
 		/* PROCESS HANDLERS */
 		private StreamWriter input = null;
-		private Regex buildRegEx = new Regex(@"(build complete|build failed)");
+		private Regex buildRegEx = new Regex(@"build succeeded.|build failed.", RegexOptions.IgnoreCase);
 		private void StandardOutputHandler(object sendingProcess, DataReceivedEventArgs outLine) {
 			stdOutput.WriteLine(outLine.Data);
 			if(buildRegEx.IsMatch(outLine.Data)) {
+				stdOutput.WriteLine("face");
 				ARE_build.Set();
 			}
 		}
@@ -318,12 +364,15 @@ namespace SamTest {
 		}
 
 		/* PROPERTIES */
+		private Process process;
 		private static AutoResetEvent ARE_build = new AutoResetEvent(false);
+		private static AutoResetEvent ARE_start = new AutoResetEvent(false);
 
 		/* PUBLIC METHODS */
-		public bool Start() {
-			Process process = new System.Diagnostics.Process();
+		public void Start(object root) {
+			process = new System.Diagnostics.Process();
 			process.StartInfo.FileName = @"cmd.exe";
+			process.StartInfo.WorkingDirectory = (string)root;
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			// Streams
@@ -340,30 +389,25 @@ namespace SamTest {
 			// StandardError stream
 			process.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);
 			process.BeginErrorReadLine();
-			return true;
+			ARE_start.Set();
 		}
-		public bool SetEnv(string gdb_path_root) {
+		public void SetEnv(string gdb_path_root) {
+			ARE_start.WaitOne();
 			input.WriteLine(@"setenv_gcc.cmd "+@gdb_path_root);
-			return true;
 		}
-		public bool Clean(string root, string proj) {
-			input.WriteLine(@"msbuild "+@root+@"\"+@proj+@" /target:clean");
-			new Thread(WaitClean);
-			return true;
+		public void Clean(string root, string proj) {
+			input.WriteLine(@"msbuild "+root+@"\"+proj+@" /target:clean");
+			ARE_build.WaitOne();
 		}
-		public bool Build(string root, string proj) {
-			input.WriteLine(@"msbuild "+@root+@"\"+@proj+@" /target:clean");
-			new Thread(WaitBuild);
-			return true;
+		public void Build(string root, string proj) {
+			input.WriteLine(@"msbuild "+root+@"\"+proj+@" /target:build");
+			ARE_build.WaitOne();
+		}
+		public void Kill() {
+			process.Kill();
 		}
 
 		/* PRIVATE METHODS */
-		private void WaitClean() {
-			ARE_build.WaitOne();
-		}
-		private void WaitBuild() {
-			ARE_build.WaitOne();
-		}
 	}/** MSBuild **/
 
 	/********************
@@ -424,15 +468,8 @@ namespace SamTest {
 		}
 
 		/* PROPERTIES */
-		private UInt32 mSampleRateHz = 4000000;
+		private UInt32 mSampleRateHz = 1000000;
 		private MLogic mLogic;
-		//mLogic.IsStreaming();
-		//mLogic.SampleRateHz = mSampleRateHz;
-		//mLogic.SetOutput(mWriteValue);
-		//mLogic.WriteStart();
-		//mLogic.ReadStart();
-		//mLogic.GetInput();
-		//mLogic.Stop();
 
 		/* EVENT: Connected */
 		public event EventHandler<EventArgs> Connected;
@@ -442,16 +479,18 @@ namespace SamTest {
 		}
 
 		/* PUBLIC METHODS */
-		public bool Start() {
+		public void Start() {
 			MSaleaeDevices devices = new MSaleaeDevices();
 			devices.OnLogicConnect += new MSaleaeDevices.OnLogicConnectDelegate(LogicOnConnect);
 			devices.OnDisconnect += new MSaleaeDevices.OnDisconnectDelegate(LogicOnDisconnect);
 			devices.BeginConnect();
 			stdOutput.WriteLine("Waiting for Logic connection.");
-			return true;
 		}
 		public void AttachOnReadData(MLogic.OnReadDataDelegate fn) {
 			mLogic.OnReadData += new MLogic.OnReadDataDelegate(fn);
+		}
+		public void DetachOnReadData(MLogic.OnReadDataDelegate fn) {
+			mLogic.OnReadData -= new MLogic.OnReadDataDelegate(fn);
 		}
 		// TODO detach
 		public bool SetSampleRate(UInt32 mSampleRateHz) {
@@ -504,8 +543,8 @@ namespace SamTest {
 		private void LogicOnConnect(ulong device_id, MLogic logic){
 			stdOutput.WriteLine("Logic with id {0} connected.", device_id);
 			mLogic = logic;
-			mLogic.OnReadData += new MLogic.OnReadDataDelegate(mLogic_OnReadData);
-			mLogic.OnWriteData += new MLogic.OnWriteDataDelegate(mLogic_OnWriteData);
+			//mLogic.OnReadData += new MLogic.OnReadDataDelegate(mLogic_OnReadData);
+			//mLogic.OnWriteData += new MLogic.OnWriteDataDelegate(mLogic_OnWriteData);
 			mLogic.OnError += new MLogic.OnErrorDelegate(mLogic_OnError);
 			mLogic.SampleRateHz = mSampleRateHz;
 			// invoke the Connected event
@@ -516,6 +555,7 @@ namespace SamTest {
 		private void mLogic_OnWriteData(ulong device_id, byte[] data) {
 		}
 		private void mLogic_OnError(ulong device_id){
+			stdError.WriteLine("Error thrown.");
 		}
 	}/** Logic **/
 
@@ -535,8 +575,7 @@ namespace SamTest {
 			if(!String.IsNullOrEmpty(outLine.Data)) {
 				if(outLine.Data == "Parse complete."){
 					// Invoke the Parsed event
-					EventArgs e = EventArgs.Empty;
-					OnParsed(e);
+					ARE_parsed.Set();
 					return;
 				}
 				// Invoke the EventParsed event
@@ -595,14 +634,10 @@ namespace SamTest {
 		}
 
 		/* PROPERTIES */
-		private string script = @"C:\SamTest\parser\parser.py";
+		private Process process;
+		private string script = @"parser.py";
+		private static AutoResetEvent ARE_parsed = new AutoResetEvent(false);
 
-		/* EVENT: Parsed */
-		public event EventHandler<EventArgs> Parsed;
-		private void OnParsed(EventArgs e){
-			if(Parsed != null)
-				Parsed(this, e);
-		}
 		/* EVENT: EventParsed */
 		public delegate void EventParsedDelegate(string eventLine);
 		public event EventParsedDelegate EventParsed;
@@ -612,10 +647,11 @@ namespace SamTest {
 		}
 
 		/* PUBLIC METHODS */
-		// TODO RDP in c sharp
-		public bool Start() {
-			Process process = new Process();
+		public void Parse(object path_filename) {
+			process = new Process();
 			process.StartInfo.FileName = @"C:\Python32\python.exe";
+			process.StartInfo.Arguments = script + @" " + path_filename;
+			process.StartInfo.WorkingDirectory = @"C:\SamTest\parser";
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			// Streams
@@ -632,13 +668,13 @@ namespace SamTest {
 			// StandardError stream
 			process.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);
 			process.BeginErrorReadLine();
-			return true;
-		}
-		public void Parse(string path, string filename) {
-			input.WriteLine(@script+' '+@path+' '+@filename);
+			ARE_parsed.WaitOne();
 		}
 		public void AttachEventParsed(EventParsedDelegate fn) {
 			EventParsed += new EventParsedDelegate(fn);
+		}
+		public void DetachEventParsed(EventParsedDelegate fn) {
+			EventParsed -= new EventParsedDelegate(fn);
 		}
 		// TODO detach event
 
@@ -650,36 +686,35 @@ namespace SamTest {
 	*********************/
 	public class SuiteInstance {
 		/* PROPERTIES */
-		public OpenOCD openocd = OpenOCD.Instance;
-		public GDB gdb = GDB.Instance;
-		public MSBuild msbuild = MSBuild.Instance;
-		public Logic logic = Logic.Instance;
-		public Parser parser = Parser.Instance;
+		// TODO make private
+		public static OpenOCD openocd = OpenOCD.Instance;
+		public static GDB gdb = GDB.Instance;
+		public static MSBuild msbuild = MSBuild.Instance;
+		public static Logic logic = Logic.Instance;
+		public static Parser parser = Parser.Instance;
 
 		/* PUBLIC METHODS */
-		public bool StartAll() {
-			if(!openocd.Start()) {
-				return false;
-			}
-			if(!gdb.Start()) {
-				return false;
-			}
-			if(!msbuild.Start()) {
-				return false;
-			}
-			if(!logic.Start()) {
-				return false;
-			}
-			if(!parser.Start()) {
-				return false;
-			}
-			return true;
+		public static void StartPerm() {
+			(new Thread(openocd.Start)).Start();
+			(new Thread(logic.Start)).Start();
 		}
-		public bool Compile(string gdb_path_root, string root, string proj) {
+		public void StartTemp(string root) {
+			(new Thread(msbuild.Start)).Start(root);
+			(new Thread(gdb.Start)).Start(root);
+		}
+		public void KillTemp() {
+			msbuild.Kill();
+			gdb.Kill();
+		}
+		public void Compile(string gdb_path_root, string proj_root, string proj) {
 			msbuild.SetEnv(gdb_path_root);
-			msbuild.Clean(root, proj);
-			msbuild.Build(root, proj);
-			return true;
+			msbuild.Clean(proj_root, proj);
+			msbuild.Build(proj_root, proj);
+		}
+		public void PrepareGDB(string axf, string entry) {
+			gdb.Connect(axf);
+			gdb.Load();
+			gdb.ContinueTo(entry);
 		}
 	}/** SuiteInstance **/
 
@@ -689,9 +724,11 @@ namespace SamTest {
 	public class TestInstance {
 		public TestInstance(string root, XmlElement config) {
 			this.root = root;
-			this.name = config["name"].Value;
-			this.entry = config["entry"].Value;
+			this.config = config;
+			this.name = config["name"].InnerXml;
+			this.entry = config["entry"].InnerXml;
 		}
+		public XmlElement config;
 
 		/* OUTPUT */
 		protected StringWriter stdOutput = new StringWriter();
@@ -700,11 +737,11 @@ namespace SamTest {
 		public StringWriter Error{ get { return stdError; }}
 
 		/* PROPERTIES */
-		protected string root;
-		protected string name;
-		protected string entry;
+		public string root;
+		public string name;
+		public string entry;
 
-		// TODO change to private
+		// TODO change to protected
 		public GDB.Controller gdb = new GDB.Controller();
 		public Logic.Controller logic = new Logic.Controller();
 		public Parser.Controller parser = new Parser.Controller();
@@ -734,27 +771,25 @@ namespace SamTest {
 		/* PUBLIC METHODS */
 		public void _Setup() {
 			if(!Request()) {
-				// control was not granted
+				stdError.WriteLine("request failed");
 			}
 			if(!Setup()) {
-				// user setup returned false
+				stdError.WriteLine("user setup failed");
 			}
 		}
 		public void _Execute() {
 			if(!Execute()) {
-				// user execute failed
+				stdError.WriteLine("user execute failed");
 			}
 			if(!Process()) {
-				// user process failed
+				stdError.WriteLine("user process failed");
 			}
 		}
 		public void _Teardown() {
 			if(!Teardown()) {
-				// user teardown failed
+				stdError.WriteLine("user teardown failed");
 			}
-			if(!Relinquish()) {
-				// control was not returned
-			}
+			Relinquish();
 		}
 
 		/* PRIVATE METHODS */
@@ -770,11 +805,10 @@ namespace SamTest {
 			}
 			return true;
 		}
-		protected bool Relinquish() {
+		protected void Relinquish() {
 			gdb.Relinquish();
 			logic.Relinquish();
 			parser.Relinquish();
-			return true;
 		}
 	}/** TestInstance **/
 }/** SamTest **/

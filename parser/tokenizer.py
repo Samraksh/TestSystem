@@ -11,8 +11,7 @@ class Tokenizer:
         self.tokenList = []
         self.tokenIterator = -1
         self.fileName = fileName
-        # TODO: fic this, coordinate with c sharp caller
-        file = open("C:\SamTest\powershell\\"+self.fileName,'r')
+        file = open(self.fileName,'r')
         token = ""
         while 1:
             char = file.read(1)

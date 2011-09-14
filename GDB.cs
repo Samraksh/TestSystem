@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SamTest {
-	enum CommandStatus
+	public enum CommandStatus
 	{
 		Done,
 		Running,
 		Error
 	}
-	class ResultData: IEnumerable
+	public class ResultData: IEnumerable
 	{
 		Hashtable props;
 		object[] array;
@@ -202,7 +202,7 @@ namespace SamTest {
 				return new object[0].GetEnumerator ();
 		}
 	}
-	class GdbCommandResult: ResultData
+	public class GdbCommandResult: ResultData
 	{
 		public CommandStatus Status;
 		public string ErrorMessage;
@@ -223,21 +223,21 @@ namespace SamTest {
 			}
 		}
 	}
-  class GdbEvent: ResultData
-  {
-    public string Name;
-    public string Reason;
-    
-    public GdbEvent (string line)
-    {
-      int i = line.IndexOf (',');
-      if (i == -1)
-        i = line.Length;
-      Name = line.Substring (1, i - 1);
-      ReadResults (line, i+1);
-      object[] reasons = GetAllValues ("reason");
-      if (reasons.Length > 0)
-        Reason = (string) reasons [0]; 
-    }
-  }
+	public class GdbEvent: ResultData
+	{
+		public string Name;
+		public string Reason;
+		
+		public GdbEvent (string line)
+		{
+			int i = line.IndexOf (',');
+			if (i == -1)
+				i = line.Length;
+			Name = line.Substring (1, i - 1);
+			ReadResults (line, i+1);
+			object[] reasons = GetAllValues ("reason");
+			if (reasons.Length > 0)
+				Reason = (string) reasons [0]; 
+		}
+	}
 }

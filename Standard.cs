@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Xml;
 // Pins type
 using Pins = System.UInt32;
@@ -12,8 +13,8 @@ using Pins = System.UInt32;
 namespace SamTest {
 	public class StandardTest: TestInstance {
 		public StandardTest(string root, XmlElement config) : base(root, config) {
-			this.edf = config["edf"].Value;
-			this.hkp = config["hkp"].Value;
+			this.edf = config["edf"].InnerXml;
+			this.hkp = config["hkp"].InnerXml;
 		}
 
 		/********************
@@ -66,76 +67,64 @@ namespace SamTest {
 		*********************/
 		public class EventTime {
 			/* CONSTRUCTORS */
-			public EventTime(EventRep ER, UInt64 offset) {
-				this.ER = ER;
+			public EventTime(string Name, UInt64 offset) {
+				this.Name = Name;
 				this.offset = offset;
 				// TODO: computer clientOffset and time
 			}
 
 			/* PROPERTIES */
-			public EventRep ER;
+			public string Name;
 			public UInt64 offset;
 			public UInt64 clientOffset;
 			public UInt64 time;
 		}/** EventTime **/
 
 		/* PROPERTIES */
-		private string edf;
-		private string hkp;
+		public string edf;
+		public string hkp;
 
-		private UInt64 offset;
-		private List<EventRep> ERlist = new List<EventRep>();
+		protected UInt64 offset;
+		protected List<EventRep> ERlist = new List<EventRep>();
 		public List<EventRep> ERs{ get{ return ERlist; }}
-		private List<EventTime> ETlist = new List<EventTime>();
+		protected List<EventTime> ETlist = new List<EventTime>();
 		public List<EventTime> ETs{ get{ return ETlist; }}
 
-		private bool firstCall = true;
-		private Pins last;
+		protected bool firstCall = true;
+		protected Pins last;
 
 		public new void _Setup() {
 			if(!Request()) {
-				// control was not granted
+				stdError.WriteLine("request failed");
 			}
+			logic.handle.AttachOnReadData(this.OnReadData);
+			parser.handle.AttachEventParsed(this.EventParsed);
+			(new Thread(parser.handle.Parse)).Start(root+@" "+edf);
+			gdb.handle.JumpTo(entry);
 			if(!Setup()) {
-				// user setup returned false
+				stdError.WriteLine("user setup failed");
 			}
 		}
 		public new void _Execute() {
 			if(!Execute()) {
-				// user execute failed
+				stdError.WriteLine("user execute failed");
 			}
+			logic.handle.ReadStart();
+			gdb.handle.Execute();
+			logic.handle.ReadStop();
 			if(!Process()) {
-				// user process failed
+				stdError.WriteLine("user process failed");
 			}
 		}
 		public new void _Teardown() {
 			if(!Teardown()) {
-				// user teardown failed
+				stdError.WriteLine("user teardown failed");
 			}
-			if(!Relinquish()) {
-				// control was not returned
-			}
+			logic.handle.DetachOnReadData(OnReadData);
+			parser.handle.DetachEventParsed(EventParsed);
+			Relinquish();
 		}
-
-		public void Parse() {
-			if(parser.haveControl) {
-				stdOutput.WriteLine("Parsing.");
-				parser.handle.Parse(root, edf);
-			}
-		}
-		public void Start() {
-			if(logic.haveControl) {
-				stdOutput.WriteLine("Starting.");
-				logic.handle.ReadStart();
-			}
-		}
-		public void Stop() {
-			if(logic.haveControl) {
-				stdOutput.WriteLine("Stopping.");
-				logic.handle.ReadStop();
-			}
-		}
-		private void mLogic_OnReadData(ulong device_id, byte[] data){
+		protected void OnReadData(ulong device_id, byte[] data){
 			Pins Tc = 0;
 			Pins Sc = 0;
 			Pins Tcp = 0;
@@ -144,24 +133,26 @@ namespace SamTest {
 				firstCall = false;
 			}
 			// On each byte of data
-			for(int dI = 1; dI < data.Length; dI++){
+			for(int dI = 1; dI < data.Length; dI++){ 
 				offset++;
 				Sc = (Pins)data[dI];
 				Tc = last ^ Sc;
-				// On each event
-				for(int eI = 0; eI < ERlist.Count; eI++){
-					EventRep Ec = ERlist[eI];
-					Tcp = Tc & Ec.X;
-					if (Tcp != (Pins)0){
-						if (((Sc & Ec.X) == Ec.S) && ((Tcp & Ec.T) == Ec.T)) {
-							ETlist.Add(new EventTime(Ec, offset));
+				if (Tc != (Pins)0){
+					// On each event
+					for(int eI = 0; eI < ERlist.Count; eI++){
+						EventRep Ec = ERlist[eI];
+						Tcp = Tc & Ec.X;
+						if(Tcp != (Pins)0) {
+							if (((Sc & Ec.X) == Ec.S) && ((Tcp & Ec.T) == Ec.T)) {
+								ETlist.Add(new EventTime(Ec.Name, offset));
+							}
 						}
 					}
 				}
 				last = Sc;
 			}
 		}
-		private void EventParsedEvent(string eventLine) {
+		protected void EventParsed(string eventLine) {
 			ERlist.Add(new EventRep(eventLine.Split('\t')));
 		}
 	}
