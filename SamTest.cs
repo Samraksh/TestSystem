@@ -2,16 +2,86 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 // external
 using SaleaeDeviceSdkDotNet;
+using Textile;
 
 /********************
 	SamTest Namespace
 *********************/
 namespace SamTest {
+
+	/********************
+		Git - Singleton
+	*********************/
+	public sealed class Git {
+		private static readonly Git instance = new Git();
+		/* CONSTRUCTOR */
+		private Git(){
+		}
+		internal static Git Instance{ get { return instance; }}
+
+		/* PROCESS HANDLERS */
+		public StreamWriter input = null;
+		private void StandardOutputHandler(object sendingProcess, DataReceivedEventArgs outLine) {
+			stdOutput.WriteLine(outLine.Data);
+			if(outLine.Data.StartsWith("Total")) {
+				ARE_done.Set();
+			}
+		}
+		private void StandardErrorHandler(object sendingProcess, DataReceivedEventArgs errLine){
+			stdError.WriteLine(errLine.Data);
+		}
+
+		/* OUTPUT */
+		private StringWriter stdOutput = new StringWriter();
+		public StringWriter Output{ get { return stdOutput; }}
+		private StringWriter stdError = new StringWriter();
+		public StringWriter Error{ get { return stdError; }}
+
+		/* PROPERTIES */
+		private Process process;
+		private string checkout_location = @"C:\MicroFrameworkPK_v4_0";
+		private static AutoResetEvent ARE_done = new AutoResetEvent(false);
+
+		/* PUBLIC METHODS */
+		public void Start() { //(string[] cfgs)
+			process = new System.Diagnostics.Process();
+			process.StartInfo.FileName = @"cmd.exe";
+			// foreach cfg in cfgs
+			process.StartInfo.WorkingDirectory = checkout_location;
+			//process.StartInfo.EnvironmentVariables.Add("PATH", @"C:\SamTest\git\cmd")
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+			// Streams
+			process.StartInfo.RedirectStandardInput = true;
+			process.StartInfo.RedirectStandardOutput = true;
+			process.StartInfo.RedirectStandardError = true;
+			// Start
+			process.Start();
+			// StandardInput stream
+			input = process.StandardInput;
+			// StandardOutput stream
+			process.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
+			process.BeginOutputReadLine();
+			// StandardError stream
+			process.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);
+			process.BeginErrorReadLine();	
+		}
+		public void Kill() {
+			process.Kill();
+		}
+		public void Checkout(string root, string branch) {
+			input.WriteLine(@"cd "+root);
+			input.WriteLine(@"git fetch github");
+			ARE_done.WaitOne();
+			input.WriteLine(@"git checkout "+branch);
+		}
+	}
 
 	/********************
 		OpenOCD - Singleton
@@ -468,6 +538,7 @@ namespace SamTest {
 		}
 
 		/* PROPERTIES */
+		public static UInt32 RateInv = 1/1000000;
 		private UInt32 mSampleRateHz = 1000000;
 		private MLogic mLogic;
 
@@ -685,26 +756,73 @@ namespace SamTest {
 		SuiteInstance
 	*********************/
 	public class SuiteInstance {
+
+		public class Feedback {
+			public Feedback(string root) {
+				this.root = root;
+			}
+
+			private string root;
+
+			private StringWriter str = new StringWriter();
+			public StringWriter preTextile{ get { return str; }}
+			private string _textile;
+			public string textile{get { return _textile; }}
+
+			public void AddAsFile(string name, string content) {
+				using (FileStream fs = File.Create(root + @"\" + name)) {
+					AddText(fs, content);
+				}
+				str.WriteLine("\"" + name + "\":" + name);
+				// append to file section
+			}
+			public void HTML() {
+				_textile = Textile.TextileFormatter.FormatString(str.ToString());
+				using (FileStream fs = File.Create(root + @"\receipt.html")) {
+					AddText(fs, _textile);
+				}
+			}
+			public void AddLine(string line) {
+				str.WriteLine(line);
+			}
+			private static void AddText(FileStream fs, string value)
+			{
+				byte[] info = new UTF8Encoding(true).GetBytes(value);
+				fs.Write(info, 0, info.Length);
+			}
+		}
+
 		/* PROPERTIES */
 		// TODO make private
+		public static Git git = Git.Instance;
 		public static OpenOCD openocd = OpenOCD.Instance;
 		public static GDB gdb = GDB.Instance;
 		public static MSBuild msbuild = MSBuild.Instance;
 		public static Logic logic = Logic.Instance;
 		public static Parser parser = Parser.Instance;
+		public Feedback feedback;
 
 		/* PUBLIC METHODS */
 		public static void StartPerm() {
 			(new Thread(openocd.Start)).Start();
-			(new Thread(logic.Start)).Start();
 		}
 		public void StartTemp(string root) {
+			(new Thread(logic.Start)).Start();
+			(new Thread(git.Start)).Start();
 			(new Thread(msbuild.Start)).Start(root);
 			(new Thread(gdb.Start)).Start(root);
 		}
 		public void KillTemp() {
+			git.Kill();
 			msbuild.Kill();
 			gdb.Kill();
+		}
+		public void SetFeedback(string root) {
+			feedback = new Feedback(root);
+			feedback.AddLine("Testing commit.");
+		}
+		public void Checkout(string root, string branch) {
+			git.Checkout(root, branch);
 		}
 		public void Compile(string gdb_path_root, string proj_root, string proj) {
 			msbuild.SetEnv(gdb_path_root);
@@ -722,13 +840,14 @@ namespace SamTest {
 		TestInstance
 	*********************/
 	public class TestInstance {
-		public TestInstance(string root, XmlElement config) {
+		public TestInstance(SuiteInstance.Feedback feedback, string root, XmlElement config) {
+			this.feedback = feedback;
 			this.root = root;
 			this.config = config;
 			this.name = config["name"].InnerXml;
 			this.entry = config["entry"].InnerXml;
+			feedback.AddLine("Test: "+this.name);
 		}
-		public XmlElement config;
 
 		/* OUTPUT */
 		protected StringWriter stdOutput = new StringWriter();
@@ -737,6 +856,8 @@ namespace SamTest {
 		public StringWriter Error{ get { return stdError; }}
 
 		/* PROPERTIES */
+		public SuiteInstance.Feedback feedback;
+		public XmlElement config;
 		public string root;
 		public string name;
 		public string entry;
@@ -783,6 +904,9 @@ namespace SamTest {
 			}
 			if(!Process()) {
 				stdError.WriteLine("user process failed");
+				feedback.AddLine("test failed");
+			} else {
+				feedback.AddLine("test passed");
 			}
 		}
 		public void _Teardown() {

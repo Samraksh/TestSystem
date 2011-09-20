@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 
@@ -56,88 +57,32 @@ namespace SamServer {
 			// deserialize json
 			JavaScriptSerializer json = new JavaScriptSerializer();
 			Object GitHubHook = json.DeserializeObject(str);
-			foreach (object commit in GitHubHook.commits) {
-				if(((string)commit.message).Contains("SamTest")) {
-					TestQueue.Enqueue((string)commit.id);
+			GitHub simpHook = (GitHub)GitHubHook;
+			foreach (Commit commit in simpHook.commits) {
+				if((commit.message).Contains("SamTest")) {
+					TestQueue.Enqueue(commit.id);
 				}
 			}
 		}
+		public class Commit {
+			public string message;
+			public string id;
+		}
+		public class GitHub {
+			public Commit[] commits;
+		}
 	}
 
-	public class TestQueue {
+	public static class TestQueue {
 		// TODO add priority queuing
 		private static Queue<string> _ids = new Queue<string>();
-		public Queue<string> IDs{ get{ return _ids; }}
+		public static Queue<string> IDs{ get{ return _ids; }}
 
-		public void Enqueue(string id) {
+		public static void Enqueue(string id) {
 			_ids.Enqueue(id);
 		}
-		public int Dequeue(string id) {
+		public static string Dequeue(string id) {
 			return _ids.Dequeue();
-		}
-	}
-
-	/********************
-		Git - Singleton
-	*********************/
-	public sealed class Git {
-		private static readonly Git instance = new PowerShell();
-		/* CONSTRUCTOR */
-		private Git(){
-			Start();
-		}
-		internal static Git Instance{ get { return instance; }}
-
-		/* PROCESS HANDLERS */
-		private StreamWriter input = null;
-		private void StandardOutputHandler(object sendingProcess, DataReceivedEventArgs outLine) {
-			stdOutput.WriteLine(outLine.Data);
-		}
-		private void StandardErrorHandler(object sendingProcess, DataReceivedEventArgs errLine){
-			stdError.WriteLine(errLine.Data);
-		}
-
-		/* OUTPUT */
-		private StringWriter stdOutput = new StringWriter();
-		public StringWriter Output{ get { return stdOutput; }}
-		private StringWriter stdError = new StringWriter();
-		public StringWriter Error{ get { return stdError; }}
-
-		/* PROPERTIES */
-		private Process process;
-		private string checkout_location = @"C:\MicroFrameworkPK_v4_0";
-
-		/* PUBLIC METHODS */
-		public void Start() { //(string[] cfgs)
-			process = new System.Diagnostics.Process();
-			process.StartInfo.FileName = @"git-bash.bat";
-			// foreach cfg in cfgs
-			process.StartInfo.Arguments = @"";
-			process.StartInfo.WorkingDirectory = checkout_location;
-			process.StartInfo.UseShellExecute = false;
-			process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-			// Streams
-			process.StartInfo.RedirectStandardInput = true;
-			process.StartInfo.RedirectStandardOutput = true;
-			process.StartInfo.RedirectStandardError = true;
-			// Start
-			process.Start();
-			// StandardInput stream
-			input = process.StandardInput;
-			// StandardOutput stream
-			process.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
-			process.BeginOutputReadLine();
-			// StandardError stream
-			process.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);
-			process.BeginErrorReadLine();	
-		}
-		public void Kill() {
-			process.Kill();
-		}
-		public void Checkout(string root, string branch) {
-			input.WriteLine(@"cd "+root);
-			input.WriteLine(@"git fetch");
-			input.WriteLine(@"git checkout "+branch);
 		}
 	}
 
@@ -163,13 +108,15 @@ namespace SamServer {
 
 		/* PUBLIC METHODS */
 		public void Start() {
-			RunspaceConfiguration config = new RunspaceConfiguration();
-			config.InitializationScripts = new ScriptConfigurationEntry("SamTest Init", "init.ps1");
-			runspace = RunspaceFactory.CreateRunspace(config);
+			runspace = RunspaceFactory.CreateRunspace();
 			runspace.Open();
+			Pipeline pipeline = runspace.CreatePipeline();
+			pipeline.Commands.AddScript("init.ps1");
+			pipeline.Invoke();
+
 		}
 		public void Kill() {
-
+			runspace.Close();
 		}
 		public void RunTest(string id) {
 			Pipeline pipeline = runspace.CreatePipeline();

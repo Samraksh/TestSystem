@@ -12,7 +12,7 @@ using Pins = System.UInt32;
 *********************/
 namespace SamTest {
 	public class StandardTest: TestInstance {
-		public StandardTest(string root, XmlElement config) : base(root, config) {
+		public StandardTest(SamTest.SuiteInstance.Feedback feedback, string root, XmlElement config) : base(feedback, root, config) {
 			this.edf = config["edf"].InnerXml;
 			this.hkp = config["hkp"].InnerXml;
 		}
@@ -70,7 +70,8 @@ namespace SamTest {
 			public EventTime(string Name, UInt64 offset) {
 				this.Name = Name;
 				this.offset = offset;
-				// TODO: computer clientOffset and time
+				// TODO: computer clientOffset based on client rate
+				this.time = offset * Logic.RateInv; // (sample) * (second/sample)
 			}
 
 			/* PROPERTIES */
@@ -93,37 +94,56 @@ namespace SamTest {
 		protected bool firstCall = true;
 		protected Pins last;
 
+		// internal setup
 		public new void _Setup() {
+			// request handle control
 			if(!Request()) {
 				stdError.WriteLine("request failed");
 			}
+			// attach the callbacks
 			logic.handle.AttachOnReadData(this.OnReadData);
 			parser.handle.AttachEventParsed(this.EventParsed);
+			// parse the edf file
 			(new Thread(parser.handle.Parse)).Start(root+@" "+edf);
+			// move program execution to test entry point
 			gdb.handle.JumpTo(entry);
+			// call the user setup
 			if(!Setup()) {
 				stdError.WriteLine("user setup failed");
 			}
 		}
+		// internal execute
 		public new void _Execute() {
+			// call the user execute
 			if(!Execute()) {
 				stdError.WriteLine("user execute failed");
 			}
+			// run the logic
 			logic.handle.ReadStart();
+			// start the GDB program and run until finished
 			gdb.handle.Execute();
+			// stop the logic
 			logic.handle.ReadStop();
+			// call the user process
 			if(!Process()) {
 				stdError.WriteLine("user process failed");
+			} else {
+				// report test success
 			}
 		}
+		// internal teardown
 		public new void _Teardown() {
+			// call the user teardown
 			if(!Teardown()) {
 				stdError.WriteLine("user teardown failed");
 			}
+			// detach callbacks
 			logic.handle.DetachOnReadData(OnReadData);
 			parser.handle.DetachEventParsed(EventParsed);
+			// release the handles
 			Relinquish();
 		}
+		// callback
 		protected void OnReadData(ulong device_id, byte[] data){
 			Pins Tc = 0;
 			Pins Sc = 0;
@@ -152,13 +172,9 @@ namespace SamTest {
 				last = Sc;
 			}
 		}
+		// callback
 		protected void EventParsed(string eventLine) {
 			ERlist.Add(new EventRep(eventLine.Split('\t')));
 		}
-	}
-}
-
-public class GPIO: SamTest.StandardTest {
-	public GPIO(string root, XmlElement config) : base(root, config) {
 	}
 }
