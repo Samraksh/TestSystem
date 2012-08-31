@@ -1,0 +1,5 @@
+C:\Test\TestRigService\TestRigService\TestRigService\bin\TestRigService.dll
+C:\Test\TestRigService\TestRigService\TestRigService\bin\TestRigService.pdb
+C:\Test\TestRigService\TestRigService\TestRigService\obj\Debug\ResolveAssemblyReference.cache
+C:\Test\TestRigService\TestRigService\TestRigService\obj\Debug\TestRigService.dll
+C:\Test\TestRigService\TestRigService\TestRigService\obj\Debug\TestRigService.pdb

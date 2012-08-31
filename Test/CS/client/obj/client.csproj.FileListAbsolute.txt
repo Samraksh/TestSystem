@@ -1,0 +1,7 @@
+C:\Samples\WCFWFCardSpace\WCF\Basic\GettingStarted\CS\client\bin\client.exe.config
+C:\Test\CS\client\bin\client.exe.config
+C:\Test\CS\client\bin\client.exe
+C:\Test\CS\client\bin\client.pdb
+C:\Test\CS\client\obj\Debug\ResolveAssemblyReference.cache
+C:\Test\CS\client\obj\Debug\client.exe
+C:\Test\CS\client\obj\Debug\client.pdb

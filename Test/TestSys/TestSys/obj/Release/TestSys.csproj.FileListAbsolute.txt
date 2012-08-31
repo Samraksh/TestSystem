@@ -1,0 +1,9 @@
+C:\Test\TestSys\TestSys\bin\Release\TestSys.exe
+C:\Test\TestSys\TestSys\bin\Release\TestSys.pdb
+C:\Test\TestSys\TestSys\obj\Release\ResolveAssemblyReference.cache
+C:\Test\TestSys\TestSys\obj\Release\Control.baml
+C:\Test\TestSys\TestSys\obj\Release\Control.g.cs
+C:\Test\TestSys\TestSys\obj\Release\TestSys_MarkupCompile.cache
+C:\Test\TestSys\TestSys\obj\Release\TestSys.g.resources
+C:\Test\TestSys\TestSys\obj\Release\TestSys.exe
+C:\Test\TestSys\TestSys\obj\Release\TestSys.pdb

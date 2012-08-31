@@ -1,0 +1,5 @@
+C:\Test\CS\service\bin\service.dll
+C:\Test\CS\service\bin\service.pdb
+C:\Test\CS\service\obj\Debug\ResolveAssemblyReference.cache
+C:\Test\CS\service\obj\Debug\service.dll
+C:\Test\CS\service\obj\Debug\service.pdb

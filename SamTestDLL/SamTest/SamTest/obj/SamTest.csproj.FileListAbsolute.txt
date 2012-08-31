@@ -1,0 +1,8 @@
+C:\Main\Work\Projects\Testing\TestInfraStructure\SamTest\SamTest\SamTestDLL\SamTest\SamTest\bin\Debug\SamTest.dll
+C:\Main\Work\Projects\Testing\TestInfraStructure\SamTest\SamTest\SamTestDLL\SamTest\SamTest\bin\Debug\SamTest.pdb
+C:\Main\Work\Projects\Testing\TestInfraStructure\SamTest\SamTest\SamTestDLL\SamTest\SamTest\bin\Debug\SaleaeDeviceSdkDotNet.dll
+C:\Main\Work\Projects\Testing\TestInfraStructure\SamTest\SamTest\SamTestDLL\SamTest\SamTest\bin\Debug\Textile.dll
+C:\Main\Work\Projects\Testing\TestInfraStructure\SamTest\SamTest\SamTestDLL\SamTest\SamTest\bin\Debug\SaleaeDeviceSdkDotNet.xml
+C:\Main\Work\Projects\Testing\TestInfraStructure\SamTest\SamTest\SamTestDLL\SamTest\SamTest\obj\Debug\ResolveAssemblyReference.cache
+C:\Main\Work\Projects\Testing\TestInfraStructure\SamTest\SamTest\SamTestDLL\SamTest\SamTest\obj\Debug\SamTest.dll
+C:\Main\Work\Projects\Testing\TestInfraStructure\SamTest\SamTest\SamTestDLL\SamTest\SamTest\obj\Debug\SamTest.pdb

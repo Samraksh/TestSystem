@@ -62,7 +62,15 @@ namespace SamTest {
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;
 			// Start
-			process.Start();
+            // Try catch block is used to avoid crashes in case of in ability to start openocd
+            try
+            {
+                process.Start();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\n\nUnable to start Git !!! ");
+            }
 			// StandardInput stream
 			input = process.StandardInput;
 			// StandardOutput stream
@@ -156,7 +164,8 @@ namespace SamTest {
 		/* PUBLIC METHODS */
 		public void Start() { //TODO (string[] cfgs)
 			process = new System.Diagnostics.Process();
-			process.StartInfo.FileName = @"openocd.exe";
+            process.StartInfo.CreateNoWindow = false;
+			process.StartInfo.FileName = @"openocd-0.5.0.exe";
 			// foreach cfg in cfgs
 			process.StartInfo.Arguments = @"-f "+openocd_interface_cfg+@" -f "+openocd_board_cfg;
 			process.StartInfo.UseShellExecute = false;
@@ -166,12 +175,12 @@ namespace SamTest {
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;
 			// Start
-			process.Start();
-			// StandardInput stream
+            process.Start();
+                // StandardInput stream
 			input = process.StandardInput;
 			// StandardOutput stream
 			process.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
-			process.BeginOutputReadLine();
+            process.BeginOutputReadLine();
 			// StandardError stream
 			process.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);
 			process.BeginErrorReadLine();	
@@ -804,14 +813,46 @@ namespace SamTest {
 
 		/* PUBLIC METHODS */
 		public static void StartPerm() {
-			(new Thread(openocd.Start)).Start();
+            Console.WriteLine("\n\nStarting OpenOCD ...");
+            try
+            {
+                (new Thread(openocd.Start)).Start();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\n\n Start OpenOCD failed due to " + e.Message + "!!!");
+            }
+            
 		}
 		public void StartTemp(string root) {
-			(new Thread(logic.Start)).Start();
-			(new Thread(git.Start)).Start();
-			(new Thread(msbuild.Start)).Start(root);
-			(new Thread(gdb.Start)).Start(root);
+            try
+            {
+                (new Thread(logic.Start)).Start();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\n\n Unable to start logic !!!");
+            }
+            // Disabling git initially, this needs to be modified
+			//(new Thread(git.Start)).Start();
+            try
+            {
+                (new Thread(msbuild.Start)).Start(root);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\n\nUnable to run msbuild on " + root + "!!!");
+            }
+            try
+            {
+                (new Thread(gdb.Start)).Start(root);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\n\nUnable to start gdb !!!");
+            }
 		}
+
 		public void KillTemp() {
 			git.Kill();
 			msbuild.Kill();
