@@ -212,10 +212,10 @@ namespace TestRig
                 // Grabbing data for sample time length                
                 ReadParameters readVars;
                 
-                if (currentTest.testType == "C")
-                    readVars = new ReadParameters(workingDirectory + "\\" + "Parameters.h", currentTest);
-                else
+                if (currentTest.testType == "C#")
                     readVars = new ReadParameters(workingDirectory + "\\" + "Parameters.cs", currentTest);
+                else
+                    readVars = new ReadParameters(workingDirectory + "\\" + "Parameters.h", currentTest);
 
                 System.Diagnostics.Debug.WriteLine("useLogic: " + currentTest.testUseLogic.ToString());
                 System.Diagnostics.Debug.WriteLine("sampleTimeMs: " + currentTest.testSampleTimeMs.ToString());
@@ -277,7 +277,7 @@ namespace TestRig
 
                 // delete raw data file
                 Thread.Sleep(50);
-                //Directory.Delete(workingDirectory + "\\" + "testTemp", true);                                    
+//                Directory.Delete(workingDirectory + "\\" + "testTemp", true);                                    
                 
                 currentTest.testState = "Test Complete";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
