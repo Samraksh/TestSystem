@@ -1,0 +1,20 @@
+Logic Assert Information
+Version: 1.1.15
+System: Windows 6.1 Service Pack 1
+File: ..\Source\Logic16Device.cpp
+Function: Logic16Device::SetSampleRateHz, Line: 129
+Error: SetSampleRateHz was provided an unsupported sample rate 400000
+Most recent messages: 
+
+  [ UsbDevice.cpp; UsbDevice::UsbDevice; 55 ]
+
+  [ UsbDevice.cpp; UsbDevice::IsFirmwareDownloaded; 96 ]
+
+4 endpoints  [ UsbDevice.cpp; UsbDevice::IsFirmwareDownloaded; 100 ]
+
+  [ LogicAnalyzerDevice.cpp; LogicAnalyzerDevice::LogicAnalyzerDevice; 21 ]
+
+  [ LogicAnalyzerDevice.cpp; LogicAnalyzerDevice::GetIdFromDevice; 227 ]
+
+bitstream version: 0x10  [ Logic16Device.cpp; Logic16Device::Logic16Device; 52 ]
+

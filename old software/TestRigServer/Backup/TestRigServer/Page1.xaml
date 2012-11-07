@@ -1,0 +1,85 @@
+﻿<Page x:Class="TestRigServer.Page1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Page1">
+    <Grid Height="600" Width="675" VerticalAlignment="Top">
+        <TabControl Name="tabControl1">
+            <TabItem Header="Login">
+                <Grid Height="260" Name="grid5" Width="625" VerticalAlignment="Top">
+                    <ComboBox Height="23" Margin="269,41,236,0" Name="RigSelect" VerticalAlignment="Top">
+                        <ComboBoxItem>localRig</ComboBoxItem>
+                        <ComboBoxItem>DublinRig</ComboBoxItem>
+                    </ComboBox>
+                    <Label Height="28" HorizontalAlignment="Left" Margin="169,41,0,0" Name="label11" VerticalAlignment="Top" Width="76">Select Rig</Label>
+                    <Label Margin="172,81,0,0" Name="testerName" HorizontalAlignment="Left" Width="82" Height="28" VerticalAlignment="Top">Tester Name</Label>
+                    <TextBox Height="28" Margin="269,80,236,0" Name="nameOfTester" VerticalAlignment="Top" VerticalContentAlignment="Center" />
+                    <Button Height="23" Margin="294,0,256,107" Name="button3" VerticalAlignment="Bottom">Login</Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="OpenOCD" Name="tabItem1">
+                <Grid VerticalAlignment="Top" Height="240">
+                    <Label Height="26" HorizontalAlignment="Left" Margin="49,42,0,0" Name="label1" VerticalAlignment="Top" Width="79">Interface</Label>
+                    <Label Height="23" HorizontalAlignment="Left" Margin="49,79,0,0" Name="label2" VerticalAlignment="Top" Width="79">Target</Label>
+                    <Label HorizontalAlignment="Left" Margin="51,117,0,100" Name="label3" Width="79">Exe</Label>
+                    <TextBox Height="23" Margin="154,42,47,0" Name="OpenOCDInterfaceBox" VerticalAlignment="Top" TextChanged="OpenOCDInterfaceBox_TextChanged" />
+                    <TextBox Height="23" Margin="154,79,47,0" Name="OpenOCDTargetBox" VerticalAlignment="Top" TextChanged="OpenOCDTargetBox_TextChanged" />
+                    <TextBox Margin="154,119,47,98" Name="OpenOCDexeBox" TextChanged="OpenOCDexeBox_TextChanged" />
+                    <Button Height="23" HorizontalAlignment="Left" Margin="166,0,0,36" Name="Start" VerticalAlignment="Bottom" Width="75" Click="Start_Click">Start</Button>
+                    <Button Height="23" Margin="268,0,0,36" Name="Show" VerticalAlignment="Bottom" Click="Show_Click" HorizontalAlignment="Left" Width="75">Show</Button>
+                    <Button Height="23" HorizontalAlignment="Right" Margin="0,0,216,36" Name="Stop" VerticalAlignment="Bottom" Width="75" Click="Stop_Click">Stop</Button>
+                    <Button Height="23" HorizontalAlignment="Right" Margin="0,0,106,36" Name="Hide" VerticalAlignment="Bottom" Width="75" Click="Hide_Click">Hide</Button>
+                    <TextBox Height="284" Margin="3,0,9,-313" Name="outBox" VerticalAlignment="Bottom" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Build Env">
+                <Grid Height="182" Name="grid2" Width="625" VerticalAlignment="Top">
+                    <Label Height="28" HorizontalAlignment="Left" Margin="35,27,0,0" Name="label6" VerticalAlignment="Top" Width="120">CodeSourcery Path</Label>
+                    <TextBox Height="25" Margin="161,28,44,0" Name="textBox6" VerticalAlignment="Top" TextChanged="textBox6_TextChanged" VerticalContentAlignment="Center" />
+                    <Button Height="23" Margin="296,0,254,42" Name="SetEnv" VerticalAlignment="Bottom">SetEnv</Button>
+                    <Label HorizontalAlignment="Left" Margin="35,72,0,80" Name="label8" Width="120">MF Installation Path</Label>
+                    <TextBox Margin="161,71,44,84" Name="mfPath" TextChanged="mfPath_TextChanged" VerticalContentAlignment="Center" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Test Build">
+                <Grid Height="192" Name="grid1" Width="641" VerticalAlignment="Top">
+                    <Label Height="28" HorizontalAlignment="Left" Margin="40,27,0,0" Name="label4" VerticalAlignment="Top" Width="67">Test Name</Label>
+                    <TextBox Height="27" Margin="130,25,52,0" Name="testNameBox" VerticalAlignment="Top" VerticalContentAlignment="Center" />
+                    <Label HorizontalAlignment="Left" Margin="40,71,0,93" Name="label5" Width="67">Test Path</Label>
+                    <TextBox Height="27" Margin="130,69,52,0" Name="testPthBox" VerticalAlignment="Top" VerticalContentAlignment="Center" />
+                    <Label Height="28" HorizontalAlignment="Left" Margin="41,0,0,44" Name="label7" VerticalAlignment="Bottom" Width="75">Test Proj File</Label>
+                    <TextBox Height="27" Margin="130,0,52,47" Name="buildProjBox" VerticalAlignment="Bottom" VerticalContentAlignment="Center" />
+                    <Button Height="23" Margin="280,0,286,10" Name="Upload" VerticalAlignment="Bottom" Click="Upload_Click">Upload</Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Test Status">
+                <Grid Height="180" Name="grid3" Width="613" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <ListView Margin="26,31,33,14" Name="listView1" ItemsSource="{Binding}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Test Name"  Width="100" DisplayMemberBinding="{Binding testName}"/>
+                                <GridViewColumn Header="Tester Name" Width="100" DisplayMemberBinding="{Binding testerName}"/>
+                                <GridViewColumn Header="Location" Width="100" DisplayMemberBinding="{Binding testLocation}"/>
+                                <GridViewColumn Header="Status" Width="100" DisplayMemberBinding="{Binding testState}"/>
+                                <GridViewColumn Header="Progress" Width="150"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <TextBox Margin="0,0,0,-352" Name="testStatusOutBox" Height="284" VerticalAlignment="Bottom" Text="{Binding Path=outTestStatus}"/>
+                    <Button Height="23" Margin="253,0,285,-45" Name="button1" VerticalAlignment="Bottom">Show</Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Logic">
+                <Grid Height="175" Name="grid4" Width="591" VerticalAlignment="Top">
+                    <Label HorizontalAlignment="Left" Margin="21,33,0,0" Name="label9" Width="80" Height="28" VerticalAlignment="Top">Output</Label>
+                    <TextBox Height="27" Margin="116,35,16,0" Name="textBox4" VerticalAlignment="Top" VerticalContentAlignment="Center" />
+                    <Button Height="23" Margin="275,0,241,28" Name="button2" VerticalAlignment="Bottom" Click="button2_Click">Start</Button>
+                    <Label HorizontalAlignment="Left" Margin="16,79,0,68" Name="label10" Width="120">Sample Rate (Hz)</Label>
+                    <TextBox Margin="116,79,16,69" Name="textBox5" VerticalContentAlignment="Center" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="History">
+                <Grid></Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>

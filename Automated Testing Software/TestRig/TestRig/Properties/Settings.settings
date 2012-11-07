@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TestRig.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="OCDInterface" Type="System.String" Scope="User">
+      <Value Profile="(Default)">interface\olimex-arm-usb-tiny-h.cfg</Value>
+    </Setting>
+    <Setting Name="OCDTarget" Type="System.String" Scope="User">
+      <Value Profile="(Default)">target\stm32xl.cfg</Value>
+    </Setting>
+    <Setting Name="OCDExe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\SamTest\openocd-bin\openocd.exe</Value>
+    </Setting>
+    <Setting Name="CSPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\SamTest\codesourcery</Value>
+    </Setting>
+    <Setting Name="MFPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\MicroFrameworkPK_v4_0</Value>
+    </Setting>
+    <Setting Name="TTPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\SamTest</Value>
+    </Setting>
+    <Setting Name="TSPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Test</Value>
+    </Setting>
+    <Setting Name="GHPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Users\Chris\AppData\Local\GitHub\PortableGit_8810fd5c2c79c73adcc73fd0825f3b32fdb816e7</Value>
+    </Setting>
+    <Setting Name="TRPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Test\Receipts</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

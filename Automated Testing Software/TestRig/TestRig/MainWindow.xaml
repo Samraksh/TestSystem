@@ -1,0 +1,112 @@
+﻿<Window x:Class="TestRig.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="671" Width="747" Closing="OnClosing" ResizeMode="NoResize" Icon="/TestRig;component/weblogo.ico">
+    <Grid>
+        <TabControl HorizontalAlignment="Stretch" Margin="12" Name="tabControl1" VerticalAlignment="Stretch">
+            <TabItem Header="Test Run" Name="tabItem1">
+                <Grid>
+                    <ListBox Height="337" HorizontalAlignment="Left" Margin="6,6,0,0" Name="listBoxTests" VerticalAlignment="Top" Width="679" />
+                    <CheckBox Content="Timer" Height="16" HorizontalAlignment="Left" Margin="167,50,0,0" Name="timerCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="Native" Height="16" HorizontalAlignment="Left" Margin="191,72,0,0" Name="timerNativecheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="C#" Height="16" HorizontalAlignment="Left" Margin="191,94,0,0" Name="timerCSharpcheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="GPIO" Height="16" HorizontalAlignment="Left" Margin="167,127,0,0" Name="gpioCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="C#" Height="16" HorizontalAlignment="Left" Margin="339,94,0,0" Name="dacCSharpCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="Native" Height="16" HorizontalAlignment="Left" Margin="339,72,0,0" Name="dacNativeCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="DAC" Height="16" HorizontalAlignment="Left" Margin="317,50,0,0" Name="dacCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="C#" Height="16" HorizontalAlignment="Left" Margin="191,257,0,0" Name="adcCSharpCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="Native" Height="16" HorizontalAlignment="Left" Margin="191,235,0,0" Name="adcNativeCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="ADC" Height="16" HorizontalAlignment="Left" Margin="167,213,0,0" Name="adcCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="C#" Height="16" HorizontalAlignment="Left" Margin="191,171,0,0" Name="gpioCSharpCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="Native" Height="16" HorizontalAlignment="Left" Margin="191,149,0,0" Name="gpioNativeCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="C#" Height="16" HorizontalAlignment="Left" Margin="480,94,0,0" Name="spiCSharpCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="Native" Height="16" HorizontalAlignment="Left" Margin="480,72,0,0" Name="spiNativeCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="C#" Height="16" HorizontalAlignment="Left" Margin="339,257,0,0" Name="sdioCSharpCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="Native" Height="16" HorizontalAlignment="Left" Margin="339,235,0,0" Name="sdioNativeCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="SDIO" Height="16" HorizontalAlignment="Left" Margin="317,213,0,0" Name="sdioCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="C#" Height="16" HorizontalAlignment="Left" Margin="339,172,0,0" Name="radioCSharpCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="Native" Height="16" HorizontalAlignment="Left" Margin="339,150,0,0" Name="radioNativeCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="Radio" Height="16" HorizontalAlignment="Left" Margin="317,127,0,0" Name="radioCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="SPI" Height="16" HorizontalAlignment="Left" Margin="457,50,0,0" Name="spiCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="USB" Height="16" HorizontalAlignment="Left" Margin="457,127,0,0" Name="usbCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="C#" Height="16" HorizontalAlignment="Left" Margin="480,257,0,0" Name="norCSharpCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="Native" Height="16" HorizontalAlignment="Left" Margin="480,235,0,0" Name="norNativeCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="NOR" Height="16" HorizontalAlignment="Left" Margin="457,213,0,0" Name="norCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="C#" Height="16" HorizontalAlignment="Left" Margin="480,171,0,0" Name="usbCSharpCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <CheckBox Content="Native" Height="16" HorizontalAlignment="Left" Margin="480,150,0,0" Name="usbNativeCheckBox" VerticalAlignment="Top" IsEnabled="False" />
+                    <Button Content="Upload" Height="23" Margin="317,0,299,191" Name="Upload" VerticalAlignment="Bottom" Click="Upload_Click" />
+                    <Button Content="Debug" Height="23" HorizontalAlignment="Left" Margin="610,552,0,0" Name="buttonDebug" VerticalAlignment="Top" Width="75" Click="buttonDebug_Click" Visibility="Hidden" />
+                    <ComboBox Height="23" Margin="80,514,491,0" Name="RigSelect" SelectedIndex="0" VerticalAlignment="Top">
+                        <ComboBoxItem Content="localRig" />
+                        <ComboBoxItem Content="DublinRig" IsEnabled="False" />
+                    </ComboBox>
+                    <Label Content="Select Rig" Height="28" HorizontalAlignment="Left" Margin="2,513,0,0" Name="label11" VerticalAlignment="Top" Width="76" />
+                    <ComboBox Height="23" Margin="0,552,486,0" Name="cbCodeLocation" SelectedIndex="0" VerticalAlignment="Top" Width="205" SelectionChanged="cbCodeLocation_SelectionChanged">
+                        <ComboBoxItem Content="Use local code" />
+                        <ComboBoxItem Content="Use archive code" />
+                        <ComboBoxItem Content="Use archive branch code" />
+                    </ComboBox>
+                    <TextBox Height="23" HorizontalAlignment="Left" Margin="309,551,0,0" Name="tbCodeBranch" VerticalAlignment="Top" Width="120" Visibility="Hidden" />
+                    <Label Content="Branch name" Height="28" HorizontalAlignment="Left" Margin="224,550,0,0" Name="lblBranch" VerticalAlignment="Top" Visibility="Hidden" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Test Status" Name="tabTestStatus">
+                <Grid Name="gridTestStatus">
+                    <ListView ItemsSource="{Binding}" Height="390" HorizontalAlignment="Left" Margin="71,68,0,0" Name="listViewStatus" VerticalAlignment="Top" Width="564">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Test Name"  Width="100" DisplayMemberBinding="{Binding testName}"/>
+                                <GridViewColumn Header="Tester Name" Width="100" DisplayMemberBinding="{Binding testerName}"/>
+                                <GridViewColumn Header="Location" Width="100" DisplayMemberBinding="{Binding testLocation}"/>                                
+                                <GridViewColumn Header="Type" Width="50"  DisplayMemberBinding="{Binding testType}"/>
+                                <GridViewColumn Header="Status" Width="200" DisplayMemberBinding="{Binding testState}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Test Settings" Name="tabTestSettings">
+                <Grid>
+                    <GroupBox Header="Test Tool Paths" Height="107" HorizontalAlignment="Left" Margin="6,277,0,0" Name="groupBox3" VerticalAlignment="Top" Width="653">
+                        <Grid>
+                            <Label Content="Test Tool Path" Height="Auto" HorizontalAlignment="Left" Margin="15,15,0,0" Name="label4" VerticalAlignment="Top" Width="Auto" />
+                            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,17,0,0" Name="tbTestToolPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" />
+                            <Label Content="Test Source Path" HorizontalAlignment="Left" Margin="15,45,0,0" Name="label5" VerticalAlignment="Top" Width="Auto" />
+                            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,47,0,0" Name="tbTestSourcePath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbTestSourcePath_TextChanged" />
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Build Environment" Height="107" HorizontalAlignment="Left" Margin="6,164,0,0" Name="groupBox2" VerticalAlignment="Top" Width="653">
+                        <Grid>
+                            <Label Content="CodeSourcery Path" Height="Auto" HorizontalAlignment="Left" Margin="15,15,0,0" Name="lblBuildSourceryPath" VerticalAlignment="Top" Width="Auto" />
+                            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,17,0,0" Name="tbBuildSourceryPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbBuildSourceryPath_TextChanged" />
+                            <Label Content="MF Installation Path" HorizontalAlignment="Left" Margin="15,45,0,0" Name="label8" VerticalAlignment="Top" Width="Auto" />
+                            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,47,0,0" Name="tbMFPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbMFPath_TextChanged" />
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="OpenOCD" Height="152" HorizontalAlignment="Left" Margin="6,6,0,0" Name="groupBox1" VerticalAlignment="Top" Width="653">
+                        <Grid Height="Auto">
+                            <Label Content="Interface" HorizontalAlignment="Left" Margin="15,15,0,87" Name="lblOCDInterface" VerticalAlignment="Top" Width="Auto" />
+                            <Label Content="Target" Height="Auto" HorizontalAlignment="Left" Margin="15,0,0,58" Name="lblOCDTarget" VerticalAlignment="Bottom" Width="Auto" />
+                            <Label Content="Exe" HorizontalAlignment="Left" Margin="15,75,0,0" Name="lblOCDExe" VerticalAlignment="Top" Width="Auto" />
+                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="75,17,6,0" Name="tbOCDInterface" Text="" VerticalAlignment="Top" TextChanged="tbOCDInterface_TextChanged" />
+                            <TextBox Height="23" Margin="75,47,6,0" Name="tbOCDTarget" Text="" VerticalAlignment="Top" TextChanged="tbOCDTarget_TextChanged" />
+                            <TextBox Height="23" Margin="75,77,6,0" Name="tbOCDExe" Text="" VerticalAlignment="Top" TextChanged="tbOCDExe_TextChanged" />
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="GitHub" Height="85" HorizontalAlignment="Left" Margin="6,384,0,0" Name="groupBox4" VerticalAlignment="Top" Width="653">
+                        <Grid Height="61">
+                            <Label Content="GitHub Path" Height="Auto" HorizontalAlignment="Left" Margin="15,15,0,0" Name="label1" VerticalAlignment="Top" Width="Auto" />
+                            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,17,0,0" Name="tbGitHubPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbGitHubPath_TextChanged" />
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Test Receipt" Height="85" HorizontalAlignment="Left" Margin="6,470,0,0" Name="groupBox5" VerticalAlignment="Top" Width="653">
+                        <Grid Height="61">
+                            <Label Content="Test Receipt Path" Height="Auto" HorizontalAlignment="Left" Margin="15,15,0,0" Name="label2" VerticalAlignment="Top" Width="Auto" />
+                            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,17,0,0" Name="tbTestReceiptPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbTestReceiptPath_TextChanged" />
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>            
+        </TabControl>
+    </Grid>
+</Window>

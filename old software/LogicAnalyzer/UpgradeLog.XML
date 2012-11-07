@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="LogicAnalyzer">
+</Property><Property Name="Solution File" Value="D:\Users\chris\Documents\GitHub\SamTest\LogicAnalyzer\LogicAnalyzer.sln">
+</Property><Property Name="User Options File" Value="D:\Users\chris\Documents\GitHub\SamTest\LogicAnalyzer\LogicAnalyzer.suo">
+</Property><Property Name="Date" Value="Monday, September 17, 2012">
+</Property><Property Name="Time" Value="10:42 AM">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="LogicAnalyzer.sln" Description="File successfully backed up as D:\Users\chris\Documents\GitHub\SamTest\LogicAnalyzer\Backup\LogicAnalyzer.sln">
+</Event><Event ErrorLevel="0" Project="" Source="LogicAnalyzer.suo" Description="File successfully backed up as D:\Users\chris\Documents\GitHub\SamTest\LogicAnalyzer\Backup\LogicAnalyzer.suo">
+</Event><Event ErrorLevel="0" Project="" Source="LogicAnalyzer.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="LogicAnalyzer.sln" Description="Converted">
+</Event></UpgradeLog>

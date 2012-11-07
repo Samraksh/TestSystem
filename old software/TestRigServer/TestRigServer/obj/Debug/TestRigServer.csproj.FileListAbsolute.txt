@@ -1,0 +1,17 @@
+C:\Test\TestRigServer\TestRigServer\bin\Debug\TestRigServer.exe.manifest
+C:\Test\TestRigServer\TestRigServer\bin\Debug\TestRigServer.xbap
+C:\Test\TestRigServer\TestRigServer\bin\Debug\TestRigServer.exe
+C:\Test\TestRigServer\TestRigServer\bin\Debug\TestRigServer.pdb
+C:\Test\TestRigServer\TestRigServer\obj\Debug\ResolveAssemblyReference.cache
+C:\Test\TestRigServer\TestRigServer\obj\Debug\Page1.baml
+C:\Test\TestRigServer\TestRigServer\obj\Debug\Page1.g.cs
+C:\Test\TestRigServer\TestRigServer\obj\Debug\App.g.cs
+C:\Test\TestRigServer\TestRigServer\obj\Debug\TestRigServer_MarkupCompile.cache
+C:\Test\TestRigServer\TestRigServer\obj\Debug\TestRigServer.g.resources
+C:\Test\TestRigServer\TestRigServer\obj\Debug\TestRigServer.Properties.Resources.resources
+C:\Test\TestRigServer\TestRigServer\obj\Debug\TestRigServer.csproj.GenerateResource.Cache
+C:\Test\TestRigServer\TestRigServer\obj\Debug\TestRigServer.TrustInfo.xml
+C:\Test\TestRigServer\TestRigServer\obj\Debug\TestRigServer.exe.manifest
+C:\Test\TestRigServer\TestRigServer\obj\Debug\TestRigServer.xbap
+C:\Test\TestRigServer\TestRigServer\obj\Debug\TestRigServer.exe
+C:\Test\TestRigServer\TestRigServer\obj\Debug\TestRigServer.pdb

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="LabSharp">
+</Property><Property Name="Solution File" Value="D:\Users\Chris\Desktop\LabSharp\LabSharp\LabSharp.sln">
+</Property><Property Name="Date" Value="Monday, October 15, 2012">
+</Property><Property Name="Time" Value="12:16:52 PM">
+</Property></Properties><Event ErrorLevel="0" Project="LabSharp" Source="LabSharp.csproj" Description="Project file successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\LabSharp.csproj">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="MxConvert.cs" Description="File successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\MxConvert.cs">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="MxUtils.cs" Description="File successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\MxUtils.cs">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="Properties\AssemblyInfo.cs" Description="File successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="Engine.cs" Description="File successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\Engine.cs">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="MatWrapper.cs" Description="File successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\MatWrapper.cs">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="MxArray.cs" Description="File successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\MxArray.cs">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="Complex.cs" Description="File successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\Complex.cs">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="MxArray.IsClass.cs" Description="File successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\MxArray.IsClass.cs">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="MxArray.Struct.cs" Description="File successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\MxArray.Struct.cs">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="MxConvert.FromMxArray.cs" Description="File successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\MxConvert.FromMxArray.cs">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="MxConvert.ToMxArray.cs" Description="File successfully backed up as D:\Users\Chris\Desktop\LabSharp\LabSharp\Backup\MxConvert.ToMxArray.cs">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="LabSharp.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="LabSharp" Source="LabSharp.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="LabSharp" Source="LabSharp.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

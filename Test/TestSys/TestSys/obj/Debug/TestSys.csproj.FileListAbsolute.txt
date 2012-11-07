@@ -1,9 +1,0 @@
-C:\Test\TestSys\TestSys\obj\Debug\ResolveAssemblyReference.cache
-C:\Test\TestSys\TestSys\obj\Debug\Control.baml
-C:\Test\TestSys\TestSys\obj\Debug\Control.g.cs
-C:\Test\TestSys\TestSys\obj\Debug\TestSys_MarkupCompile.cache
-C:\Test\TestSys\TestSys\obj\Debug\TestSys.g.resources
-C:\Test\TestSys\TestSys\bin\Debug\TestSys.exe
-C:\Test\TestSys\TestSys\bin\Debug\TestSys.pdb
-C:\Test\TestSys\TestSys\obj\Debug\TestSys.exe
-C:\Test\TestSys\TestSys\obj\Debug\TestSys.pdb

@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly manifestVersion="1.0" xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1">
+  <asmv1:assemblyIdentity version="1.0.0.3" name="TestRigServer.exe" publicKeyToken="b2d5909b165571aa" language="neutral" processorArchitecture="msil" type="win32" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="TestRigServer" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="TestRigServer.exe" parameters="" />
+    <hostInBrowser xmlns="urn:schemas-microsoft-com:asm.v3" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet version="1" class="System.Security.NamedPermissionSet" Name="Internet" Description="Default rights given to Internet applications" ID="Custom" SameSite="site">
+          <IPermission version="1" class="System.Security.Permissions.FileDialogPermission, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Access="Open" />
+          <IPermission UserQuota="1024000" version="1" class="System.Security.Permissions.IsolatedStorageFilePermission, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Allowed="ApplicationIsolationByUser" />
+          <IPermission version="1" class="System.Security.Permissions.SecurityPermission, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Flags="Execution" />
+          <IPermission version="1" class="System.Security.Permissions.UIPermission, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Clipboard="OwnClipboard" Window="SafeTopLevelWindows" />
+          <IPermission version="1" class="System.Drawing.Printing.PrintingPermission, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" Level="SafePrinting" />
+          <IPermission version="1" class="System.Security.Permissions.MediaPermission, WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Audio="SafeAudio" Image="SafeImage" Video="SafeVideo" />
+          <IPermission version="1" class="System.Security.Permissions.WebBrowserPermission, WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Level="Safe" />
+        </PermissionSet>
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!-- UAC Manifest Options
+            If you want to change the Windows User Account Control level replace the 
+            requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+            If you want to utilize File and Registry Virtualization for backward 
+            compatibility then delete the requestedExecutionLevel node.
+        -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="TestRigServer.exe" size="27136">
+      <assemblyIdentity name="TestRigServer" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>o0wtANtwkjAlgccYDsyvn4ZLnPE=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+<publisherIdentity name="CN=SAMVENTURE01\Nived" issuerKeyHash="3e16ccb478f194a9855ec36b145bc2b83ae5937d" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>PtIR+kMFXtZnjRQjUdhaMtspv0E=</DigestValue></Reference></SignedInfo><SignatureValue>S+8Kx1ta+eP9c0yI2N3lOOnQGTBjL2Ov81rTztrRG1Aee5pAIAl/p2ZDt/pxVifBoLiT7rDUEJ6mw7F2nwMkMjirDfazaLIRAtKvZohRtlrWp9cyAjgLTK/gXGO244OmSgharE3qzcYbPQ0dk0bnEPXA/KruTjkxspn3eEzjXE8=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>rgCzQw16vgd0dznEEPYsK3HxNo/Nt6gpOA5YDOZOOd0v+P6rjEhIwCOUqGADElyk8Guxl9OaGddu+qKKc9x+hR8t8qas9zvSH+bRqV7ZARJ+zRoMcG20rTHA3t8dbeVcwMKJRVvTxZxlYU88U8srptLHjNzJqVhx6SC5gKldJS8=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="41bf29db325ad85123148d67d65e0543fa11d23e" Description="" Url=""><as:assemblyIdentity version="1.0.0.3" name="TestRigServer.exe" publicKeyToken="b2d5909b165571aa" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=SAMVENTURE01\Nived</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>7zG8JS9TBTXOVC/uM0UFRAAUPz4=</DigestValue></Reference></SignedInfo><SignatureValue>LG3fxKDBw2i9AsNgZkzyqBq/uFez2RK04c1gNS2J6rBfZ8oJKmQqMmMsGLtpuWbXBF1/4ngiTxGEbTIfBG4OdzDV1Urbu8UYtiGGH6GKyOxmwpQpqyHGRgRSnfqx/tpSA+RrHqewarvyhy+mTtP0myzbOEuFFAwDiq74HuHUHGk=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>rgCzQw16vgd0dznEEPYsK3HxNo/Nt6gpOA5YDOZOOd0v+P6rjEhIwCOUqGADElyk8Guxl9OaGddu+qKKc9x+hR8t8qas9zvSH+bRqV7ZARJ+zRoMcG20rTHA3t8dbeVcwMKJRVvTxZxlYU88U8srptLHjNzJqVhx6SC5gKldJS8=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB2TCCAUagAwIBAgIQPp6ed9uIw4dEFN/wp44/BTAJBgUrDgMCHQUAMC8xLTArBgNVBAMeJABTAEEATQBWAEUATgBUAFUAUgBFADAAMQBcAE4AaQB2AGUAZDAeFw0xMjA0MjAxNDI2NDRaFw0xMzA0MjAyMDI2NDRaMC8xLTArBgNVBAMeJABTAEEATQBWAEUATgBUAFUAUgBFADAAMQBcAE4AaQB2AGUAZDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEArgCzQw16vgd0dznEEPYsK3HxNo/Nt6gpOA5YDOZOOd0v+P6rjEhIwCOUqGADElyk8Guxl9OaGddu+qKKc9x+hR8t8qas9zvSH+bRqV7ZARJ+zRoMcG20rTHA3t8dbeVcwMKJRVvTxZxlYU88U8srptLHjNzJqVhx6SC5gKldJS8CAwEAATAJBgUrDgMCHQUAA4GBAC5hr61PreAjrneMNBKieCgoAnhuRBUg6JrJJJoKio4+HIeb9uQfD9PhirbBtz8zjsRXn7YKgQZSlUOADI3rwIux98Rnw+POpU5HwcN8I5/7zGmbbeGLiHO+yrCEVDBMxGxH33UjegQvCJVbNMiqbYkX/Kj9uzIjINgfwLKkw/Kw</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
