@@ -70,7 +70,7 @@
                     <GroupBox Header="Test Tool Paths" Height="107" HorizontalAlignment="Left" Margin="6,277,0,0" Name="groupBox3" VerticalAlignment="Top" Width="653">
                         <Grid>
                             <Label Content="Test Tool Path" Height="Auto" HorizontalAlignment="Left" Margin="15,15,0,0" Name="label4" VerticalAlignment="Top" Width="Auto" />
-                            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,17,0,0" Name="tbTestToolPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" />
+                            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,17,0,0" Name="tbTestToolPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbTestToolPath_TextChanged" />
                             <Label Content="Test Source Path" HorizontalAlignment="Left" Margin="15,45,0,0" Name="label5" VerticalAlignment="Top" Width="Auto" />
                             <TextBox Height="23" HorizontalAlignment="Left" Margin="135,47,0,0" Name="tbTestSourcePath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbTestSourcePath_TextChanged" />
                         </Grid>
@@ -93,13 +93,7 @@
                             <TextBox Height="23" Margin="75,77,6,0" Name="tbOCDExe" Text="" VerticalAlignment="Top" TextChanged="tbOCDExe_TextChanged" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="GitHub" Height="85" HorizontalAlignment="Left" Margin="6,384,0,0" Name="groupBox4" VerticalAlignment="Top" Width="653">
-                        <Grid Height="61">
-                            <Label Content="GitHub Path" Height="Auto" HorizontalAlignment="Left" Margin="15,15,0,0" Name="label1" VerticalAlignment="Top" Width="Auto" />
-                            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,17,0,0" Name="tbGitHubPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbGitHubPath_TextChanged" />
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox Header="Test Receipt" Height="85" HorizontalAlignment="Left" Margin="6,470,0,0" Name="groupBox5" VerticalAlignment="Top" Width="653">
+                    <GroupBox Header="Test Receipt" Height="85" HorizontalAlignment="Left" Margin="6,387,0,0" Name="groupBox5" VerticalAlignment="Top" Width="653">
                         <Grid Height="61">
                             <Label Content="Test Receipt Path" Height="Auto" HorizontalAlignment="Left" Margin="15,15,0,0" Name="label2" VerticalAlignment="Top" Width="Auto" />
                             <TextBox Height="23" HorizontalAlignment="Left" Margin="135,17,0,0" Name="tbTestReceiptPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbTestReceiptPath_TextChanged" />

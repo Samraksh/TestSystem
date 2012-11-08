@@ -106,8 +106,7 @@ namespace TestRig
 
                         // The test is over so we will pull it from the "Test Status" tab display
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.removeDelegate);
-                    }
-                
+                    }                
                 }
                 catch (Exception ex)
                 {
@@ -277,7 +276,7 @@ namespace TestRig
 
                 // delete raw data file
                 Thread.Sleep(50);
-//                Directory.Delete(workingDirectory + "\\" + "testTemp", true);                                    
+                Directory.Delete(workingDirectory + "\\" + "testTemp", true);                                    
                 
                 currentTest.testState = "Test Complete";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);

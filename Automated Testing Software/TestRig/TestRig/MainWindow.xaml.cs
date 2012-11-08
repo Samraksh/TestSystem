@@ -54,6 +54,7 @@ namespace TestRig
         public string textOCDInterface;
         public string textOCDTarget;
         public string textOCDExe;
+        public string textTestToolPath;
 
         public MainWindow()
         {
@@ -342,11 +343,6 @@ namespace TestRig
             textMFPath = tbMFPath.Text;
         }
 
-        private void tbGitHubPath_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            textGitHubPath = tbGitHubPath.Text;
-        }
-
         private void tbTestReceiptPath_TextChanged(object sender, TextChangedEventArgs e)
         {
             textTestReceiptPath = tbTestReceiptPath.Text;
@@ -366,6 +362,11 @@ namespace TestRig
         {
             textOCDExe = tbOCDExe.Text;
         }
+
+        private void tbTestToolPath_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            textTestToolPath = tbTestToolPath.Text;
+        } 
 
         public static void showMessageBox(string message)
         {
@@ -427,10 +428,9 @@ namespace TestRig
                     MessageBox.Show("Test source path: " + tbTestSourcePath.Text + " does not exist.");
                 }
 
-                tbGitHubPath.Text = Properties.Settings.Default.GHPath.ToString();
-                if (Directory.Exists(tbGitHubPath.Text) == false)
+                if (Directory.Exists(tbTestToolPath.Text + @"\Automated Testing Software\GitBin") == false)
                 {
-                    MessageBox.Show("Git Hub path: " + tbGitHubPath.Text + " does not exist.");
+                    MessageBox.Show("Git Hub path: " + tbTestToolPath.Text + @"\Automated Testing Software\GitBin" + " does not exist.");
                 }
 
                 tbTestReceiptPath.Text = Properties.Settings.Default.TRPath.ToString();
@@ -457,7 +457,6 @@ namespace TestRig
                 Properties.Settings.Default["MFPath"] = tbMFPath.Text;
                 Properties.Settings.Default["TTPath"] = tbTestToolPath.Text;
                 Properties.Settings.Default["TSPath"] = tbTestSourcePath.Text;
-                Properties.Settings.Default["GHPath"] = tbGitHubPath.Text;
                 Properties.Settings.Default["TRPath"] = tbTestReceiptPath.Text;
             }
             catch (Exception ex)
@@ -494,6 +493,6 @@ namespace TestRig
                 lblBranch.Visibility = Visibility.Visible;
                 tbCodeBranch.Visibility = Visibility.Visible;
             }             
-        }        
+        }       
     }
 }

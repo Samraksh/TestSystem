@@ -22,8 +22,8 @@ namespace TestRig
         public StreamWriter input = null;
 
         public bool running;
-        private string archive = "Firstb";
-        //private string archive = "TestSys";
+        private string archive;
+        private string matchedResponse;
 
         private StringWriter stdOutput = new StringWriter();
         public StringWriter Output { get { return stdOutput; } }
@@ -37,7 +37,10 @@ namespace TestRig
 
         public Git(MainWindow passedHandle)
         {
-            mainHandle = passedHandle;            
+            mainHandle = passedHandle;  
+            archive  = mainHandle.textTestSourcePath;            
+            //archive = "d:\\Work\\TestSys\\Firstb";
+
             ProcessStartInfo openGitInfo = new ProcessStartInfo();
             GitProcess = new Process();
 
@@ -63,11 +66,11 @@ namespace TestRig
 
         public bool CloneCode()
         {            
-            RunCommand(@"setlocal");
-            RunCommand(@"set git_install_root=" + mainHandle.textGitHubPath);            
+            RunCommand(@"setlocal");                    
+            RunCommand(@"set git_install_root=" + mainHandle.textTestToolPath + @"\Automated Testing Software\GitBin");            
             RunCommand(@"set PATH=%git_install_root%\bin;%git_install_root%\mingw\bin;%git_install_root%\cmd;%PATH%");
             RunCommand(@"set PLINK_PROTOCOL=ssh");
-            RunCommand(@"set HOME=%USERPROFILE%");
+            RunCommand(@"set HOME=%USERPROFILE%");            
 
             if (RunCommand(@"dir " + archive.ToString(), "File Not Found", "", 500) != CommandStatus.Done)
             {
@@ -83,23 +86,25 @@ namespace TestRig
             }
             else
             {
+                string userName = GetGitUserName();                
+                int index = archive.LastIndexOf('\\') + 1;
+                string archiveRoot = archive.Substring(index, archive.Length - index);
                 // test repository does NOT exist so we clone it here                
                 //if (RunCommand("git clone git@github.com:ChrisAtSamraksh/" + archive.ToString(), "Resolving deltas", "", 30000) != CommandStatus.Done)
                 // For some reason the git responses are not redirected to our process so we have to use something else
-                if (RunCommand("git clone git@github.com:ChrisAtSamraksh/" + archive.ToString(), "Cloning into", "", 30000) != CommandStatus.Done)
+                if (RunCommand("git clone git@github.com:" + userName + "/" + archiveRoot.ToString(), "Cloning into", "", 30000) != CommandStatus.Done)
                 {
                     System.Diagnostics.Debug.WriteLine("Git failed to clone.");
                     return false;
                 }
             }                                  
-
             return true;
         }
 
         public bool CloneCodeBranch(string textCodeBranch)
         {
             RunCommand(@"setlocal");
-            RunCommand(@"set git_install_root=" + mainHandle.textGitHubPath);
+            RunCommand(@"set git_install_root=" + mainHandle.textTestToolPath + @"\Automated Testing Software\GitBin");
             RunCommand(@"set PATH=%git_install_root%\bin;%git_install_root%\mingw\bin;%git_install_root%\cmd;%PATH%");
             RunCommand(@"set PLINK_PROTOCOL=ssh");
             RunCommand(@"set HOME=%USERPROFILE%");
@@ -118,10 +123,13 @@ namespace TestRig
             }
             else
             {
+                string userName = GetGitUserName();
+                int index = archive.LastIndexOf('\\') + 1;
+                string archiveRoot = archive.Substring(index, archive.Length - index);
                 // test repository does NOT exist so we clone it here                
                 //if (RunCommand("git clone git@github.com:ChrisAtSamraksh/" + archive.ToString() + " -b " + textCodeBranch, "Resolving deltas", "", 30000) != CommandStatus.Done)
                 // For some reason the git responses are not redirected to our process so we have to use something else
-                if (RunCommand("git clone git@github.com:ChrisAtSamraksh/" + archive.ToString() + " -b " + textCodeBranch, "Cloning into", "", 30000) != CommandStatus.Done)
+                if (RunCommand("git clone git@github.com:" + userName + "/" + archiveRoot.ToString() + " -b " + textCodeBranch, "Cloning into", "", 30000) != CommandStatus.Done)
                 {
                     System.Diagnostics.Debug.WriteLine("Git failed to clone.");
                     return false;
@@ -152,6 +160,7 @@ namespace TestRig
                 if (response.Contains(expectedResponse1))
                 {
                     commandResult = CommandStatus.Done;
+                    matchedResponse = response;
                     ARE_result.Set();                    
                 }
             }
@@ -159,7 +168,8 @@ namespace TestRig
             {
                  if (response.Contains(expectedResponse2))
                  {
-                     commandResult = CommandStatus.Done; 
+                     commandResult = CommandStatus.Done;
+                     matchedResponse = response;
                      ARE_result.Set();                    
                  }
             }
@@ -207,6 +217,17 @@ namespace TestRig
                     return commandResult;
             }
             return commandResult;
+        }
+
+        private string GetGitUserName()
+        {
+            string userName;
+
+            matchedResponse = "";
+            RunCommand("git config --list", "user.name","NULL",5000);
+
+            userName = matchedResponse.Split('=')[1];
+            return userName;
         }
     }
 }
