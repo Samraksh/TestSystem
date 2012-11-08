@@ -7,4 +7,5 @@ parser/__pycache__/*
 git/*
 SamTest.dll
 server/SamServer.dll
+Automated Testing Software/TestRig/TestRig/bin/*
 !*.gitkeep
