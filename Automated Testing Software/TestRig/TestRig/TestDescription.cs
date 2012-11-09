@@ -7,7 +7,7 @@ namespace TestRig
 {
     public class TestDescription
     {
-        static public int testId = 0;
+        public bool testReadComplete;
         public string testName { get; set; }
         public string testType { get; set; }
         public string testDescription { get; set; }
@@ -23,6 +23,7 @@ namespace TestRig
         public string testMFVersionNum { get; set; }
         public string testGitOption { get; set; }
         public string testGitBranch { get; set; }
+        public string testUsePrecompiledBinary { get; set; }
 
         // the following are set by the test parameter file
         public bool testUseLogic { get; set; }
@@ -38,17 +39,18 @@ namespace TestRig
 
         public TestDescription()
         {
-            testId++;
+            testReadComplete = false;
             testUseLogic = false;
             testSampleTimeMs = 500;
             testSampleFrequency = 4000000;
             testUseExecutable = false;
-            testExecutableName = "";
+            testExecutableName = String.Empty;
             testExecutableTimeoutMs = 1000;
             testMatlabAnalysis = false;
             testMatlabScriptName = "analysis.m";
             testPowershellAnalysis = false;
             testPowershellName = "analysis.ps1";
+            testUsePrecompiledBinary = String.Empty;
         }
 
         public TestDescription(TestDescription copy)
@@ -78,11 +80,12 @@ namespace TestRig
             this.testMatlabScriptName = copy.testMatlabScriptName;
             this.testPowershellAnalysis = copy.testPowershellAnalysis;
             this.testPowershellName = copy.testPowershellName;
+            this.testUsePrecompiledBinary = copy.testUsePrecompiledBinary;
         }
 
         public override string ToString()
         {
-            string returnString = "";
+            string returnString = String.Empty;
 
             returnString += "<Test Name='" + testName + "' Type = '" + testType + "'>\r\n";
             returnString += "\t<Description>\r\n\t" + testDescription + "\r\n\t</Description>\r\n";
@@ -93,6 +96,7 @@ namespace TestRig
             returnString += "\t<TestMFVersionNum>\r\n\t" + testMFVersionNum + "\r\n\t</TestMFVersionNum>\r\n";
             returnString += "\t<TestGitOption>\r\n\t" + testGitOption + "\r\n\t</TestGitOption>\r\n";
             returnString += "\t<TestGitBranch>\r\n\t" + testGitBranch + "\r\n\t</TestGitBranch>\r\n";
+            returnString += "\t<TestUsePrecompiledBinary>\r\n\t" + testUsePrecompiledBinary + "\r\n\t</TestUsePrecompiledBinary>\r\n";            
             returnString += "\t<TestUseLogic>\r\n\t" + testUseLogic.ToString() + "\r\n\t</TestUseLogic>\r\n";
             returnString += "\t<TestSampleTimeMs>\r\n\t" + testSampleTimeMs.ToString() + "\r\n\t</TestSampleTimeMs>\r\n";
             returnString += "\t<TestSampleFrequency>\r\n\t" + testSampleFrequency.ToString() + "\r\n\t</TestSampleFrequency>\r\n";

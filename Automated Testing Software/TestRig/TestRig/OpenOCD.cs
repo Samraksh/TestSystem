@@ -18,7 +18,7 @@ namespace TestRig
         }
 
         private CommandStatus commandResult;
-        private string expectedResponse = "";
+        private string expectedResponse = String.Empty;
         public StreamWriter input = null;
 
         private StringWriter stdOutput = new StringWriter();

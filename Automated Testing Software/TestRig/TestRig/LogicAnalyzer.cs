@@ -38,8 +38,7 @@ namespace TestRig
 
             setBitMask(projectName);
 
-            // wait for device to be found; sleep for 1 second
-            // TODO: figure out a way to detect that we can use logic instead of just waiting
+            // wait for device to be found; sleep for 2 second
             Thread.Sleep(2000);
         }
 
@@ -120,13 +119,13 @@ namespace TestRig
 
         public bool startMeasure(string filename, int sampleMs)
         {
-            if (filename == "")
+            if (filename == String.Empty)
                 return false;
 
             //if (mLogic != null) accessorLength = (int)((sampleMs / 1000F) * (float)mSampleRateHz * 16F);  // 8 bytes + 8 chars of ',' or '\0'
             //else accessorLength = (int)((sampleMs / 1000F) * (float)mSampleRateHz * 32F);
 
-            if (filename == "") return false;
+            if (filename == String.Empty) return false;
             file = new System.IO.StreamWriter(filename, false);
             System.Diagnostics.Debug.WriteLine("Logic: opened file " + filename);
             //mmf = System.IO.MemoryMappedFiles.MemoryMappedFile.CreateFromFile(filename, FileMode.OpenOrCreate, "csv", accessorLength);
@@ -213,7 +212,7 @@ namespace TestRig
                         if ((bitMask & 0x04) != 0) file.Write("," + ((char)(((data[i] & 0x04) >> 2) + '0')).ToString());
                         if ((bitMask & 0x02) != 0) file.Write("," + ((char)(((data[i] & 0x02) >> 1) + '0')).ToString());
                         if ((bitMask & 0x01) != 0) file.Write("," + ((char)(((data[i] & 0x01)) + '0')).ToString());
-                        file.WriteLine("");
+                        file.WriteLine(String.Empty);
                         //writeStr = sampleNumber.ToString() + "," + ((char)((data[i] & 0x01) + '0')).ToString();
                         //asciiBytes = Encoding.ASCII.GetBytes(writeStr);
                         //accessor.WriteArray(accessorOffset, asciiBytes, 0, asciiBytes.Length);

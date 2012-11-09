@@ -17,7 +17,7 @@ namespace TestRig
         }
 
         private CommandStatus commandResult;
-        private string expectedPassResponse = "", expectedFailResponse = "";
+        private string expectedPassResponse = String.Empty, expectedFailResponse = String.Empty;
         public StreamWriter input = null;
 
         private StringWriter stdOutput = new StringWriter();
@@ -74,7 +74,7 @@ namespace TestRig
         public bool BuildTinyCLR()
         {                      
             RunCommand(@"cd " + MFPath);
-            /*if (RunCommand(@"setenv_gcc.cmd " + mainHandle.textBuildSourceryPath, "setting vars", "", 1000) != CommandStatus.Done)
+            /*if (RunCommand(@"setenv_gcc.cmd " + mainHandle.textBuildSourceryPath, "setting vars", String.Empty, 1000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to setenv.");
                 return false;
@@ -189,7 +189,7 @@ namespace TestRig
 
         private void ProcessResponse(string response)
         {
-            if ((expectedPassResponse != "") && (expectedPassResponse != null))
+            if ((expectedPassResponse != String.Empty) && (expectedPassResponse != null))
             {
                 if (response.Contains(expectedPassResponse))
                 {
@@ -197,7 +197,7 @@ namespace TestRig
                     ARE_result.Set();                    
                 }
             }
-            if ((expectedFailResponse != "") && (expectedFailResponse != null))
+            if ((expectedFailResponse != String.Empty) && (expectedFailResponse != null))
             {
                 if (response.Contains(expectedFailResponse))
                 {

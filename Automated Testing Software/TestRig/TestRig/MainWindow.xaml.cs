@@ -35,7 +35,7 @@ namespace TestRig
 
     public partial class MainWindow : Window
     {
-        private ReceiveSocket rxSocket;
+        private static ReceiveSocket rxSocket;
         private TestLaunch testLaunch;
         public static Queue<TestDescription> testCollection;
         public static ObservableCollection<TestDescription> _displayTestCollection;
@@ -54,7 +54,12 @@ namespace TestRig
         public string textOCDInterface;
         public string textOCDTarget;
         public string textOCDExe;
-        public string textTestToolPath;
+        public string textGitPath;
+        public static string textGitCodeLocation;
+        public static string textGitCodeBranch;
+        public static TestDescription[] availableTests;
+        private static Tasks _tasks;
+        private static int testNum;
 
         public MainWindow()
         {
@@ -63,7 +68,7 @@ namespace TestRig
             checkSettings();
 
             // to be used to protect testCollection from read/writes in various threads
-            testCollectionMutex = new Mutex(false,"TestCollectionMutex");
+            testCollectionMutex = new Mutex(false, "TestCollectionMutex");
 
             // the local machine test queue to be run (if this is the test machine)
             testCollection = new Queue<TestDescription>();
@@ -76,7 +81,7 @@ namespace TestRig
             addDelegate = new AddTestItem(AddTestItemMethod);
             removeDelegate = new RemoveTestItem(RemoveTestItemMethod);
             updateDelegate = new DisplayUpdate(DisplayUpdateMethod);
-            
+
             // sometimes openOCD is running so we will check and warn here.
             bool openOCDRunning = false;
             foreach (Process clsProcess in Process.GetProcesses())
@@ -92,21 +97,23 @@ namespace TestRig
                 MessageBox.Show("OpenOCD is already running.\r\nStop the OpenOCD process and try again.");
                 Environment.Exit(0);
             }
-
         }
 
         public void Initialize()
         {
             try
-            {                                
+            {
                 // RxSocket is used to send selected test queue to the tester and to listen for incoming test queues if this machine is the tester
                 rxSocket = new ReceiveSocket(testCollection, testCollectionMutex, this);
 
                 // testLaunch is used to execute any tests in the local test queue if this machine is the tester
                 testLaunch = new TestLaunch(testCollection, testCollectionMutex, this);
 
+                // Get a reference to the tasks collection.
+                _tasks = (Tasks)this.Resources["tasks"];
+
                 // read Test XML file to discover which tests are available to test
-                activateTests(activateTestsOptions.parseTestFile);                
+                activateTests(activateTestsOptions.parseTestFile);
             }
             catch (Exception ex)
             {
@@ -120,7 +127,7 @@ namespace TestRig
             {
                 // killing any active threads before program quits
                 System.Diagnostics.Debug.WriteLine("Killing active threads...");
-                
+
                 if (rxSocket != null)
                 {
                     rxSocket.KillListenThread();
@@ -144,7 +151,7 @@ namespace TestRig
 
             // killing all running threads
             Kill();
-            
+
             e.Cancel = false;
         }
 
@@ -157,7 +164,7 @@ namespace TestRig
         public void RemoveTestItemMethod()
         {
             // the method used by other threads to remove items from  _displayTestCollection
-            _displayTestCollection.RemoveAt(0);                    
+            _displayTestCollection.RemoveAt(0);
         }
 
         public void DisplayUpdateMethod()
@@ -176,156 +183,131 @@ namespace TestRig
 
         private void activateTests(activateTestsOptions option)
         {
-            bool initValue;
-            if (option == activateTestsOptions.parseTestFile)
-                initValue = false;
-            else
-                initValue = true;
+            try
+            {
+                if (_tasks == null)
+                    return;
+                _tasks.Clear();
+                testNum = 1;
+                availableTests = new TestDescription[1000];
+                System.IO.DirectoryInfo xmlPath = new System.IO.DirectoryInfo(tbTestSourcePath.Text);
+                WalkDirectoryTree(xmlPath);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Activate XML reading ended with exception: " + ex.Message);
+            }
+        }
 
-            // TODO: make checkbox initialization into cleaner loop
-            timerCSharpcheckBox.IsEnabled = initValue;
-            timerCSharpcheckBox.IsChecked = false;
+        private static void WalkDirectoryTree(System.IO.DirectoryInfo root)
+        {
+            System.IO.FileInfo[] files = null;
+            System.IO.DirectoryInfo[] subDirs = null;
 
-            timerNativecheckBox.IsEnabled = initValue;
-            timerNativecheckBox.IsChecked = false;
+            // First, process all the files directly under this folder 
+            try
+            {
+                files = root.GetFiles("*.*");
+            }
+            // This is thrown if even one of the files requires permissions greater 
+            // than the application provides. 
+            catch (UnauthorizedAccessException e)
+            {
+                // This code just writes out the message and continues to recurse. 
+                // You may decide to do something different here. For example, you 
+                // can try to elevate your privileges and access the file again.
+                //log.Add(e.Message);
+            }
 
-            gpioCSharpCheckBox.IsEnabled = initValue;
-            gpioCSharpCheckBox.IsChecked = false;
+            catch (System.IO.DirectoryNotFoundException e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
 
-            gpioNativeCheckBox.IsEnabled = initValue;
-            gpioNativeCheckBox.IsChecked = false;
-
-            if (option == activateTestsOptions.parseTestFile)
-            {                
-                try
+            if (files != null)
+            {
+                foreach (System.IO.FileInfo fi in files)
                 {
-                    string xmlFileName = tbTestSourcePath.Text + "\\tests.xml";
-                    StreamReader testReader = new StreamReader(xmlFileName);
-                    // Create an XmlReader
-                    using (XmlReader reader = XmlReader.Create(testReader))
+                    // In this example, we only access the existing FileInfo object. If we 
+                    // want to open, delete or modify the file, then 
+                    // a try-catch block is required here to handle the case 
+                    // where the file has been deleted since the call to TraverseTree().                   
+                    if (fi.Name.Equals("tests.xml"))
                     {
-
-                        System.Diagnostics.Debug.WriteLine("Starting to available test XML test file.");
-                        while (reader != null)
-                        {
-                            // read in each defined test within the configuration file and activate the appropriate checkbox
-                            TestDescription readTest = rxSocket.readXMLTest(reader);
-
-                            if (readTest.testName == "Timer" && readTest.testType == "C#")
-                            {
-                                timerCSharpcheckBox.IsEnabled = true;
-                            }
-                            else if (readTest.testName == "Timer" && readTest.testType == "Native")
-                            {
-                                timerNativecheckBox.IsEnabled = true;
-                            }
-                            else if (readTest.testName == "GPIO" && readTest.testType == "C#")
-                            {
-                                gpioCSharpCheckBox.IsEnabled = true;
-                            }
-                            else if (readTest.testName == "GPIO" && readTest.testType == "Native")
-                            {
-                                gpioNativeCheckBox.IsEnabled = true;
-                            }
-                        }
-
+                        System.Diagnostics.Debug.WriteLine(fi.FullName);
+                        AddTests(fi);
                     }
                 }
-                catch (Exception ex)
+
+                // Now find all the subdirectories under this directory.
+                subDirs = root.GetDirectories();
+
+                foreach (System.IO.DirectoryInfo dirInfo in subDirs)
                 {
-                    System.Diagnostics.Debug.WriteLine("Activate XML reading ended with exception: " + ex.Message);
+                    // Resursive call for each subdirectory.
+                    WalkDirectoryTree(dirInfo);
                 }
+            }
+        }
+        
+        private static void AddTests(System.IO.FileInfo fi){
+            StreamReader testReader = new StreamReader(fi.FullName);
+            try
+            {
+                // Create an XmlReader
+                using (XmlReader reader = XmlReader.Create(testReader))
+                {
+                    System.Diagnostics.Debug.WriteLine("Starting to read available test XML test file.");
+                    while (reader != null)
+                    {
+                        // read in each defined test within the configuration file and activate the appropriate checkbox
+                        TestDescription readTest = rxSocket.readXMLTest(reader);
+                        if (readTest.testReadComplete == false)
+                            return;
+                        // if the follow items are specified already we keep those parameters, otherwise those test parameters are populated here
+                        if (readTest.testerName == String.Empty)
+                            readTest.testerName = System.Environment.UserName.ToString();
+                        if (readTest.testLocation == String.Empty)
+                            readTest.testLocation = System.Environment.MachineName.ToString();
+                        if (readTest.testMFVersionNum == String.Empty)
+                            readTest.testMFVersionNum = "4.0";
+                        if (readTest.testGitOption == String.Empty)
+                            readTest.testGitOption = textGitCodeLocation;
+                        if (readTest.testGitBranch == String.Empty)
+                            readTest.testGitBranch = textGitCodeBranch;
+                        availableTests[testNum - 1] = readTest;
+                        _tasks.Add(new Task()
+                        {
+                            TestNum = testNum,
+                            Name = readTest.testName,
+                            Type = readTest.testType,
+                            Path = readTest.testPath,
+                            Description = readTest.testDescription,
+                            Selected = false
+                        });
+                        testNum++;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("AddTests: " + ex.ToString());
             }
         }
 
         private void Upload_Click(object sender, RoutedEventArgs e)
         {
-            // once upload button is clicked then we will write all desired tests to a XML file and send to the test machine (sent to localhost if this machine is the test machine)
-            TestDescription testTimerCS = null;
-            TestDescription testTimerNative = null;
-            TestDescription testGPIOCS = null;
-            TestDescription testGPIONative = null;
-
-            string xmlFileName = tbTestSourcePath.Text + "\\tests.xml";
-            StreamReader testReader = new StreamReader(xmlFileName);
-            // Create an XmlReader
-            using (XmlReader reader = XmlReader.Create(testReader))
-            {
-                try
-                {
-                    System.Diagnostics.Debug.WriteLine("Reading in all available tests.");
-                    while (reader != null)
-                    {
-                        TestDescription readTest = rxSocket.readXMLTest(reader);
-
-                        // if the follow items are specified already we keep those parameters, otherwise those test parameters are populated here
-                        if (readTest.testerName == "")
-                            readTest.testerName = System.Environment.UserName.ToString();
-                        if (readTest.testLocation == "")
-                            readTest.testLocation = System.Environment.MachineName.ToString();
-                        if (readTest.testMFVersionNum == "")
-                            readTest.testMFVersionNum = "4.0";
-                        if (readTest.testGitOption == "")
-                            readTest.testGitOption = cbCodeLocation.Text;
-                        if (readTest.testGitBranch == "")
-                            readTest.testGitBranch = tbCodeBranch.Text;
-
-                        if (readTest.testName == "Timer" && readTest.testType == "C#")
-                        {
-                            testTimerCS = new TestDescription(readTest);
-                        }
-                        else if (readTest.testName == "Timer" && readTest.testType == "Native")
-                        {
-                            testTimerNative = new TestDescription(readTest);
-                        }
-                        else if (readTest.testName == "GPIO" && readTest.testType == "C#")
-                        {
-                            testGPIOCS = new TestDescription(readTest);
-                        }
-                        else if (readTest.testName == "GPIO" && readTest.testType == "Native")
-                        {
-                            testGPIONative = new TestDescription(readTest);
-                        }                        
-                    }
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine("Upload XML reading ended with exception: " + ex.Message);
-                }
-            }           
-
-            // upon click any tests selected will generate a test description  in a file which will then be sent to the test machine (to localhost if this machine is the tester)
-            string fileName = "test.config";            
+            // upon click any tests selected will generate a test description in a file which will then be sent to the test machine (to localhost if this machine is the tester)
+            string fileName = "test.config";
             using (StreamWriter writer = new StreamWriter(fileName))
             {
                 writer.WriteLine("<TestSuite>");
-                if (timerNativecheckBox.IsChecked == true)
+                foreach (Task queueTask in _tasks)
                 {
-                    if (testTimerNative == null)
-                        MessageBox.Show("Test Timer Native test not defined.");
-                    else
-                        writer.Write(testTimerNative.ToString());
-                }
-                if (timerCSharpcheckBox.IsChecked == true)
-                {
-                    if (testTimerCS == null)
-                        MessageBox.Show("Test Timer C# test not defined.");
-                    else
-                        writer.Write(testTimerCS.ToString());
-                }
-                if (gpioNativeCheckBox.IsChecked == true)
-                {
-                    if (testGPIONative == null)
-                        MessageBox.Show("Test GPIO Native test not defined.");
-                    else
-                        writer.Write(testGPIONative.ToString());
-                }
-                if (gpioCSharpCheckBox.IsChecked == true)
-                {
-                    if (testGPIOCS == null)
-                        MessageBox.Show("Test GPIO C# test not defined.");
-                    else
-                        writer.Write(testGPIOCS.ToString());
+                    if (queueTask.Selected == true)
+                    {
+                        writer.Write(availableTests[queueTask.TestNum - 1].ToString());
+                    }
                 }
                 writer.WriteLine("</TestSuite>");
             }
@@ -363,10 +345,15 @@ namespace TestRig
             textOCDExe = tbOCDExe.Text;
         }
 
-        private void tbTestToolPath_TextChanged(object sender, TextChangedEventArgs e)
+        private void tbGitPath_TextChanged(object sender, TextChangedEventArgs e)
         {
-            textTestToolPath = tbTestToolPath.Text;
-        } 
+            textGitPath = tbGitPath.Text;
+        }
+
+        private void tbCodeBranch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            textGitCodeBranch = tbCodeBranch.Text;
+        }   
 
         public static void showMessageBox(string message)
         {
@@ -375,68 +362,74 @@ namespace TestRig
 
         private void buttonDebug_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void checkSettings()
         {
             try
             {
-                // checking to make sure paths actually exist
-                string tempPath;
+                // checking to make sure paths actually exist                
                 tbOCDExe.Text = Properties.Settings.Default.OCDExe.ToString();
+                tbOCDInterface.Text = Properties.Settings.Default.OCDInterface.ToString();
+                tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
+                tbBuildSourceryPath.Text = Properties.Settings.Default.CSPath.ToString();
+                tbMFPath.Text = Properties.Settings.Default.MFPath.ToString();
+                tbGitPath.Text = Properties.Settings.Default.TTPath.ToString();
+                tbTestSourcePath.Text = Properties.Settings.Default.TSPath.ToString();
+                tbTestReceiptPath.Text = Properties.Settings.Default.TRPath.ToString();
+
                 if (File.Exists(tbOCDExe.Text) == false)
                 {
                     MessageBox.Show("OpenOCD executable: " + tbOCDExe.Text + " does not exist.");
+                    return;
                 }
-
-                tbOCDInterface.Text = Properties.Settings.Default.OCDInterface.ToString();
-                tempPath = (Directory.GetParent(tbOCDExe.Text) + "\\" + tbOCDInterface.Text).ToString();
-                if (File.Exists(tempPath) == false)
+                
+                if (File.Exists(tbOCDInterface.Text) == false)
                 {
-                    MessageBox.Show("OpenOCD Interface file: " + tempPath + " does not exist.");
+                    MessageBox.Show("OpenOCD Interface file: " + tbOCDInterface.Text + " does not exist.");
+                    return;
                 }
-
-                tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
-                tempPath = (Directory.GetParent(tbOCDExe.Text) + "\\" + tbOCDTarget.Text).ToString();
-                if (File.Exists(tempPath) == false)
+                
+                if (File.Exists(tbOCDTarget.Text) == false)
                 {
-                    MessageBox.Show("OpenOCD Target file: " + tempPath + " does not exist.");
+                    MessageBox.Show("OpenOCD Target file: " + tbOCDTarget.Text + " does not exist.");
+                    return;
                 }
-
-                tbBuildSourceryPath.Text = Properties.Settings.Default.CSPath.ToString();
+                
                 if (Directory.Exists(tbBuildSourceryPath.Text) == false)
                 {
                     MessageBox.Show("Codesourcery path: " + tbBuildSourceryPath.Text + " does not exist.");
+                    return;
                 }
-
-                tbMFPath.Text = Properties.Settings.Default.MFPath.ToString();
+                
                 if (Directory.Exists(tbMFPath.Text) == false)
                 {
                     MessageBox.Show("Microframework path: " + tbMFPath.Text + " does not exist.");
+                    return;
                 }
-
-                tbTestToolPath.Text = Properties.Settings.Default.TTPath.ToString();
-                if (Directory.Exists(tbTestToolPath.Text) == false)
+                
+                if (Directory.Exists(tbGitPath.Text) == false)
                 {
-                    MessageBox.Show("Test tool path: " + tbTestToolPath.Text + " does not exist.");
+                    MessageBox.Show("Test tool path: " + tbGitPath.Text + " does not exist.");
+                    return;
                 }
-
-                tbTestSourcePath.Text = Properties.Settings.Default.TSPath.ToString();
+                
                 if (Directory.Exists(tbTestSourcePath.Text) == false)
                 {
                     MessageBox.Show("Test source path: " + tbTestSourcePath.Text + " does not exist.");
+                    return;
                 }
 
-                if (Directory.Exists(tbTestToolPath.Text + @"\Automated Testing Software\GitBin") == false)
+                if (Directory.Exists(tbGitPath.Text) == false)
                 {
-                    MessageBox.Show("Git Hub path: " + tbTestToolPath.Text + @"\Automated Testing Software\GitBin" + " does not exist.");
+                    MessageBox.Show("Git Hub path: " + tbGitPath.Text + " does not exist.");
+                    return;
                 }
-
-                tbTestReceiptPath.Text = Properties.Settings.Default.TRPath.ToString();
+                
                 if (Directory.Exists(tbTestReceiptPath.Text) == false)
                 {
                     MessageBox.Show("Test Receipt path: " + tbTestReceiptPath.Text + " does not exist.");
+                    return;
                 }
             }
             catch (Exception ex)
@@ -455,7 +448,7 @@ namespace TestRig
                 Properties.Settings.Default["OCDExe"] = tbOCDExe.Text;
                 Properties.Settings.Default["CSPath"] = tbBuildSourceryPath.Text;
                 Properties.Settings.Default["MFPath"] = tbMFPath.Text;
-                Properties.Settings.Default["TTPath"] = tbTestToolPath.Text;
+                Properties.Settings.Default["TTPath"] = tbGitPath.Text;
                 Properties.Settings.Default["TSPath"] = tbTestSourcePath.Text;
                 Properties.Settings.Default["TRPath"] = tbTestReceiptPath.Text;
             }
@@ -466,14 +459,14 @@ namespace TestRig
         }
 
         private void cbCodeLocation_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {            
+        {
             if (tbCodeBranch == null)
             {
                 // buttons have not yet been defined by InitializeComponent
                 return;
             }
-            string textCbCodeLocation = cbCodeLocation.SelectedItem.ToString();
-            if (textCbCodeLocation.Contains("Use local code"))
+            textGitCodeLocation = cbCodeLocation.SelectedItem.ToString();
+            if (textGitCodeLocation.Contains("Use local code"))
             {
                 // read Test XML file to discover which tests are available to test
                 activateTests(activateTestsOptions.parseTestFile);
@@ -481,18 +474,92 @@ namespace TestRig
                 lblBranch.Visibility = Visibility.Hidden;
                 tbCodeBranch.Visibility = Visibility.Hidden;
             }
-            else if (textCbCodeLocation.Contains("Use archive code"))
+            else if (textGitCodeLocation.Contains("Use archive code"))
             {
                 activateTests(activateTestsOptions.allTests);
                 lblBranch.Visibility = Visibility.Hidden;
                 tbCodeBranch.Visibility = Visibility.Hidden;
             }
-            else if (textCbCodeLocation.Contains("Use archive branch code"))
+            else if (textGitCodeLocation.Contains("Use archive branch code"))
             {
                 activateTests(activateTestsOptions.allTests);
                 lblBranch.Visibility = Visibility.Visible;
                 tbCodeBranch.Visibility = Visibility.Visible;
-            }             
-        }       
+            }
+        }
+
+        private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
+        {
+            Task t = e.Item as Task;
+            if (t != null)
+                if ((t.Name.Contains(tbNameFilter.Text) == true) && (t.Path.Contains(tbPathFilter.Text) == true) && (t.Type.Contains(tbTypeFilter.Text) == true) && (t.Description.Contains(tbDescFilter.Text) == true))
+                    e.Accepted = true;
+                else
+                    e.Accepted = false;
+
+        }
+
+        private void DataGridCell_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DataGridCell cell = sender as DataGridCell;
+            if (cell != null && !cell.IsEditing && !cell.IsReadOnly)
+            {
+                if (!cell.IsFocused)
+                {
+                    cell.Focus();
+                }
+                DataGrid dataGrid = FindVisualParent<DataGrid>(cell);
+                if (dataGrid != null)
+                {
+                    if (dataGrid.SelectionUnit != DataGridSelectionUnit.FullRow)
+                    {
+                        if (!cell.IsSelected)
+                            cell.IsSelected = true;
+                    }
+                    else
+                    {
+                        DataGridRow row = FindVisualParent<DataGridRow>(cell);
+                        if (row != null && !row.IsSelected)
+                        {
+                            row.IsSelected = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        static T FindVisualParent<T>(UIElement element) where T : UIElement
+        {
+            UIElement parent = element;
+            while (parent != null)
+            {
+                T correctlyTyped = parent as T;
+                if (correctlyTyped != null)
+                {
+                    return correctlyTyped;
+                }
+
+                parent = VisualTreeHelper.GetParent(parent) as UIElement;
+            }
+            return null;
+        }
+
+        private void testDataGrid_AutoGeneratedColumns(object sender, EventArgs e)
+        {
+            testDataGrid.Columns[0].Visibility = Visibility.Hidden;
+            testDataGrid.Columns[1].Width = 100;
+            testDataGrid.Columns[2].Width = 50;
+            testDataGrid.Columns[3].Width = 200;
+            testDataGrid.Columns[4].Width = 200;
+            testDataGrid.Columns[1].IsReadOnly = true;
+            testDataGrid.Columns[2].IsReadOnly = true;
+            testDataGrid.Columns[3].IsReadOnly = true;
+            testDataGrid.Columns[4].IsReadOnly = true;
+        }
+
+        private void tbFilter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CollectionViewSource.GetDefaultView(testDataGrid.ItemsSource).Refresh();
+        }     
     }
 }

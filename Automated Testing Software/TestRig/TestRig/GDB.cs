@@ -17,7 +17,7 @@ namespace TestRig
         }
 
         private CommandStatus commandResult;
-        private string expectedResponse = "";
+        private string expectedResponse = String.Empty;
         public StreamWriter input = null;
 
         private StringWriter stdOutput = new StringWriter();
@@ -123,7 +123,7 @@ namespace TestRig
 
         private void ProcessResponse(string response)
         {
-            if ((response != "") && (response != null))
+            if ((response != String.Empty) && (response != null))
             {
                 if (response.Contains(expectedResponse))
                 {

@@ -158,7 +158,10 @@ namespace TestRig
 
                 if (currentTest.testType == "C#")
                 {
-                    if (msbuild.BuildTinyCLR() == false) return "MSBuild failed to build TinyCLR";
+                    if (currentTest.testUsePrecompiledBinary == String.Empty)
+                    {
+                        if (msbuild.BuildTinyCLR() == false) return "MSBuild failed to build TinyCLR";
+                    }
                     if (msbuild.BuildManagedProject(workingDirectory, currentTest.buildProj) == false) return "MSBuild failed to build managed project";
                 }
                 else
@@ -185,8 +188,14 @@ namespace TestRig
                 {
                     currentTest.testState = "Loading MF AXF";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                    //if (gdb.Load(mainHandle.textMFPath + @"\" + @"BuildOutput\THUMB2\GCC4.2\le\FLASH\debug\STM32F10x\bin\tinyclr.axf") == false) return "GDB failed to load MF AXF file";                    
-                    if (gdb.Load(@"D:\\Work\\images\\emote\\tinyclr.axf") == false) return "GDB failed to load MF AXF file";
+                    if (currentTest.testUsePrecompiledBinary != String.Empty)
+                    {
+                        if (gdb.Load(workingDirectory + "\\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled MF AXF file: " + currentTest.testUsePrecompiledBinary;
+                    }
+                    else
+                    {
+                        if (gdb.Load(mainHandle.textMFPath + @"\" + @"BuildOutput\THUMB2\GCC4.2\le\FLASH\debug\STM32F10x\bin\tinyclr.axf") == false) return "GDB failed to load MF AXF file";                    
+                    }                                        
 
                     currentTest.testState = "Loading managed code";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
@@ -205,6 +214,7 @@ namespace TestRig
                 // waiting for processor code to start executing (this can take up to two seconds)
                 Thread.Sleep(1000);
                 
+                //Thread.Sleep(5000);
                 currentTest.testState = "Running test";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                 
@@ -230,7 +240,7 @@ namespace TestRig
                     if (logicTest == null)
                         logicTest = new LogicAnalyzer(currentTest.testSampleFrequency, workingDirectory + "\\" + strippedName + ".hkp");
                     else
-                        logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + "\\" + strippedName + ".hkp");
+                        logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + "\\" + strippedName + ".hkp");                    
                     if (logicTest == null) return "Logic Analyzer failed to load";
                     if (logicTest.startMeasure(workingDirectory + "\\testTemp\\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
                     Thread.Sleep(currentTest.testSampleTimeMs);

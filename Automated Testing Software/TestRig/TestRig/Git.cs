@@ -67,7 +67,7 @@ namespace TestRig
         public bool CloneCode()
         {            
             RunCommand(@"setlocal");                    
-            RunCommand(@"set git_install_root=" + mainHandle.textTestToolPath + @"\Automated Testing Software\GitBin");            
+            RunCommand(@"set git_install_root=" + mainHandle.textGitPath + @"\Automated Testing Software\GitBin");            
             RunCommand(@"set PATH=%git_install_root%\bin;%git_install_root%\mingw\bin;%git_install_root%\cmd;%PATH%");
             RunCommand(@"set PLINK_PROTOCOL=ssh");
             RunCommand(@"set HOME=%USERPROFILE%");            
@@ -90,9 +90,9 @@ namespace TestRig
                 int index = archive.LastIndexOf('\\') + 1;
                 string archiveRoot = archive.Substring(index, archive.Length - index);
                 // test repository does NOT exist so we clone it here                
-                //if (RunCommand("git clone git@github.com:ChrisAtSamraksh/" + archive.ToString(), "Resolving deltas", "", 30000) != CommandStatus.Done)
+                //if (RunCommand("git clone git@github.com:ChrisAtSamraksh/" + archive.ToString(), "Resolving deltas", String.Empty, 30000) != CommandStatus.Done)
                 // For some reason the git responses are not redirected to our process so we have to use something else
-                if (RunCommand("git clone git@github.com:" + userName + "/" + archiveRoot.ToString(), "Cloning into", "", 30000) != CommandStatus.Done)
+                if (RunCommand("git clone git@github.com:" + userName + "/" + archiveRoot.ToString(), "Cloning into", String.Empty, 30000) != CommandStatus.Done)
                 {
                     System.Diagnostics.Debug.WriteLine("Git failed to clone.");
                     return false;
@@ -104,12 +104,12 @@ namespace TestRig
         public bool CloneCodeBranch(string textCodeBranch)
         {
             RunCommand(@"setlocal");
-            RunCommand(@"set git_install_root=" + mainHandle.textTestToolPath + @"\Automated Testing Software\GitBin");
+            RunCommand(@"set git_install_root=" + mainHandle.textGitPath + @"\Automated Testing Software\GitBin");
             RunCommand(@"set PATH=%git_install_root%\bin;%git_install_root%\mingw\bin;%git_install_root%\cmd;%PATH%");
             RunCommand(@"set PLINK_PROTOCOL=ssh");
             RunCommand(@"set HOME=%USERPROFILE%");
 
-            if (RunCommand(@"dir " + archive.ToString(), "File Not Found", "", 500) != CommandStatus.Done)
+            if (RunCommand(@"dir " + archive.ToString(), "File Not Found", String.Empty, 500) != CommandStatus.Done)
             {
                 // test repository exists so we just checkout what we need to
                 RunCommand(@"cd " + archive.ToString());
@@ -127,9 +127,9 @@ namespace TestRig
                 int index = archive.LastIndexOf('\\') + 1;
                 string archiveRoot = archive.Substring(index, archive.Length - index);
                 // test repository does NOT exist so we clone it here                
-                //if (RunCommand("git clone git@github.com:ChrisAtSamraksh/" + archive.ToString() + " -b " + textCodeBranch, "Resolving deltas", "", 30000) != CommandStatus.Done)
+                //if (RunCommand("git clone git@github.com:ChrisAtSamraksh/" + archive.ToString() + " -b " + textCodeBranch, "Resolving deltas", String.Empty, 30000) != CommandStatus.Done)
                 // For some reason the git responses are not redirected to our process so we have to use something else
-                if (RunCommand("git clone git@github.com:" + userName + "/" + archiveRoot.ToString() + " -b " + textCodeBranch, "Cloning into", "", 30000) != CommandStatus.Done)
+                if (RunCommand("git clone git@github.com:" + userName + "/" + archiveRoot.ToString() + " -b " + textCodeBranch, "Cloning into", String.Empty, 30000) != CommandStatus.Done)
                 {
                     System.Diagnostics.Debug.WriteLine("Git failed to clone.");
                     return false;
@@ -155,7 +155,7 @@ namespace TestRig
 
         private void ProcessResponse(string response)
         {
-            if ((expectedResponse1 != "") && (expectedResponse1 != null))
+            if ((expectedResponse1 != String.Empty) && (expectedResponse1 != null))
             {
                 if (response.Contains(expectedResponse1))
                 {
@@ -164,7 +164,7 @@ namespace TestRig
                     ARE_result.Set();                    
                 }
             }
-            if ((expectedResponse2 != "") && (expectedResponse2 != null))
+            if ((expectedResponse2 != String.Empty) && (expectedResponse2 != null))
             {
                  if (response.Contains(expectedResponse2))
                  {
@@ -223,7 +223,7 @@ namespace TestRig
         {
             string userName;
 
-            matchedResponse = "";
+            matchedResponse = String.Empty;
             RunCommand("git config --list", "user.name","NULL",5000);
 
             userName = matchedResponse.Split('=')[1];

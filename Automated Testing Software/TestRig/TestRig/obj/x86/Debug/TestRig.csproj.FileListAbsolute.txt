@@ -4,9 +4,6 @@ D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\obj\x86\Deb
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\SaleaeDevice.dll
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\TestRig.exe
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\TestRig.pdb
-D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\SaleaeDeviceSdkDotNet.dll
-D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\SaleaeDeviceSdkDotNet.pdb
-D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\SaleaeDeviceSdkDotNet.xml
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\obj\x86\Debug\MainWindow.baml
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\obj\x86\Debug\MainWindow.g.cs
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\obj\x86\Debug\App.g.cs
@@ -18,7 +15,6 @@ D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\L
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\LabSharp.NativeFunctions.dll
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\LabSharp.pdb
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\LabSharp.NativeFunctions.pdb
-D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\obj\x86\Debug\TestRig.csprojResolveAssemblyReference.cache
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\obj\x86\Debug\TestRig.csproj.GenerateResource.Cache
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\TestRig.exe.manifest
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\bin\Debug\TestRig.application
@@ -36,9 +32,6 @@ D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\bin\Debug\LabSharp.dl
 D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\bin\Debug\LabSharp.NativeFunctions.dll
 D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\bin\Debug\LabSharp.pdb
 D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\bin\Debug\LabSharp.NativeFunctions.pdb
-D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\bin\Debug\SaleaeDeviceSdkDotNet.pdb
-D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\bin\Debug\SaleaeDeviceSdkDotNet.xml
-D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\TestRig.csprojResolveAssemblyReference.cache
 D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\MainWindow.baml
 D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\MainWindow.g.cs
 D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\App.g.cs
@@ -49,3 +42,5 @@ D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\TestRig
 D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\TestRig.csproj.GenerateResource.Cache
 D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\TestRig.exe.manifest
 D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\TestRig.application
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\obj\x86\Debug\TestRig_MarkupCompile.lref
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs

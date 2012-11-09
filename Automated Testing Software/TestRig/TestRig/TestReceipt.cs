@@ -30,12 +30,12 @@ namespace TestRig
             testDuration = TimeSpan.Zero;
             testAccuracy = 0;
             testDateTime = DateTime.Now;
-            testReturnParameter1 = "";
-            testReturnParameter2 = "";
-            testReturnParameter3 = "";
-            testReturnParameter4 = "";
-            testReturnParameter5 = "";
-            testExecutionMachine = "";
+            testReturnParameter1 = String.Empty;
+            testReturnParameter2 = String.Empty;
+            testReturnParameter3 = String.Empty;
+            testReturnParameter4 = String.Empty;
+            testReturnParameter5 = String.Empty;
+            testExecutionMachine = String.Empty;
             testDescription = currentTest;
         }
 
@@ -58,7 +58,7 @@ namespace TestRig
 
         public override string ToString()
         {
-            string returnString = "";
+            string returnString = String.Empty;
 
             returnString += "<TestResults>\r\n";
             returnString += "\t<TestComplete>\r\n\t" + testComplete.ToString() + "\r\n\t</TestComplete>\r\n";

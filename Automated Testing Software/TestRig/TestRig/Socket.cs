@@ -82,7 +82,7 @@ namespace TestRig
         private string strip(string s)
         {
             if (s == null)
-                return "";
+                return String.Empty;
             s = s.Replace("\n", String.Empty);
             s = s.Replace("\t", String.Empty);
             s = s.Replace("\r", String.Empty);
@@ -95,46 +95,52 @@ namespace TestRig
         {
             TestDescription readTest = new TestDescription();
 
-            reader.ReadToFollowing("Test");
-            reader.MoveToFirstAttribute();
+            if (reader.ReadToFollowing("Test") == false) return readTest;
+            if (reader.MoveToFirstAttribute() == false) return readTest;
             readTest.testName = reader.Value;
             //System.Diagnostics.Debug.WriteLine("The name value: " + readTest.testName);
-            reader.MoveToNextAttribute();
+            if (reader.MoveToNextAttribute() == false) return readTest;
             readTest.testType = reader.Value;
             //System.Diagnostics.Debug.WriteLine("The type value: " + readTest.testType);
 
-            reader.ReadToFollowing("Description");
+            if (reader.ReadToFollowing("Description") == false) return readTest;
             readTest.testDescription = strip(reader.ReadElementContentAsString());
             //System.Diagnostics.Debug.WriteLine("Description of test: " + readTest.testDescription);
 
-            reader.ReadToFollowing("TestPath");
+            if (reader.ReadToFollowing("TestPath") == false) return readTest;
             readTest.testPath = strip(reader.ReadElementContentAsString());
             //System.Diagnostics.Debug.WriteLine("Test path of test: " + readTest.testPath);
 
-            reader.ReadToFollowing("TestProjName");
+            if (reader.ReadToFollowing("TestProjName") == false) return readTest;
             readTest.buildProj = strip(reader.ReadElementContentAsString());
             //System.Diagnostics.Debug.WriteLine("Build project name of test: " + readTest.buildProj);
 
-            reader.ReadToFollowing("TesterName");
+            if (reader.ReadToFollowing("TesterName") == false) return readTest;
             readTest.testerName = strip(reader.ReadElementContentAsString());
             //System.Diagnostics.Debug.WriteLine("Tester Name: " + readTest.testerName);
 
-            reader.ReadToFollowing("TestLocation");
+            if (reader.ReadToFollowing("TestLocation") == false) return readTest;
             readTest.testLocation = strip(reader.ReadElementContentAsString());
             //System.Diagnostics.Debug.WriteLine("Test Location: " + readTest.testLocation);
 
-            reader.ReadToFollowing("TestMFVersionNum");
+            if (reader.ReadToFollowing("TestMFVersionNum") == false) return readTest;
             readTest.testMFVersionNum = strip(reader.ReadElementContentAsString());
             //System.Diagnostics.Debug.WriteLine("MF Version number: " + readTest.testMFVersionNum);
 
-            reader.ReadToFollowing("TestGitOption");
+            if (reader.ReadToFollowing("TestGitOption") == false) return readTest;
             readTest.testGitOption = strip(reader.ReadElementContentAsString());
             //System.Diagnostics.Debug.WriteLine("Git Option: " + readTest.testGitOption);
 
-            reader.ReadToFollowing("TestGitBranch");
+            if (reader.ReadToFollowing("TestGitBranch") == false) return readTest;
             readTest.testGitBranch = strip(reader.ReadElementContentAsString());
             //System.Diagnostics.Debug.WriteLine("Git Option: " + readTest.testGitBranch);
 
+            if (reader.ReadToFollowing("TestUsePrecompiledBinary") == true)
+                readTest.testUsePrecompiledBinary = strip(reader.ReadElementContentAsString());
+            else
+                readTest.testUsePrecompiledBinary = String.Empty;
+
+            readTest.testReadComplete = true;
             return readTest;
         }
 
@@ -154,11 +160,12 @@ namespace TestRig
                     {                        
                         TestDescription readTest = readXMLTest(reader);                        
 
-                        if (readTest.testName.Length > 0)
+                        if (readTest.testReadComplete == true)
                         {
                             // waiting for mutex to be free
                             testCollectionMutex.WaitOne();
                             // queueing up test that was just parsed out in local machine test queue
+                            System.Diagnostics.Debug.WriteLine("Queue test: " + readTest.testName);
                             testCollectionSocket.Enqueue(readTest);
                             // updating test status tab display
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.addDelegate, readTest);

@@ -26,7 +26,7 @@ namespace TestRig
         public Socket connectSocket;
         public MainWindow mainHandle;
         private CommandStatus commandResult;
-        private string expectedResponse = "";
+        private string expectedResponse = String.Empty;
 
         private static AutoResetEvent ARE_result = new AutoResetEvent(false);
 

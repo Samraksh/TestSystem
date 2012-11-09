@@ -34,11 +34,11 @@ namespace TestRig
 
                 engine.SetVariable("result", "FAIL");
                 engine.SetVariable("accuracy", 0);
-                engine.SetVariable("resultParameter1", "");
-                engine.SetVariable("resultParameter2", "");
-                engine.SetVariable("resultParameter3", "");
-                engine.SetVariable("resultParameter4", "");
-                engine.SetVariable("resultParameter5", "");
+                engine.SetVariable("resultParameter1", String.Empty);
+                engine.SetVariable("resultParameter2", String.Empty);
+                engine.SetVariable("resultParameter3", String.Empty);
+                engine.SetVariable("resultParameter4", String.Empty);
+                engine.SetVariable("resultParameter5", String.Empty);
                 engine.SetVariable("dataFileName", dataFileName);
 
                 // stripping .m from the matlab script name
