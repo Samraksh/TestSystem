@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="OCDInterface" Type="System.String" Scope="User">
-      <Value Profile="(Default)">interface\olimex-arm-usb-tiny-h.cfg</Value>
+      <Value Profile="(Default)">D:\Work\SamTest\openocd-bin\interface\olimex-arm-usb-tiny-h.cfg</Value>
     </Setting>
     <Setting Name="OCDTarget" Type="System.String" Scope="User">
-      <Value Profile="(Default)">target\stm32xl.cfg</Value>
+      <Value Profile="(Default)">D:\Work\SamTest\openocd-bin\target\stm32xl.cfg</Value>
     </Setting>
     <Setting Name="OCDExe" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Work\SamTest\openocd-bin\openocd.exe</Value>
@@ -15,16 +15,13 @@
       <Value Profile="(Default)">D:\Work\SamTest\codesourcery</Value>
     </Setting>
     <Setting Name="MFPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\MicroFrameworkPK_v4_0</Value>
+      <Value Profile="(Default)">D:\Work\DotNet-MF\MicroFrameworkPK_v4_0</Value>
     </Setting>
-    <Setting Name="TTPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\SamTest</Value>
+    <Setting Name="GitPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\SamTest\Automated Testing Software\GitBin</Value>
     </Setting>
     <Setting Name="TSPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Test</Value>
-    </Setting>
-    <Setting Name="GHPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Users\Chris\AppData\Local\GitHub\PortableGit_8810fd5c2c79c73adcc73fd0825f3b32fdb816e7</Value>
+      <Value Profile="(Default)">D:\Work\TestSys</Value>
     </Setting>
     <Setting Name="TRPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Test\Receipts</Value>

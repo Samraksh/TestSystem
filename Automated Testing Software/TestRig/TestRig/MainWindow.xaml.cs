@@ -49,7 +49,6 @@ namespace TestRig
         public string textBuildSourceryPath;
         public string textMFPath;
         public string textTestSourcePath;
-        public string textGitHubPath;
         public string textTestReceiptPath;
         public string textOCDInterface;
         public string textOCDTarget;
@@ -374,7 +373,7 @@ namespace TestRig
                 tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
                 tbBuildSourceryPath.Text = Properties.Settings.Default.CSPath.ToString();
                 tbMFPath.Text = Properties.Settings.Default.MFPath.ToString();
-                tbGitPath.Text = Properties.Settings.Default.TTPath.ToString();
+                tbGitPath.Text = Properties.Settings.Default.GitPath.ToString();
                 tbTestSourcePath.Text = Properties.Settings.Default.TSPath.ToString();
                 tbTestReceiptPath.Text = Properties.Settings.Default.TRPath.ToString();
 
@@ -448,7 +447,7 @@ namespace TestRig
                 Properties.Settings.Default["OCDExe"] = tbOCDExe.Text;
                 Properties.Settings.Default["CSPath"] = tbBuildSourceryPath.Text;
                 Properties.Settings.Default["MFPath"] = tbMFPath.Text;
-                Properties.Settings.Default["TTPath"] = tbGitPath.Text;
+                Properties.Settings.Default["GitPath"] = tbGitPath.Text;
                 Properties.Settings.Default["TSPath"] = tbTestSourcePath.Text;
                 Properties.Settings.Default["TRPath"] = tbTestReceiptPath.Text;
             }

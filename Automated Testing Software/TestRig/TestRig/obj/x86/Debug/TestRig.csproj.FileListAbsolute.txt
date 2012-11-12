@@ -44,3 +44,8 @@ D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\TestRig
 D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\TestRig.application
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\obj\x86\Debug\TestRig_MarkupCompile.lref
 D:\Users\Chris\Documents\Visual Studio 2010\Projects\TestRig\TestRig\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\TestRig.csprojResolveAssemblyReference.cache
+D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\obj\x86\Debug\TestRig_MarkupCompile.lref
+D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\bin\Debug\SaleaeDeviceSdkDotNet.dll
+D:\Work\SamTest\Automated Testing Software\TestRig\TestRig\bin\Debug\SaleaeDeviceSdkDotNet.xml
