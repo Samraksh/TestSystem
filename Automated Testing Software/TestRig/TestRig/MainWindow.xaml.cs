@@ -230,8 +230,10 @@ namespace TestRig
                     // In this example, we only access the existing FileInfo object. If we 
                     // want to open, delete or modify the file, then 
                     // a try-catch block is required here to handle the case 
-                    // where the file has been deleted since the call to TraverseTree().                   
-                    if (fi.Name.Equals("tests.xml"))
+                    // where the file has been deleted since the call to TraverseTree().     
+              
+                    // filtering out template test description file
+                    if (fi.Name.Equals("tests.xml") && !fi.FullName.Contains("Template") )
                     {
                         System.Diagnostics.Debug.WriteLine(fi.FullName);
                         AddTests(fi);
