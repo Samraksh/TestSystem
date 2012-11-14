@@ -47,24 +47,28 @@ namespace TestRig
         public RemoveTestItem removeDelegate;
         public DisplayUpdate updateDelegate;
         public string textBuildSourceryPath;
-        public string textMFPath;
+        public string textMFPath_4_0;
+        public string textMFPath_4_3;
         public string textTestSourcePath;
         public string textTestReceiptPath;
         public string textOCDInterface;
         public string textOCDTarget;
         public string textOCDExe;
         public string textGitPath;
+        public static string textMFSelection;
         public static string textGitCodeLocation;
         public static string textGitCodeBranch;
         public static TestDescription[] availableTests;
         private static Tasks _tasks;
         private static int testNum;
+        private bool settingsInitialized = false;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            checkSettings();
+            readSettings();
+            checkPaths();
 
             // to be used to protect testCollection from read/writes in various threads
             testCollectionMutex = new Mutex(false, "TestCollectionMutex");
@@ -273,7 +277,7 @@ namespace TestRig
                         if (readTest.testLocation == String.Empty)
                             readTest.testLocation = System.Environment.MachineName.ToString();
                         if (readTest.testMFVersionNum == String.Empty)
-                            readTest.testMFVersionNum = "4.0";
+                            readTest.testMFVersionNum = textMFSelection;
                         if (readTest.testGitOption == String.Empty)
                             readTest.testGitOption = textGitCodeLocation;
                         if (readTest.testGitBranch == String.Empty)
@@ -324,8 +328,11 @@ namespace TestRig
         }
 
         private void tbMFPath_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            textMFPath = tbMFPath.Text;
+        {            
+            if (cbMFVersion.SelectedValue.ToString().Contains("MF 4.0"))
+                textMFPath_4_0 = tbMFPath.Text;
+            else
+                textMFPath_4_3 = tbMFPath.Text;
         }
 
         private void tbTestReceiptPath_TextChanged(object sender, TextChangedEventArgs e)
@@ -356,6 +363,22 @@ namespace TestRig
         private void tbCodeBranch_TextChanged(object sender, TextChangedEventArgs e)
         {
             textGitCodeBranch = tbCodeBranch.Text;
+        }
+
+        private void cbMFVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (settingsInitialized == false)
+            {
+                // buttons have not yet been defined by InitializeComponent
+                return;
+            }
+            textMFSelection = cbMFVersion.SelectedItem.ToString();
+            if (textMFSelection.Contains("MF 4.0"))
+                tbMFPath.Text = textMFPath_4_0;
+            else
+                tbMFPath.Text = textMFPath_4_3;
+
+            checkPaths();
         }   
 
         public static void showMessageBox(string message)
@@ -367,56 +390,46 @@ namespace TestRig
         {
         }
 
-        private void checkSettings()
+        private void checkPaths()
         {
             try
             {
-                // checking to make sure paths actually exist                
-                tbOCDExe.Text = Properties.Settings.Default.OCDExe.ToString();
-                tbOCDInterface.Text = Properties.Settings.Default.OCDInterface.ToString();
-                tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
-                tbBuildSourceryPath.Text = Properties.Settings.Default.CSPath.ToString();
-                tbMFPath.Text = Properties.Settings.Default.MFPath.ToString();
-                tbGitPath.Text = Properties.Settings.Default.GitPath.ToString();
-                tbTestSourcePath.Text = Properties.Settings.Default.TSPath.ToString();
-                tbTestReceiptPath.Text = Properties.Settings.Default.TRPath.ToString();
-
                 if (File.Exists(tbOCDExe.Text) == false)
                 {
                     MessageBox.Show("OpenOCD executable: " + tbOCDExe.Text + " does not exist.");
                     return;
                 }
-                
+
                 if (File.Exists(tbOCDInterface.Text) == false)
                 {
                     MessageBox.Show("OpenOCD Interface file: " + tbOCDInterface.Text + " does not exist.");
                     return;
                 }
-                
+
                 if (File.Exists(tbOCDTarget.Text) == false)
                 {
                     MessageBox.Show("OpenOCD Target file: " + tbOCDTarget.Text + " does not exist.");
                     return;
                 }
-                
+
                 if (Directory.Exists(tbBuildSourceryPath.Text) == false)
                 {
                     MessageBox.Show("Codesourcery path: " + tbBuildSourceryPath.Text + " does not exist.");
                     return;
                 }
-                
+
                 if (Directory.Exists(tbMFPath.Text) == false)
                 {
                     MessageBox.Show("Microframework path: " + tbMFPath.Text + " does not exist.");
                     return;
                 }
-                
+
                 if (Directory.Exists(tbGitPath.Text) == false)
                 {
                     MessageBox.Show("Test tool path: " + tbGitPath.Text + " does not exist.");
                     return;
                 }
-                
+
                 if (Directory.Exists(tbTestSourcePath.Text) == false)
                 {
                     MessageBox.Show("Test source path: " + tbTestSourcePath.Text + " does not exist.");
@@ -428,7 +441,7 @@ namespace TestRig
                     MessageBox.Show("Git Hub path: " + tbGitPath.Text + " does not exist.");
                     return;
                 }
-                
+
                 if (Directory.Exists(tbTestReceiptPath.Text) == false)
                 {
                     MessageBox.Show("Test Receipt path: " + tbTestReceiptPath.Text + " does not exist.");
@@ -437,7 +450,36 @@ namespace TestRig
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("checkRegistry: " + ex.ToString());
+                System.Diagnostics.Debug.WriteLine("readSettings: " + ex.ToString());
+            }
+        }
+
+        private void readSettings()
+        {
+            try
+            {
+                // checking to make sure paths actually exist                
+                tbOCDExe.Text = Properties.Settings.Default.OCDExe.ToString();
+                tbOCDInterface.Text = Properties.Settings.Default.OCDInterface.ToString();
+                tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
+                tbBuildSourceryPath.Text = Properties.Settings.Default.CSPath.ToString();
+
+                cbMFVersion.SelectedIndex = Properties.Settings.Default.MFSelection;    
+                textMFPath_4_0 = Properties.Settings.Default.MFPath_4_0.ToString();
+                textMFPath_4_3 = Properties.Settings.Default.MFPath_4_3.ToString();
+                if (cbMFVersion.SelectedValue.ToString().Contains("MF 4.0"))
+                    tbMFPath.Text = textMFPath_4_0;
+                else
+                    tbMFPath.Text = textMFPath_4_3;
+                tbGitPath.Text = Properties.Settings.Default.GitPath.ToString();
+                tbTestSourcePath.Text = Properties.Settings.Default.TSPath.ToString();
+                tbTestReceiptPath.Text = Properties.Settings.Default.TRPath.ToString();
+
+                settingsInitialized = true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("readSettings: " + ex.ToString());
             }
         }
 
@@ -450,7 +492,9 @@ namespace TestRig
                 Properties.Settings.Default["OCDTarget"] = tbOCDTarget.Text;
                 Properties.Settings.Default["OCDExe"] = tbOCDExe.Text;
                 Properties.Settings.Default["CSPath"] = tbBuildSourceryPath.Text;
-                Properties.Settings.Default["MFPath"] = tbMFPath.Text;
+                Properties.Settings.Default["MFPath_4_0"] = textMFPath_4_0;
+                Properties.Settings.Default["MFPath_4_3"] = textMFPath_4_3;
+                Properties.Settings.Default["MFSelection"] = cbMFVersion.SelectedIndex;
                 Properties.Settings.Default["GitPath"] = tbGitPath.Text;
                 Properties.Settings.Default["TSPath"] = tbTestSourcePath.Text;
                 Properties.Settings.Default["TRPath"] = tbTestReceiptPath.Text;
@@ -463,7 +507,7 @@ namespace TestRig
 
         private void cbCodeLocation_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (tbCodeBranch == null)
+            if (settingsInitialized == false)
             {
                 // buttons have not yet been defined by InitializeComponent
                 return;
@@ -563,6 +607,6 @@ namespace TestRig
         private void tbFilter_TextChanged(object sender, TextChangedEventArgs e)
         {
             CollectionViewSource.GetDefaultView(testDataGrid.ItemsSource).Refresh();
-        }     
+        }  
     }
 }

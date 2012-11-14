@@ -14,7 +14,7 @@
     <Setting Name="CSPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Work\SamTest\codesourcery</Value>
     </Setting>
-    <Setting Name="MFPath" Type="System.String" Scope="User">
+    <Setting Name="MFPath_4_0" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Work\DotNet-MF\MicroFrameworkPK_v4_0</Value>
     </Setting>
     <Setting Name="GitPath" Type="System.String" Scope="User">
@@ -25,6 +25,12 @@
     </Setting>
     <Setting Name="TRPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Test\Receipts</Value>
+    </Setting>
+    <Setting Name="MFPath_4_3" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\DotNet-MF\MicroFrameworkPK_v4_3</Value>
+    </Setting>
+    <Setting Name="MFSelection" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

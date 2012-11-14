@@ -60,13 +60,13 @@ namespace TestRig
             switch (MFVersion)
             {
                 case "4.0":
-                    MFPath = mainHandle.textMFPath;
+                    MFPath = mainHandle.textMFPath_4_0;
                     break;
                 case "4.3":
-                    MFPath = mainHandle.textMFPath;
+                    MFPath = mainHandle.textMFPath_4_3;
                     break;
                 default:
-                    MFPath = mainHandle.textMFPath;
+                    MFPath = mainHandle.textMFPath_4_3;
                     break;
             }
         }

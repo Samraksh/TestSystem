@@ -111,7 +111,11 @@
                             <Label Content="CodeSourcery Path" Height="Auto" HorizontalAlignment="Left" Margin="15,15,0,0" Name="lblBuildSourceryPath" VerticalAlignment="Top" Width="Auto" />
                             <TextBox Height="23" HorizontalAlignment="Left" Margin="135,17,0,0" Name="tbBuildSourceryPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbBuildSourceryPath_TextChanged" />
                             <Label Content="MF Installation Path" HorizontalAlignment="Left" Margin="15,45,0,0" Name="label8" VerticalAlignment="Top" Width="Auto" />
-                            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,47,0,0" Name="tbMFPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbMFPath_TextChanged" />
+                            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,47,0,0" Name="tbMFPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="407" TextChanged="tbMFPath_TextChanged" />
+                            <ComboBox Height="23" HorizontalAlignment="Left" Margin="548,47,0,0" Name="cbMFVersion" VerticalAlignment="Top" Width="87" SelectionChanged="cbMFVersion_SelectionChanged">
+                                <ComboBoxItem Content="MF 4.0" />
+                                <ComboBoxItem Content="MF 4.3" IsSelected="True" />
+                            </ComboBox>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="OpenOCD" Height="152" HorizontalAlignment="Left" Margin="6,6,0,0" Name="groupBox1" VerticalAlignment="Top" Width="653">

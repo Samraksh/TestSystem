@@ -22,7 +22,7 @@ namespace TestRig
         public LogicAnalyzer logicTest;
         public Matlab matlab;
         public MSBuild msbuild;
-        private TestReceipt testReceipt;
+        private TestReceipt testReceipt;        
 
         public TestLaunch(Queue<TestDescription> testCollection, Mutex collectionMutex, MainWindow passedHandle)
         {
@@ -34,7 +34,7 @@ namespace TestRig
             // starting thread to launch any locally queued up tests
             LaunchThread = new Thread(new ThreadStart(LaunchThreadFunction));
             LaunchThread.Start();
-            LaunchThread.Name = "Launch Test Thread";
+            LaunchThread.Name = "Launch Test Thread";            
         }
 
         public void KillLaunchThread()
@@ -123,6 +123,20 @@ namespace TestRig
                 string projectName = currentTest.buildProj;
                 int index = projectName.IndexOf('.');
                 string strippedName = projectName.Substring(0, index);
+                string MFPath;
+
+                switch (currentTest.testMFVersionNum)
+                {
+                    case "4.0":
+                        MFPath = mainHandle.textMFPath_4_0;
+                        break;
+                    case "4.3":
+                        MFPath = mainHandle.textMFPath_4_3;
+                        break;
+                    default:
+                        MFPath = mainHandle.textMFPath_4_3;
+                        break;
+                }
                 
                 currentTest.testState = "Retrieving code";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
@@ -153,7 +167,7 @@ namespace TestRig
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
 
                 System.Diagnostics.Debug.WriteLine("Building code");
-                msbuild = new MSBuild(mainHandle, "4.0");
+                msbuild = new MSBuild(mainHandle, currentTest.testMFVersionNum);
                 if (msbuild == null) return "MSBuild failed to load";
 
                 if (currentTest.testType == "C#")
@@ -194,18 +208,25 @@ namespace TestRig
                     }
                     else
                     {
-                        if (gdb.Load(mainHandle.textMFPath + @"\" + @"BuildOutput\THUMB2\GCC4.2\le\FLASH\debug\STM32F10x\bin\tinyclr.axf") == false) return "GDB failed to load MF AXF file";                    
+                        if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\GCC4.2\le\FLASH\debug\STM32F10x\bin\tinyclr.axf") == false) return "GDB failed to load MF AXF file";                    
                     }                                        
 
                     currentTest.testState = "Loading managed code";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                    
-                    if (telnet.Load(mainHandle.textMFPath + @"\" + @"BuildOutput\public\Debug\Client\dat" + @"\" + strippedName + "_Conv.s19") == false) return "Telnet failed to load";                    
+
+                    if (telnet.Load(MFPath + @"\" + @"BuildOutput\public\Debug\Client\dat" + @"\" + strippedName + "_Conv.s19") == false) return "Telnet failed to load";                    
                 } else
                 {
                     currentTest.testState = "Loading test AXF";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                    if (gdb.Load(mainHandle.textMFPath + @"\" + @"BuildOutput\THUMB2\GCC4.2\le\FLASH\debug\STM32F10x\bin" + @"\" + strippedName + ".axf") == false) return "GDB failedto load compiled AXF";
+                    if (currentTest.testUsePrecompiledBinary != String.Empty)
+                    {
+                        if (gdb.Load(workingDirectory + "\\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled AXF file: " + currentTest.testUsePrecompiledBinary;
+                    }
+                    else
+                    {
+                        if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\GCC4.2\le\FLASH\debug\STM32F10x\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                    }                     
                 }
                                
                 currentTest.testState = "Starting processor";

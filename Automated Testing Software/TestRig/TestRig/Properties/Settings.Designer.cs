@@ -74,12 +74,12 @@ namespace TestRig.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_0")]
-        public string MFPath {
+        public string MFPath_4_0 {
             get {
-                return ((string)(this["MFPath"]));
+                return ((string)(this["MFPath_4_0"]));
             }
             set {
-                this["MFPath"] = value;
+                this["MFPath_4_0"] = value;
             }
         }
         
@@ -116,6 +116,30 @@ namespace TestRig.Properties {
             }
             set {
                 this["TRPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3")]
+        public string MFPath_4_3 {
+            get {
+                return ((string)(this["MFPath_4_3"]));
+            }
+            set {
+                this["MFPath_4_3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int MFSelection {
+            get {
+                return ((int)(this["MFSelection"]));
+            }
+            set {
+                this["MFSelection"] = value;
             }
         }
     }
