@@ -1,0 +1,145 @@
+
+Simple.bin:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+80300000 <__do_global_dtors_aux>:
+80300000:	e59f3010 	ldr	r3, [pc, #16]	; 80300018 <__do_global_dtors_aux+0x18>
+80300004:	e5d32000 	ldrb	r2, [r3]
+80300008:	e3520000 	cmp	r2, #0
+8030000c:	03a02001 	moveq	r2, #1
+80300010:	05c32000 	strbeq	r2, [r3]
+80300014:	e12fff1e 	bx	lr
+80300018:	803080f4 	ldrshthi	r8, [r0], -r4
+
+8030001c <frame_dummy>:
+8030001c:	e59f0024 	ldr	r0, [pc, #36]	; 80300048 <frame_dummy+0x2c>
+80300020:	e92d4008 	push	{r3, lr}
+80300024:	e5903000 	ldr	r3, [r0]
+80300028:	e3530000 	cmp	r3, #0
+8030002c:	0a000003 	beq	80300040 <frame_dummy+0x24>
+80300030:	e59f3014 	ldr	r3, [pc, #20]	; 8030004c <frame_dummy+0x30>
+80300034:	e3530000 	cmp	r3, #0
+80300038:	11a0e00f 	movne	lr, pc
+8030003c:	112fff13 	bxne	r3
+80300040:	e8bd4008 	pop	{r3, lr}
+80300044:	e12fff1e 	bx	lr
+80300048:	803080e8 	eorshi	r8, r0, r8, ror #1
+8030004c:	00000000 	andeq	r0, r0, r0
+
+80300050 <main>:
+80300050:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+80300054:	e28db000 	add	fp, sp, #0
+80300058:	e24dd00c 	sub	sp, sp, #12
+8030005c:	e3a03000 	mov	r3, #0
+80300060:	e50b3008 	str	r3, [fp, #-8]
+80300064:	ea000009 	b	80300090 <main+0x40>
+80300068:	e30830f0 	movw	r3, #33008	; 0x80f0
+8030006c:	e3483030 	movt	r3, #32816	; 0x8030
+80300070:	e5933000 	ldr	r3, [r3]
+80300074:	e2832001 	add	r2, r3, #1
+80300078:	e30830f0 	movw	r3, #33008	; 0x80f0
+8030007c:	e3483030 	movt	r3, #32816	; 0x8030
+80300080:	e5832000 	str	r2, [r3]
+80300084:	e51b3008 	ldr	r3, [fp, #-8]
+80300088:	e2833001 	add	r3, r3, #1
+8030008c:	e50b3008 	str	r3, [fp, #-8]
+80300090:	e51b3008 	ldr	r3, [fp, #-8]
+80300094:	e3530063 	cmp	r3, #99	; 0x63
+80300098:	c3a03000 	movgt	r3, #0
+8030009c:	d3a03001 	movle	r3, #1
+803000a0:	e6ef3073 	uxtb	r3, r3
+803000a4:	e3530000 	cmp	r3, #0
+803000a8:	1affffee 	bne	80300068 <main+0x18>
+803000ac:	e3a03000 	mov	r3, #0
+803000b0:	e1a00003 	mov	r0, r3
+803000b4:	e28bd000 	add	sp, fp, #0
+803000b8:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+803000bc:	e12fff1e 	bx	lr
+
+Disassembly of section .init:
+
+00008000 <_init>:
+    8000:	e1a0c00d 	mov	ip, sp
+    8004:	e92ddff8 	push	{r3, r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}
+    8008:	e24cb004 	sub	fp, ip, #4
+    800c:	e24bd028 	sub	sp, fp, #40	; 0x28
+    8010:	e89d6ff0 	ldm	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, lr}
+    8014:	e12fff1e 	bx	lr
+
+Disassembly of section .fini:
+
+803000c0 <_fini>:
+803000c0:	e1a0c00d 	mov	ip, sp
+803000c4:	e92ddff8 	push	{r3, r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}
+803000c8:	e24cb004 	sub	fp, ip, #4
+803000cc:	e24bd028 	sub	sp, fp, #40	; 0x28
+803000d0:	e89d6ff0 	ldm	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, lr}
+803000d4:	e12fff1e 	bx	lr
+
+Disassembly of section .ARM.exidx:
+
+803000d8 <.ARM.exidx>:
+803000d8:	7fffff78 	svcvc	0x00ffff78
+803000dc:	00000001 	andeq	r0, r0, r1
+
+Disassembly of section .init_array:
+
+803080e0 <__frame_dummy_init_array_entry>:
+803080e0:	8030001c 	eorshi	r0, r0, ip, lsl r0
+
+Disassembly of section .fini_array:
+
+803080e4 <__do_global_dtors_aux_fini_array_entry>:
+803080e4:	80300000 	eorshi	r0, r0, r0
+
+Disassembly of section .jcr:
+
+803080e8 <__JCR_END__>:
+803080e8:	00000000 	andeq	r0, r0, r0
+
+Disassembly of section .data:
+
+803080ec <__data_start>:
+803080ec:	00000000 	andeq	r0, r0, r0
+
+803080f0 <x>:
+803080f0:	deadbeef 	cdple	14, 10, cr11, cr13, cr15, {7}
+
+Disassembly of section .bss:
+
+803080f4 <completed.4678>:
+803080f4:	00000000 	andeq	r0, r0, r0
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	43434700 	movtmi	r4, #14080	; 0x3700
+   4:	5328203a 	teqpl	r8, #58	; 0x3a
+   8:	6372756f 	cmnvs	r2, #465567744	; 0x1bc00000
+   c:	20797265 	rsbscs	r7, r9, r5, ror #4
+  10:	202b2b47 	eorcs	r2, fp, r7, asr #22
+  14:	6574694c 	ldrbvs	r6, [r4, #-2380]!	; 0x94c
+  18:	31303220 	teqcc	r0, r0, lsr #4
+  1c:	2d317130 	ldfcss	f7, [r1, #-192]!	; 0xffffff40
+  20:	29383831 	ldmdbcs	r8!, {r0, r4, r5, fp, ip, sp}
+  24:	342e3420 	strtcc	r3, [lr], #-1056	; 0x420
+  28:	Address 0x00000028 is out of bounds.
+
+
+Disassembly of section .ARM.attributes:
+
+00000000 <_stack-0x80000>:
+   0:	00002a41 	andeq	r2, r0, r1, asr #20
+   4:	61656100 	cmnvs	r5, r0, lsl #2
+   8:	01006962 	tsteq	r0, r2, ror #18
+   c:	00000020 	andeq	r0, r0, r0, lsr #32
+  10:	412d3705 	teqmi	sp, r5, lsl #14
+  14:	070a0600 	streq	r0, [sl, -r0, lsl #12]
+  18:	09010841 	stmdbeq	r1, {r0, r6, fp}
+  1c:	14041202 	strne	r1, [r4], #-514	; 0x202
+  20:	17011501 	strne	r1, [r1, -r1, lsl #10]
+  24:	1a011803 	bne	46038 <_init+0x3e038>
+  28:	Address 0x00000028 is out of bounds.
+

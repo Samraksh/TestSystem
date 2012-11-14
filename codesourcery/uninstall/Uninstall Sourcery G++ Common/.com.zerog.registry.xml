@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<registry install_date="2010-08-09 09:34:25" version="1.1" last_modified="2010-08-09 09:34:31">
+	<products>
+		<product name="Sourcery G++ Common" id="d4bc5c81-77c7-4703-8f94-5e063b518f3b" version="1.0.0.257747" copyright="2008" info_url="http://www.codesourcery.com" support_url="http://www.codesourcery.com/support/" location="C:\CodeSourcery" last_modified="2010-08-09 09:34:25">
+		<![CDATA[Sourcery G++ Common]]>
+			<vendor name="CodeSourcery" id="7f1ebb3c-1ec7-11b2-8037-c0d9e9f9d7a6" home_page="http://www.codesourcery.com" email="sales@codesourcery.com"/>
+			<feature name="Sourcery G++ Common" last_modified="2010-08-09 09:34:31">
+			<![CDATA[This installs the Sourcery G++ Common feature.]]>
+				<component ref_id="735297d0-0269-4636-a3b6-c97cb0380fc9" version="1.0.0.257747" location="C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\Uninstall Sourcery G++ Common.exe"/>
+				<component ref_id="2953cb23-86ff-42a1-92be-8c002a0ad7fc" version="1.0.0.257747" location="C:\CodeSourcery\uninstall\features\Common.key"/>
+			</feature>
+		</product>
+	</products>
+	<components>
+		<component id="2953cb23-86ff-42a1-92be-8c002a0ad7fc" version="1.0.0.257747" name="Sourcery G++ Common" location="C:\CodeSourcery\uninstall\features\Common.key" vendor="CodeSourcery">
+			<resource keyfile="false" name="uninstall" location="C:\CodeSourcery\uninstall" type="directory" uninstall="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="false" name="features" location="C:\CodeSourcery\uninstall\features" type="directory" uninstall="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="true" name="Common.key" location="C:\CodeSourcery\uninstall\features\Common.key" type="file" uninstall="true"/>
+			<resource keyfile="false" name="bin" location="C:\CodeSourcery\bin" type="directory" uninstall="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="false" name="cs-rm.exe" location="C:\CodeSourcery\bin\cs-rm.exe" type="file" uninstall="true"/>
+			<resource keyfile="false" name="cs-make.exe" location="C:\CodeSourcery\bin\cs-make.exe" type="file" uninstall="true"/>
+			<resource keyfile="false" name="uninstall" location="C:\CodeSourcery\uninstall" type="directory" uninstall="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="false" name="create-links-iamm-common_files-arm-2010q1-188-arm-none-eabi.exe" location="C:\CodeSourcery\uninstall\create-links-iamm-common_files-arm-2010q1-188-arm-none-eabi.exe" type="file" uninstall="true"/>
+			<resource keyfile="false" name="remove-links-iamm-common_files-arm-2010q1-188-arm-none-eabi.exe" location="C:\CodeSourcery\uninstall\remove-links-iamm-common_files-arm-2010q1-188-arm-none-eabi.exe" type="file" uninstall="true"/>
+		</component>
+		<component id="735297d0-0269-4636-a3b6-c97cb0380fc9" version="1.0.0.257747" name="Sourcery G++ Common InstallAnywhere Uninstall" location="C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\Uninstall Sourcery G++ Common.exe" vendor="CodeSourcery">
+			<resource keyfile="false" name="Sourcery G++ Common Installer.log" location="C:\CodeSourcery\uninstall\Sourcery G++ Common Installer.log" type="file" uninstall="true"/>
+			<resource keyfile="false" name="uninstall" location="C:\CodeSourcery\uninstall" type="directory" uninstall="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="false" name="Uninstall Sourcery G++ Common" location="C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common" type="directory" uninstall="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="false" name="uninstaller.jar" location="C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\uninstaller.jar" type="file" uninstall="true"/>
+			<resource keyfile="true" name="Uninstall Sourcery G++ Common.exe" location="C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\Uninstall Sourcery G++ Common.exe" type="executable" uninstall="true"/>
+			<resource keyfile="false" name="Uninstall Sourcery G++ Common.lax" location="C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\Uninstall Sourcery G++ Common.lax" type="file" uninstall="true"/>
+			<resource keyfile="false" name="resource" location="C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\resource" type="directory" uninstall="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="false" name="iawin32.dll" location="C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\resource\iawin32.dll" type="file" uninstall="true"/>
+			<resource keyfile="false" name="remove.exe" location="C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\resource\remove.exe" type="file" uninstall="true"/>
+			<resource keyfile="false" name="ZGWin32LaunchHelper.exe" location="C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\resource\ZGWin32LaunchHelper.exe" type="file" uninstall="true"/>
+			<resource keyfile="false" name=".com.zerog.registry.xml" location="C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\.com.zerog.registry.xml" type="file" uninstall="true"/>
+		</component>
+	</components>
+</registry>

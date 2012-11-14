@@ -1,0 +1,129 @@
+#   LaunchAnywhere (tm) Executable Properties File - Macrovision Corp.
+
+#   LAX.APPLICATION.NAME
+#   --------------------
+#   the default name of this executable -- do not edit
+
+lax.application.name=Uninstall Sourcery G++ Common.exe
+
+
+#   LAX.CLASS.PATH
+#   --------------
+#   the Java classpath necessary to run this application
+#   Can be separated by colons (Mac OS/Unix) or semicolons (Windows)
+
+lax.class.path=uninstaller.jar;resource;uninstallerResources.zip
+
+
+#   LAX.COMMAND.LINE.ARGS
+#   ---------------------
+
+lax.command.line.args=$CMD_LINE_ARGUMENTS$ -u
+
+
+#   LAX.DIR
+#   -------
+#   path to directory holding LaunchAnywhere's native launcher
+
+lax.dir=C:\\CodeSourcery\\uninstall\\Uninstall Sourcery G++ Common\\
+
+
+#   LAX.INSTALLER.UNIX.UI.DEFAULT
+#   -----------------------------
+
+lax.installer.unix.ui.default=
+
+
+#   LAX.MAIN.CLASS
+#   --------------
+#   the class that contains the main method for the application
+
+lax.main.class=com.zerog.ia.installer.Main
+
+
+
+lax.main.method=main
+
+
+#   LAX.NL.CURRENT.VM
+#   -----------------
+#   the VM to use for the next launch
+
+lax.nl.current.vm=C:\\CodeSourcery\\jre\\bin\\java.exe
+
+
+#   LAX.NL.JAVA.COMPILER
+#   --------------------
+
+lax.nl.java.compiler=off
+
+
+#   LAX.NL.JAVA.LAUNCHER.MAIN.CLASS
+#   -------------------------------
+#   main class of LaunchAnywhere's java launcher -- do not adjust
+
+lax.nl.java.launcher.main.class=com.zerog.lax.LAX
+
+
+#   LAX.NL.JAVA.LAUNCHER.MAIN.METHOD
+#   --------------------------------
+#   main method of LaunchAnywhere's java launcher -- do not adjust
+
+lax.nl.java.launcher.main.method=main
+
+
+#   LAX.NL.JAVA.OPTION.CHECK.SOURCE
+#   -------------------------------
+
+lax.nl.java.option.check.source=off
+
+
+#   LAX.NL.JAVA.OPTION.JAVA.HEAP.SIZE.INITIAL
+#   -----------------------------------------
+
+lax.nl.java.option.java.heap.size.initial=16777216
+
+
+#   LAX.NL.JAVA.OPTION.JAVA.HEAP.SIZE.MAX
+#   -------------------------------------
+
+lax.nl.java.option.java.heap.size.max=536870912
+
+
+
+lax.nl.valid.vm.list=1.4+
+
+
+#   LAX.NL.WIN32.MICROSOFTVM.MIN.VERSION
+#   ------------------------------------
+
+lax.nl.win32.microsoftvm.min.version=3167
+
+
+
+lax.root.install.dir=C:\\CodeSourcery
+
+
+
+lax.stderr.redirect=
+
+
+
+lax.stdin.redirect=
+
+
+
+lax.stdout.redirect=
+
+
+
+lax.user.dir=.
+
+
+#   LAX.VERSION
+#   -----------
+#   version of LaunchAnywhere that created this properties file
+
+lax.version=9.0
+
+
