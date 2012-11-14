@@ -160,8 +160,7 @@ namespace TestRig
             index = projectName.IndexOf('.');
             string strippedName = projectName.Substring(0, index);
             //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
-            string buildOutput = @"bin\Release\";
-            //string buildOutput = "$(BUILD_TREE)";
+            string buildOutput = @"bin\Release\";            
             // convert to S19 record
             if (RunCommand(@"binToSrec.exe -b 80A0000 -i " + buildOutput + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 5000) != CommandStatus.Done)
             {

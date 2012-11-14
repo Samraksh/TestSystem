@@ -196,8 +196,11 @@ namespace TestRig
                 if (telnet == null) return "Telnet failed to load";
 
                 if (telnet.Start() == false) return "Telnet failed to start";
-                if (telnet.Clear() == false) return "Telnet failed to clear FLASH";                    
-                
+                if (telnet.Clear() == false) return "Telnet failed to clear FLASH";
+
+                //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
+                string buildOutput = @"bin\Release\"; 
+
                 if (currentTest.testType == "C#")
                 {
                     currentTest.testState = "Loading MF AXF";
@@ -214,7 +217,7 @@ namespace TestRig
                     currentTest.testState = "Loading managed code";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
 
-                    if (telnet.Load(MFPath + @"\" + @"BuildOutput\public\Debug\Client\dat" + @"\" + strippedName + "_Conv.s19") == false) return "Telnet failed to load";                    
+                    if (telnet.Load(workingDirectory + "\\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";                    
                 } else
                 {
                     currentTest.testState = "Loading test AXF";
