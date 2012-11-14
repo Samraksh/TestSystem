@@ -17,7 +17,7 @@ namespace TestRig
         }
 
         private CommandStatus commandResult;
-        private string expectedResponse = String.Empty;
+        private string expectedPassResponse = String.Empty, expectedFailResponse = String.Empty;
         public StreamWriter input = null;
 
         private StringWriter stdOutput = new StringWriter();
@@ -55,11 +55,11 @@ namespace TestRig
             MSBuildProcess.BeginOutputReadLine();
             MSBuildProcess.BeginErrorReadLine();
 
-            if (RunCommand(@"target remote localhost:3333", "Remote debugging using localhost:3333", 5000) != CommandStatus.Done)
+            if (RunCommand(@"target remote localhost:3333", "Remote debugging using localhost:3333", "^error", 5000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to connect to localhost.");                
             }
-            if (RunCommand(@"monitor soft_reset_halt", "target halted due to breakpoint", 5000) != CommandStatus.Done)
+            if (RunCommand(@"monitor soft_reset_halt", "target halted due to breakpoint", "^error", 5000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to halt processor.");
             }  
@@ -70,18 +70,18 @@ namespace TestRig
             string modifiedAXFFile = axfFile.Replace("\\", "\\\\");
             System.Diagnostics.Debug.WriteLine("GDB loading: axf: " + modifiedAXFFile);
             waitForMessages();
-                                  
-            if (RunCommand(@"monitor mwb 0x20000000 0 0x18000", "^done", 15000) != CommandStatus.Done)
+
+            if (RunCommand(@"monitor mwb 0x20000000 0 0x18000", "^done", "^error", 15000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to clear memory.");
                 return false;
-            }            
-            if (RunCommand(@"-file-exec-and-symbols " + modifiedAXFFile, "^done", 10000) != CommandStatus.Done)
+            }
+            if (RunCommand(@"-file-exec-and-symbols " + modifiedAXFFile, "^done", "^error", 10000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to run -file-exec-and-symbols command.");
                 return false;
             }
-            if (RunCommand(@"load", "Transfer rate", 600000) != CommandStatus.Done)
+            if (RunCommand(@"load", "Transfer rate", "^error", 600000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to load file.");
                 return false;
@@ -93,12 +93,12 @@ namespace TestRig
         public bool Continue()
         {
             System.Diagnostics.Debug.WriteLine("GDB continue");
-            if (RunCommand(@"monitor soft_reset_halt", "target halted due to breakpoint", 3000) != CommandStatus.Done)
+            if (RunCommand(@"monitor soft_reset_halt", "target halted due to breakpoint", "^error", 3000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to halt processor.");
                 return false;
             }
-            if (RunCommand(@"-exec-continue", "^running", 1000) != CommandStatus.Done)
+            if (RunCommand(@"-exec-continue", "^running", "^error", 1000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to halt processor.");
                 return false;
@@ -111,6 +111,7 @@ namespace TestRig
         {
             try
             {
+                RunCommand("quit");
                 System.Diagnostics.Debug.WriteLine("MSBuildProcess killed.");
                 MSBuildProcess.Kill();
                 MSBuildProcess = null;
@@ -123,11 +124,19 @@ namespace TestRig
 
         private void ProcessResponse(string response)
         {
-            if ((response != String.Empty) && (response != null))
+            if ((expectedPassResponse != String.Empty) && (expectedPassResponse != null))
             {
-                if (response.Contains(expectedResponse))
+                if (response.Contains(expectedPassResponse))
                 {
                     commandResult = CommandStatus.Done;
+                    ARE_result.Set();
+                }
+            }
+            if ((expectedFailResponse != String.Empty) && (expectedFailResponse != null))
+            {
+                if (response.Contains(expectedFailResponse))
+                {
+                    commandResult = CommandStatus.Error;
                     ARE_result.Set();
                 }
             }
@@ -161,19 +170,21 @@ namespace TestRig
 
         private bool waitForMessages()
         {
-            expectedResponse = "This string should never be matched in the GDB output";
+            expectedPassResponse = "This string should never be matched in the GDB output";
             ARE_result.WaitOne(500);
             return true;
         }
 
-        private CommandStatus RunCommand(string command, string expect, int timeout)
+        private CommandStatus RunCommand(string command, string expectPass, string expectFail, int timeout)
         {
             int attempts;
-            expectedResponse = expect;
+
+            expectedPassResponse = expectPass;
+            expectedFailResponse = expectFail;
 
             for (attempts = 0; attempts < 3; attempts++)
             {
-                System.Diagnostics.Debug.WriteLine("GDB run attempt " + attempts.ToString() + " for: " + command + " waiting for: " + expect.ToString());
+                System.Diagnostics.Debug.WriteLine("GDB run attempt " + attempts.ToString() + " for: " + command + " waiting for: " + expectPass.ToString());
                 commandResult = CommandStatus.Running;
                 input.WriteLine(command);
                 ARE_result.WaitOne(timeout);

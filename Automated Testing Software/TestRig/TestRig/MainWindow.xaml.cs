@@ -95,7 +95,7 @@ namespace TestRig
             {
                 MessageBox.Show("OpenOCD is already running.\r\nStop the OpenOCD process and try again.");
                 Environment.Exit(0);
-            }
+            }            
         }
 
         public void Initialize()
@@ -169,6 +169,7 @@ namespace TestRig
         public void DisplayUpdateMethod()
         {
             listViewStatus.Items.Refresh();
+            this.InvalidateVisual();
         }
 
         private void tbTestSourcePath_TextChanged(object sender, TextChangedEventArgs e)
@@ -216,6 +217,7 @@ namespace TestRig
                 // You may decide to do something different here. For example, you 
                 // can try to elevate your privileges and access the file again.
                 //log.Add(e.Message);
+                System.Diagnostics.Debug.WriteLine(e.Message);
             }
 
             catch (System.IO.DirectoryNotFoundException e)

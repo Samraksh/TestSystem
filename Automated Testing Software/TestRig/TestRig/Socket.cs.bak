@@ -157,7 +157,8 @@ namespace TestRig
                 {
                     System.Diagnostics.Debug.WriteLine("Starting to parse received XML test file.");
                     while (reader != null)
-                    {                        
+                    {
+                        System.Diagnostics.Debug.WriteLine("xxxx reader length: " + reader.Value.Length.ToString());
                         TestDescription readTest = readXMLTest(reader);                        
 
                         if (readTest.testReadComplete == true)

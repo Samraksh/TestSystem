@@ -67,7 +67,7 @@ namespace TestRig
         public bool CloneCode()
         {            
             RunCommand(@"setlocal");                    
-            RunCommand(@"set git_install_root=" + mainHandle.textGitPath + @"\Automated Testing Software\GitBin");            
+            RunCommand(@"set git_install_root=" + mainHandle.textGitPath);            
             RunCommand(@"set PATH=%git_install_root%\bin;%git_install_root%\mingw\bin;%git_install_root%\cmd;%PATH%");
             RunCommand(@"set PLINK_PROTOCOL=ssh");
             RunCommand(@"set HOME=%USERPROFILE%");            

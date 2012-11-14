@@ -119,6 +119,7 @@ namespace TestRig
         {
             try
             {
+                RunCommand("exit", "halted", 100);
                 System.Diagnostics.Debug.WriteLine("Telnet board kill listen thread.");
 
                 connectSocket.Close();
