@@ -159,15 +159,18 @@ namespace TestRig
             string projectName = project;
             index = projectName.IndexOf('.');
             string strippedName = projectName.Substring(0, index);
+            //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
+            string buildOutput = @"bin\Release\";
+            //string buildOutput = "$(BUILD_TREE)";
             // convert to S19 record
-            if (RunCommand(@"binToSrec.exe -b 80A0000 -i " + MFPath + @"\BuildOutput\public\Debug\Client\dat\" + strippedName + ".dat -o " + MFPath + @"\BuildOutput\public\Debug\Client\dat\" + strippedName + ".s19", "Conversion is Successful", "FAILED", 5000) != CommandStatus.Done)
+            if (RunCommand(@"binToSrec.exe -b 80A0000 -i " + buildOutput + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 5000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to convert to S19 step 1.");
                 return false;
             }
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project converted to S19 step 1.");
-            RunCommand(mainHandle.textBuildSourceryPath + @"\bin\arm-none-eabi-objcopy.exe " + MFPath + @"\BuildOutput\public\Debug\Client\dat\" + strippedName + @".s19 " + MFPath + @"\BuildOutput\public\Debug\Client\dat\" + strippedName + @"_Conv.s19");
+            RunCommand(mainHandle.textBuildSourceryPath + @"\bin\arm-none-eabi-objcopy.exe " + buildOutput + strippedName + @".s19 " + buildOutput + strippedName + @"_Conv.s19");
             Thread.Sleep(2000);
 
             return true;
