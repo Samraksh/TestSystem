@@ -142,5 +142,65 @@ namespace TestRig.Properties {
                 this["MFSelection"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int HSSelection {
+            get {
+                return ((int)(this["HSSelection"]));
+            }
+            set {
+                this["HSSelection"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int MTSelection {
+            get {
+                return ((int)(this["MTSelection"]));
+            }
+            set {
+                this["MTSelection"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int STSelection {
+            get {
+                return ((int)(this["STSelection"]));
+            }
+            set {
+                this["STSelection"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int GVSelection {
+            get {
+                return ((int)(this["GVSelection"]));
+            }
+            set {
+                this["GVSelection"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int MFPathSelection {
+            get {
+                return ((int)(this["MFPathSelection"]));
+            }
+            set {
+                this["MFPathSelection"] = value;
+            }
+        }
     }
 }

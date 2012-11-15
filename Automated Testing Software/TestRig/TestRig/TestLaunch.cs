@@ -174,13 +174,13 @@ namespace TestRig
                 {
                     if (currentTest.testUsePrecompiledBinary == String.Empty)
                     {
-                        if (msbuild.BuildTinyCLR() == false) return "MSBuild failed to build TinyCLR";
+                        if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyCLR";
                     }
-                    if (msbuild.BuildManagedProject(workingDirectory, currentTest.buildProj) == false) return "MSBuild failed to build managed project";
+                    if (msbuild.BuildManagedProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build managed project";
                 }
                 else
                 {
-                    if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj) == false) return "MSBuild failed to build native project";
+                    if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build native project";
                 }
 
                 msbuild.Kill();
@@ -211,7 +211,7 @@ namespace TestRig
                     }
                     else
                     {
-                        if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\GCC4.2\le\FLASH\debug\STM32F10x\bin\tinyclr.axf") == false) return "GDB failed to load MF AXF file";                    
+                        if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";                    
                     }                                        
 
                     currentTest.testState = "Loading managed code";
@@ -228,7 +228,8 @@ namespace TestRig
                     }
                     else
                     {
-                        if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\GCC4.2\le\FLASH\debug\STM32F10x\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                        // if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\[GCC4.2 / other]\le\[FLASH / RAM]\debug\[STM32F10x / solution]\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                        if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
                     }                     
                 }
                                

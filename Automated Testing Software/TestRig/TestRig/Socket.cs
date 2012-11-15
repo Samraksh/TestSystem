@@ -140,6 +140,27 @@ namespace TestRig
             else
                 readTest.testUsePrecompiledBinary = String.Empty;
 
+            if (reader.ReadToFollowing("TestHardware") == true)
+                readTest.testHardware = strip(reader.ReadElementContentAsString());
+            else
+                readTest.testHardware = String.Empty;
+            if (reader.ReadToFollowing("TestSolution") == true)
+                readTest.testSolution = strip(reader.ReadElementContentAsString());
+            else
+                readTest.testSolution = String.Empty;
+            if (reader.ReadToFollowing("TestMemoryType") == true)
+                readTest.testMemoryType = strip(reader.ReadElementContentAsString());
+            else
+                readTest.testMemoryType = String.Empty;
+            if (reader.ReadToFollowing("TestSolutionType") == true)
+                readTest.testSolutionType = strip(reader.ReadElementContentAsString());
+            else
+                readTest.testSolutionType = String.Empty;
+            if (reader.ReadToFollowing("TestGCCVersion") == true)
+                readTest.testGCCVersion = strip(reader.ReadElementContentAsString());
+            else
+                readTest.testGCCVersion = String.Empty;
+
             readTest.testReadComplete = true;
             return readTest;
         }

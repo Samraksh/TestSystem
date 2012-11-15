@@ -55,9 +55,15 @@ namespace TestRig
         public string textOCDTarget;
         public string textOCDExe;
         public string textGitPath;
-        public static string textMFSelection;
+        public static string textMFPathSelection;
         public static string textGitCodeLocation;
         public static string textGitCodeBranch;
+        public static string textHardware;
+        public static string textSolution;
+        public static string textMemoryType;
+        public static string textSolutionType;
+        public static string textGCCVersion;
+        public static string textMFSelected;
         public static TestDescription[] availableTests;
         private static Tasks _tasks;
         private static int testNum;
@@ -178,11 +184,22 @@ namespace TestRig
 
         private void tbTestSourcePath_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // if test source path changed then we will automatically enable/diable test options
-            activateTests(activateTestsOptions.parseTestFile);
+            if (Directory.Exists(tbTestSourcePath.Text) == true)
+            {
+                // if test source path changed then we will automatically enable/diable test options
+                activateTests(activateTestsOptions.parseTestFile);
 
-            // this string is used because other threads are not allowed to access the text box directly
-            textTestSourcePath = tbTestSourcePath.Text;
+                // this string is used because other threads are not allowed to access the text box directly
+                textTestSourcePath = tbTestSourcePath.Text;
+            }
+            else
+            {
+                if (_tasks == null)
+                    return;
+                _tasks.Clear();
+                testNum = 1;
+            }
+            
         }
 
         private void activateTests(activateTestsOptions option)
@@ -270,18 +287,8 @@ namespace TestRig
                         // read in each defined test within the configuration file and activate the appropriate checkbox
                         TestDescription readTest = rxSocket.readXMLTest(reader);
                         if (readTest.testReadComplete == false)
-                            return;
-                        // if the follow items are specified already we keep those parameters, otherwise those test parameters are populated here
-                        if (readTest.testerName == String.Empty)
-                            readTest.testerName = System.Environment.UserName.ToString();
-                        if (readTest.testLocation == String.Empty)
-                            readTest.testLocation = System.Environment.MachineName.ToString();
-                        if (readTest.testMFVersionNum == String.Empty)
-                            readTest.testMFVersionNum = textMFSelection;
-                        if (readTest.testGitOption == String.Empty)
-                            readTest.testGitOption = textGitCodeLocation;
-                        if (readTest.testGitBranch == String.Empty)
-                            readTest.testGitBranch = textGitCodeBranch;
+                            return;                        
+
                         availableTests[testNum - 1] = readTest;
                         _tasks.Add(new Task()
                         {
@@ -313,7 +320,29 @@ namespace TestRig
                 {
                     if (queueTask.Selected == true)
                     {
-                        writer.Write(availableTests[queueTask.TestNum - 1].ToString());
+                        TestDescription tempTask = new TestDescription(availableTests[queueTask.TestNum - 1]);
+                        // if the follow items are specified already we keep those parameters, otherwise those test parameters are populated here
+                        if (tempTask.testerName == String.Empty)
+                            tempTask.testerName = System.Environment.UserName.ToString();
+                        if (tempTask.testLocation == String.Empty)
+                            tempTask.testLocation = System.Environment.MachineName.ToString();
+                        if (tempTask.testMFVersionNum == String.Empty)
+                            tempTask.testMFVersionNum = textMFSelected;
+                        if (tempTask.testGitOption == String.Empty)
+                            tempTask.testGitOption = textGitCodeLocation;
+                        if (tempTask.testGitBranch == String.Empty)
+                            tempTask.testGitBranch = textGitCodeBranch;
+                        if (tempTask.testHardware == String.Empty)
+                            tempTask.testHardware = textHardware;
+                        if (tempTask.testSolution == String.Empty)
+                            tempTask.testSolution = textSolution;
+                        if (tempTask.testMemoryType == String.Empty)
+                            tempTask.testMemoryType = textMemoryType;
+                        if (tempTask.testSolutionType == String.Empty)
+                            tempTask.testSolutionType = textSolutionType;
+                        if (tempTask.testGCCVersion == String.Empty)
+                            tempTask.testGCCVersion = textGCCVersion;
+                        writer.Write(tempTask.ToString());
                     }
                 }
                 writer.WriteLine("</TestSuite>");
@@ -328,8 +357,8 @@ namespace TestRig
         }
 
         private void tbMFPath_TextChanged(object sender, TextChangedEventArgs e)
-        {            
-            if (cbMFVersion.SelectedValue.ToString().Contains("MF 4.0"))
+        {
+            if (cbMFVersionPath.SelectedValue.ToString().Contains("MF 4.0"))
                 textMFPath_4_0 = tbMFPath.Text;
             else
                 textMFPath_4_3 = tbMFPath.Text;
@@ -365,15 +394,15 @@ namespace TestRig
             textGitCodeBranch = tbCodeBranch.Text;
         }
 
-        private void cbMFVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cbMFVersionPath_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (settingsInitialized == false)
             {
                 // buttons have not yet been defined by InitializeComponent
                 return;
             }
-            textMFSelection = cbMFVersion.SelectedItem.ToString();
-            if (textMFSelection.Contains("MF 4.0"))
+            textMFPathSelection = cbMFVersionPath.SelectedItem.ToString();
+            if (textMFPathSelection.Contains("MF 4.0"))
                 tbMFPath.Text = textMFPath_4_0;
             else
                 tbMFPath.Text = textMFPath_4_3;
@@ -464,16 +493,23 @@ namespace TestRig
                 tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
                 tbBuildSourceryPath.Text = Properties.Settings.Default.CSPath.ToString();
 
-                cbMFVersion.SelectedIndex = Properties.Settings.Default.MFSelection;    
+                cbMFVersionPath.SelectedIndex = Properties.Settings.Default.MFPathSelection;    
                 textMFPath_4_0 = Properties.Settings.Default.MFPath_4_0.ToString();
                 textMFPath_4_3 = Properties.Settings.Default.MFPath_4_3.ToString();
-                if (cbMFVersion.SelectedValue.ToString().Contains("MF 4.0"))
+                if (cbMFVersionPath.SelectedValue.ToString().Contains("MF 4.0"))
                     tbMFPath.Text = textMFPath_4_0;
                 else
                     tbMFPath.Text = textMFPath_4_3;
                 tbGitPath.Text = Properties.Settings.Default.GitPath.ToString();
                 tbTestSourcePath.Text = Properties.Settings.Default.TSPath.ToString();
                 tbTestReceiptPath.Text = Properties.Settings.Default.TRPath.ToString();
+
+                cbHardware.SelectedIndex = Properties.Settings.Default.HSSelection;
+                cbMemory.SelectedIndex = Properties.Settings.Default.MTSelection;
+                cbSolutionType.SelectedIndex = Properties.Settings.Default.STSelection;
+                cbGCCVersion.SelectedIndex = Properties.Settings.Default.GVSelection;
+
+                cbMFSelected.SelectedIndex = Properties.Settings.Default.MFSelection;
 
                 settingsInitialized = true;
             }
@@ -494,10 +530,16 @@ namespace TestRig
                 Properties.Settings.Default["CSPath"] = tbBuildSourceryPath.Text;
                 Properties.Settings.Default["MFPath_4_0"] = textMFPath_4_0;
                 Properties.Settings.Default["MFPath_4_3"] = textMFPath_4_3;
-                Properties.Settings.Default["MFSelection"] = cbMFVersion.SelectedIndex;
+                Properties.Settings.Default["MFPathSelection"] = cbMFVersionPath.SelectedIndex;
                 Properties.Settings.Default["GitPath"] = tbGitPath.Text;
                 Properties.Settings.Default["TSPath"] = tbTestSourcePath.Text;
                 Properties.Settings.Default["TRPath"] = tbTestReceiptPath.Text;
+                Properties.Settings.Default["HSSelection"] = cbHardware.SelectedIndex;
+                Properties.Settings.Default["MTSelection"] = cbMemory.SelectedIndex;
+                Properties.Settings.Default["STSelection"] = cbSolutionType.SelectedIndex;
+                Properties.Settings.Default["GVSelection"] = cbGCCVersion.SelectedIndex;
+                Properties.Settings.Default["MFSelection"] = cbMFSelected.SelectedIndex;
+                Properties.Settings.Default.Save();
             }
             catch (Exception ex)
             {
@@ -607,6 +649,98 @@ namespace TestRig
         private void tbFilter_TextChanged(object sender, TextChangedEventArgs e)
         {
             CollectionViewSource.GetDefaultView(testDataGrid.ItemsSource).Refresh();
+        }
+
+        private void cbHardware_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (cbHardware.SelectedIndex)
+            {
+                case 0:
+                    textHardware = "Emote v1";
+                    textSolution = "STM32F10x";
+                    break;
+                case 1:
+                    textHardware = "Emote.Now";
+                    textSolution = "EmoteDotNow";
+                    break;
+                case 2:
+                    textHardware = "Soc8200";
+                    textSolution = "SOC8200";
+                    break;
+                case 3:
+                    textHardware = "Adapt";
+                    textSolution = "ADAPT";
+                    break;
+                default:
+                    textHardware = "Emote v1";
+                    textSolution = "STM32F10x";
+                    break;
+            }
+        }
+
+        private void cbMemory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (cbMemory.SelectedIndex)
+            {
+                case 0:
+                    textMemoryType = "FLASH";
+                    break;
+                case 1:
+                    textMemoryType = "RAM";
+                    break;
+                case 2:
+                    textMemoryType = "External FLASH";
+                    break;
+                default:
+                    textMemoryType = "FLASH";
+                    break;
+            }
+        }
+
+        private void cbSolutionType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (cbSolutionType.SelectedIndex)
+            {
+                case 0:
+                    textSolutionType = "TinyCLR";
+                    break;
+                case 1:
+                    textSolutionType = "TinyBooter";
+                    break;
+                default:
+                    textSolutionType = "TinyCLR";
+                    break;
+            }
+        }
+
+        private void cbGCCVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (cbGCCVersion.SelectedIndex)
+            {
+                case 0:
+                    textGCCVersion = "GCC4.2";
+                    break;
+                default:
+                    textGCCVersion = "GCC4.2";
+                    break;
+            }
+        }
+
+        private void cbMFSelected_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (cbMFSelected.SelectedIndex)
+            {
+                case 0:
+                    textMFSelected = "4.0";
+                    break;
+                case 1:
+                    textMFSelected = "4.3";
+                    break;
+                default:
+                    textMFSelected = "4.3";
+                    break;
+            }
+            
         }  
     }
 }

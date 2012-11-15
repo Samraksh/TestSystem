@@ -71,7 +71,7 @@ namespace TestRig
             }
         }
 
-        public bool BuildTinyCLR()
+        public bool BuildTinyCLR(TestDescription currentTest)
         {                      
             RunCommand(@"cd " + MFPath);
             /*if (RunCommand(@"setenv_gcc.cmd " + mainHandle.textBuildSourceryPath, "setting vars", String.Empty, 1000) != CommandStatus.Done)
@@ -79,11 +79,11 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to setenv.");
                 return false;
             }*/
-            RunCommand(@"setenv_base.cmd GCC4.2 PORT " + mainHandle.textBuildSourceryPath);
+            RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
 
-            RunCommand(@"cd " + MFPath + @"\Solutions\STM32F10x\TinyCLR");
+            RunCommand(@"cd " + MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType);
              
-            if (RunCommand(@"msbuild /t:clean tinyclr.proj", "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
                 return false;
@@ -91,7 +91,7 @@ namespace TestRig
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
 
-            if (RunCommand(@"msbuild /t:build tinyclr.proj", "Build succeeded", "Build FAILED", 120000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 120000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
@@ -102,7 +102,7 @@ namespace TestRig
             return true;
         }
 
-        public bool BuildNativeProject(string path, string project)
+        public bool BuildNativeProject(string path, string project, TestDescription currentTest)
         {
             RunCommand(@"cd " + MFPath);
 
@@ -110,16 +110,16 @@ namespace TestRig
             int index = fullPath.IndexOf(@"TestSys");
             string strippedPath = path.Substring(0, index);
             RunCommand(@"SET TESTSOURCE=" + strippedPath);
-            RunCommand(@"setenv_base.cmd GCC4.2 PORT " + mainHandle.textBuildSourceryPath);
+            RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
             RunCommand(@"cd " + path);
-            if (RunCommand(@"msbuild /t:clean " + project, "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
                 return false;
             }
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-            if (RunCommand(@"msbuild /t:build " + project, "Build succeeded", "Build FAILED", 120000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 120000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
@@ -130,7 +130,7 @@ namespace TestRig
             return true;
         }
 
-        public bool BuildManagedProject(string path, string project)
+        public bool BuildManagedProject(string path, string project, TestDescription currentTest)
         {
             RunCommand(@"cd " + MFPath);
 
@@ -138,16 +138,17 @@ namespace TestRig
             int index = fullPath.IndexOf(@"TestSys");
             string strippedPath = path.Substring(0, index);
             RunCommand(@"SET TESTSOURCE=" + strippedPath);
-            RunCommand(@"setenv_base.cmd GCC4.2 PORT " + mainHandle.textBuildSourceryPath);
+            RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
             RunCommand(@"cd " + path);
-            if (RunCommand(@"msbuild /t:clean " + project, "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
                 return false;
             }
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-            if (RunCommand(@"msbuild /t:build " + project, "Build succeeded", "Build FAILED", 120000) != CommandStatus.Done)
+            // msbuild /t:build /p:memory=" + currentTest.testMemoryType + @" (default) (/p:memory=RAM)
+            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 120000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
