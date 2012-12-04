@@ -96,7 +96,7 @@ namespace TestRig
         {
             try
             {
-                string modifiedS19File = s19File.Replace("\\", "\\\\");
+                string modifiedS19File = s19File.Replace(@"\", @"\\");
                 System.Diagnostics.Debug.WriteLine("Sending commands to board: ");
                 waitForMessages();                
                 

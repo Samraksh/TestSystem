@@ -55,16 +55,16 @@
                     </DataGrid>
                     <Button Content="Upload Tests" Height="23" Margin="590,0,18,129" Name="Upload" VerticalAlignment="Bottom" Click="Upload_Click" Width="83" />
                     <Button Content="Debug" Height="23" HorizontalAlignment="Left" Margin="610,595,0,0" Name="buttonDebug" VerticalAlignment="Top" Width="75" Click="buttonDebug_Click" Visibility="Hidden" />
-                    <ComboBox Height="23" Margin="384,543,165,0" Name="RigSelect" SelectedIndex="0" VerticalAlignment="Top" Width="142" HorizontalAlignment="Left">
+                    <ComboBox Height="23" Margin="384,543,0,0" Name="RigSelect" SelectedIndex="0" VerticalAlignment="Top" Width="164" HorizontalAlignment="Left">
                         <ComboBoxItem Content="localRig" />
                         <ComboBoxItem Content="DublinRig" IsEnabled="False" />
                     </ComboBox>
-                    <ComboBox Height="23" Margin="384,568,0,0" Name="cbCodeLocation" SelectedIndex="0" VerticalAlignment="Top" Width="142" SelectionChanged="cbCodeLocation_SelectionChanged" HorizontalAlignment="Left">
+                    <ComboBox Height="23" Margin="384,568,0,0" Name="cbCodeLocation" SelectedIndex="0" VerticalAlignment="Top" Width="164" SelectionChanged="cbCodeLocation_SelectionChanged" HorizontalAlignment="Left">
                         <ComboBoxItem Content="Use local code" />
                         <ComboBoxItem Content="Use archive code" />
                         <ComboBoxItem Content="Use archive branch code" />
                     </ComboBox>
-                    <TextBox Height="23" HorizontalAlignment="Left" Margin="384,593,0,0" Name="tbCodeBranch" VerticalAlignment="Top" Width="142" Visibility="Hidden" TextChanged="tbCodeBranch_TextChanged" SelectionBrush="#FF3399FF" Background="#FFF0F0F0" />
+                    <TextBox Height="23" HorizontalAlignment="Left" Margin="384,593,0,0" Name="tbCodeBranch" VerticalAlignment="Top" Width="164" Visibility="Hidden" TextChanged="tbCodeBranch_TextChanged" SelectionBrush="#FF3399FF" Background="#FFF0F0F0" />
                     <Label Content="Git Branch:" Height="28" HorizontalAlignment="Left" Margin="315,590,0,0" Name="lblBranch" VerticalAlignment="Top" Visibility="Hidden" />
                     <GroupBox Header="Test Filters" Height="68" HorizontalAlignment="Left" Margin="-2,443,0,0" Name="groupBox4" VerticalAlignment="Top" Width="570">
                         <Grid Width="560">
@@ -98,7 +98,7 @@
                         <ComboBoxItem Content="TinyBooter" IsEnabled="True" />
                     </ComboBox>
                     <Label Content="Git Setting:" Height="28" HorizontalAlignment="Left" Margin="313,565,0,0" Name="label10" VerticalAlignment="Top" />
-                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="384,518,0,0" Name="cbMFSelected" SelectedIndex="0" VerticalAlignment="Top" Width="142" SelectionChanged="cbMFSelected_SelectionChanged">
+                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="384,518,0,0" Name="cbMFSelected" SelectedIndex="0" VerticalAlignment="Top" Width="164" SelectionChanged="cbMFSelected_SelectionChanged">
                         <ComboBoxItem Content="4.0" />
                         <ComboBoxItem Content="4.3" IsEnabled="True" />
                     </ComboBox>

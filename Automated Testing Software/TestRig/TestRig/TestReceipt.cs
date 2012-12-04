@@ -95,13 +95,13 @@ namespace TestRig
 
             // if a file already exists a number is appended to the file so as to not overwrite the file
             int num = 1;
-            while (File.Exists(path + "\\" + fullFileName))
+            while (File.Exists(path + @"\" + fullFileName))
             {
                 fullFileName = fileName + strippedProject + "_receipt" + num.ToString() + ".xml";
                 num++;
             }
 
-            using (StreamWriter writer = new StreamWriter(path + "\\" + fullFileName))
+            using (StreamWriter writer = new StreamWriter(path + @"\" + fullFileName))
             {
                 writer.WriteLine(this.ToString());
             }

@@ -67,7 +67,7 @@ namespace TestRig
 
         public bool Load(string axfFile)
         {
-            string modifiedAXFFile = axfFile.Replace("\\", "\\\\");
+            string modifiedAXFFile = axfFile.Replace(@"\", @"\\");
             System.Diagnostics.Debug.WriteLine("GDB loading: axf: " + modifiedAXFFile);
             waitForMessages();
 

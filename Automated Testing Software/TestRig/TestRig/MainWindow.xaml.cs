@@ -358,7 +358,7 @@ namespace TestRig
 
         private void tbMFPath_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (cbMFVersionPath.SelectedValue.ToString().Contains("MF 4.0"))
+            if (((ComboBoxItem)cbMFVersionPath.SelectedItem).Content.ToString().Equals("MF 4.0"))
                 textMFPath_4_0 = tbMFPath.Text;
             else
                 textMFPath_4_3 = tbMFPath.Text;
@@ -401,8 +401,8 @@ namespace TestRig
                 // buttons have not yet been defined by InitializeComponent
                 return;
             }
-            textMFPathSelection = cbMFVersionPath.SelectedItem.ToString();
-            if (textMFPathSelection.Contains("MF 4.0"))
+            textMFPathSelection = ((ComboBoxItem)cbMFVersionPath.SelectedItem).Content.ToString();
+            if (textMFPathSelection.Equals("MF 4.0"))
                 tbMFPath.Text = textMFPath_4_0;
             else
                 tbMFPath.Text = textMFPath_4_3;
@@ -417,6 +417,7 @@ namespace TestRig
 
         private void buttonDebug_Click(object sender, RoutedEventArgs e)
         {
+            
         }
 
         private void checkPaths()
@@ -496,7 +497,7 @@ namespace TestRig
                 cbMFVersionPath.SelectedIndex = Properties.Settings.Default.MFPathSelection;    
                 textMFPath_4_0 = Properties.Settings.Default.MFPath_4_0.ToString();
                 textMFPath_4_3 = Properties.Settings.Default.MFPath_4_3.ToString();
-                if (cbMFVersionPath.SelectedValue.ToString().Contains("MF 4.0"))
+                if (((ComboBoxItem)cbMFVersionPath.SelectedItem).Content.ToString().Equals("MF 4.0"))
                     tbMFPath.Text = textMFPath_4_0;
                 else
                     tbMFPath.Text = textMFPath_4_3;
@@ -554,8 +555,8 @@ namespace TestRig
                 // buttons have not yet been defined by InitializeComponent
                 return;
             }
-            textGitCodeLocation = cbCodeLocation.SelectedItem.ToString();
-            if (textGitCodeLocation.Contains("Use local code"))
+            textGitCodeLocation = ((ComboBoxItem)cbCodeLocation.SelectedItem).Content.ToString();
+            if (textGitCodeLocation.Equals("Use local code"))
             {
                 // read Test XML file to discover which tests are available to test
                 activateTests(activateTestsOptions.parseTestFile);
@@ -563,13 +564,13 @@ namespace TestRig
                 lblBranch.Visibility = Visibility.Hidden;
                 tbCodeBranch.Visibility = Visibility.Hidden;
             }
-            else if (textGitCodeLocation.Contains("Use archive code"))
+            else if (textGitCodeLocation.Equals("Use archive code"))
             {
                 activateTests(activateTestsOptions.allTests);
                 lblBranch.Visibility = Visibility.Hidden;
                 tbCodeBranch.Visibility = Visibility.Hidden;
             }
-            else if (textGitCodeLocation.Contains("Use archive branch code"))
+            else if (textGitCodeLocation.Equals("Use archive branch code"))
             {
                 activateTests(activateTestsOptions.allTests);
                 lblBranch.Visibility = Visibility.Visible;

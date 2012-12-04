@@ -119,7 +119,7 @@ namespace TestRig
         {
             try
             {
-                string workingDirectory = mainHandle.textTestSourcePath + "\\" + currentTest.testPath;
+                string workingDirectory = mainHandle.textTestSourcePath + @"\" + currentTest.testPath;
                 string projectName = currentTest.buildProj;
                 int index = projectName.IndexOf('.');
                 string strippedName = projectName.Substring(0, index);
@@ -145,20 +145,20 @@ namespace TestRig
                 if (git == null) return "Git failed to load";
 
                 // Checkout code from GitHub if needed
-                if (currentTest.testGitOption.Contains("Use local code"))
+                if (currentTest.testGitOption.Equals("Use local code"))
                 {
                     // we do not checkout code if we are using the local copies
                     System.Diagnostics.Debug.WriteLine("Using local code for test.");
                 }
-                else if (currentTest.testGitOption.Contains("Use archive code"))
+                else if (currentTest.testGitOption.Equals("Use archive code"))
                 {
                     System.Diagnostics.Debug.WriteLine("Checking out archived code.");
                     if (git.CloneCode() == false) return "Git failed to Clone";
                 }
-                else if (currentTest.testGitOption.Contains("Use archive branch code"))
+                else if (currentTest.testGitOption.Equals("Use archive branch code"))
                 {
                     System.Diagnostics.Debug.WriteLine("Checking out branch <" + currentTest.testGitBranch + "> of archived code.");
-                    if (git.CloneCodeBranch(currentTest.testGitBranch) == false) return "Git failed to Clone Branch";
+                    if (git.CloneCodeBranch(currentTest.testGitBranch) == false) return "Git failed to clone branch: " + currentTest.testGitBranch;
                 }
                 
                 git.Kill();
@@ -207,7 +207,7 @@ namespace TestRig
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                     if (currentTest.testUsePrecompiledBinary != String.Empty)
                     {
-                        if (gdb.Load(workingDirectory + "\\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled MF AXF file: " + currentTest.testUsePrecompiledBinary;
+                        if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled MF AXF file: " + currentTest.testUsePrecompiledBinary;
                     }
                     else
                     {
@@ -217,14 +217,14 @@ namespace TestRig
                     currentTest.testState = "Loading managed code";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
 
-                    if (telnet.Load(workingDirectory + "\\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";                    
+                    if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";                    
                 } else
                 {
                     currentTest.testState = "Loading test AXF";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                     if (currentTest.testUsePrecompiledBinary != String.Empty)
                     {
-                        if (gdb.Load(workingDirectory + "\\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled AXF file: " + currentTest.testUsePrecompiledBinary;
+                        if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled AXF file: " + currentTest.testUsePrecompiledBinary;
                     }
                     else
                     {
@@ -247,9 +247,9 @@ namespace TestRig
                 ReadParameters readVars;
                 
                 if (currentTest.testType == "C#")
-                    readVars = new ReadParameters(workingDirectory + "\\" + "Parameters.cs", currentTest);
+                    readVars = new ReadParameters(workingDirectory + @"\" + "Parameters.cs", currentTest);
                 else
-                    readVars = new ReadParameters(workingDirectory + "\\" + "Parameters.h", currentTest);
+                    readVars = new ReadParameters(workingDirectory + @"\" + "Parameters.h", currentTest);
 
                 System.Diagnostics.Debug.WriteLine("useLogic: " + currentTest.testUseLogic.ToString());
                 System.Diagnostics.Debug.WriteLine("sampleTimeMs: " + currentTest.testSampleTimeMs.ToString());
@@ -258,23 +258,23 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("executableName: " + currentTest.testExecutableName.ToString());
                 System.Diagnostics.Debug.WriteLine("executableTimeoutMs: " + currentTest.testExecutableTimeoutMs.ToString());
 
-                if (Directory.Exists(workingDirectory + "\\" + "testTemp")) Directory.Delete(workingDirectory + "\\" + "testTemp", true);
-                Directory.CreateDirectory(workingDirectory + "\\" + "testTemp");
+                if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
+                Directory.CreateDirectory(workingDirectory + @"\" + "testTemp");
                 if (currentTest.testUseLogic == true)
                 {
                     if (logicTest == null)
-                        logicTest = new LogicAnalyzer(currentTest.testSampleFrequency, workingDirectory + "\\" + strippedName + ".hkp");
+                        logicTest = new LogicAnalyzer(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
                     else
-                        logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + "\\" + strippedName + ".hkp");                    
+                        logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");                    
                     if (logicTest == null) return "Logic Analyzer failed to load";
-                    if (logicTest.startMeasure(workingDirectory + "\\testTemp\\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
+                    if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
                     Thread.Sleep(currentTest.testSampleTimeMs);
                     if (logicTest.stopMeasure() == false) return "Logic Analyzer failed to stop measuring";
                 }
 
                 if (currentTest.testUseExecutable == true)
                 {
-                    if (File.Exists(workingDirectory + "\\" + currentTest.testExecutableName) == false) return "Specified executable: " + currentTest.testExecutableName + " does not exist.";
+                    if (File.Exists(workingDirectory + @"\" + currentTest.testExecutableName) == false) return "Specified executable: " + currentTest.testExecutableName + " does not exist.";
                     ProcessStartInfo TestExecutableInfo = new ProcessStartInfo();
                     Process TestExecutableProcess = new Process();
 
@@ -283,7 +283,7 @@ namespace TestRig
                     TestExecutableInfo.CreateNoWindow = true;
                     TestExecutableInfo.RedirectStandardInput = true;
                     TestExecutableInfo.UseShellExecute = false;
-                    TestExecutableInfo.FileName = workingDirectory + "\\" + currentTest.testExecutableName;
+                    TestExecutableInfo.FileName = workingDirectory + @"\" + currentTest.testExecutableName;
 
                     TestExecutableProcess.StartInfo = TestExecutableInfo;
                     TestExecutableProcess.Start();
@@ -303,7 +303,7 @@ namespace TestRig
                 {
                     matlab = new Matlab(mainHandle, testReceipt);
                     if (matlab == null) return "Matlab failed to load";
-                    if (matlab.matlabRunScript(workingDirectory, "testTemp\\testData.csv", currentTest) == false) return "Matlab failed to run script";
+                    if (matlab.matlabRunScript(workingDirectory, @"testTemp\testData.csv", currentTest) == false) return "Matlab failed to run script";
                 }
                 else if (currentTest.testPowershellAnalysis == true)
                 {
@@ -311,7 +311,7 @@ namespace TestRig
 
                 // delete raw data file
                 Thread.Sleep(50);
-                Directory.Delete(workingDirectory + "\\" + "testTemp", true);                                    
+                Directory.Delete(workingDirectory + @"\" + "testTemp", true);                                    
                 
                 currentTest.testState = "Test Complete";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);

@@ -31,6 +31,7 @@ namespace TestRig
         public MainWindow mainHandle;
 
         private string MFPath;
+        private string usingMFVersion;
 
         public MSBuild(MainWindow passedHandle, string MFVersion)
         {
@@ -57,7 +58,8 @@ namespace TestRig
             MSBuildProcess.BeginOutputReadLine();
             MSBuildProcess.BeginErrorReadLine();
 
-            switch (MFVersion)
+            usingMFVersion = MFVersion;
+            switch (usingMFVersion)
             {
                 case "4.0":
                     MFPath = mainHandle.textMFPath_4_0;
@@ -79,7 +81,19 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to setenv.");
                 return false;
             }*/
-            RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
+            switch (usingMFVersion)
+            {
+                case "4.0":
+                    RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
+                    break;
+                case "4.3":
+                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    break;
+                default:
+                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    break;
+            }
+            
 
             RunCommand(@"cd " + MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType);
              
@@ -91,7 +105,7 @@ namespace TestRig
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
 
-            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 120000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 600000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
@@ -110,7 +124,18 @@ namespace TestRig
             int index = fullPath.IndexOf(@"TestSys");
             string strippedPath = path.Substring(0, index);
             RunCommand(@"SET TESTSOURCE=" + strippedPath);
-            RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
+            switch (usingMFVersion)
+            {
+                case "4.0":
+                    RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
+                    break;
+                case "4.3":
+                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    break;
+                default:
+                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    break;
+            }            
             RunCommand(@"cd " + path);
             if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
             {
@@ -119,7 +144,7 @@ namespace TestRig
             }
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 120000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 600000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
@@ -132,13 +157,44 @@ namespace TestRig
 
         public bool BuildManagedProject(string path, string project, TestDescription currentTest)
         {
+            string applicationStartAddress;
+
+            switch (currentTest.testSolution){
+                case "STM32F10x":
+                    applicationStartAddress = "80A0000";
+                    break;
+                case "EmoteDotNow":
+                    applicationStartAddress = "80A0000";
+                    break;
+                case "SOC8200":
+                    applicationStartAddress = "80A0000";
+                    break;
+                case "ADAPT":
+                    applicationStartAddress = "80A0000";
+                    break;
+                default:
+                    applicationStartAddress = "80A0000";
+                    break;
+            }
+
             RunCommand(@"cd " + MFPath);
 
             string fullPath = mainHandle.textTestSourcePath;
             int index = fullPath.IndexOf(@"TestSys");
             string strippedPath = path.Substring(0, index);
             RunCommand(@"SET TESTSOURCE=" + strippedPath);
-            RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
+            switch (usingMFVersion)
+            {
+                case "4.0":
+                    RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
+                    break;
+                case "4.3":
+                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    break;
+                default:
+                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    break;
+            }            
             RunCommand(@"cd " + path);
             if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
             {
@@ -148,7 +204,7 @@ namespace TestRig
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
             // msbuild /t:build /p:memory=" + currentTest.testMemoryType + @" (default) (/p:memory=RAM)
-            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 120000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 600000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
@@ -163,7 +219,7 @@ namespace TestRig
             //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
             string buildOutput = @"bin\Release\";            
             // convert to S19 record
-            if (RunCommand(@"binToSrec.exe -b 80A0000 -i " + buildOutput + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 5000) != CommandStatus.Done)
+            if (RunCommand(@"binToSrec.exe -b " + applicationStartAddress + " -i " + buildOutput + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 5000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to convert to S19 step 1.");
                 return false;
