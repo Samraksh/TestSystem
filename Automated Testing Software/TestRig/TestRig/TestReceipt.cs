@@ -89,7 +89,7 @@ namespace TestRig
             fileName = fileName.Substring(2);
 
             // removing .csproj or .proj from project name
-            int index = testDescription.buildProj.IndexOf('.');
+            int index = testDescription.buildProj.LastIndexOf('.');
             string strippedProject = testDescription.buildProj.Substring(0, index);
             string fullFileName = fileName + strippedProject +"_receipt.xml";
 

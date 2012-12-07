@@ -121,7 +121,7 @@ namespace TestRig
             RunCommand(@"cd " + MFPath);
 
             string fullPath = mainHandle.textTestSourcePath;
-            int index = fullPath.IndexOf(@"TestSys");
+            int index = fullPath.LastIndexOf(@"TestSys");
             string strippedPath = path.Substring(0, index);
             RunCommand(@"SET TESTSOURCE=" + strippedPath);
             switch (usingMFVersion)
@@ -180,7 +180,7 @@ namespace TestRig
             RunCommand(@"cd " + MFPath);
 
             string fullPath = mainHandle.textTestSourcePath;
-            int index = fullPath.IndexOf(@"TestSys");
+            int index = fullPath.LastIndexOf(@"TestSys");
             string strippedPath = path.Substring(0, index);
             RunCommand(@"SET TESTSOURCE=" + strippedPath);
             switch (usingMFVersion)
@@ -214,7 +214,7 @@ namespace TestRig
 
             // stripping the name of the project we are compiling to rename it to  *.s19 and *_conv.s19 files
             string projectName = project;
-            index = projectName.IndexOf('.');
+            index = projectName.LastIndexOf('.');
             string strippedName = projectName.Substring(0, index);
             //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
             string buildOutput = @"bin\Release\";            

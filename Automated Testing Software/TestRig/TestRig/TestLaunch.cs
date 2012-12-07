@@ -121,7 +121,7 @@ namespace TestRig
             {
                 string workingDirectory = mainHandle.textTestSourcePath + @"\" + currentTest.testPath;
                 string projectName = currentTest.buildProj;
-                int index = projectName.IndexOf('.');
+                int index = projectName.LastIndexOf('.');
                 string strippedName = projectName.Substring(0, index);
                 string MFPath;
 
