@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using System.Linq;
 
 namespace TestRig
 {
@@ -73,9 +74,31 @@ namespace TestRig
             }
         }
 
+        private bool ChangeDirectories(string directory)
+        {
+            // first change disks (might be needed)
+            if (directory.Contains(':'))
+            {
+                int index = directory.IndexOf(':');
+                string strippedName = directory.Substring(0, index + 1);
+
+                // changing disks
+                RunCommand(strippedName);
+                // changing directory
+                RunCommand(@"cd " + directory);
+            }
+            else
+            {
+                // no need to change disks, just directory
+                RunCommand(@"cd " + directory);
+            }
+
+            return true;
+        }
+
         public bool BuildTinyCLR(TestDescription currentTest)
-        {                      
-            RunCommand(@"cd " + MFPath);
+        {
+            ChangeDirectories(MFPath);
             /*if (RunCommand(@"setenv_gcc.cmd " + mainHandle.textBuildSourceryPath, "setting vars", String.Empty, 1000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to setenv.");
@@ -93,9 +116,8 @@ namespace TestRig
                     RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
                     break;
             }
-            
 
-            RunCommand(@"cd " + MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType);
+            ChangeDirectories(MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType);            
              
             if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
             {
@@ -118,7 +140,7 @@ namespace TestRig
 
         public bool BuildNativeProject(string path, string project, TestDescription currentTest)
         {
-            RunCommand(@"cd " + MFPath);
+            ChangeDirectories(MFPath);
 
             string fullPath = mainHandle.textTestSourcePath;
             int index = fullPath.LastIndexOf(@"TestSys");
@@ -135,8 +157,8 @@ namespace TestRig
                 default:
                     RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
                     break;
-            }            
-            RunCommand(@"cd " + path);
+            }
+            ChangeDirectories(path);            
             if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
@@ -177,7 +199,7 @@ namespace TestRig
                     break;
             }
 
-            RunCommand(@"cd " + MFPath);
+            ChangeDirectories(MFPath);
 
             string fullPath = mainHandle.textTestSourcePath;
             int index = fullPath.LastIndexOf(@"TestSys");
@@ -194,8 +216,8 @@ namespace TestRig
                 default:
                     RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
                     break;
-            }            
-            RunCommand(@"cd " + path);
+            }
+            ChangeDirectories(path);
             if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");

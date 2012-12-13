@@ -64,6 +64,28 @@ namespace TestRig
             GitProcess.BeginErrorReadLine();
         }
 
+        private bool ChangeDirectories(string directory)
+        {
+            // first change disks (might be needed)
+            if (directory.Contains(':'))
+            {
+                int index = directory.IndexOf(':');
+                string strippedName = directory.Substring(0, index + 1);
+
+                // changing disks
+                RunCommand(strippedName);
+                // changing directory
+                RunCommand(@"cd " + directory);
+            }
+            else
+            {
+                // no need to change disks, just directory
+                RunCommand(@"cd " + directory);
+            }
+
+            return true;
+        }
+
         public bool CloneCode()
         {            
             RunCommand(@"setlocal");                    
@@ -75,7 +97,7 @@ namespace TestRig
             if (RunCommand(@"dir " + archive.ToString(), "File Not Found", "", 500) != CommandStatus.Done)
             {
                 // test repository exists so we just checkout what we need to
-                RunCommand(@"cd " + archive.ToString());
+                ChangeDirectories(archive.ToString());
                 RunCommand(@"git reset --hard");
                 if (RunCommand("git checkout master", "Switched to", "Already on", 500) != CommandStatus.Done)
                 {
@@ -112,7 +134,7 @@ namespace TestRig
             if (RunCommand(@"dir " + archive.ToString(), "File Not Found", String.Empty, 500) != CommandStatus.Done)
             {
                 // test repository exists so we just checkout what we need to
-                RunCommand(@"cd " + archive.ToString());
+                ChangeDirectories(archive.ToString());
                 RunCommand(@"git reset --hard");
                 if (RunCommand("git checkout " + textCodeBranch, "Switched to", "Already on", 500) != CommandStatus.Done)
                 {
