@@ -81,7 +81,7 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("GDB failed to run -file-exec-and-symbols command.");
                 return false;
             }
-            if (RunCommand(@"load", "Transfer rate", "^error", 600000) != CommandStatus.Done)
+            if (RunCommand(@"load", "Transfer rate", "^error", 900000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to load file.");
                 return false;

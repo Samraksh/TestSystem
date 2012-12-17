@@ -127,7 +127,7 @@ namespace TestRig
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
 
-            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 600000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
@@ -166,7 +166,7 @@ namespace TestRig
             }
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 600000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
@@ -226,7 +226,7 @@ namespace TestRig
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
             // msbuild /t:build /p:memory=" + currentTest.testMemoryType + @" (default) (/p:memory=RAM)
-            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 600000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
