@@ -22,7 +22,8 @@ namespace TestRig
         public LogicAnalyzer logicTest;
         public Matlab matlab;
         public MSBuild msbuild;
-        private TestReceipt testReceipt;        
+        private TestReceipt testReceipt;
+        public Fastboot fastboot;
 
         public TestLaunch(Queue<TestDescription> testCollection, Mutex collectionMutex, MainWindow passedHandle)
         {
@@ -49,6 +50,7 @@ namespace TestRig
                 if (telnet != null) telnet.Kill();
                 if (matlab != null) matlab.Kill();
                 if (msbuild != null) msbuild.Kill();
+                if (fastboot != null) fastboot.Kill();
 
                 if (LaunchThread.IsAlive) LaunchThread.Abort();
                 LaunchThread.Join(100);
@@ -95,6 +97,7 @@ namespace TestRig
                             if (telnet != null) telnet.Kill();
                             if (gdb != null) gdb.Kill();
                             if (openOCD != null) openOCD.Kill();
+                            if (fastboot != null) fastboot.Kill();
                             
                             System.Diagnostics.Debug.WriteLine("Test FAILED because of:" + returnReason);
                         }
@@ -161,10 +164,7 @@ namespace TestRig
                     if (git.CloneCodeBranch(currentTest.testGitBranch) == false) return "Git failed to clone branch: " + currentTest.testGitBranch;
                 }
                 
-                git.Kill();
-                
-                currentTest.testState = "Building";
-                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                git.Kill();                
 
                 System.Diagnostics.Debug.WriteLine("Building code");
                 msbuild = new MSBuild(mainHandle, currentTest.testMFVersionNum);
@@ -174,68 +174,99 @@ namespace TestRig
                 {
                     if (currentTest.testUsePrecompiledBinary == String.Empty)
                     {
+                        currentTest.testState = "Building TinyCLR";
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                         if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyCLR";
                     }
+                    currentTest.testState = "Building managed code";
+                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                     if (msbuild.BuildManagedProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build managed project";
                 }
                 else
                 {
+                    currentTest.testState = "Building native code";
+                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                     if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build native project";
                 }
 
                 msbuild.Kill();
-                
-                // executing the current test
-                System.Diagnostics.Debug.WriteLine("Executing test for:  " + currentTest.testName);
-                
-                openOCD = new OpenOCD(mainHandle);
-                if (openOCD == null) return "OpenOCD failed to load";
-                gdb = new GDB(mainHandle);
-                if (gdb == null) return "GDB failed to load";
-                telnet = new TelnetBoard(mainHandle);
-                if (telnet == null) return "Telnet failed to load";
 
-                if (telnet.Start() == false) return "Telnet failed to start";
-                if (telnet.Clear() == false) return "Telnet failed to clear FLASH";
-
+                // loading and executing the current test
                 //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
-                string buildOutput = @"bin\Release\"; 
+                string buildOutput = @"bin\Release\";
 
-                if (currentTest.testType == "C#")
-                {
-                    currentTest.testState = "Loading MF AXF";
-                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                    if (currentTest.testUsePrecompiledBinary != String.Empty)
-                    {
-                        if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled MF AXF file: " + currentTest.testUsePrecompiledBinary;
-                    }
-                    else
-                    {
-                        if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";                    
-                    }                                        
+                if (currentTest.testSolution.Equals("SOC_ADAPT"))
+                {                    
+                    System.Diagnostics.Debug.WriteLine("Executing ADAPT test for:  " + currentTest.testName);
 
-                    currentTest.testState = "Loading managed code";
-                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                    //string inFile1Name = "D:/Test/pad_test/f1.bin";
+                    string inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".bin";
+                    //string inFile2Name = "D:/Test/pad_test/f2.bin";
+                    string inFile2Name = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
+                    string concatFileName = workingDirectory + @"\" + "MF_managed.bin";
 
-                    if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";                    
-                } else
-                {
-                    currentTest.testState = "Loading test AXF";
+                    fastboot = new Fastboot(mainHandle);
+                    currentTest.testState = "Entering Fastboot mode";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                    if (currentTest.testUsePrecompiledBinary != String.Empty)
-                    {
-                        if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled AXF file: " + currentTest.testUsePrecompiledBinary;
-                    }
-                    else
-                    {
-                        // if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\[GCC4.2 / other]\le\[FLASH / RAM]\debug\[STM32F10x / solution]\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
-                        if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
-                    }                     
+                    if (fastboot == null) return "Fastboot failed to load";
+                    if (fastboot.enterFastbootMode() == false) return "Failed to enter Fastboot mode";
+                    if (fastboot.createFinalBinary(inFile1Name, inFile2Name, concatFileName) == false) return "Failed to create Adapt binary";
+                    currentTest.testState = "Loading Adapt code";
+                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                    if (fastboot.load(concatFileName) == false) return "Failed to load Adapt binary";
+                    if (fastboot.run() == false) return "Failed to run Adapt binary";
                 }
-                               
-                currentTest.testState = "Starting processor";
-                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                if (gdb.Continue() == false) return "GDB failed to start processor";
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Executing test for:  " + currentTest.testName);
+
+                    openOCD = new OpenOCD(mainHandle);
+                    if (openOCD == null) return "OpenOCD failed to load";
+                    gdb = new GDB(mainHandle);
+                    if (gdb == null) return "GDB failed to load";
+                    telnet = new TelnetBoard(mainHandle);
+                    if (telnet == null) return "Telnet failed to load";
+
+                    if (telnet.Start() == false) return "Telnet failed to start";
+                    if (telnet.Clear() == false) return "Telnet failed to clear FLASH";                    
+
+                    if (currentTest.testType == "C#")
+                    {
+                        currentTest.testState = "Loading MF AXF";
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                        if (currentTest.testUsePrecompiledBinary != String.Empty)
+                        {
+                            if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled MF AXF file: " + currentTest.testUsePrecompiledBinary;
+                        }
+                        else
+                        {
+                            if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                        }
+
+                        currentTest.testState = "Loading managed code";
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+
+                        if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";
+                    }
+                    else
+                    {
+                        currentTest.testState = "Loading test AXF";
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                        if (currentTest.testUsePrecompiledBinary != String.Empty)
+                        {
+                            if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled AXF file: " + currentTest.testUsePrecompiledBinary;
+                        }
+                        else
+                        {
+                            // if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\[GCC4.2 / other]\le\[FLASH / RAM]\debug\[STM32F10x / solution]\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                            if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                        }
+                    }
+
+                    currentTest.testState = "Starting processor";
+                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                    if (gdb.Continue() == false) return "GDB failed to start processor";
+                }
                 // waiting for processor code to start executing (this can take up to two seconds)
                 Thread.Sleep(1000);
                 
@@ -292,7 +323,8 @@ namespace TestRig
 
                 if (telnet != null) telnet.Kill();
                 if (gdb != null) gdb.Kill();
-                if (openOCD != null) openOCD.Kill();             
+                if (openOCD != null) openOCD.Kill(); 
+                if (fastboot != null) fastboot.Kill();
                 
                 currentTest.testState = "Analyzing test";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);

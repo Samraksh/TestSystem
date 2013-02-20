@@ -71,11 +71,11 @@ namespace TestRig
             System.Diagnostics.Debug.WriteLine("GDB loading: axf: " + modifiedAXFFile);
             waitForMessages();
 
-            if (RunCommand(@"monitor mwb 0x20000000 0 0x18000", "^done", "^error", 15000) != CommandStatus.Done)
+            /*if (RunCommand(@"monitor mwb 0x20000000 0 0x18000", "^done", "^error", 15000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to clear memory.");
                 return false;
-            }
+            }*/
             if (RunCommand(@"-file-exec-and-symbols " + modifiedAXFFile, "^done", "^error", 10000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to run -file-exec-and-symbols command.");
