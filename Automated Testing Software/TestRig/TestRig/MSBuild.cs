@@ -191,8 +191,8 @@ namespace TestRig
                 case "SOC8200":
                     applicationStartAddress = "80A0000";
                     break;
-                case "ADAPT":
-                    applicationStartAddress = "80A0000";
+                case "SOC_ADAPT":
+                    applicationStartAddress = "805E8000";
                     break;
                 default:
                     applicationStartAddress = "80A0000";
@@ -234,7 +234,7 @@ namespace TestRig
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project built.");
 
-            // stripping the name of the project we are compiling to rename it to  *.s19 and *_conv.s19 files
+            // stripping the name of the project we are compiling to rename it to *.s19 and *_conv.s19 files
             string projectName = project;
             index = projectName.LastIndexOf('.');
             string strippedName = projectName.Substring(0, index);

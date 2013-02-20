@@ -137,14 +137,14 @@ namespace TestRig
                 // killing any active threads before program quits
                 System.Diagnostics.Debug.WriteLine("Killing active threads...");
 
-                if (rxSocket != null)
-                {
-                    rxSocket.KillListenThread();
-                }
                 if (testLaunch != null)
                 {
                     testLaunch.KillLaunchThread();
                 }
+                if (rxSocket != null)
+                {
+                    rxSocket.KillListenThread();
+                }                
             }
             catch (Exception ex)
             {
@@ -670,7 +670,7 @@ namespace TestRig
                     break;
                 case 3:
                     textHardware = "Adapt";
-                    textSolution = "ADAPT";
+                    textSolution = "SOC_ADAPT";
                     break;
                 default:
                     textHardware = "Emote v1";

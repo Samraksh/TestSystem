@@ -125,12 +125,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Fastboot.cs" />
     <Compile Include="GDB.cs" />
     <Compile Include="Git.cs" />
     <Compile Include="LogicAnalyzer.cs" />
     <Compile Include="Matlab.cs" />
     <Compile Include="MSBuild.cs" />
     <Compile Include="OpenOCD.cs" />
+    <Compile Include="PwrUSBWrapper.cs" />
     <Compile Include="ReadParameters.cs" />
     <Compile Include="Socket.cs" />
     <Compile Include="Task.cs" />
@@ -176,6 +178,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="PwrUSBDll.lib" />
     <None Include="TestRig_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +204,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="PwrUSBDll.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SaleaeDevice.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

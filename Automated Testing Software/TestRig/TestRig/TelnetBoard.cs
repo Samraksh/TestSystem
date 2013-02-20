@@ -73,11 +73,11 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("Sending commands to board: ");
                 waitForMessages();
 
-                if (RunCommand("stm32f1x mass_erase 0\r\n", "stm32x mass erase complete", 5000) != CommandStatus.Done)
+                /*if (RunCommand("stm32f1x mass_erase 0\r\n", "stm32x mass erase complete", 5000) != CommandStatus.Done)
                 {
                     System.Diagnostics.Debug.WriteLine("Telnet failed to stm32f1x mass_erase 0.");
                     return false;
-                }
+                }*/
                 if (RunCommand("stm32f1x mass_erase 1\r\n", "stm32x mass erase complete", 5000) != CommandStatus.Done)
                 {
                     System.Diagnostics.Debug.WriteLine("Telnet failed to stm32f1x mass_erase 1.");
