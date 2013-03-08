@@ -64,6 +64,7 @@ namespace TestRig
         public static string textSolutionType;
         public static string textGCCVersion;
         public static string textMFSelected;
+        public string textCOMPort;
         public static TestDescription[] availableTests;
         private static Tasks _tasks;
         private static int testNum;
@@ -494,6 +495,8 @@ namespace TestRig
                 tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
                 tbBuildSourceryPath.Text = Properties.Settings.Default.CSPath.ToString();
 
+                cbCOMPort.SelectedIndex = Properties.Settings.Default.COMPort;
+
                 cbMFVersionPath.SelectedIndex = Properties.Settings.Default.MFPathSelection;    
                 textMFPath_4_0 = Properties.Settings.Default.MFPath_4_0.ToString();
                 textMFPath_4_3 = Properties.Settings.Default.MFPath_4_3.ToString();
@@ -532,6 +535,7 @@ namespace TestRig
                 Properties.Settings.Default["MFPath_4_0"] = textMFPath_4_0;
                 Properties.Settings.Default["MFPath_4_3"] = textMFPath_4_3;
                 Properties.Settings.Default["MFPathSelection"] = cbMFVersionPath.SelectedIndex;
+                Properties.Settings.Default["COMPort"] = cbCOMPort.SelectedIndex;
                 Properties.Settings.Default["GitPath"] = tbGitPath.Text;
                 Properties.Settings.Default["TSPath"] = tbTestSourcePath.Text;
                 Properties.Settings.Default["TRPath"] = tbTestReceiptPath.Text;
@@ -742,6 +746,12 @@ namespace TestRig
                     break;
             }
             
+        }
+
+        private void cbCOMPort_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            textCOMPort = ((ComboBoxItem)cbCOMPort.SelectedItem).Content.ToString();
+            textCOMPort = textCOMPort.Remove(3, 1);
         }  
     }
 }

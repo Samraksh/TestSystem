@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.Ports;
 using System.Diagnostics;
 
 namespace TestRig
@@ -19,6 +20,7 @@ namespace TestRig
         public Git git;
         public GDB gdb;
         public TelnetBoard telnet;
+        public COMPort COM;
         public LogicAnalyzer logicTest;
         public Matlab matlab;
         public MSBuild msbuild;
@@ -48,6 +50,7 @@ namespace TestRig
                 if (git != null) git.Kill();
                 if (openOCD != null) openOCD.Kill();                
                 if (telnet != null) telnet.Kill();
+                if (COM != null) COM.Kill();
                 if (matlab != null) matlab.Kill();
                 if (msbuild != null) msbuild.Kill();
                 if (fastboot != null) fastboot.Kill();
@@ -95,6 +98,7 @@ namespace TestRig
                             if (msbuild != null) msbuild.Kill();
                             if (git != null) git.Kill();
                             if (telnet != null) telnet.Kill();
+                            if (COM != null) COM.Kill();
                             if (gdb != null) gdb.Kill();
                             if (openOCD != null) openOCD.Kill();
                             if (fastboot != null) fastboot.Kill();
@@ -127,6 +131,8 @@ namespace TestRig
                 int index = projectName.LastIndexOf('.');
                 string strippedName = projectName.Substring(0, index);
                 string MFPath;
+                ProcessStartInfo TestExecutableInfo = new ProcessStartInfo();
+                Process TestExecutableProcess = new Process();
 
                 switch (currentTest.testMFVersionNum)
                 {
@@ -191,6 +197,62 @@ namespace TestRig
 
                 msbuild.Kill();
 
+                // Preparing data gathering systems and analysis
+                // Grabbing data for sample time length                
+                ReadParameters readVars;
+
+                if (currentTest.testType == "C#")
+                    readVars = new ReadParameters(workingDirectory + @"\" + "Parameters.cs", currentTest);
+                else
+                    readVars = new ReadParameters(workingDirectory + @"\" + "Parameters.h", currentTest);
+
+                System.Diagnostics.Debug.WriteLine("useLogic: " + currentTest.testUseLogic.ToString());
+                System.Diagnostics.Debug.WriteLine("sampleTimeMs: " + currentTest.testSampleTimeMs.ToString());
+                System.Diagnostics.Debug.WriteLine("sampleFrequency: " + currentTest.testSampleFrequency.ToString());
+                System.Diagnostics.Debug.WriteLine("useExecutable: " + currentTest.testUseExecutable.ToString());
+                System.Diagnostics.Debug.WriteLine("executableName: " + currentTest.testExecutableName.ToString());
+                System.Diagnostics.Debug.WriteLine("testRunTimeMs: " + currentTest.testRunTimeMs.ToString());
+                System.Diagnostics.Debug.WriteLine("useCOM: " + currentTest.testUseCOM.ToString());
+                System.Diagnostics.Debug.WriteLine("forceCOM: " + currentTest.testForceCOM.ToString());
+                System.Diagnostics.Debug.WriteLine("COMParameters: " + currentTest.testCOMParameters.ToString());
+
+                if (currentTest.testUseCOM == true)
+                {
+                    COM = new COMPort(mainHandle, currentTest, testReceipt);
+                    if (COM == null) return "COM failed to open";
+                }
+                if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
+                Directory.CreateDirectory(workingDirectory + @"\" + "testTemp");
+                if (currentTest.testUseLogic == true)
+                {
+                    if (logicTest == null)
+                        logicTest = new LogicAnalyzer(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
+                    else
+                        logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
+                    if (logicTest == null) return "Logic Analyzer failed to load";
+                    //if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
+                    //Thread.Sleep(currentTest.testSampleTimeMs);
+                    //if (logicTest.stopMeasure() == false) return "Logic Analyzer failed to stop measuring";
+                }
+
+                if (currentTest.testUseExecutable == true)
+                {
+                    if (File.Exists(workingDirectory + @"\" + currentTest.testExecutableName) == false) return "Specified executable: " + currentTest.testExecutableName + " does not exist.";
+                    TestExecutableInfo = new ProcessStartInfo();
+                    TestExecutableProcess = new Process();
+
+                    System.Diagnostics.Debug.WriteLine("Starting to run test executable: " + currentTest.testExecutableName);
+
+                    TestExecutableInfo.CreateNoWindow = true;
+                    TestExecutableInfo.RedirectStandardInput = true;
+                    TestExecutableInfo.UseShellExecute = false;
+                    TestExecutableInfo.FileName = workingDirectory + @"\" + currentTest.testExecutableName;
+
+                    TestExecutableProcess.StartInfo = TestExecutableInfo;
+                    //TestExecutableProcess.Start();
+                    //TestExecutableProcess.WaitForExit(currentTest.testRunTimeMs);
+                }
+
                 // loading and executing the current test
                 //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
                 string buildOutput = @"bin\Release\";
@@ -202,7 +264,9 @@ namespace TestRig
                     //string inFile1Name = "D:/Test/pad_test/f1.bin";
                     string inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".bin";
                     //string inFile2Name = "D:/Test/pad_test/f2.bin";
-                    string inFile2Name = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
+                    //string inFile2Name = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
+                    // Adapt uses .dat file instead of converted s19
+                    string inFile2Name = workingDirectory + @"\" + buildOutput + strippedName + ".dat";
                     string concatFileName = workingDirectory + @"\" + "MF_managed.bin";
 
                     fastboot = new Fastboot(mainHandle);
@@ -268,35 +332,14 @@ namespace TestRig
                     if (gdb.Continue() == false) return "GDB failed to start processor";
                 }
                 // waiting for processor code to start executing (this can take up to two seconds)
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
                 
                 //Thread.Sleep(5000);
                 currentTest.testState = "Running test";
-                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                
-                // Grabbing data for sample time length                
-                ReadParameters readVars;
-                
-                if (currentTest.testType == "C#")
-                    readVars = new ReadParameters(workingDirectory + @"\" + "Parameters.cs", currentTest);
-                else
-                    readVars = new ReadParameters(workingDirectory + @"\" + "Parameters.h", currentTest);
-
-                System.Diagnostics.Debug.WriteLine("useLogic: " + currentTest.testUseLogic.ToString());
-                System.Diagnostics.Debug.WriteLine("sampleTimeMs: " + currentTest.testSampleTimeMs.ToString());
-                System.Diagnostics.Debug.WriteLine("sampleFrequency: " + currentTest.testSampleFrequency.ToString());
-                System.Diagnostics.Debug.WriteLine("useExecutable: " + currentTest.testUseExecutable.ToString());
-                System.Diagnostics.Debug.WriteLine("executableName: " + currentTest.testExecutableName.ToString());
-                System.Diagnostics.Debug.WriteLine("executableTimeoutMs: " + currentTest.testExecutableTimeoutMs.ToString());
-
-                if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
-                Directory.CreateDirectory(workingDirectory + @"\" + "testTemp");
+                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);                
+                               
                 if (currentTest.testUseLogic == true)
-                {
-                    if (logicTest == null)
-                        logicTest = new LogicAnalyzer(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
-                    else
-                        logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");                    
+                {                           
                     if (logicTest == null) return "Logic Analyzer failed to load";
                     if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
                     Thread.Sleep(currentTest.testSampleTimeMs);
@@ -305,22 +348,18 @@ namespace TestRig
 
                 if (currentTest.testUseExecutable == true)
                 {
-                    if (File.Exists(workingDirectory + @"\" + currentTest.testExecutableName) == false) return "Specified executable: " + currentTest.testExecutableName + " does not exist.";
-                    ProcessStartInfo TestExecutableInfo = new ProcessStartInfo();
-                    Process TestExecutableProcess = new Process();
-
-                    System.Diagnostics.Debug.WriteLine("Starting to run test executable: " + currentTest.testExecutableName);
-
-                    TestExecutableInfo.CreateNoWindow = true;
-                    TestExecutableInfo.RedirectStandardInput = true;
-                    TestExecutableInfo.UseShellExecute = false;
-                    TestExecutableInfo.FileName = workingDirectory + @"\" + currentTest.testExecutableName;
-
-                    TestExecutableProcess.StartInfo = TestExecutableInfo;
                     TestExecutableProcess.Start();
-                    TestExecutableProcess.WaitForExit(currentTest.testExecutableTimeoutMs);
+                    TestExecutableProcess.WaitForExit(currentTest.testRunTimeMs);
+                }
+                int tenthWait = 0;
+                while ((currentTest.testUseCOM == true) && (testReceipt.testComplete != true) && (tenthWait < 10) )
+                {
+                    // if we are using the COM port then we will wait for the test to complete before moving on
+                    Thread.Sleep( ((int)(currentTest.testSampleTimeMs / 10)));
+                    tenthWait++;
                 }
 
+                if (COM != null) COM.Kill();
                 if (telnet != null) telnet.Kill();
                 if (gdb != null) gdb.Kill();
                 if (openOCD != null) openOCD.Kill(); 

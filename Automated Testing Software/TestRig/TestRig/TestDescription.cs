@@ -36,11 +36,14 @@ namespace TestRig
         public int testSampleFrequency { get; set; }
         public bool testUseExecutable { get; set; }
         public string testExecutableName { get; set; }
-        public int testExecutableTimeoutMs { get; set; }
+        public int testRunTimeMs { get; set; }
         public bool testMatlabAnalysis { get; set; }
         public string testMatlabScriptName { get; set; }
         public bool testPowershellAnalysis { get; set; }
         public string testPowershellName { get; set; }
+        public bool testUseCOM { get; set; }
+        public string testForceCOM { get; set; }
+        public string testCOMParameters { get; set; }
 
         public TestDescription()
         {
@@ -50,7 +53,7 @@ namespace TestRig
             testSampleFrequency = 4000000;
             testUseExecutable = false;
             testExecutableName = String.Empty;
-            testExecutableTimeoutMs = 1000;
+            testRunTimeMs = 1000;
             testMatlabAnalysis = false;
             testMatlabScriptName = "analysis.m";
             testPowershellAnalysis = false;
@@ -61,6 +64,9 @@ namespace TestRig
             testMemoryType = String.Empty;
             testSolutionType = String.Empty;
             testGCCVersion = String.Empty;
+            testUseCOM = false;
+            testForceCOM = String.Empty;
+            testCOMParameters = String.Empty;
         }
 
         public TestDescription(TestDescription copy)
@@ -85,7 +91,7 @@ namespace TestRig
             this.testSampleFrequency = copy.testSampleFrequency;
             this.testUseExecutable = copy.testUseExecutable;
             this.testExecutableName = copy.testExecutableName;
-            this.testExecutableTimeoutMs = copy.testExecutableTimeoutMs;
+            this.testRunTimeMs = copy.testRunTimeMs;
             this.testMatlabAnalysis = copy.testMatlabAnalysis;
             this.testMatlabScriptName = copy.testMatlabScriptName;
             this.testPowershellAnalysis = copy.testPowershellAnalysis;
@@ -96,6 +102,9 @@ namespace TestRig
             this.testMemoryType = copy.testMemoryType;
             this.testSolutionType = copy.testSolutionType;
             this.testGCCVersion = copy.testGCCVersion;
+            this.testUseCOM = copy.testUseCOM;
+            this.testForceCOM = copy.testForceCOM;
+            this.testCOMParameters = copy.testCOMParameters;
         }
 
         public override string ToString()
@@ -122,11 +131,14 @@ namespace TestRig
             returnString += "\t<TestSampleFrequency>\r\n\t" + testSampleFrequency.ToString() + "\r\n\t</TestSampleFrequency>\r\n";
             returnString += "\t<TestUseExecutable>\r\n\t" + testUseExecutable.ToString() + "\r\n\t</TestUseExecutable>\r\n";
             returnString += "\t<TestExecutableName>\r\n\t" + testExecutableName + "\r\n\t</TestExecutableName>\r\n";
-            returnString += "\t<TestExecutableTimeoutMs>\r\n\t" + testExecutableTimeoutMs.ToString() + "\r\n\t</TestExecutableTimeoutMs>\r\n";
+            returnString += "\t<TestRunTimeMs>\r\n\t" + testRunTimeMs.ToString() + "\r\n\t</TestRunTimeMs>\r\n";
             returnString += "\t<TestMatlabAnalysis>\r\n\t" + testMatlabAnalysis.ToString() + "\r\n\t</TestMatlabAnalysis>\r\n";
             returnString += "\t<TestMatlabScriptName>\r\n\t" + testMatlabScriptName + "\r\n\t</TestMatlabScriptName>\r\n";
             returnString += "\t<TestPowershellAnalysis>\r\n\t" + testPowershellAnalysis.ToString() + "\r\n\t</TestPowershellAnalysis>\r\n";
             returnString += "\t<TestPowershellName>\r\n\t" + testPowershellName + "\r\n\t</TestPowershellName>\r\n";
+            returnString += "\t<TestUseCOM>\r\n\t" + testUseCOM.ToString() + "\r\n\t</TestUseCOM>\r\n";
+            returnString += "\t<TestForceCOM>\r\n\t" + testForceCOM + "\r\n\t</TestForceCOM>\r\n";
+            returnString += "\t<TestCOMParameters>\r\n\t" + testCOMParameters + "\r\n\t</TestCOMParameters>\r\n";
             returnString += "</Test>\r\n";
 
             return returnString;

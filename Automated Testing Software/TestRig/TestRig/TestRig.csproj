@@ -29,7 +29,7 @@
     <ProductName>TestRig</ProductName>
     <PublisherName>Samraksh</PublisherName>
     <SuiteName>Test Automation</SuiteName>
-    <ApplicationRevision>15</ApplicationRevision>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -125,6 +125,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="COMPort.cs" />
     <Compile Include="Fastboot.cs" />
     <Compile Include="GDB.cs" />
     <Compile Include="Git.cs" />

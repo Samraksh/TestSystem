@@ -37,7 +37,7 @@ namespace TestRig
                                     value = value.TrimEnd('\"');
                                     currentTest.testExecutableName = value;
                                 }
-                                if (parameter.Equals("executableTimeoutMs")) currentTest.testExecutableTimeoutMs = int.Parse(value);
+                                if (parameter.Equals("testRunTimeMs")) currentTest.testRunTimeMs = int.Parse(value);
                                 if (parameter.Equals("useMatlabAnalysis")) currentTest.testMatlabAnalysis = bool.Parse(value);
                                 if (parameter.Equals("matlabScriptName"))
                                 {
@@ -51,6 +51,19 @@ namespace TestRig
                                     value = value.TrimStart('\"');
                                     value = value.TrimEnd('\"');
                                     currentTest.testPowershellName = value;
+                                }
+                                if (parameter.Equals("useCOMPort")) currentTest.testUseCOM = bool.Parse(value);
+                                if (parameter.Equals("forceCOM"))
+                                {
+                                    value = value.TrimStart('\"');
+                                    value = value.TrimEnd('\"');
+                                    currentTest.testForceCOM = value;
+                                }
+                                if (parameter.Equals("COMParameters"))
+                                {
+                                    value = value.TrimStart('\"');
+                                    value = value.TrimEnd('\"');
+                                    currentTest.testCOMParameters = value;
                                 }
                             }                    
                         }
@@ -73,7 +86,7 @@ namespace TestRig
                                     value = value.TrimEnd('\"');
                                     currentTest.testExecutableName = value;
                                 }
-                                if (parameter.Equals("executableTimeoutMs")) currentTest.testExecutableTimeoutMs = int.Parse(value);
+                                if (parameter.Equals("testRunTimeMs")) currentTest.testRunTimeMs = int.Parse(value);
                                 if (parameter.Equals("useMatlabAnalysis")) currentTest.testMatlabAnalysis = bool.Parse(value);
                                 if (parameter.Equals("matlabScriptName"))
                                 {
@@ -87,6 +100,19 @@ namespace TestRig
                                     value = value.TrimStart('\"');
                                     value = value.TrimEnd('\"');
                                     currentTest.testPowershellName = value;
+                                }
+                                if (parameter.Equals("useCOMPort")) currentTest.testUseCOM = bool.Parse(value);
+                                if (parameter.Equals("forceCOM"))
+                                {
+                                    value = value.TrimStart('\"');
+                                    value = value.TrimEnd('\"');
+                                    currentTest.testForceCOM = value;
+                                }
+                                if (parameter.Equals("COMParameters"))
+                                {
+                                    value = value.TrimStart('\"');
+                                    value = value.TrimEnd('\"');
+                                    currentTest.testCOMParameters = value;
                                 }
                             }   
                         }

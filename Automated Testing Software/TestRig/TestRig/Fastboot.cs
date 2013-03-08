@@ -243,7 +243,7 @@ namespace TestRig
             }
             PwrUSBWrapper.SetCurrentPowerUSB(0);
 
-            System.Diagnostics.Debug.WriteLine("PowerUSB Connected. Model: %d. Version:%s\n", model, firmware);
+            System.Diagnostics.Debug.WriteLine("PowerUSB Connected. Model: " + model.ToString() + ". Version: " + firmware.ToString());	
             System.Diagnostics.Debug.WriteLine("Turning off USB power strip outlet 1");
             PwrUSBWrapper.SetPortPowerUSB(0, 0, 0);
 
