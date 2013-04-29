@@ -18,8 +18,6 @@ namespace TestRig
         public string testState { get; set; }
         public string testProgress { get; set; }
         public string directoryName { get; set; }
-        public string buildEnvScriptName { get; set; }
-        public string testScriptName { get; set; }
         public string testMFVersionNum { get; set; }
         public string testGitOption { get; set; }
         public string testGitBranch { get; set; }
@@ -34,16 +32,16 @@ namespace TestRig
         public bool testUseLogic { get; set; }
         public int testSampleTimeMs { get; set; }
         public int testSampleFrequency { get; set; }
-        public bool testUseExecutable { get; set; }
-        public string testExecutableName { get; set; }
-        public int testRunTimeMs { get; set; }
-        public bool testMatlabAnalysis { get; set; }
-        public string testMatlabScriptName { get; set; }
-        public bool testPowershellAnalysis { get; set; }
-        public string testPowershellName { get; set; }
         public bool testUseCOM { get; set; }
         public string testForceCOM { get; set; }
         public string testCOMParameters { get; set; }
+        public bool testUseScript { get; set; }
+        public string testScriptName { get; set; }
+        public int testScriptTimeoutMs { get; set; }
+        public bool testMatlabAnalysis { get; set; }
+        public string testMatlabScriptName { get; set; }
+        public bool testPowershellAnalysis { get; set; }
+        public string testPowershellName { get; set; }        
 
         public TestDescription()
         {
@@ -51,9 +49,9 @@ namespace TestRig
             testUseLogic = false;
             testSampleTimeMs = 500;
             testSampleFrequency = 4000000;
-            testUseExecutable = false;
-            testExecutableName = String.Empty;
-            testRunTimeMs = 1000;
+            testUseScript = false;
+            testScriptName = String.Empty;
+            testScriptTimeoutMs = 1000;
             testMatlabAnalysis = false;
             testMatlabScriptName = "analysis.m";
             testPowershellAnalysis = false;
@@ -81,17 +79,15 @@ namespace TestRig
             this.testState = copy.testState;
             this.testProgress = copy.testProgress;
             this.directoryName = copy.directoryName;
-            this.buildEnvScriptName = copy.buildEnvScriptName;
-            this.testScriptName = copy.testScriptName;
             this.testMFVersionNum = copy.testMFVersionNum;
             this.testGitOption = copy.testGitOption;
             this.testGitBranch = copy.testGitBranch;
             this.testUseLogic = copy.testUseLogic;
             this.testSampleTimeMs = copy.testSampleTimeMs;
             this.testSampleFrequency = copy.testSampleFrequency;
-            this.testUseExecutable = copy.testUseExecutable;
-            this.testExecutableName = copy.testExecutableName;
-            this.testRunTimeMs = copy.testRunTimeMs;
+            this.testUseScript = copy.testUseScript;
+            this.testScriptName = copy.testScriptName;
+            this.testScriptTimeoutMs = copy.testScriptTimeoutMs;
             this.testMatlabAnalysis = copy.testMatlabAnalysis;
             this.testMatlabScriptName = copy.testMatlabScriptName;
             this.testPowershellAnalysis = copy.testPowershellAnalysis;
@@ -129,9 +125,9 @@ namespace TestRig
             returnString += "\t<TestUseLogic>\r\n\t" + testUseLogic.ToString() + "\r\n\t</TestUseLogic>\r\n";
             returnString += "\t<TestSampleTimeMs>\r\n\t" + testSampleTimeMs.ToString() + "\r\n\t</TestSampleTimeMs>\r\n";
             returnString += "\t<TestSampleFrequency>\r\n\t" + testSampleFrequency.ToString() + "\r\n\t</TestSampleFrequency>\r\n";
-            returnString += "\t<TestUseExecutable>\r\n\t" + testUseExecutable.ToString() + "\r\n\t</TestUseExecutable>\r\n";
-            returnString += "\t<TestExecutableName>\r\n\t" + testExecutableName + "\r\n\t</TestExecutableName>\r\n";
-            returnString += "\t<TestRunTimeMs>\r\n\t" + testRunTimeMs.ToString() + "\r\n\t</TestRunTimeMs>\r\n";
+            returnString += "\t<testUseScript>\r\n\t" + testUseScript.ToString() + "\r\n\t</testUseScript>\r\n";
+            returnString += "\t<testScriptName>\r\n\t" + testScriptName + "\r\n\t</testScriptName>\r\n";
+            returnString += "\t<testScriptTimeoutMs>\r\n\t" + testScriptTimeoutMs.ToString() + "\r\n\t</testScriptTimeoutMs>\r\n";
             returnString += "\t<TestMatlabAnalysis>\r\n\t" + testMatlabAnalysis.ToString() + "\r\n\t</TestMatlabAnalysis>\r\n";
             returnString += "\t<TestMatlabScriptName>\r\n\t" + testMatlabScriptName + "\r\n\t</TestMatlabScriptName>\r\n";
             returnString += "\t<TestPowershellAnalysis>\r\n\t" + testPowershellAnalysis.ToString() + "\r\n\t</TestPowershellAnalysis>\r\n";

@@ -58,7 +58,7 @@
                         </DataGrid.RowStyle>
                     </DataGrid>
                     <Button Content="Upload Tests" Height="23" Margin="350,0,18,129" Name="Upload" VerticalAlignment="Bottom" Click="Upload_Click" Width="83" Grid.Column="1" />
-                    <Button Content="Debug" Height="23" HorizontalAlignment="Left" Margin="370,595,0,0" Name="buttonDebug" VerticalAlignment="Top" Width="75" Click="buttonDebug_Click" Visibility="Hidden" IsEnabled="True" Grid.Column="1" />
+                    <Button Content="Debug" Height="23" HorizontalAlignment="Left" Margin="370,595,0,0" Name="buttonDebug" VerticalAlignment="Top" Width="75" Click="buttonDebug_Click" Visibility="Visible" IsEnabled="True" Grid.Column="1" />
                     <ComboBox Height="23" Margin="144,543,0,0" Name="RigSelect" SelectedIndex="0" VerticalAlignment="Top" Width="164" HorizontalAlignment="Left" Grid.Column="1">
                         <ComboBoxItem Content="localRig" />
                         <ComboBoxItem Content="DublinRig" IsEnabled="False" />
@@ -183,6 +183,11 @@
                         <ComboBoxItem Content="COM 18" />
                         <ComboBoxItem Content="COM 19" />
                         <ComboBoxItem Content="COM 20" />
+                        <ComboBoxItem Content="COM 21" />
+                        <ComboBoxItem Content="COM 22" />
+                        <ComboBoxItem Content="COM 23" />
+                        <ComboBoxItem Content="COM 24" />
+                        <ComboBoxItem Content="COM 25" />
                     </ComboBox>
                     <Label Content="COM Port:" Height="28" HorizontalAlignment="Left" Margin="6,478,0,0" Name="label12" VerticalAlignment="Top" />
                 </Grid>

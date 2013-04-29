@@ -119,7 +119,7 @@ namespace TestRig
 
             ChangeDirectories(MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType);            
              
-            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
                 return false;
@@ -127,6 +127,7 @@ namespace TestRig
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
 
+            //if (RunCommand(@"msbuild /t:build /p:configuration=Release /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
@@ -159,7 +160,7 @@ namespace TestRig
                     break;
             }
             ChangeDirectories(path);            
-            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
                 return false;
@@ -183,19 +184,19 @@ namespace TestRig
 
             switch (currentTest.testSolution){
                 case "STM32F10x":
-                    applicationStartAddress = "80A0000";
+                    applicationStartAddress = "80A2000";
                     break;
                 case "EmoteDotNow":
-                    applicationStartAddress = "80A0000";
+                    applicationStartAddress = "80A2000";
                     break;
                 case "SOC8200":
-                    applicationStartAddress = "80A0000";
+                    applicationStartAddress = "80A2000";
                     break;
                 case "SOC_ADAPT":
                     applicationStartAddress = "805E8000";
                     break;
                 default:
-                    applicationStartAddress = "80A0000";
+                    applicationStartAddress = "80A2000";
                     break;
             }
 
@@ -218,7 +219,7 @@ namespace TestRig
                     break;
             }
             ChangeDirectories(path);
-            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 10000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
                 return false;
@@ -241,7 +242,7 @@ namespace TestRig
             //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
             string buildOutput = @"bin\Release\";            
             // convert to S19 record
-            if (RunCommand(@"binToSrec.exe -b " + applicationStartAddress + " -i " + buildOutput + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 5000) != CommandStatus.Done)
+            if (RunCommand(@"binToSrec.exe -b " + applicationStartAddress + " -i " + buildOutput + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 10000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to convert to S19 step 1.");
                 return false;

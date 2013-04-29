@@ -9,7 +9,6 @@ namespace TestRig
             private StreamReader sr;
             private String line;
 
-
             public ReadParameters(string file, TestDescription currentTest)
             {
                 try
@@ -30,14 +29,14 @@ namespace TestRig
                                 if (parameter.Equals("useLogic")) currentTest.testUseLogic = bool.Parse(value);
                                 if (parameter.Equals("sampleTimeMs")) currentTest.testSampleTimeMs = int.Parse(value);
                                 if (parameter.Equals("sampleFrequency")) currentTest.testSampleFrequency = int.Parse(value);
-                                if (parameter.Equals("useExecutable")) currentTest.testUseExecutable = bool.Parse(value);
-                                if (parameter.Equals("executableName"))
+                                if (parameter.Equals("useTestScript")) currentTest.testUseScript = bool.Parse(value);
+                                if (parameter.Equals("testScriptName"))
                                 {
                                     value = value.TrimStart('\"');
                                     value = value.TrimEnd('\"');
-                                    currentTest.testExecutableName = value;
+                                    currentTest.testScriptName = value;
                                 }
-                                if (parameter.Equals("testRunTimeMs")) currentTest.testRunTimeMs = int.Parse(value);
+                                if (parameter.Equals("testScriptTimeoutMs")) currentTest.testScriptTimeoutMs = int.Parse(value);
                                 if (parameter.Equals("useMatlabAnalysis")) currentTest.testMatlabAnalysis = bool.Parse(value);
                                 if (parameter.Equals("matlabScriptName"))
                                 {
@@ -79,14 +78,14 @@ namespace TestRig
                                 if (parameter.Equals("useLogic")) currentTest.testUseLogic = bool.Parse(value);
                                 if (parameter.Equals("sampleTimeMs")) currentTest.testSampleTimeMs = int.Parse(value);
                                 if (parameter.Equals("sampleFrequency")) currentTest.testSampleFrequency = int.Parse(value);
-                                if (parameter.Equals("useExecutable")) currentTest.testUseExecutable = bool.Parse(value);
-                                if (parameter.Equals("executableName"))
+                                if (parameter.Equals("useTestScript")) currentTest.testUseScript = bool.Parse(value);
+                                if (parameter.Equals("testScriptName"))
                                 {
                                     value = value.TrimStart('\"');
                                     value = value.TrimEnd('\"');
-                                    currentTest.testExecutableName = value;
+                                    currentTest.testScriptName = value;
                                 }
-                                if (parameter.Equals("testRunTimeMs")) currentTest.testRunTimeMs = int.Parse(value);
+                                if (parameter.Equals("testScriptTimeoutMs")) currentTest.testScriptTimeoutMs = int.Parse(value);
                                 if (parameter.Equals("useMatlabAnalysis")) currentTest.testMatlabAnalysis = bool.Parse(value);
                                 if (parameter.Equals("matlabScriptName"))
                                 {

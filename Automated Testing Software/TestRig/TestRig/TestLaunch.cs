@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Ports;
 using System.Diagnostics;
+using System.Management.Automation;
 
 namespace TestRig
 {    
@@ -46,11 +47,11 @@ namespace TestRig
             System.Diagnostics.Debug.WriteLine("Killing launch test thread.");
             if (LaunchThread != null)
             {
-                if (gdb != null) gdb.Kill();
-                if (git != null) git.Kill();
-                if (openOCD != null) openOCD.Kill();                
                 if (telnet != null) telnet.Kill();
+                if (gdb != null) gdb.Kill();
+                if (git != null) git.Kill();                                                
                 if (COM != null) COM.Kill();
+                if (openOCD != null) openOCD.Kill();
                 if (matlab != null) matlab.Kill();
                 if (msbuild != null) msbuild.Kill();
                 if (fastboot != null) fastboot.Kill();
@@ -125,7 +126,7 @@ namespace TestRig
         private string ExecuteTest(TestDescription currentTest)
         {
             try
-            {
+            {                
                 string workingDirectory = mainHandle.textTestSourcePath + @"\" + currentTest.testPath;
                 string projectName = currentTest.buildProj;
                 int index = projectName.LastIndexOf('.');
@@ -133,6 +134,7 @@ namespace TestRig
                 string MFPath;
                 ProcessStartInfo TestExecutableInfo = new ProcessStartInfo();
                 Process TestExecutableProcess = new Process();
+                DateTime testStartTime = DateTime.Now;
 
                 switch (currentTest.testMFVersionNum)
                 {
@@ -147,6 +149,7 @@ namespace TestRig
                         break;
                 }
                 
+                #region Retrieving code
                 currentTest.testState = "Retrieving code";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                 
@@ -170,8 +173,10 @@ namespace TestRig
                     if (git.CloneCodeBranch(currentTest.testGitBranch) == false) return "Git failed to clone branch: " + currentTest.testGitBranch;
                 }
                 
-                git.Kill();                
+                git.Kill();    
+                #endregion
 
+                #region Building code
                 System.Diagnostics.Debug.WriteLine("Building code");
                 msbuild = new MSBuild(mainHandle, currentTest.testMFVersionNum);
                 if (msbuild == null) return "MSBuild failed to load";
@@ -196,7 +201,9 @@ namespace TestRig
                 }
 
                 msbuild.Kill();
-
+                #endregion
+               
+                #region Reading parameters
                 // Preparing data gathering systems and analysis
                 // Grabbing data for sample time length                
                 ReadParameters readVars;
@@ -209,13 +216,15 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("useLogic: " + currentTest.testUseLogic.ToString());
                 System.Diagnostics.Debug.WriteLine("sampleTimeMs: " + currentTest.testSampleTimeMs.ToString());
                 System.Diagnostics.Debug.WriteLine("sampleFrequency: " + currentTest.testSampleFrequency.ToString());
-                System.Diagnostics.Debug.WriteLine("useExecutable: " + currentTest.testUseExecutable.ToString());
-                System.Diagnostics.Debug.WriteLine("executableName: " + currentTest.testExecutableName.ToString());
-                System.Diagnostics.Debug.WriteLine("testRunTimeMs: " + currentTest.testRunTimeMs.ToString());
+                System.Diagnostics.Debug.WriteLine("useTestScript: " + currentTest.testUseScript.ToString());
+                System.Diagnostics.Debug.WriteLine("testScriptName: " + currentTest.testScriptName.ToString());
+                System.Diagnostics.Debug.WriteLine("testScriptTimeoutMs: " + currentTest.testScriptTimeoutMs.ToString());
                 System.Diagnostics.Debug.WriteLine("useCOM: " + currentTest.testUseCOM.ToString());
                 System.Diagnostics.Debug.WriteLine("forceCOM: " + currentTest.testForceCOM.ToString());
                 System.Diagnostics.Debug.WriteLine("COMParameters: " + currentTest.testCOMParameters.ToString());
+                #endregion
 
+                #region Getting ready to run test
                 if (currentTest.testUseCOM == true)
                 {
                     COM = new COMPort(mainHandle, currentTest, testReceipt);
@@ -230,30 +239,31 @@ namespace TestRig
                     else
                         logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
                     if (logicTest == null) return "Logic Analyzer failed to load";
-                    //if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
-                    //Thread.Sleep(currentTest.testSampleTimeMs);
-                    //if (logicTest.stopMeasure() == false) return "Logic Analyzer failed to stop measuring";
+                    if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
                 }
 
-                if (currentTest.testUseExecutable == true)
+                // starting to measure time of test 
+                testStartTime = DateTime.Now;
+
+                if (currentTest.testUseScript == true)
                 {
-                    if (File.Exists(workingDirectory + @"\" + currentTest.testExecutableName) == false) return "Specified executable: " + currentTest.testExecutableName + " does not exist.";
                     TestExecutableInfo = new ProcessStartInfo();
                     TestExecutableProcess = new Process();
 
-                    System.Diagnostics.Debug.WriteLine("Starting to run test executable: " + currentTest.testExecutableName);
+                    System.Diagnostics.Debug.WriteLine("Starting to run test command prompt: " + currentTest.testScriptName);
 
                     TestExecutableInfo.CreateNoWindow = true;
-                    TestExecutableInfo.RedirectStandardInput = true;
+                    TestExecutableInfo.RedirectStandardInput = false;
                     TestExecutableInfo.UseShellExecute = false;
-                    TestExecutableInfo.FileName = workingDirectory + @"\" + currentTest.testExecutableName;
+                    //TestExecutableInfo.FileName = @"cmd.exe";
 
                     TestExecutableProcess.StartInfo = TestExecutableInfo;
                     //TestExecutableProcess.Start();
-                    //TestExecutableProcess.WaitForExit(currentTest.testRunTimeMs);
+                    //input = TestExecutableProcess.StandardInput;
                 }
+                #endregion
 
-                // loading and executing the current test
+                #region Loading the current test
                 //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
                 string buildOutput = @"bin\Release\";
 
@@ -307,7 +317,7 @@ namespace TestRig
                             if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                         }
 
-                        currentTest.testState = "Loading managed code";
+                       currentTest.testState = "Loading managed code";
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
 
                         if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";
@@ -331,40 +341,164 @@ namespace TestRig
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                     if (gdb.Continue() == false) return "GDB failed to start processor";
                 }
-                // waiting for processor code to start executing (this can take up to two seconds)
-                //Thread.Sleep(1000);
-                
-                //Thread.Sleep(5000);
+                #endregion
+
+                #region Running test
                 currentTest.testState = "Running test";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);                
-                               
+                if (currentTest.testUseScript == true)
+                {
+                    Thread.Sleep(15000);
+                    if (COM != null) COM.Kill();
+                    Thread.Sleep(6000);
+                    COM = new COMPort(mainHandle, currentTest, testReceipt);
+                    if (COM == null) return "COM failed to open";
+
+                    StreamReader script;
+                    String line;
+                    string[] parsedLine;
+                    int runTime = 0;
+
+                    if (File.Exists(workingDirectory + @"\" + currentTest.testScriptName) == false) return "Specified script: " + currentTest.testScriptName + " does not exist.";                    
+                    System.Diagnostics.Debug.WriteLine("Running test script: " + currentTest.testScriptName);
+                    script = new StreamReader(workingDirectory + @"\" + currentTest.testScriptName);
+                    line = script.ReadLine();
+                    while (line != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Running script line: " + line);
+                        parsedLine = line.Split(' ');
+                        if (line.StartsWith("#"))
+                        {
+                            System.Diagnostics.Debug.WriteLine("Script comment: " + line);
+                        }
+                        else if (line.StartsWith("execute"))
+                        {                            
+                            try
+                            {
+                                runTime = int.Parse(parsedLine[2].Trim());
+                                // see what is to be exectued (exe, dll, other)
+                                if (parsedLine[1].EndsWith(".exe"))
+                                {
+                                    TestExecutableInfo.FileName = parsedLine[1].Trim();                                    
+
+                                    TestExecutableProcess.Start();
+                                    TestExecutableProcess.WaitForExit(runTime);
+                                    TestExecutableProcess.Kill();
+                                }
+                                else if (parsedLine[1].EndsWith(".dll"))
+                                {
+                                }
+                                else if (parsedLine[1].EndsWith(".ps1"))
+                                {
+                                    PowerShell powerShell = PowerShell.Create();
+
+                                    powerShell.AddScript(File.ReadAllText(workingDirectory + @"\" + "Test.ps1"));
+                                    var results = powerShell.Invoke();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine("failed to execute: " + parsedLine[1].Trim() + " running for (ms): " + runTime.ToString() + ": " + ex.Message);
+                                return "failed to execute: " + parsedLine[1].Trim() + " running for (ms): " + runTime.ToString();
+                            }
+                        }
+                        else if (line.StartsWith("COM_send"))
+                        {
+                            if (parsedLine[1].Contains("random"))
+                            {
+                                Random random;
+                                int randomNumber;
+
+                                if (parsedLine[2].Contains("none"))
+                                    random = new Random();
+                                else 
+                                    random = new Random(int.Parse(parsedLine[2].Trim()));
+
+                                int byteNum = int.Parse(parsedLine[3].Trim());
+                                int lowerBound = int.Parse(parsedLine[4].Trim());
+                                int upperBound = int.Parse(parsedLine[5].Trim());
+
+                                System.Diagnostics.Debug.WriteLine("Sending " + byteNum.ToString() + " random bytes (" + lowerBound.ToString() + "," + upperBound.ToString() + ") to COM port");                                
+
+                                for (int i = 0; i < byteNum; i++)
+                                {
+                                    randomNumber = random.Next(lowerBound, upperBound);
+                                    COM.Send(randomNumber.ToString() + "\r\n");
+                                }
+                            }
+                            else if (parsedLine[1].Contains("file"))
+                            {
+                                string fileName = parsedLine[2].Trim();
+                                if (File.Exists(workingDirectory + @"\" + fileName) == false) return "Specified COM_send file: " + fileName + " does not exist.";
+                                System.Diagnostics.Debug.WriteLine("Sending data file: " + workingDirectory + @"\" + fileName + " to COM port");
+                                COM.SendFile(workingDirectory + @"\" + fileName);
+                            }
+                            else if (parsedLine[1].Contains("string"))
+                            {
+                                int location = line.IndexOf("string ");
+                                COM.Send(line.Remove(0, location+7));
+                            }
+                        }
+                        else if (line.StartsWith("COM_receive"))
+                        {
+                            if (parsedLine[1].Contains("file"))
+                            {
+                                string fileName = parsedLine[3].Trim();                                
+                                if (COM.SaveToFile(bool.Parse(parsedLine[2].Trim()), workingDirectory + @"\" + fileName) == false) return "Specified COM_receive file: " + workingDirectory + @"\" + fileName + " could not be opened.";
+                            }
+                        }
+                        else if (line.StartsWith("sleep"))
+                        {
+                            int waitTimeMs = int.Parse(parsedLine[1].Trim());
+                            
+                            System.Diagnostics.Debug.WriteLine("Script sleeping for " + waitTimeMs.ToString() + " ms.");
+                            Thread.Sleep(waitTimeMs);                            
+                        } 
+                        line = script.ReadLine();
+                    }
+                    script.Close();
+                }
+                #endregion
+
+                #region Stop data capture if occurring 
+                DateTime testStopTime = DateTime.Now;
+                TimeSpan duration = testStopTime - testStartTime;
+
                 if (currentTest.testUseLogic == true)
                 {                           
                     if (logicTest == null) return "Logic Analyzer failed to load";
-                    if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
-                    Thread.Sleep(currentTest.testSampleTimeMs);
+                    //if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
+                    // shutting down logic analyzer if we sampled long enough
+                    if ((int)duration.TotalMilliseconds < currentTest.testSampleTimeMs)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Waiting for end of logic sampling to end (" + ((int)duration.TotalMilliseconds - currentTest.testSampleTimeMs).ToString() + ") ms");
+                        Thread.Sleep((int)duration.TotalMilliseconds - currentTest.testSampleTimeMs);
+                    }
                     if (logicTest.stopMeasure() == false) return "Logic Analyzer failed to stop measuring";
                 }
-
-                if (currentTest.testUseExecutable == true)
+                
+                testStopTime = DateTime.Now;
+                duration = testStopTime - testStartTime;
+                int remainingCOMtimeMs = currentTest.testSampleTimeMs - (int)duration.TotalMilliseconds;
+                int tenthWaitTimeMs = remainingCOMtimeMs / 10;
+                
+                while ((currentTest.testUseCOM == true) && (testReceipt.testComplete != true) && (remainingCOMtimeMs > 0) )
                 {
-                    TestExecutableProcess.Start();
-                    TestExecutableProcess.WaitForExit(currentTest.testRunTimeMs);
-                }
-                int tenthWait = 0;
-                while ((currentTest.testUseCOM == true) && (testReceipt.testComplete != true) && (tenthWait < 10) )
-                {
+                    System.Diagnostics.Debug.WriteLine("Waiting for end of logic sampling to end (" + (remainingCOMtimeMs).ToString() + ") ms");
                     // if we are using the COM port then we will wait for the test to complete before moving on
-                    Thread.Sleep( ((int)(currentTest.testSampleTimeMs / 10)));
-                    tenthWait++;
+                    Thread.Sleep(tenthWaitTimeMs);
+                    testStopTime = DateTime.Now;
+                    duration = testStopTime - testStartTime;
+                    remainingCOMtimeMs = currentTest.testSampleTimeMs - (int)duration.TotalMilliseconds;
                 }
-
+                #endregion
                 if (COM != null) COM.Kill();
                 if (telnet != null) telnet.Kill();
                 if (gdb != null) gdb.Kill();
                 if (openOCD != null) openOCD.Kill(); 
                 if (fastboot != null) fastboot.Kill();
-                
+
+                #region Analyzing test
                 currentTest.testState = "Analyzing test";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                 
@@ -382,8 +516,9 @@ namespace TestRig
 
                 // delete raw data file
                 Thread.Sleep(50);
-                Directory.Delete(workingDirectory + @"\" + "testTemp", true);                                    
-                
+                Directory.Delete(workingDirectory + @"\" + "testTemp", true);
+                #endregion
+
                 currentTest.testState = "Test Complete";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
 
