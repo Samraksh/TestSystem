@@ -418,7 +418,7 @@ namespace TestRig
 
         private void buttonDebug_Click(object sender, RoutedEventArgs e)
         {
-            
+            testLaunch.DebugFunction();
         }
 
         private void checkPaths()

@@ -34,6 +34,8 @@ namespace TestRig
         private string MFPath;
         private string usingMFVersion;
 
+        private string applicationStartAddress;
+
         public MSBuild(MainWindow passedHandle, string MFVersion)
         {
             mainHandle = passedHandle;
@@ -72,6 +74,8 @@ namespace TestRig
                     MFPath = mainHandle.textMFPath_4_3;
                     break;
             }
+
+            applicationStartAddress = String.Empty;
         }
 
         private bool ChangeDirectories(string directory)
@@ -98,6 +102,9 @@ namespace TestRig
 
         public bool BuildTinyCLR(TestDescription currentTest)
         {
+            StreamReader sr;
+            String line;
+
             ChangeDirectories(MFPath);
             /*if (RunCommand(@"setenv_gcc.cmd " + mainHandle.textBuildSourceryPath, "setting vars", String.Empty, 1000) != CommandStatus.Done)
             {
@@ -135,6 +142,54 @@ namespace TestRig
             }
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project built.");
+
+            System.Diagnostics.Debug.WriteLine("Searching scatterfile");
+            // discovering applicationStartAddress value
+            bool applicationStartAddressFound = false;
+            string FileName = MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType +  @"\" + "scatterfile_tinyclr_gcc.xml";
+            if (File.Exists(FileName) == true)
+            {
+                sr = new StreamReader(FileName);
+                line = sr.ReadLine();
+                while (line != null)
+                {
+                    if (line.Contains("Set Name=\"Deploy_BaseAddress\"") == true)
+                    {
+                        System.Diagnostics.Debug.WriteLine("line found: " + line.ToString());
+                        string value = line.Split('=')[2];
+                        char[] trimChars = new char[] { '\"', '/', '>' };
+                        value = value.TrimStart(trimChars);
+                        value = value.TrimEnd(trimChars);
+                        value = value.Remove(0, 2);
+                        applicationStartAddress = value;
+                    } 
+                    line = sr.ReadLine();
+                }
+                sr.Close();
+                applicationStartAddressFound = true;
+            }
+            if (applicationStartAddressFound == false)
+            {
+                switch (currentTest.testSolution)
+                {
+                    case "STM32F10x":
+                        applicationStartAddress = "80A2000";
+                        break;
+                    case "EmoteDotNow":
+                        applicationStartAddress = "80A7000";
+                        break;
+                    case "SOC8200":
+                        applicationStartAddress = "80A2000";
+                        break;
+                    case "SOC_ADAPT":
+                        applicationStartAddress = "805E8000";
+                        break;
+                    default:
+                        applicationStartAddress = "80A2000";
+                        break;
+                }
+            }
+            System.Diagnostics.Debug.WriteLine("applicationStartAddressFound: " + applicationStartAddressFound.ToString() + " and is: " + applicationStartAddress.ToString());
 
             return true;
         }
@@ -179,27 +234,7 @@ namespace TestRig
         }
 
         public bool BuildManagedProject(string path, string project, TestDescription currentTest)
-        {
-            string applicationStartAddress;
-
-            switch (currentTest.testSolution){
-                case "STM32F10x":
-                    applicationStartAddress = "80A2000";
-                    break;
-                case "EmoteDotNow":
-                    applicationStartAddress = "80A2000";
-                    break;
-                case "SOC8200":
-                    applicationStartAddress = "80A2000";
-                    break;
-                case "SOC_ADAPT":
-                    applicationStartAddress = "805E8000";
-                    break;
-                default:
-                    applicationStartAddress = "80A2000";
-                    break;
-            }
-
+        {                        
             ChangeDirectories(MFPath);
 
             string fullPath = mainHandle.textTestSourcePath;

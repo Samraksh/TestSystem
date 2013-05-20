@@ -123,6 +123,39 @@ namespace TestRig
             }
         }
 
+        public string DebugFunction(){
+
+                    openOCD = new OpenOCD(mainHandle);
+                    if (openOCD == null) return "OpenOCD failed to load";
+                    gdb = new GDB(mainHandle);
+                    if (gdb == null) return "GDB failed to load";
+                    telnet = new TelnetBoard(mainHandle);
+                    if (telnet == null) return "Telnet failed to load";
+
+                    if (telnet.Start() == false) return "Telnet failed to start";
+                    if (telnet.Clear() == false) return "Telnet failed to clear FLASH";                    
+
+                        
+                            //if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                        
+
+
+                        //if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";
+                   
+                    
+                    if (gdb.Continue() == false) return "GDB failed to start processor";
+
+                    if (msbuild != null) msbuild.Kill();
+                    if (git != null) git.Kill();
+                    if (telnet != null) telnet.Kill();
+                    if (COM != null) COM.Kill();
+                    if (gdb != null) gdb.Kill();
+                    if (openOCD != null) openOCD.Kill();
+                    if (fastboot != null) fastboot.Kill();
+
+                    return null;
+        }
+
         private string ExecuteTest(TestDescription currentTest)
         {
             try
@@ -201,8 +234,7 @@ namespace TestRig
                 }
 
                 msbuild.Kill();
-                #endregion
-               
+                #endregion           
                 #region Reading parameters
                 // Preparing data gathering systems and analysis
                 // Grabbing data for sample time length                
