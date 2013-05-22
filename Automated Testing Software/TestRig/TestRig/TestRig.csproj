@@ -29,7 +29,7 @@
     <ProductName>TestRig</ProductName>
     <PublisherName>Samraksh</PublisherName>
     <SuiteName>Test Automation</SuiteName>
-    <ApplicationRevision>16</ApplicationRevision>
+    <ApplicationRevision>18</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -127,6 +127,7 @@
     </ApplicationDefinition>
     <Compile Include="COMPort.cs" />
     <Compile Include="Fastboot.cs" />
+    <Compile Include="FileTest.cs" />
     <Compile Include="GDB.cs" />
     <Compile Include="Git.cs" />
     <Compile Include="LogicAnalyzer.cs" />

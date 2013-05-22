@@ -110,10 +110,12 @@ namespace TestRig
                         System.Diagnostics.Debug.WriteLine("\r\nSerialPort Handler: ");
                         for (int i = 0; i < inData.Length; i++)
                             System.Diagnostics.Debug.Write(inData[i]);
-                        //System.Diagnostics.Debug.WriteLine(inData);
-                        
+
                         if (saveToFile == true)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Writing: " + inData + " to file.");
                             receiveFile.Write(inData);
+                        }
 
                         accumReceiveString = String.Concat(accumReceiveString, inData);
 
@@ -124,12 +126,7 @@ namespace TestRig
                             accumReceiveString = accumReceiveString.Remove(0, accumReceiveString.IndexOf('\n') + 1);
                             processResponse(strippedReceive);
                         }
-                    }
-                    //else
-                    //{
-                    //    Thread.Sleep(100);
-                    //}
-                    
+                    }                    
                 }
                 catch (Exception ex)
                 {
@@ -138,31 +135,10 @@ namespace TestRig
             }
         }
 
-        /*static void SerialPortHandler(object sender, SerialDataReceivedEventArgs e)
-        {            
-            SerialPort serialPort = (SerialPort)sender;
-            string inData = serialPort.ReadExisting();
-            //System.Diagnostics.Debug.WriteLine("\r\nSerialPort Handler: " + inData.TrimStart('\0'));
-            //System.Diagnostics.Debug.WriteLine(inData);
-
-            if (saveToFile == true)
-                receiveFile.Write(inData);
-
-            accumReceiveString = String.Concat(accumReceiveString, inData);
-
-            string strippedReceive = String.Empty;
-            while ( (accumReceiveString.Contains("\n")) || (accumReceiveString.Contains("\r")) )
-            {
-                strippedReceive = accumReceiveString.Substring(0, accumReceiveString.IndexOf('\n') + 1);
-                accumReceiveString = accumReceiveString.Remove(0, accumReceiveString.IndexOf('\n') + 1);
-                processResponse(strippedReceive);
-            }
-        }*/
-
         public bool Send(string SendString)
         {
             System.Diagnostics.Debug.Write("COM sending: " + SendString);
-            serialPort.WriteLine(SendString);
+            serialPort.Write(SendString);
 
             return true;
         }
@@ -184,30 +160,41 @@ namespace TestRig
             return true;
         }
 
-        public bool SaveToFile(bool saveEnabled, string FileName)
+        public bool SaveToFile(string saveEnabled, string FileName)
         {
-            if (saveEnabled == true)
-            {                
-                saveFileName = FileName;
-                try
+            if (saveEnabled.Equals("enable"))
+            {
+                if (saveToFile == false)
                 {
-                    if (FileName == String.Empty) return false;
-                    receiveFile = new System.IO.StreamWriter(FileName, false);
+                    saveFileName = FileName;
+                    try
+                    {
+                        if (FileName == String.Empty) return false;
+                        receiveFile = new System.IO.StreamWriter(FileName, false);
 
-                    System.Diagnostics.Debug.WriteLine("Starting to save received COM data to file: " + FileName);
-                    saveToFile = true;                    
+                        System.Diagnostics.Debug.WriteLine("Starting to save received COM data to file: " + FileName);
+                        saveToFile = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine("SaveToFile could not open file: " + FileName + ex.ToString());
+                        return false;
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    System.Diagnostics.Debug.WriteLine("SaveToFile could not open file: " + FileName + ex.ToString());
-                    return false;
+                    System.Diagnostics.Debug.WriteLine("Already writing to file for COM traffic.");
                 }
             }
             else
             {
                 System.Diagnostics.Debug.WriteLine("No longer saving COM data to file.");
                 saveToFile = false;
-                receiveFile.Close();
+                if (receiveFile != null)
+                {
+                    receiveFile.Close();
+                    receiveFile = null;
+                }
             }
 
             return true;
@@ -231,7 +218,11 @@ namespace TestRig
                 }
 
                 if (saveToFile == true)
+                {
+                    System.Diagnostics.Debug.WriteLine("No longer saving COM data to file.");
                     receiveFile.Close();
+                    receiveFile = null;
+                }
             }
             catch (Exception ex)
             {

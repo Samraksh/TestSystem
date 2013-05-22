@@ -22,6 +22,7 @@ namespace TestRig
         public GDB gdb;
         public TelnetBoard telnet;
         public COMPort COM;
+        public FileTest fTest;
         public LogicAnalyzer logicTest;
         public Matlab matlab;
         public MSBuild msbuild;
@@ -51,6 +52,7 @@ namespace TestRig
                 if (gdb != null) gdb.Kill();
                 if (git != null) git.Kill();                                                
                 if (COM != null) COM.Kill();
+                if (fTest != null) fTest.Kill();                
                 if (openOCD != null) openOCD.Kill();
                 if (matlab != null) matlab.Kill();
                 if (msbuild != null) msbuild.Kill();
@@ -100,6 +102,7 @@ namespace TestRig
                             if (git != null) git.Kill();
                             if (telnet != null) telnet.Kill();
                             if (COM != null) COM.Kill();
+                            if (fTest != null) fTest.Kill();                            
                             if (gdb != null) gdb.Kill();
                             if (openOCD != null) openOCD.Kill();
                             if (fastboot != null) fastboot.Kill();
@@ -149,6 +152,7 @@ namespace TestRig
                     if (git != null) git.Kill();
                     if (telnet != null) telnet.Kill();
                     if (COM != null) COM.Kill();
+                    if (fTest != null) fTest.Kill();            
                     if (gdb != null) gdb.Kill();
                     if (openOCD != null) openOCD.Kill();
                     if (fastboot != null) fastboot.Kill();
@@ -385,6 +389,8 @@ namespace TestRig
                     Thread.Sleep(6000);
                     COM = new COMPort(mainHandle, currentTest, testReceipt);
                     if (COM == null) return "COM failed to open";
+                    fTest = new FileTest(mainHandle, currentTest);
+                    if (fTest == null) return "FileTest failed to open";
 
                     StreamReader script;
                     String line;
@@ -434,6 +440,48 @@ namespace TestRig
                                 return "failed to execute: " + parsedLine[1].Trim() + " running for (ms): " + runTime.ToString();
                             }
                         }
+                        else if (line.StartsWith("file"))
+                        {
+                            if (parsedLine[1].Contains("random"))
+                            {
+                                Random random;
+                                int randomNumber;
+
+                                if (parsedLine[2].Contains("none"))
+                                    random = new Random();
+                                else
+                                    random = new Random(int.Parse(parsedLine[2].Trim()));
+
+                                int byteNum = int.Parse(parsedLine[3].Trim());
+                                int lowerBound = int.Parse(parsedLine[4].Trim());
+                                int upperBound = int.Parse(parsedLine[5].Trim());
+
+                                System.Diagnostics.Debug.WriteLine("Sending " + byteNum.ToString() + " random bytes (" + lowerBound.ToString() + "," + upperBound.ToString() + ") to COM port");
+
+                                for (int i = 0; i < byteNum; i++)
+                                {
+                                    randomNumber = random.Next(lowerBound, upperBound);
+                                    fTest.Save(randomNumber.ToString() + "\r\n");
+                                }
+                            }
+                            else if (parsedLine[1].Contains("file"))
+                            {
+                                string fileName = parsedLine[2].Trim();
+                                if (File.Exists(workingDirectory + @"\" + fileName) == false) return "Specified fTest file: " + fileName + " does not exist.";
+                                System.Diagnostics.Debug.WriteLine("Sending data file: " + workingDirectory + @"\" + fileName + " to COM port");
+                                fTest.SendFile(workingDirectory + @"\" + fileName);
+                            }
+                            else if (parsedLine[1].Contains("string"))
+                            {
+                                int location = line.IndexOf("string ");
+                                fTest.Save(line.Remove(0, location + 7));
+                            }
+                            else if (parsedLine[1].Contains("enable") || parsedLine[1].Contains("disable"))
+                            {
+                                string fileName = parsedLine[2].Trim();
+                                if (fTest.SaveToFile(parsedLine[1].Trim(), workingDirectory + @"\" + fileName) == false) return "Specified test file: " + workingDirectory + @"\" + fileName + " could not be opened.";
+                            }                            
+                        }
                         else if (line.StartsWith("COM_send"))
                         {
                             if (parsedLine[1].Contains("random"))
@@ -443,14 +491,14 @@ namespace TestRig
 
                                 if (parsedLine[2].Contains("none"))
                                     random = new Random();
-                                else 
+                                else
                                     random = new Random(int.Parse(parsedLine[2].Trim()));
 
                                 int byteNum = int.Parse(parsedLine[3].Trim());
                                 int lowerBound = int.Parse(parsedLine[4].Trim());
                                 int upperBound = int.Parse(parsedLine[5].Trim());
 
-                                System.Diagnostics.Debug.WriteLine("Sending " + byteNum.ToString() + " random bytes (" + lowerBound.ToString() + "," + upperBound.ToString() + ") to COM port");                                
+                                System.Diagnostics.Debug.WriteLine("Sending " + byteNum.ToString() + " random bytes (" + lowerBound.ToString() + "," + upperBound.ToString() + ") to COM port");
 
                                 for (int i = 0; i < byteNum; i++)
                                 {
@@ -468,24 +516,91 @@ namespace TestRig
                             else if (parsedLine[1].Contains("string"))
                             {
                                 int location = line.IndexOf("string ");
-                                COM.Send(line.Remove(0, location+7));
+                                COM.Send(line.Remove(0, location + 7));
                             }
                         }
                         else if (line.StartsWith("COM_receive"))
                         {
                             if (parsedLine[1].Contains("file"))
                             {
-                                string fileName = parsedLine[3].Trim();                                
-                                if (COM.SaveToFile(bool.Parse(parsedLine[2].Trim()), workingDirectory + @"\" + fileName) == false) return "Specified COM_receive file: " + workingDirectory + @"\" + fileName + " could not be opened.";
+                                string fileName = parsedLine[3].Trim();
+                                if (COM.SaveToFile(parsedLine[2].Trim(), workingDirectory + @"\" + fileName) == false) return "Specified COM_receive file: " + workingDirectory + @"\" + fileName + " could not be opened.";
                             }
                         }
                         else if (line.StartsWith("sleep"))
                         {
                             int waitTimeMs = int.Parse(parsedLine[1].Trim());
-                            
+
                             System.Diagnostics.Debug.WriteLine("Script sleeping for " + waitTimeMs.ToString() + " ms.");
-                            Thread.Sleep(waitTimeMs);                            
-                        } 
+                            Thread.Sleep(waitTimeMs);
+                        }
+                        else if (line.StartsWith("test_result"))
+                        {
+                            if ((parsedLine[1].Contains("file")) && (parsedLine[2].Contains("compare")))
+                            {
+                                string fileName1 = parsedLine[3].Trim();
+                                string fileName2 = parsedLine[4].Trim();
+                                testReceipt.testPass = fTest.Compare(workingDirectory + @"\" + fileName1, workingDirectory + @"\" + fileName2);
+                                testReceipt.testComplete = true;                                
+                            }
+                            else if (parsedLine[1].Contains("results"))
+                            {
+                                try
+                                {
+                                    StreamReader tResult = new StreamReader(workingDirectory + @"\" + parsedLine[2]);
+                                    string resultLine;
+
+                                    resultLine = tResult.ReadLine();
+                                    while (resultLine != null)
+                                    {
+                                        if (resultLine.Contains("result ="))
+                                        {
+                                            if (resultLine.Contains("PASS"))
+                                                testReceipt.testPass = true;
+                                            else
+                                                testReceipt.testPass = false;
+                                        }
+                                        else if (resultLine.Contains("accuracy"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testAccuracy = double.Parse(resultLine.Substring(index, resultLine.Length - index));
+                                        }
+                                        else if (resultLine.Contains("resultParameter1"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testReturnParameter1 = resultLine.Substring(index, resultLine.Length - index);
+                                        }
+                                        else if (resultLine.Contains("resultParameter2"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testReturnParameter2 = resultLine.Substring(index, resultLine.Length - index);
+                                        }
+                                        else if (resultLine.Contains("resultParameter3"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testReturnParameter3 = resultLine.Substring(index, resultLine.Length - index);
+                                        }
+                                        else if (resultLine.Contains("resultParameter4"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testReturnParameter4 = resultLine.Substring(index, resultLine.Length - index);
+                                        }
+                                        else if (resultLine.Contains("resultParameter5"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testReturnParameter5 = resultLine.Substring(index, resultLine.Length - index);
+                                            testReceipt.testComplete = true;
+                                        }
+                                        resultLine = tResult.ReadLine();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("test results read FAIL: " + ex.Message);
+                                    return "Test result file read failure: " + ex.Message;
+                                }
+                            }
+                        }
                         line = script.ReadLine();
                     }
                     script.Close();
