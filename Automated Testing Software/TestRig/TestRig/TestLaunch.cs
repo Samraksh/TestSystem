@@ -260,45 +260,6 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("COMParameters: " + currentTest.testCOMParameters.ToString());
                 #endregion
 
-                #region Getting ready to run test
-                if (currentTest.testUseCOM == true)
-                {
-                    COM = new COMPort(mainHandle, currentTest, testReceipt);
-                    if (COM == null) return "COM failed to open";
-                }
-                if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
-                Directory.CreateDirectory(workingDirectory + @"\" + "testTemp");
-                if (currentTest.testUseLogic == true)
-                {
-                    if (logicTest == null)
-                        logicTest = new LogicAnalyzer(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
-                    else
-                        logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
-                    if (logicTest == null) return "Logic Analyzer failed to load";
-                    if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
-                }
-
-                // starting to measure time of test 
-                testStartTime = DateTime.Now;
-
-                if (currentTest.testUseScript == true)
-                {
-                    TestExecutableInfo = new ProcessStartInfo();
-                    TestExecutableProcess = new Process();
-
-                    System.Diagnostics.Debug.WriteLine("Starting to run test command prompt: " + currentTest.testScriptName);
-
-                    TestExecutableInfo.CreateNoWindow = true;
-                    TestExecutableInfo.RedirectStandardInput = false;
-                    TestExecutableInfo.UseShellExecute = false;
-                    //TestExecutableInfo.FileName = @"cmd.exe";
-
-                    TestExecutableProcess.StartInfo = TestExecutableInfo;
-                    //TestExecutableProcess.Start();
-                    //input = TestExecutableProcess.StandardInput;
-                }
-                #endregion
-
                 #region Loading the current test
                 //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
                 string buildOutput = @"bin\Release\";
@@ -376,6 +337,45 @@ namespace TestRig
                     currentTest.testState = "Starting processor";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                     if (gdb.Continue() == false) return "GDB failed to start processor";
+                }
+                #endregion
+
+                #region Getting ready to run test
+                if (currentTest.testUseCOM == true)
+                {
+                    COM = new COMPort(mainHandle, currentTest, testReceipt);
+                    if (COM == null) return "COM failed to open";
+                }
+                if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
+                Directory.CreateDirectory(workingDirectory + @"\" + "testTemp");
+                if (currentTest.testUseLogic == true)
+                {
+                    if (logicTest == null)
+                        logicTest = new LogicAnalyzer(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
+                    else
+                        logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
+                    if (logicTest == null) return "Logic Analyzer failed to load";
+                    if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
+                }
+
+                // starting to measure time of test 
+                testStartTime = DateTime.Now;
+
+                if (currentTest.testUseScript == true)
+                {
+                    TestExecutableInfo = new ProcessStartInfo();
+                    TestExecutableProcess = new Process();
+
+                    System.Diagnostics.Debug.WriteLine("Starting to run test command prompt: " + currentTest.testScriptName);
+
+                    TestExecutableInfo.CreateNoWindow = true;
+                    TestExecutableInfo.RedirectStandardInput = false;
+                    TestExecutableInfo.UseShellExecute = false;
+                    //TestExecutableInfo.FileName = @"cmd.exe";
+
+                    TestExecutableProcess.StartInfo = TestExecutableInfo;
+                    //TestExecutableProcess.Start();
+                    //input = TestExecutableProcess.StandardInput;
                 }
                 #endregion
 
@@ -618,8 +618,8 @@ namespace TestRig
                     // shutting down logic analyzer if we sampled long enough
                     if ((int)duration.TotalMilliseconds < currentTest.testSampleTimeMs)
                     {
-                        System.Diagnostics.Debug.WriteLine("Waiting for end of logic sampling to end (" + ((int)duration.TotalMilliseconds - currentTest.testSampleTimeMs).ToString() + ") ms");
-                        Thread.Sleep((int)duration.TotalMilliseconds - currentTest.testSampleTimeMs);
+                        System.Diagnostics.Debug.WriteLine("Waiting for end of logic sampling to end (" + (currentTest.testSampleTimeMs - (int)duration.TotalMilliseconds).ToString() + ") ms");
+                        Thread.Sleep(currentTest.testSampleTimeMs - (int)duration.TotalMilliseconds);
                     }
                     if (logicTest.stopMeasure() == false) return "Logic Analyzer failed to stop measuring";
                 }
