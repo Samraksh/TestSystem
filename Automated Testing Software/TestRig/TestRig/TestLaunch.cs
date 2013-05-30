@@ -347,12 +347,8 @@ namespace TestRig
                             if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled AXF file: " + currentTest.testUsePrecompiledBinary;
                         }
                         else
-                        {                            
-                            currentTest.testState = "Loading TinyBooter";
-                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                            currentTest.testSolutionType = "TinyBooter";
-                            if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
-                            currentTest.testState = "Loading TinyCLR";
+                        {                                                        
+                            currentTest.testState = "Loading native code";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                             currentTest.testSolutionType = "TinyCLR";                                                   
                             if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
