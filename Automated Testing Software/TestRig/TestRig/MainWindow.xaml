@@ -86,8 +86,8 @@
                         <ComboBoxItem Content="Soc8200 - SOC8200" />
                         <ComboBoxItem Content="Adapt - ADAPT" IsEnabled="True" />
                     </ComboBox>
-                    <Label Content="GCC Version:" Height="28" HorizontalAlignment="Left" Margin="5,590,0,0" Name="label3" VerticalAlignment="Top" />
-                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="118,593,0,0" Name="cbGCCVersion" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbGCCVersion_SelectionChanged" Grid.ColumnSpan="2">
+                    <Label Content="GCC Version:" Height="28" HorizontalAlignment="Left" Margin="5,566,0,0" Name="label3" VerticalAlignment="Top" />
+                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="118,569,0,0" Name="cbGCCVersion" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbGCCVersion_SelectionChanged" Grid.ColumnSpan="2">
                         <ComboBoxItem Content="GCC4.2" />
                     </ComboBox>
                     <Label Content="Memory Type:" HorizontalAlignment="Left" Margin="5,540,0,0" Name="label6" VerticalAlignment="Top" />
@@ -96,17 +96,17 @@
                         <ComboBoxItem Content="RAM" />
                         <ComboBoxItem Content="External FLASH" IsEnabled="False" />
                     </ComboBox>
-                    <Label Content="Solution Type:" Height="28" HorizontalAlignment="Left" Margin="5,565,0,0" Name="label9" VerticalAlignment="Top" />
-                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="118,568,0,0" Name="cbSolutionType" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbSolutionType_SelectionChanged" Grid.ColumnSpan="2">
-                        <ComboBoxItem Content="TinyCLR" />
-                        <ComboBoxItem Content="TinyBooter" IsEnabled="True" />
-                    </ComboBox>
                     <Label Content="Git Setting:" Height="28" HorizontalAlignment="Left" Margin="73,565,0,0" Name="label10" VerticalAlignment="Top" Grid.Column="1" />
                     <ComboBox Height="23" HorizontalAlignment="Left" Margin="144,518,0,0" Name="cbMFSelected" SelectedIndex="0" VerticalAlignment="Top" Width="164" SelectionChanged="cbMFSelected_SelectionChanged" Grid.Column="1">
                         <ComboBoxItem Content="4.0" />
                         <ComboBoxItem Content="4.3" IsEnabled="True" />
                     </ComboBox>
                     <Label Content="MF Version:" Height="28" HorizontalAlignment="Left" Margin="75,515,0,0" Name="label11" VerticalAlignment="Top" Grid.Column="1" />
+                    <Label Content="Solution Type:" Height="28" HorizontalAlignment="Left" Margin="6,592,0,0" Name="label9" VerticalAlignment="Top" Visibility="Hidden" />
+                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="119,595,0,0" Name="cbSolutionType" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbSolutionType_SelectionChanged" Visibility="Hidden" Grid.ColumnSpan="2">
+                        <ComboBoxItem Content="TinyCLR" />
+                        <ComboBoxItem Content="TinyBooter" IsEnabled="True" />
+                    </ComboBox>
                 </Grid>
             </TabItem>
             <TabItem Header="Test Status" Name="tabTestStatus">
@@ -192,6 +192,6 @@
                     <Label Content="COM Port:" Height="28" HorizontalAlignment="Left" Margin="6,478,0,0" Name="label12" VerticalAlignment="Top" />
                 </Grid>
             </TabItem>            
-        </TabControl>        
+        </TabControl>
     </Grid>
 </Window>

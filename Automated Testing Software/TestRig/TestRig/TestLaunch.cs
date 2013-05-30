@@ -212,7 +212,7 @@ namespace TestRig
                 
                 git.Kill();    
                 #endregion
-
+                
                 #region Building code
                 System.Diagnostics.Debug.WriteLine("Building code");
                 msbuild = new MSBuild(mainHandle, currentTest.testMFVersionNum);
@@ -222,8 +222,13 @@ namespace TestRig
                 {
                     if (currentTest.testUsePrecompiledBinary == String.Empty)
                     {
+                        currentTest.testState = "Building TinyBooter";
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                        currentTest.testSolutionType = "TinyBooter";
+                        if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
                         currentTest.testState = "Building TinyCLR";
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                        currentTest.testSolutionType = "TinyCLR";
                         if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyCLR";
                     }
                     currentTest.testState = "Building managed code";
@@ -232,13 +237,19 @@ namespace TestRig
                 }
                 else
                 {
+                    currentTest.testState = "Building TinyBooter";
+                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                    currentTest.testSolutionType = "TinyBooter";
+                    if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
                     currentTest.testState = "Building native code";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                    currentTest.testSolutionType = "TinyCLR";
                     if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build native project";
                 }
 
                 msbuild.Kill();
-                #endregion           
+                #endregion       
+                
                 #region Reading parameters
                 // Preparing data gathering systems and analysis
                 // Grabbing data for sample time length                
@@ -249,6 +260,7 @@ namespace TestRig
                 else
                     readVars = new ReadParameters(workingDirectory + @"\" + "Parameters.h", currentTest);
 
+                System.Diagnostics.Debug.WriteLine("testTimeout: " + currentTest.testTimeout.ToString());
                 System.Diagnostics.Debug.WriteLine("useLogic: " + currentTest.testUseLogic.ToString());
                 System.Diagnostics.Debug.WriteLine("sampleTimeMs: " + currentTest.testSampleTimeMs.ToString());
                 System.Diagnostics.Debug.WriteLine("sampleFrequency: " + currentTest.testSampleFrequency.ToString());
@@ -300,17 +312,24 @@ namespace TestRig
 
                     if (telnet.Start() == false) return "Telnet failed to start";
                     if (telnet.Clear() == false) return "Telnet failed to clear FLASH";                    
-
+                    
                     if (currentTest.testType == "C#")
-                    {
-                        currentTest.testState = "Loading MF AXF";
-                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                    {                        
                         if (currentTest.testUsePrecompiledBinary != String.Empty)
                         {
+                            currentTest.testState = "Loading MF AXF";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                             if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled MF AXF file: " + currentTest.testUsePrecompiledBinary;
                         }
                         else
                         {
+                            currentTest.testState = "Loading TinyBooter";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                            currentTest.testSolutionType = "TinyBooter";
+                            if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                            currentTest.testState = "Loading TinyCLR";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                            currentTest.testSolutionType = "TinyCLR";
                             if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                         }
 
@@ -320,20 +339,26 @@ namespace TestRig
                         if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";
                     }
                     else
-                    {
-                        currentTest.testState = "Loading test AXF";
-                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                    {                        
                         if (currentTest.testUsePrecompiledBinary != String.Empty)
                         {
+                            currentTest.testState = "Loading test AXF";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                             if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled AXF file: " + currentTest.testUsePrecompiledBinary;
                         }
                         else
-                        {
-                            // if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\[GCC4.2 / other]\le\[FLASH / RAM]\debug\[STM32F10x / solution]\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                        {                            
+                            currentTest.testState = "Loading TinyBooter";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                            currentTest.testSolutionType = "TinyBooter";
+                            if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                            currentTest.testState = "Loading TinyCLR";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                            currentTest.testSolutionType = "TinyCLR";                                                   
                             if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
                         }
                     }
-
+                    
                     currentTest.testState = "Starting processor";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                     if (gdb.Continue() == false) return "GDB failed to start processor";
@@ -626,17 +651,18 @@ namespace TestRig
                 
                 testStopTime = DateTime.Now;
                 duration = testStopTime - testStartTime;
-                int remainingCOMtimeMs = currentTest.testSampleTimeMs - (int)duration.TotalMilliseconds;
+                int remainingCOMtimeMs = currentTest.testTimeout - (int)duration.TotalMilliseconds;
                 int tenthWaitTimeMs = remainingCOMtimeMs / 10;
-                
+
+                System.Diagnostics.Debug.WriteLine("Test timeout (" + (remainingCOMtimeMs).ToString() + ") ms");
                 while ((currentTest.testUseCOM == true) && (testReceipt.testComplete != true) && (remainingCOMtimeMs > 0) )
                 {
-                    System.Diagnostics.Debug.WriteLine("Waiting for end of logic sampling to end (" + (remainingCOMtimeMs).ToString() + ") ms");
+                    System.Diagnostics.Debug.WriteLine("Waiting for test to timeout (" + (remainingCOMtimeMs).ToString() + ") ms");
                     // if we are using the COM port then we will wait for the test to complete before moving on
                     Thread.Sleep(tenthWaitTimeMs);
                     testStopTime = DateTime.Now;
                     duration = testStopTime - testStartTime;
-                    remainingCOMtimeMs = currentTest.testSampleTimeMs - (int)duration.TotalMilliseconds;
+                    remainingCOMtimeMs = currentTest.testTimeout - (int)duration.TotalMilliseconds;
                 }
                 #endregion
                 if (COM != null) COM.Kill();

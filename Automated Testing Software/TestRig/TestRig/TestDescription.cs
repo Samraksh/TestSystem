@@ -29,6 +29,7 @@ namespace TestRig
         public string testGCCVersion { get; set; }
 
         // the following are set by the test parameter file
+        public int testTimeout { get; set; }
         public bool testUseLogic { get; set; }
         public int testSampleTimeMs { get; set; }
         public int testSampleFrequency { get; set; }
@@ -46,6 +47,7 @@ namespace TestRig
         public TestDescription()
         {
             testReadComplete = false;
+            testTimeout = 60000;
             testUseLogic = false;
             testSampleTimeMs = 500;
             testSampleFrequency = 4000000;
@@ -82,6 +84,7 @@ namespace TestRig
             this.testMFVersionNum = copy.testMFVersionNum;
             this.testGitOption = copy.testGitOption;
             this.testGitBranch = copy.testGitBranch;
+            this.testTimeout = copy.testTimeout;
             this.testUseLogic = copy.testUseLogic;
             this.testSampleTimeMs = copy.testSampleTimeMs;
             this.testSampleFrequency = copy.testSampleFrequency;
@@ -121,7 +124,8 @@ namespace TestRig
             returnString += "\t<TestSolution>\r\n\t" + testSolution + "\r\n\t</TestSolution>\r\n";
             returnString += "\t<TestMemoryType>\r\n\t" + testMemoryType + "\r\n\t</TestMemoryType>\r\n";
             returnString += "\t<TestSolutionType>\r\n\t" + testSolutionType + "\r\n\t</TestSolutionType>\r\n";
-            returnString += "\t<TestGCCVersion>\r\n\t" + testGCCVersion + "\r\n\t</TestGCCVersion>\r\n";    
+            returnString += "\t<TestGCCVersion>\r\n\t" + testGCCVersion + "\r\n\t</TestGCCVersion>\r\n";
+            returnString += "\t<TestTimeout>\r\n\t" + testTimeout.ToString() + "\r\n\t</TestTimeout>\r\n";
             returnString += "\t<TestUseLogic>\r\n\t" + testUseLogic.ToString() + "\r\n\t</TestUseLogic>\r\n";
             returnString += "\t<TestSampleTimeMs>\r\n\t" + testSampleTimeMs.ToString() + "\r\n\t</TestSampleTimeMs>\r\n";
             returnString += "\t<TestSampleFrequency>\r\n\t" + testSampleFrequency.ToString() + "\r\n\t</TestSampleFrequency>\r\n";

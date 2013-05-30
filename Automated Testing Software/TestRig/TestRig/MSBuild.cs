@@ -124,15 +124,19 @@ namespace TestRig
                     break;
             }
 
-            ChangeDirectories(MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType);            
-             
-            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+            ChangeDirectories(MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType);
+
+            // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
+            if (currentTest.testSolutionType == "TinyBooter")
             {
-                System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                return false;
+                if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                {
+                    System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                    return false;
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
             }
-            else
-                System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
 
             //if (RunCommand(@"msbuild /t:build /p:configuration=Release /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)

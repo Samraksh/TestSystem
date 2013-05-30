@@ -248,7 +248,7 @@ namespace TestRig
                 if (rxString != String.Empty)
                 {
                     System.Diagnostics.Debug.WriteLine("COM processing: " + rxString.ToString());
-                    if (rxString.Contains("result ="))
+                    if (rxString.Contains("result =") || rxString.Contains("result="))
                     {
                         if (rxString.Contains("PASS"))
                             testResults.testPass = true;
@@ -257,32 +257,32 @@ namespace TestRig
                     }
                     else if (rxString.Contains("accuracy"))
                     {
-                        index = rxString.IndexOf('=') + 2;
+                        index = rxString.IndexOf('=') + 1;
                         testResults.testAccuracy = double.Parse(rxString.Substring(index, rxString.Length - index));
                     }
                     else if (rxString.Contains("resultParameter1"))
                     {
-                        index = rxString.IndexOf('=') + 2;
+                        index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter1 = rxString.Substring(index, rxString.Length - index);
                     }
                     else if (rxString.Contains("resultParameter2"))
                     {
-                        index = rxString.IndexOf('=') + 2;
+                        index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter2 = rxString.Substring(index, rxString.Length - index);
                     }
                     else if (rxString.Contains("resultParameter3"))
                     {
-                        index = rxString.IndexOf('=') + 2;
+                        index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter3 = rxString.Substring(index, rxString.Length - index);
                     }
                     else if (rxString.Contains("resultParameter4"))
                     {
-                        index = rxString.IndexOf('=') + 2;
+                        index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter4 = rxString.Substring(index, rxString.Length - index);
                     }
                     else if (rxString.Contains("resultParameter5"))
                     {
-                        index = rxString.IndexOf('=') + 2;
+                        index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter5 = rxString.Substring(index, rxString.Length - index);
                         testResults.testComplete = true;
                     }

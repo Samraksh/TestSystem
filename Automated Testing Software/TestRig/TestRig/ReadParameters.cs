@@ -26,6 +26,7 @@ namespace TestRig
                                 string value = parsedLine[4];
                                 value = value.Replace(';', ' ');
                                 value = value.Trim();
+                                if (parameter.Equals("testTimeout")) currentTest.testTimeout = int.Parse(value);
                                 if (parameter.Equals("useLogic")) currentTest.testUseLogic = bool.Parse(value);
                                 if (parameter.Equals("sampleTimeMs")) currentTest.testSampleTimeMs = int.Parse(value);
                                 if (parameter.Equals("sampleFrequency")) currentTest.testSampleFrequency = int.Parse(value);
@@ -75,6 +76,7 @@ namespace TestRig
                                 string value = parsedLine[2];
                                 value = value.Replace(';', ' ');
                                 value = value.Trim();
+                                if (parameter.Equals("testTimeout")) currentTest.testTimeout = int.Parse(value);
                                 if (parameter.Equals("useLogic")) currentTest.testUseLogic = bool.Parse(value);
                                 if (parameter.Equals("sampleTimeMs")) currentTest.testSampleTimeMs = int.Parse(value);
                                 if (parameter.Equals("sampleFrequency")) currentTest.testSampleFrequency = int.Parse(value);
