@@ -10,27 +10,6 @@ using System.Threading;
 
 namespace TestRig
 {
-    class i2cPacket {
-		public int devAddr;
-        public int regAddr;
-		public bool read;
-        //public int* data;
-		//public bool *ack;
-        public int length;
-        public int error;
-
-		/*void print() {
-			if (length > 0) {
-				printf("0x%02X @ 0x%02X [%3d]: %s ", regAddr, devAddr, length, read ? "==>" : "<==");
-				for (U32 i = 0; i < length; i++) printf(" %02X", data[i]);
-			} else {
-				printf("[?]");
-			}
-			if (error > 0) printf(" ERR: %d", error);
-			printf("\n");
-		}*/
-};
-
     public class LogicAnalyzer
     {
         private UInt32 mSampleRateHz;
@@ -48,20 +27,17 @@ namespace TestRig
         private byte previousSample;
         private byte bitMask;
         private bool analyzeI2C;
-        private int lastLevels;
-        private int changeLevels;
-        private const int I2C_STATE_IDLE =	0;
-        private const int I2C_STATE_PREBYTE	 = 1;
-        private const int I2C_STATE_POSTBYTE =2;
+        private byte lastLevels;
+        private byte changeLevels;
+        private const int I2C_STATE_IDLE = 0;
+        private const int I2C_STATE_READING = 1;
+        private const int I2C_STATE_POSTBYTE = 2;
         private int i2cState = I2C_STATE_IDLE;
-        private int packetBytePos = 0;
-private int[] packetData = new int[1024];
-bool[] packetAck = new bool[1024];
-private int currentBitPos;
-private int currentByte;
-bool currentAck;
-private i2cPacket packet = new i2cPacket();
-bool readSetup = false;
+        private byte[] packetData = new byte[1024];
+        bool[] packetAck = new bool[1024];
+        private byte currentBitPos;
+        private byte currentByte;
+        bool ignoreGlitch = true;
 
         public LogicAnalyzer(int sampleFrequency, string projectName)
         {
@@ -71,10 +47,10 @@ bool readSetup = false;
             devices.OnLogic16Connect += new MSaleaeDevices.OnLogic16ConnectDelegate(devices_Logic16OnConnect);
             devices.OnDisconnect += new MSaleaeDevices.OnDisconnectDelegate(devices_OnDisconnect);
             devices.BeginConnect();
-
-            analyzeI2C = false;
+            
             lastLevels = 0;
-            changeLevels = 0;            
+            changeLevels = 0;
+            analyzeI2C = false;
 
             setBitMask(projectName);
 
@@ -157,8 +133,13 @@ bool readSetup = false;
             return true;
         }
 
-        public bool startMeasure(string filename, int sampleMs)
+        public bool startMeasure(string filename, int sampleMs, string testType)
         {
+            if ((testType.Equals("I2C") == true) || (testType.Equals("i2c") == true) ){
+                analyzeI2C = true;
+            } else {
+                analyzeI2C = false;
+            }
             if (filename == String.Empty)
                 return false;
 
@@ -232,207 +213,121 @@ bool readSetup = false;
         {
             try
             {
-                int i,levels;
-                int maskSDA = 0x4;
-                int maskSCL = 0x2;
+                int i;
+                byte levels;
+                int maskSDA = 0x2;
+                int maskSCL = 0x4;
                 //string writeStr;
                 //byte[] asciiBytes;
 
-                System.Diagnostics.Debug.WriteLine("Logic: Read {0} bytes, starting with 0x{1:X}", data.Length, (ushort)data[0]);
+                //System.Diagnostics.Debug.WriteLine("Logic: Read {0} bytes, starting with 0x{1:X}", data.Length, (ushort)data[0]);
 
                 if (analyzeI2C == true)
                 {
-                   /* int change = 0;
+                    int change = 0;
                     for (i = 0; i < data.Length; i++)
                     {
                         levels = data[i];
-                        changeLevels = lastLevels ^ levels;
-                        if ( (changeLevels & maskSDA) != 0)
+                        changeLevels = (byte)(lastLevels ^ levels);
+                        if ((changeLevels & maskSDA) != 0)
                         {
                             // SDA changed since last report
                             change++;
                             if ((levels & maskSCL) != 0)
                             {
-                                // SDA changed while SCL is HIGH, START or STOP
-                                if ((changeLevels & maskSDA) != 0)
+                                if (ignoreGlitch == true)
                                 {
-                                    // SDA changed from LOW to HIGH, STOP condition
-                                    if (i2cState == I2C_STATE_PREBYTE)
-                                    {
-                                        // STOP condition found while busy, good
-                                        i2cState = I2C_STATE_IDLE;
-                                        //printf("]\n");
-                                    }
-                                    else
-                                    {
-                                        // ERROR: STOP condition found while already idle
-                                        //printf("] (error, state=%d)\n", i2cState);
-                                    }
-                                    if (packetBytePos == 2 && ((packetData[0] & 1) == 0))
-                                    {
-                                        // setup read packet, just a dev addr + reg addr in this one
-                                        packet.devAddr = packetData[0] >> 1;
-                                        packet.regAddr = packetData[1];
-                                        packet.read = true;
-                                        readSetup = true;
-                                    }
-                                    else if (packetBytePos > 0)
-                                    {
-                                        if (readSetup)
-                                        {
-                                            // result of previous read request
-                                            if (packet data != null) free(packet.data);
-                                            packet.data = (int*)malloc(packetBytePos - 1);
-                                            packet.length = packetBytePos - 1;
-                                            memcpy(packet.data, packetData + 1, packet.length);
-                                            packet.print();
-                                            readSetup = false;
-                                        }
-                                        else if (packetBytePos > 2)
-                                        {
-                                            // regular write packet
-                                            packet.devAddr = packetData[0] >> 1;
-                                            packet.read = false;
-                                            packet.regAddr = packetData[1];
-                                            if (packet.data != NULL) free(packet.data);
-                                            packet.data = (U8*)malloc(packetBytePos - 2);
-                                            packet.length = packetBytePos - 2;
-                                            memcpy(packet.data, packetData + 2, packet.length);
-                                            packet.print();
-                                        }
-                                    }
-                                    packetBytePos = 0;
+                                    ignoreGlitch = false;
                                 }
                                 else
                                 {
-                                    // SDA changed from HIGH to LOW, START condition
+                                    // SDA changed while SCL is HIGH, START or STOP
+                                    if (i2cState == I2C_STATE_READING)
+                                    {
+                                        // SDA changed from LOW to HIGH, STOP condition
+                                        //System.Diagnostics.Debug.Write("SDA changed from LOW to HIGH, STOP condition\r\n");
+                                        i2cState = I2C_STATE_IDLE;
+                                        file.Write("]\r\n");
+                                        System.Diagnostics.Debug.Write("]\r\n");
 
-                                    // SDA changed from HIGH to LOW, START condition
-                                    if (i2cState == I2C_STATE_IDLE)
-                                    {
-                                        // START condition found while idle
-                                        i2cState = I2C_STATE_PREBYTE;
-                                        //printf("[ ");
-                                    }
-                                    else if (i2cState == I2C_STATE_PREBYTE)
-                                    {
-                                        // repeated START condition, end of last packet
-                                        if (packetBytePos == 2 && ((packetData[0] & 1) == 0))
-                                        {
-                                            // setup read packet, just a dev addr + reg addr in this one
-                                            packet.devAddr = packetData[0] >> 1;
-                                            packet.regAddr = packetData[1];
-                                            packet.read = true;
-                                            readSetup = true;
-                                        }
-                                        else if (packetBytePos > 0)
-                                        {
-                                            if (readSetup)
-                                            {
-                                                // result of previous read request
-                                                if (packet.data != NULL) free(packet.data);
-                                                packet.data = (U8*)malloc(packetBytePos - 1);
-                                                packet.length = packetBytePos - 1;
-                                                memcpy(packet.data, packetData + 1, packet.length);
-                                                packet.print();
-                                                readSetup = false;
-                                            }
-                                            else if (packetBytePos > 2)
-                                            {
-                                                // regular write packet
-                                                packet.devAddr = packetData[0] >> 1;
-                                                packet.read = false;
-                                                packet.regAddr = packetData[1];
-                                                if (packet.data != NULL) free(packet.data);
-                                                packet.data = (U8*)malloc(packetBytePos - 2);
-                                                packet.length = packetBytePos - 2;
-                                                memcpy(packet.data, packetData + 2, packet.length);
-                                                packet.print();
-                                            }
-                                        }
-                                        packetBytePos = 0;
-                                        //printf("{ ");
                                     }
                                     else
                                     {
-                                        // ERROR: START condition found while expecting something else
-                                        //printf("[ (error, state=%d)\n", i2cState);
+                                        // SDA changed from HIGH to LOW, START condition
+                                        //System.Diagnostics.Debug.Write("SDA changed from HIGH to LOW, START condition\r\n");
+                                        i2cState = I2C_STATE_READING;
+                                        file.Write("[");
+                                        System.Diagnostics.Debug.Write("[");
+
+                                        currentBitPos = 7; // I2C protocol is big-endian
+                                        currentByte = 0;
                                     }
-                                    packetBytePos = 0;
-                                    currentBitPos = 7; // I2C protocol is big-endian
-                                    currentByte = 0;
-                                    currentAck = false;
                                 }
-                            }
-                            else
-                            {
-                                // SDA changed while SCL is LOW, nothing important
                             }
                         }
                         if ((changeLevels & maskSCL) != 0)
                         {
-                            // SCL changed since last report
-                            change++;
-                            if ((levels & maskSCL) != 0)
+                            if ((ignoreGlitch == false) && (i2cState != I2C_STATE_IDLE))
                             {
-                                // SCL is HIGH, start of pulsed bit read or acknowledge
-                                if (currentBitPos < 8)
+                                // SCL changed since last report
+                                change++;
+                                if ((levels & maskSCL) != 0)
                                 {
-                                    // 0-7 = data bit
-                                    if ((levels & maskSDA) != 0)
+                                    // SCL is HIGH, start of pulsed bit read or acknowledge
+                                    if (currentBitPos < 8)
                                     {
-                                        // SDA is HIGH, bit=1 or ACK
-                                        //std::cout << "1";
-                                        currentByte |= (1 << currentBitPos);
+                                        // 0-7 = data bit
+                                        if ((levels & maskSDA) != 0)
+                                        {
+                                            // SDA is HIGH, bit=1 or ACK
+                                            //System.Diagnostics.Debug.Write("1");
+                                            currentByte |= (byte)(1 << currentBitPos);
+                                        }
+                                        else
+                                        {
+                                            // SDA is LOW, bit=0 or NACK
+                                            //System.Diagnostics.Debug.Write("0");
+                                        }
+                                        //if (currentBitPos == 0 && i2cState == I2C_STATE_PREBYTE)
+                                        //{
+                                        //    i2cState = I2C_STATE_POSTBYTE;
+                                        //}
+                                        currentBitPos--; // will wrap around to 255 for 9th (ack/nack) bit
                                     }
                                     else
                                     {
-                                        // SDA is LOW, bit=0 or NACK
-                                        //std::cout << "0";
-                                    }
-                                    if (currentBitPos == 0 && i2cState == I2C_STATE_PREBYTE)
-                                    {
-                                        i2cState = I2C_STATE_POSTBYTE;
-                                    }
-                                    currentBitPos--; // will wrap around to 255 for 9th (ack/nack) bit
-                                }
-                                else
-                                {
-                                    // 255 = ack/nack bit
-                                    if ((levels & maskSDA) != 0)
-                                    {
-                                        // SDA is HIGH, bit=1 or NACK
-                                        //std::cout << "N ";
-                                        currentAck = true;
-                                    }
-                                    else
-                                    {
-                                        // SDA is LOW, bit=0 or ACK
-                                        //std::cout << "A ";
-                                    }
+                                        // 255 = ack/nack bit
+                                        if ((levels & maskSDA) != 0)
+                                        {
+                                            // SDA is HIGH, bit=1 or NACK
+                                            //System.Diagnostics.Debug.Write("N");
+                                        }
+                                        else
+                                        {
+                                            // SDA is LOW, bit=0 or ACK
+                                            //System.Diagnostics.Debug.Write("A\r\n" + currentByte.ToString("X") + "\r\n");  
+                                            file.Write(currentByte.ToString("X2") + " ");
+                                            System.Diagnostics.Debug.Write(currentByte.ToString("X2") + " ");                                            
+                                        }
 
-                                    if (i2cState == I2C_STATE_POSTBYTE)
-                                    {
-                                        //printf("%02X%c ", currentByte, currentAck ? '-' : '+');
-                                        packetData[packetBytePos] = currentByte;
-                                        packetAck[packetBytePos] = currentAck;
-                                        packetBytePos++;
-                                        i2cState = I2C_STATE_PREBYTE;
-                                    }
+                                        /*if (i2cState == I2C_STATE_READING)
+                                        {
+                                            //printf("%02X%c ", currentByte, currentAck ? '-' : '+');
+                                            System.Diagnostics.Debug.Write(currentByte.ToString());
+                                            packetData[packetBytePos] = currentByte;
+                                            packetAck[packetBytePos] = currentAck;
+                                            packetBytePos++;
+                                            //i2cState = I2C_STATE_PREBYTE;
+                                        }*/
 
-                                    currentBitPos = 7;
-                                    currentByte = 0;
-                                    currentAck = false;
+                                        currentBitPos = 7;
+                                        currentByte = 0;
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                // SCL is LOW, end of pulsed bit read or acknoweldge
                             }
                         }
-
                         lastLevels = levels;
-                    }*/
+                    }
                 }
                 else
                 {

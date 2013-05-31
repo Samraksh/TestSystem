@@ -30,7 +30,7 @@ namespace TestRig
 
         // the following are set by the test parameter file
         public int testTimeout { get; set; }
-        public bool testUseLogic { get; set; }
+        public string testUseLogic { get; set; }
         public int testSampleTimeMs { get; set; }
         public int testSampleFrequency { get; set; }
         public bool testUseCOM { get; set; }
@@ -39,25 +39,25 @@ namespace TestRig
         public bool testUseScript { get; set; }
         public string testScriptName { get; set; }
         public int testScriptTimeoutMs { get; set; }
-        public bool testMatlabAnalysis { get; set; }
-        public string testMatlabScriptName { get; set; }
-        public bool testPowershellAnalysis { get; set; }
-        public string testPowershellName { get; set; }        
+        public string testAnalysis { get; set; }
+        public string testAnalysisScriptName { get; set; }
+        public bool testUseResultsFile { get; set; }
+        public string testResultsFileName { get; set; }    
 
         public TestDescription()
         {
             testReadComplete = false;
             testTimeout = 60000;
-            testUseLogic = false;
+            testUseLogic = "false";
             testSampleTimeMs = 500;
             testSampleFrequency = 4000000;
             testUseScript = false;
             testScriptName = String.Empty;
             testScriptTimeoutMs = 1000;
-            testMatlabAnalysis = false;
-            testMatlabScriptName = "analysis.m";
-            testPowershellAnalysis = false;
-            testPowershellName = "analysis.ps1";
+            testAnalysis = "none";
+            testAnalysisScriptName = "analysis.m";
+            testUseResultsFile = false;
+            testResultsFileName = "results.txt";
             testUsePrecompiledBinary = String.Empty;
             testHardware = String.Empty;
             testSolution = String.Empty;
@@ -91,10 +91,10 @@ namespace TestRig
             this.testUseScript = copy.testUseScript;
             this.testScriptName = copy.testScriptName;
             this.testScriptTimeoutMs = copy.testScriptTimeoutMs;
-            this.testMatlabAnalysis = copy.testMatlabAnalysis;
-            this.testMatlabScriptName = copy.testMatlabScriptName;
-            this.testPowershellAnalysis = copy.testPowershellAnalysis;
-            this.testPowershellName = copy.testPowershellName;
+            this.testAnalysis = copy.testAnalysis;
+            this.testAnalysisScriptName = copy.testAnalysisScriptName;
+            this.testUseResultsFile = copy.testUseResultsFile;
+            this.testResultsFileName = copy.testResultsFileName;
             this.testUsePrecompiledBinary = copy.testUsePrecompiledBinary;
             this.testHardware = copy.testHardware;
             this.testSolution = copy.testSolution;
@@ -126,16 +126,16 @@ namespace TestRig
             returnString += "\t<TestSolutionType>\r\n\t" + testSolutionType + "\r\n\t</TestSolutionType>\r\n";
             returnString += "\t<TestGCCVersion>\r\n\t" + testGCCVersion + "\r\n\t</TestGCCVersion>\r\n";
             returnString += "\t<TestTimeout>\r\n\t" + testTimeout.ToString() + "\r\n\t</TestTimeout>\r\n";
-            returnString += "\t<TestUseLogic>\r\n\t" + testUseLogic.ToString() + "\r\n\t</TestUseLogic>\r\n";
+            returnString += "\t<TestUseLogic>\r\n\t" + testUseLogic + "\r\n\t</TestUseLogic>\r\n";
             returnString += "\t<TestSampleTimeMs>\r\n\t" + testSampleTimeMs.ToString() + "\r\n\t</TestSampleTimeMs>\r\n";
             returnString += "\t<TestSampleFrequency>\r\n\t" + testSampleFrequency.ToString() + "\r\n\t</TestSampleFrequency>\r\n";
             returnString += "\t<testUseScript>\r\n\t" + testUseScript.ToString() + "\r\n\t</testUseScript>\r\n";
             returnString += "\t<testScriptName>\r\n\t" + testScriptName + "\r\n\t</testScriptName>\r\n";
             returnString += "\t<testScriptTimeoutMs>\r\n\t" + testScriptTimeoutMs.ToString() + "\r\n\t</testScriptTimeoutMs>\r\n";
-            returnString += "\t<TestMatlabAnalysis>\r\n\t" + testMatlabAnalysis.ToString() + "\r\n\t</TestMatlabAnalysis>\r\n";
-            returnString += "\t<TestMatlabScriptName>\r\n\t" + testMatlabScriptName + "\r\n\t</TestMatlabScriptName>\r\n";
-            returnString += "\t<TestPowershellAnalysis>\r\n\t" + testPowershellAnalysis.ToString() + "\r\n\t</TestPowershellAnalysis>\r\n";
-            returnString += "\t<TestPowershellName>\r\n\t" + testPowershellName + "\r\n\t</TestPowershellName>\r\n";
+            returnString += "\t<TestAnalysis>\r\n\t" + testAnalysis.ToString() + "\r\n\t</TestAnalysis>\r\n";
+            returnString += "\t<TestAnalysisScriptName>\r\n\t" + testAnalysisScriptName + "\r\n\t</TestAnalysisScriptName>\r\n";
+            returnString += "\t<TestUseResultsFile>\r\n\t" + testUseResultsFile.ToString() + "\r\n\t</TestUseResultsFile>\r\n";
+            returnString += "\t<TestResultsFileName>\r\n\t" + testResultsFileName + "\r\n\t</TestResultsFileName>\r\n";
             returnString += "\t<TestUseCOM>\r\n\t" + testUseCOM.ToString() + "\r\n\t</TestUseCOM>\r\n";
             returnString += "\t<TestForceCOM>\r\n\t" + testForceCOM + "\r\n\t</TestForceCOM>\r\n";
             returnString += "\t<TestCOMParameters>\r\n\t" + testCOMParameters + "\r\n\t</TestCOMParameters>\r\n";

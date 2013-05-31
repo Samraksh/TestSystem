@@ -42,7 +42,7 @@ namespace TestRig
                 engine.SetVariable("dataFileName", dataFileName);
 
                 // stripping .m from the matlab script name
-                string matlabScriptName = currentTest.testMatlabScriptName.Replace(".m", "");
+                string matlabScriptName = currentTest.testAnalysisScriptName.Replace(".m", "");
                 engine.Eval(matlabScriptName);
                 
 

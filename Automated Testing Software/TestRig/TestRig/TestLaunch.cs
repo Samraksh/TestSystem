@@ -169,8 +169,11 @@ namespace TestRig
                 int index = projectName.LastIndexOf('.');
                 string strippedName = projectName.Substring(0, index);
                 string MFPath;
+                string testDataName = String.Empty;
                 ProcessStartInfo TestExecutableInfo = new ProcessStartInfo();
+                ProcessStartInfo TestAnalysisExecutableInfo = new ProcessStartInfo();
                 Process TestExecutableProcess = new Process();
+                Process TestAnalysisExecutableProcess = new Process();
                 DateTime testStartTime = DateTime.Now;
 
                 switch (currentTest.testMFVersionNum)
@@ -261,7 +264,7 @@ namespace TestRig
                     readVars = new ReadParameters(workingDirectory + @"\" + "Parameters.h", currentTest);
 
                 System.Diagnostics.Debug.WriteLine("testTimeout: " + currentTest.testTimeout.ToString());
-                System.Diagnostics.Debug.WriteLine("useLogic: " + currentTest.testUseLogic.ToString());
+                System.Diagnostics.Debug.WriteLine("useLogic: " + currentTest.testUseLogic);
                 System.Diagnostics.Debug.WriteLine("sampleTimeMs: " + currentTest.testSampleTimeMs.ToString());
                 System.Diagnostics.Debug.WriteLine("sampleFrequency: " + currentTest.testSampleFrequency.ToString());
                 System.Diagnostics.Debug.WriteLine("useTestScript: " + currentTest.testUseScript.ToString());
@@ -270,6 +273,10 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("useCOM: " + currentTest.testUseCOM.ToString());
                 System.Diagnostics.Debug.WriteLine("forceCOM: " + currentTest.testForceCOM.ToString());
                 System.Diagnostics.Debug.WriteLine("COMParameters: " + currentTest.testCOMParameters.ToString());
+                System.Diagnostics.Debug.WriteLine("useAnalysis: " + currentTest.testAnalysis.ToString());
+                System.Diagnostics.Debug.WriteLine("analysisScriptName: " + currentTest.testAnalysisScriptName.ToString());
+                System.Diagnostics.Debug.WriteLine("useResultsFile: " + currentTest.testUseResultsFile.ToString());
+                System.Diagnostics.Debug.WriteLine("resultsFileName: " + currentTest.testResultsFileName.ToString());
                 #endregion
 
                 #region Loading the current test
@@ -369,14 +376,22 @@ namespace TestRig
                 }
                 if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
                 Directory.CreateDirectory(workingDirectory + @"\" + "testTemp");
-                if (currentTest.testUseLogic == true)
+                if ((currentTest.testUseLogic.Equals("normal") == true) || (currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
                 {
                     if (logicTest == null)
                         logicTest = new LogicAnalyzer(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
                     else
                         logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
                     if (logicTest == null) return "Logic Analyzer failed to load";
-                    if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
+                    if ((currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
+                    {
+                        testDataName = "testData.txt";
+                    }
+                    else
+                    {
+                        testDataName = "testData.csv";
+                    }
+                    if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + testDataName, currentTest.testSampleTimeMs, currentTest.testUseLogic) == false) return "Logic Analyzer failed to start measuring";
                 }
 
                 // starting to measure time of test 
@@ -442,7 +457,8 @@ namespace TestRig
 
                                     TestExecutableProcess.Start();
                                     TestExecutableProcess.WaitForExit(runTime);
-                                    TestExecutableProcess.Kill();
+                                    if (TestExecutableProcess.HasExited == false)
+                                        TestExecutableProcess.Kill();
                                 }
                                 else if (parsedLine[1].EndsWith(".dll"))
                                 {
@@ -632,10 +648,9 @@ namespace TestRig
                 DateTime testStopTime = DateTime.Now;
                 TimeSpan duration = testStopTime - testStartTime;
 
-                if (currentTest.testUseLogic == true)
+                if ((currentTest.testUseLogic.Equals("normal") == true) || (currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
                 {                           
                     if (logicTest == null) return "Logic Analyzer failed to load";
-                    //if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + "testData.csv", currentTest.testSampleTimeMs) == false) return "Logic Analyzer failed to start measuring";
                     // shutting down logic analyzer if we sampled long enough
                     if ((int)duration.TotalMilliseconds < currentTest.testSampleTimeMs)
                     {
@@ -673,15 +688,92 @@ namespace TestRig
                 
                 Thread.Sleep(50);
 
-                if (currentTest.testMatlabAnalysis == true)
+                if ((currentTest.testAnalysis.Equals("matlab") == true) || (currentTest.testAnalysis.Equals("Matlab") == true))
                 {
                     matlab = new Matlab(mainHandle, testReceipt);
                     if (matlab == null) return "Matlab failed to load";
-                    if (matlab.matlabRunScript(workingDirectory, @"testTemp\testData.csv", currentTest) == false) return "Matlab failed to run script";
+                    if (matlab.matlabRunScript(workingDirectory, @"testTemp\" + testDataName, currentTest) == false) return "Matlab failed to run script";
                 }
-                else if (currentTest.testPowershellAnalysis == true)
+                else if (currentTest.testAnalysis.Equals("exe") == true)
                 {
+                    TestAnalysisExecutableInfo = new ProcessStartInfo();
+                    TestAnalysisExecutableProcess = new Process();
+
+                    System.Diagnostics.Debug.WriteLine("Starting to run analysis executable: " + currentTest.testAnalysisScriptName);
+
+                    TestAnalysisExecutableInfo.CreateNoWindow = true;
+                    TestAnalysisExecutableInfo.RedirectStandardInput = false;
+                    TestAnalysisExecutableInfo.UseShellExecute = false;
+
+                    TestAnalysisExecutableProcess.StartInfo = TestAnalysisExecutableInfo;
+                    TestAnalysisExecutableInfo.FileName = workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim();
+
+                    TestAnalysisExecutableInfo.Arguments = workingDirectory + @"\testTemp\" + testDataName + " " + workingDirectory + @"\testTemp\" + currentTest.testResultsFileName;
+                    TestAnalysisExecutableProcess.Start();
+                    TestAnalysisExecutableProcess.WaitForExit(currentTest.testTimeout);
+                    if (TestAnalysisExecutableProcess.HasExited == false)
+                        TestAnalysisExecutableProcess.Kill();
                 }
+
+                if (currentTest.testUseResultsFile == true)
+                {
+                    try
+                    {
+                        StreamReader tResult = new StreamReader(workingDirectory + @"\testTemp\" + currentTest.testResultsFileName);
+                        string resultLine;
+
+                        resultLine = tResult.ReadLine();
+                        while (resultLine != null)
+                        {
+                            if (resultLine.Contains("result ="))
+                            {
+                                if (resultLine.Contains("PASS"))
+                                    testReceipt.testPass = true;
+                                else
+                                    testReceipt.testPass = false;
+                            }
+                            else if (resultLine.Contains("accuracy"))
+                            {
+                                index = resultLine.IndexOf('=') + 2;
+                                testReceipt.testAccuracy = double.Parse(resultLine.Substring(index, resultLine.Length - index));
+                            }
+                            else if (resultLine.Contains("resultParameter1"))
+                            {
+                                index = resultLine.IndexOf('=') + 2;
+                                testReceipt.testReturnParameter1 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter2"))
+                            {
+                                index = resultLine.IndexOf('=') + 2;
+                                testReceipt.testReturnParameter2 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter3"))
+                            {
+                                index = resultLine.IndexOf('=') + 2;
+                                testReceipt.testReturnParameter3 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter4"))
+                            {
+                                index = resultLine.IndexOf('=') + 2;
+                                testReceipt.testReturnParameter4 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter5"))
+                            {
+                                index = resultLine.IndexOf('=') + 2;
+                                testReceipt.testReturnParameter5 = resultLine.Substring(index, resultLine.Length - index);
+                                testReceipt.testComplete = true;
+                            }
+                            resultLine = tResult.ReadLine();
+                        }
+                        tResult.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine("test results read FAIL: " + ex.Message);
+                        return "Test result file read failure: " + ex.Message;
+                    }
+                }
+
 
                 // delete raw data file
                 Thread.Sleep(50);

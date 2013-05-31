@@ -27,7 +27,12 @@ namespace TestRig
                                 value = value.Replace(';', ' ');
                                 value = value.Trim();
                                 if (parameter.Equals("testTimeout")) currentTest.testTimeout = int.Parse(value);
-                                if (parameter.Equals("useLogic")) currentTest.testUseLogic = bool.Parse(value);
+                                if (parameter.Equals("useLogic"))
+                                {
+                                    value = value.TrimStart('\"');
+                                    value = value.TrimEnd('\"');
+                                    currentTest.testUseLogic = value;
+                                }
                                 if (parameter.Equals("sampleTimeMs")) currentTest.testSampleTimeMs = int.Parse(value);
                                 if (parameter.Equals("sampleFrequency")) currentTest.testSampleFrequency = int.Parse(value);
                                 if (parameter.Equals("useTestScript")) currentTest.testUseScript = bool.Parse(value);
@@ -38,19 +43,24 @@ namespace TestRig
                                     currentTest.testScriptName = value;
                                 }
                                 if (parameter.Equals("testScriptTimeoutMs")) currentTest.testScriptTimeoutMs = int.Parse(value);
-                                if (parameter.Equals("useMatlabAnalysis")) currentTest.testMatlabAnalysis = bool.Parse(value);
-                                if (parameter.Equals("matlabScriptName"))
+                                if (parameter.Equals("useAnalysis"))
                                 {
                                     value = value.TrimStart('\"');
                                     value = value.TrimEnd('\"');
-                                    currentTest.testMatlabScriptName = value;
+                                    currentTest.testAnalysis = value;
                                 }
-                                if (parameter.Equals("usePowershellAnalysis")) currentTest.testPowershellAnalysis = bool.Parse(value);
-                                if (parameter.Equals("powershellName"))
+                                if (parameter.Equals("analysisScriptName"))
                                 {
                                     value = value.TrimStart('\"');
                                     value = value.TrimEnd('\"');
-                                    currentTest.testPowershellName = value;
+                                    currentTest.testAnalysisScriptName = value;
+                                }
+                                if (parameter.Equals("useResultsFile")) currentTest.testUseResultsFile = bool.Parse(value);
+                                if (parameter.Equals("resultsFileName"))
+                                {
+                                    value = value.TrimStart('\"');
+                                    value = value.TrimEnd('\"');
+                                    currentTest.testResultsFileName = value;
                                 }
                                 if (parameter.Equals("useCOMPort")) currentTest.testUseCOM = bool.Parse(value);
                                 if (parameter.Equals("forceCOM"))
@@ -77,7 +87,12 @@ namespace TestRig
                                 value = value.Replace(';', ' ');
                                 value = value.Trim();
                                 if (parameter.Equals("testTimeout")) currentTest.testTimeout = int.Parse(value);
-                                if (parameter.Equals("useLogic")) currentTest.testUseLogic = bool.Parse(value);
+                                if (parameter.Equals("useLogic"))
+                                {
+                                    value = value.TrimStart('\"');
+                                    value = value.TrimEnd('\"');
+                                    currentTest.testUseLogic = value;
+                                }
                                 if (parameter.Equals("sampleTimeMs")) currentTest.testSampleTimeMs = int.Parse(value);
                                 if (parameter.Equals("sampleFrequency")) currentTest.testSampleFrequency = int.Parse(value);
                                 if (parameter.Equals("useTestScript")) currentTest.testUseScript = bool.Parse(value);
@@ -88,19 +103,24 @@ namespace TestRig
                                     currentTest.testScriptName = value;
                                 }
                                 if (parameter.Equals("testScriptTimeoutMs")) currentTest.testScriptTimeoutMs = int.Parse(value);
-                                if (parameter.Equals("useMatlabAnalysis")) currentTest.testMatlabAnalysis = bool.Parse(value);
-                                if (parameter.Equals("matlabScriptName"))
+                                if (parameter.Equals("useAnalysis"))
                                 {
                                     value = value.TrimStart('\"');
                                     value = value.TrimEnd('\"');
-                                    currentTest.testMatlabScriptName = value;
+                                    currentTest.testAnalysis = value;
                                 }
-                                if (parameter.Equals("usePowershellAnalysis")) currentTest.testPowershellAnalysis = bool.Parse(value);
-                                if (parameter.Equals("powershellName"))
+                                if (parameter.Equals("analysisScriptName"))
                                 {
                                     value = value.TrimStart('\"');
                                     value = value.TrimEnd('\"');
-                                    currentTest.testPowershellName = value;
+                                    currentTest.testAnalysisScriptName = value;
+                                }
+                                if (parameter.Equals("useResultsFile")) currentTest.testUseResultsFile = bool.Parse(value);
+                                if (parameter.Equals("resultsFileName"))
+                                {
+                                    value = value.TrimStart('\"');
+                                    value = value.TrimEnd('\"');
+                                    currentTest.testResultsFileName = value;
                                 }
                                 if (parameter.Equals("useCOMPort")) currentTest.testUseCOM = bool.Parse(value);
                                 if (parameter.Equals("forceCOM"))
