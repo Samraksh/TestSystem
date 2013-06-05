@@ -27,33 +27,33 @@ namespace TestRig
 
         private static AutoResetEvent ARE_result = new AutoResetEvent(false);
 
-        private Process MSBuildProcess;
+        private Process GDBProcess;
         public MainWindow mainHandle;
 
         public GDB(MainWindow passedHandle)
         {
             mainHandle = passedHandle;
-            ProcessStartInfo MSBuildInfo = new ProcessStartInfo();
-            MSBuildProcess = new Process();
+            ProcessStartInfo GDBInfo = new ProcessStartInfo();
+            GDBProcess = new Process();
             
             System.Diagnostics.Debug.WriteLine("Starting GDB.");
 
-            MSBuildInfo.CreateNoWindow = true;
-            MSBuildInfo.RedirectStandardInput = true;
-            MSBuildInfo.UseShellExecute = false;
-            MSBuildInfo.RedirectStandardOutput = true;
-            MSBuildInfo.RedirectStandardError = true;
-            MSBuildInfo.Arguments = @"-quiet -fullname --interpreter=mi2";
-            MSBuildInfo.FileName = mainHandle.textBuildSourceryPath + @"\bin\arm-none-eabi-gdb.exe";
+            GDBInfo.CreateNoWindow = true;
+            GDBInfo.RedirectStandardInput = true;
+            GDBInfo.UseShellExecute = false;
+            GDBInfo.RedirectStandardOutput = true;
+            GDBInfo.RedirectStandardError = true;
+            GDBInfo.Arguments = @"-quiet -fullname --interpreter=mi2";
+            GDBInfo.FileName = mainHandle.textBuildSourceryPath + @"\bin\arm-none-eabi-gdb.exe";
 
-            MSBuildProcess.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
-            MSBuildProcess.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);
+            GDBProcess.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
+            GDBProcess.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);
 
-            MSBuildProcess.StartInfo = MSBuildInfo;
-            MSBuildProcess.Start();
-            input = MSBuildProcess.StandardInput;
-            MSBuildProcess.BeginOutputReadLine();
-            MSBuildProcess.BeginErrorReadLine();
+            GDBProcess.StartInfo = GDBInfo;
+            GDBProcess.Start();
+            input = GDBProcess.StandardInput;
+            GDBProcess.BeginOutputReadLine();
+            GDBProcess.BeginErrorReadLine();
 
             if (RunCommand(@"target remote localhost:3333", "Remote debugging using localhost:3333", "^error", 5000) != CommandStatus.Done)
             {
@@ -112,13 +112,13 @@ namespace TestRig
             try
             {
                 RunCommand("quit");
-                System.Diagnostics.Debug.WriteLine("MSBuildProcess killed.");
-                MSBuildProcess.Kill();
-                MSBuildProcess = null;
+                System.Diagnostics.Debug.WriteLine("GDBProcess killed.");
+                GDBProcess.Kill();
+                GDBProcess = null;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("MSBuildProcess already killed. Can't kill again: " + ex.ToString());
+                System.Diagnostics.Debug.WriteLine("GDBProcess already killed. Can't kill again: " + ex.ToString());
             }
         }
 

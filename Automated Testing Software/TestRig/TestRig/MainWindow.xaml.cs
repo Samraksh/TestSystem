@@ -290,6 +290,10 @@ namespace TestRig
                         if (readTest.testReadComplete == false)
                             return;                        
 
+                        // if this is a test supporting a primary test then we don't list it. It will automatically be loaded by primary test if selected.
+                        if (readTest.testSupporting.Contains("support project") == true)
+                            return;
+
                         availableTests[testNum - 1] = readTest;
                         _tasks.Add(new Task()
                         {
@@ -307,6 +311,53 @@ namespace TestRig
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("AddTests: " + ex.ToString());
+            }
+        }
+
+        private void QueueSupportTest(string fileName, StreamWriter writer)
+        {
+            StreamReader testReader = new StreamReader(@"D:\work\testsys\Two\Second\tests.xml");
+            try
+            {
+                // Create an XmlReader
+                using (XmlReader reader = XmlReader.Create(testReader))
+                {
+                    System.Diagnostics.Debug.WriteLine("Starting to read available test XML test file.");
+                    while (reader != null)
+                    {
+                        // read in each defined test within the configuration file and activate the appropriate checkbox
+                        TestDescription readTest = rxSocket.readXMLTest(reader);
+                        if (readTest.testReadComplete == false)
+                            return;
+
+                        if (readTest.testerName == String.Empty)
+                            readTest.testerName = System.Environment.UserName.ToString();
+                        if (readTest.testLocation == String.Empty)
+                            readTest.testLocation = System.Environment.MachineName.ToString();
+                        if (readTest.testMFVersionNum == String.Empty)
+                            readTest.testMFVersionNum = textMFSelected;
+                        if (readTest.testGitOption == String.Empty)
+                            readTest.testGitOption = textGitCodeLocation;
+                        if (readTest.testGitBranch == String.Empty)
+                            readTest.testGitBranch = textGitCodeBranch;
+                        if (readTest.testHardware == String.Empty)
+                            readTest.testHardware = textHardware;
+                        if (readTest.testSolution == String.Empty)
+                            readTest.testSolution = textSolution;
+                        if (readTest.testMemoryType == String.Empty)
+                            readTest.testMemoryType = textMemoryType;
+                        if (readTest.testSolutionType == String.Empty)
+                            readTest.testSolutionType = textSolutionType;
+                        if (readTest.testGCCVersion == String.Empty)
+                            readTest.testGCCVersion = textGCCVersion;
+
+                        writer.Write(readTest.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("QueueSupportTest: " + ex.ToString());
             }
         }
 
@@ -343,6 +394,8 @@ namespace TestRig
                             tempTask.testSolutionType = textSolutionType;
                         if (tempTask.testGCCVersion == String.Empty)
                             tempTask.testGCCVersion = textGCCVersion;
+                        if (tempTask.testSupporting != String.Empty)
+                            QueueSupportTest(tempTask.testSupporting, writer);
                         writer.Write(tempTask.ToString());
                     }
                 }
