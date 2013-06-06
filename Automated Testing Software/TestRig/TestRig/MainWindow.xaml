@@ -85,6 +85,7 @@
                         <ComboBoxItem Content="Emote.Now - EmoteDotNow" />
                         <ComboBoxItem Content="Soc8200 - SOC8200" />
                         <ComboBoxItem Content="Adapt - ADAPT" IsEnabled="True" />
+                        <ComboBoxItem Content="Lauterbach" />
                     </ComboBox>
                     <Label Content="GCC Version:" Height="28" HorizontalAlignment="Left" Margin="5,566,0,0" Name="label3" VerticalAlignment="Top" />
                     <ComboBox Height="23" HorizontalAlignment="Left" Margin="118,569,0,0" Name="cbGCCVersion" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbGCCVersion_SelectionChanged" Grid.ColumnSpan="2">
@@ -124,7 +125,7 @@
                     </ListView>
                 </Grid>
             </TabItem>
-            <TabItem Header="Test Machine Paths" Name="tabTestSettings">
+            <TabItem Header="Configure Test Mahcine" Name="tabTestSettings">
                 <Grid>
                     <GroupBox Header="Test Tool Paths" Height="107" HorizontalAlignment="Left" Margin="6,277,0,0" Name="groupBox3" VerticalAlignment="Top" Width="653">
                         <Grid>
@@ -190,6 +191,7 @@
                         <ComboBoxItem Content="COM 25" />
                     </ComboBox>
                     <Label Content="COM Port:" Height="28" HorizontalAlignment="Left" Margin="6,478,0,0" Name="label12" VerticalAlignment="Top" />
+                    <CheckBox Content="Automate power cycle during code loading" Height="16" HorizontalAlignment="Left" Margin="12,512,0,0" Name="cbPowerAutomate" VerticalAlignment="Top" Width="259" Unchecked="cbPowerAutomate_Unchecked" Checked="cbPowerAutomate_Checked" />
                 </Grid>
             </TabItem>            
         </TabControl>

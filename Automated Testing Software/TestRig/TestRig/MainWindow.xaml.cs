@@ -64,6 +64,7 @@ namespace TestRig
         public static string textSolutionType;
         public static string textGCCVersion;
         public static string textMFSelected;
+        public bool powerAutomateSelected;
         public string textCOMPort;
         public static TestDescription[] availableTests;
         private static Tasks _tasks;
@@ -729,6 +730,10 @@ namespace TestRig
                     textHardware = "Adapt";
                     textSolution = "SOC_ADAPT";
                     break;
+                case 4:
+                    textHardware = "Lauterbach";
+                    textSolution = "Lauterbach";
+                    break;
                 default:
                     textHardware = "Emote v1";
                     textSolution = "STM32F10x";
@@ -805,6 +810,16 @@ namespace TestRig
         {
             textCOMPort = ((ComboBoxItem)cbCOMPort.SelectedItem).Content.ToString();
             textCOMPort = textCOMPort.Remove(3, 1);
-        }  
+        }
+
+        private void cbPowerAutomate_Unchecked(object sender, RoutedEventArgs e)
+        {
+            powerAutomateSelected = false;
+        }
+
+        private void cbPowerAutomate_Checked(object sender, RoutedEventArgs e)
+        {
+            powerAutomateSelected = true;
+        }        
     }
 }
