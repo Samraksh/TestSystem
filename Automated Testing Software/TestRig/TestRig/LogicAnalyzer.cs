@@ -220,7 +220,7 @@ namespace TestRig
                 //string writeStr;
                 //byte[] asciiBytes;
 
-                //System.Diagnostics.Debug.WriteLine("Logic: Read {0} bytes, starting with 0x{1:X}", data.Length, (ushort)data[0]);
+                System.Diagnostics.Debug.WriteLine("Logic: Read {0} bytes, starting with 0x{1:X}", data.Length, (ushort)data[0]);
 
                 if (analyzeI2C == true)
                 {

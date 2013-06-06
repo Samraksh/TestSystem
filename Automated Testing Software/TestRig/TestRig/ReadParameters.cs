@@ -78,7 +78,8 @@ namespace TestRig
                             }                    
                         }
                         else
-                        {                           
+                        {
+                            line = line.Replace("\t", " ");
                             if (line.Contains("define") == true)
                             {
                                 string[] parsedLine = line.Split(' ');

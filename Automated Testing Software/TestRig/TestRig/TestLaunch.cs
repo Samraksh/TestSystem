@@ -688,6 +688,12 @@ namespace TestRig
                 
                 Thread.Sleep(50);
 
+                testStopTime = DateTime.Now;
+                duration = testStopTime - testStartTime;
+                int analysisTimeout = currentTest.testTimeout - (int)duration.TotalMilliseconds;
+                // if the timeout already occurred we should still run the analysis for at least 10 seconds.
+                if (analysisTimeout < 10000)
+                    analysisTimeout = 10000;
                 if ((currentTest.testAnalysis.Equals("matlab") == true) || (currentTest.testAnalysis.Equals("Matlab") == true))
                 {
                     matlab = new Matlab(mainHandle, testReceipt);
@@ -710,7 +716,7 @@ namespace TestRig
 
                     TestAnalysisExecutableInfo.Arguments = workingDirectory + @"\testTemp\" + testDataName + " " + workingDirectory + @"\testTemp\" + currentTest.testResultsFileName;
                     TestAnalysisExecutableProcess.Start();
-                    TestAnalysisExecutableProcess.WaitForExit(currentTest.testTimeout);
+                    TestAnalysisExecutableProcess.WaitForExit(analysisTimeout);
                     if (TestAnalysisExecutableProcess.HasExited == false)
                         TestAnalysisExecutableProcess.Kill();
                 }

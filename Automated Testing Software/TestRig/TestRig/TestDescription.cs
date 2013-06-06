@@ -56,7 +56,7 @@ namespace TestRig
             testScriptName = String.Empty;
             testScriptTimeoutMs = 1000;
             testAnalysis = "none";
-            testAnalysisScriptName = "analysis.m";
+            testAnalysisScriptName = "analyze.m";
             testUseResultsFile = false;
             testResultsFileName = "results.txt";
             testUsePrecompiledBinary = String.Empty;

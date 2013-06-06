@@ -35,6 +35,7 @@ namespace TestRig
         private string usingMFVersion;
 
         private string applicationStartAddress;
+        private string preprocessorString;
 
         public MSBuild(MainWindow passedHandle, string MFVersion)
         {
@@ -200,6 +201,24 @@ namespace TestRig
 
         public bool BuildNativeProject(string path, string project, TestDescription currentTest)
         {
+            switch (currentTest.testSolution)
+            {
+                case "STM32F10x":
+                    preprocessorString = "HARDWARE_EMOTE";
+                    break;
+                case "EmoteDotNow":
+                    preprocessorString = "HARDWARE_EMOTE";
+                    break;
+                case "SOC8200":
+                    preprocessorString = "HARDWARE_SOC8200";
+                    break;
+                case "SOC_ADAPT":
+                    preprocessorString = "HARDWARE_ADAPT";
+                    break;
+                default:
+                    preprocessorString = "HARDWARE_UNKNOWN";
+                    break;
+            }
             ChangeDirectories(MFPath);
 
             string fullPath = mainHandle.textTestSourcePath;
@@ -226,7 +245,7 @@ namespace TestRig
             }
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
@@ -238,7 +257,25 @@ namespace TestRig
         }
 
         public bool BuildManagedProject(string path, string project, TestDescription currentTest)
-        {                        
+        {
+            switch (currentTest.testSolution)
+            {
+                case "STM32F10x":
+                    preprocessorString = "HARDWARE_EMOTE";
+                    break;
+                case "EmoteDotNow":
+                    preprocessorString = "HARDWARE_EMOTE";
+                    break;
+                case "SOC8200":
+                    preprocessorString = "HARDWARE_SOC8200";
+                    break;
+                case "SOC_ADAPT":
+                    preprocessorString = "HARDWARE_ADAPT";
+                    break;
+                default:
+                    preprocessorString = "HARDWARE_UNKNOWN";
+                    break;
+            }    
             ChangeDirectories(MFPath);
 
             string fullPath = mainHandle.textTestSourcePath;
@@ -266,7 +303,7 @@ namespace TestRig
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
             // msbuild /t:build /p:memory=" + currentTest.testMemoryType + @" (default) (/p:memory=RAM)
-            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
