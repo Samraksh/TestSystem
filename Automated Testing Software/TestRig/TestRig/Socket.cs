@@ -59,16 +59,28 @@ namespace TestRig
             {
                 try
                 {
+                    int receivedBytesLen;
                     // this thread will continue to listen for and accept TCP/IP connections and will parse any test configuration files
+                    System.Diagnostics.Debug.Write("attempting to accept rx connection\r\n");
                     connectSocket = Rxsocket.Accept();
                     System.Diagnostics.Debug.WriteLine("Receive socket accepted connection.");
 
-                    byte[] clientData = new byte[1024 * 5000];
+                    byte[] clientData = new byte[1024 * 250];
 
                     System.Diagnostics.Debug.WriteLine("Receiving test config file from: " + connectSocket.RemoteEndPoint.ToString());
-                    int receivedBytesLen = connectSocket.Receive(clientData);
+                    receivedBytesLen = connectSocket.Receive(clientData);
+                    BinaryWriter bWrite = new BinaryWriter(File.Open("receive.config", FileMode.Create));
+                    while (receivedBytesLen != 0)
+                    {
+                        bWrite.Write(clientData, 0, receivedBytesLen);
+                        receivedBytesLen = connectSocket.Receive(clientData);
+                    }
+                    Console.WriteLine("File: {0} received over RX socket and saved", "receive.config");
+                    bWrite.Flush();
+                    bWrite.Close();
 
-                    readXML(clientData);
+                    byte[] fileData = File.ReadAllBytes("receive.config");
+                    readXML(fileData);
 
                     connectSocket.Close();
                 }
@@ -183,7 +195,7 @@ namespace TestRig
                     System.Diagnostics.Debug.WriteLine("Starting to parse received XML test file.");
                     while (reader != null)
                     {                        
-                        TestDescription readTest = readXMLTest(reader);                        
+                        TestDescription readTest = readXMLTest(reader);
 
                         if (readTest.testReadComplete == true)
                         {
@@ -196,6 +208,8 @@ namespace TestRig
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.addDelegate, readTest);
                             testCollectionMutex.ReleaseMutex();
                         }
+                        else
+                            return;
                     }
                 }
                 catch (Exception ex)

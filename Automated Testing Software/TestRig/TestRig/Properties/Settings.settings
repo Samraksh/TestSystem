@@ -2,26 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TestRig.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="OCDInterface" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\SamTest\openocd-bin\interface\olimex-arm-usb-tiny-h.cfg</Value>
-    </Setting>
-    <Setting Name="OCDTarget" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\SamTest\openocd-bin\target\stm32xl.cfg</Value>
-    </Setting>
-    <Setting Name="OCDExe" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\SamTest\openocd-bin\openocd.exe</Value>
-    </Setting>
-    <Setting Name="CSPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\SamTest\codesourcery</Value>
-    </Setting>
     <Setting Name="MFPath_4_0" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Work\DotNet-MF\MicroFrameworkPK_v4_0</Value>
-    </Setting>
-    <Setting Name="GitPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\SamTest\Automated Testing Software\GitBin</Value>
-    </Setting>
-    <Setting Name="TSPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\TestSys</Value>
     </Setting>
     <Setting Name="TRPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Test\Receipts</Value>
@@ -49,6 +31,27 @@
     </Setting>
     <Setting Name="COMPort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="OCDInterfacePrimary" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\SamTest\openocd-bin\interface\olimex-arm-usb-tiny-h.cfg</Value>
+    </Setting>
+    <Setting Name="OCDTarget" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\SamTest\openocd-bin\target\stm32xl.cfg</Value>
+    </Setting>
+    <Setting Name="OCDExe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\SamTest\openocd-bin\openocd.exe</Value>
+    </Setting>
+    <Setting Name="CSPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\SamTest\codesourcery</Value>
+    </Setting>
+    <Setting Name="GitPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\SamTest\Automated Testing Software\GitBin</Value>
+    </Setting>
+    <Setting Name="TSPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\TestSys</Value>
+    </Setting>
+    <Setting Name="OCDInterfaceSecondary1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\SamTest\openocd-bin\interface\olimex-arm-usb-ocd.cfg</Value>
     </Setting>
   </Settings>
 </SettingsFile>

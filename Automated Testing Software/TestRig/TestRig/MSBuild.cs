@@ -222,7 +222,7 @@ namespace TestRig
             ChangeDirectories(MFPath);
 
             string fullPath = mainHandle.textTestSourcePath;
-            int index = fullPath.LastIndexOf(@"TestSys");
+            int index = fullPath.LastIndexOf(@"TestSuite");
             string strippedPath = path.Substring(0, index);
             RunCommand(@"SET TESTSOURCE=" + strippedPath);
             switch (usingMFVersion)
@@ -279,7 +279,7 @@ namespace TestRig
             ChangeDirectories(MFPath);
 
             string fullPath = mainHandle.textTestSourcePath;
-            int index = fullPath.LastIndexOf(@"TestSys");
+            int index = fullPath.LastIndexOf(@"TestSuite");
             string strippedPath = path.Substring(0, index);
             RunCommand(@"SET TESTSOURCE=" + strippedPath);
             switch (usingMFVersion)

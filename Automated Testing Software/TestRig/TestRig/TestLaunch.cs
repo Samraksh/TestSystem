@@ -112,8 +112,11 @@ namespace TestRig
 
                         testReceipt.testResult = returnReason;
 
-                        string TRPath = mainHandle.textTestReceiptPath; 
-                        testReceipt.WriteFile(TRPath);                                                
+                        string TRPath = mainHandle.textTestReceiptPath;
+
+                        // we won't write test receipts for support projects
+                        if (currentTest.testSupporting.Contains("support project") == false)
+                            testReceipt.WriteFile(TRPath);                                                
 
                         // The test is over so we will pull it from the "Test Status" tab display
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.removeDelegate);
@@ -128,7 +131,7 @@ namespace TestRig
 
         public string DebugFunction(){
 
-                    openOCD = new OpenOCD(mainHandle);
+                    /*openOCD = new OpenOCD(mainHandle, currentTest);
                     if (openOCD == null) return "OpenOCD failed to load";
                     gdb = new GDB(mainHandle);
                     if (gdb == null) return "GDB failed to load";
@@ -156,7 +159,7 @@ namespace TestRig
                     if (gdb != null) gdb.Kill();
                     if (openOCD != null) openOCD.Kill();
                     if (fastboot != null) fastboot.Kill();
-
+                    */
                     return null;
         }
 
@@ -310,7 +313,7 @@ namespace TestRig
                 {
                     System.Diagnostics.Debug.WriteLine("Executing test for:  " + currentTest.testName);
 
-                    openOCD = new OpenOCD(mainHandle);
+                    openOCD = new OpenOCD(mainHandle, currentTest);
                     if (openOCD == null) return "OpenOCD failed to load";
                     gdb = new GDB(mainHandle);
                     if (gdb == null) return "GDB failed to load";

@@ -152,9 +152,13 @@
                             <Label Content="Interface" HorizontalAlignment="Left" Margin="15,15,0,87" Name="lblOCDInterface" VerticalAlignment="Top" Width="Auto" />
                             <Label Content="Target" Height="Auto" HorizontalAlignment="Left" Margin="15,0,0,58" Name="lblOCDTarget" VerticalAlignment="Bottom" Width="Auto" />
                             <Label Content="Exe" HorizontalAlignment="Left" Margin="15,75,0,0" Name="lblOCDExe" VerticalAlignment="Top" Width="Auto" />
-                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="75,17,6,0" Name="tbOCDInterface" Text="" VerticalAlignment="Top" TextChanged="tbOCDInterface_TextChanged" />
+                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="75,17,99,0" Name="tbOCDInterface" Text="" VerticalAlignment="Top" TextChanged="tbOCDInterface_TextChanged" />
                             <TextBox Height="23" Margin="75,47,6,0" Name="tbOCDTarget" Text="" VerticalAlignment="Top" TextChanged="tbOCDTarget_TextChanged" />
                             <TextBox Height="23" Margin="75,77,6,0" Name="tbOCDExe" Text="" VerticalAlignment="Top" TextChanged="tbOCDExe_TextChanged" />
+                            <ComboBox Height="23" HorizontalAlignment="Left" Margin="548,18,0,0" Name="cbInterface" VerticalAlignment="Top" Width="87" SelectionChanged="cbInterface_SelectionChanged">
+                                <ComboBoxItem Content="Primary" IsSelected="True" />
+                                <ComboBoxItem Content="Support 1" IsSelected="False" />
+                            </ComboBox>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Test Receipt" Height="85" HorizontalAlignment="Left" Margin="6,387,0,0" Name="groupBox5" VerticalAlignment="Top" Width="653">

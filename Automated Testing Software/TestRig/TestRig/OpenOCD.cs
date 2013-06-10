@@ -31,7 +31,7 @@ namespace TestRig
         private Process OCDProcess;        
         public MainWindow mainHandle;
 
-        public OpenOCD(MainWindow passedHandle)
+        public OpenOCD(MainWindow passedHandle, TestDescription currentTest)
         {
             mainHandle = passedHandle;
             ProcessStartInfo openOCDInfo = new ProcessStartInfo();
@@ -45,7 +45,14 @@ namespace TestRig
             openOCDInfo.UseShellExecute = false;
             openOCDInfo.RedirectStandardError = true;
             openOCDInfo.WorkingDirectory = Path.GetDirectoryName(mainHandle.textOCDExe);
-            openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterface + " -f " + mainHandle.textOCDTarget;
+            if (currentTest.testSupporting.StartsWith("1") == true) 
+            {
+                openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfaceSecondary1 + " -f " + mainHandle.textOCDTarget;
+            } 
+            else
+            {
+                openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfacePrimary + " -f " + mainHandle.textOCDTarget;
+            }
             openOCDInfo.FileName = mainHandle.textOCDExe;
 
             OCDProcess.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);

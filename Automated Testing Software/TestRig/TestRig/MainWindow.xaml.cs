@@ -51,7 +51,8 @@ namespace TestRig
         public string textMFPath_4_3;
         public string textTestSourcePath;
         public string textTestReceiptPath;
-        public string textOCDInterface;
+        public string textOCDInterfacePrimary;
+        public string textOCDInterfaceSecondary1;
         public string textOCDTarget;
         public string textOCDExe;
         public string textGitPath;
@@ -317,7 +318,7 @@ namespace TestRig
 
         private void QueueSupportTest(string fileName, StreamWriter writer)
         {
-            StreamReader testReader = new StreamReader(@"D:\work\testsys\Two\Second\tests.xml");
+            StreamReader testReader = new StreamReader(textTestSourcePath + @"\" + fileName);
             try
             {
                 // Create an XmlReader
@@ -426,7 +427,10 @@ namespace TestRig
 
         private void tbOCDInterface_TextChanged(object sender, TextChangedEventArgs e)
         {
-            textOCDInterface = tbOCDInterface.Text;
+            if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
+                textOCDInterfacePrimary = tbOCDInterface.Text;
+            else
+                textOCDInterfaceSecondary1 = tbOCDInterface.Text;
         }
 
         private void tbOCDTarget_TextChanged(object sender, TextChangedEventArgs e)
@@ -472,7 +476,7 @@ namespace TestRig
 
         private void buttonDebug_Click(object sender, RoutedEventArgs e)
         {
-            testLaunch.DebugFunction();            
+            testLaunch.DebugFunction();  
         }
 
         private void checkPaths()
@@ -545,7 +549,12 @@ namespace TestRig
             {
                 // checking to make sure paths actually exist                
                 tbOCDExe.Text = Properties.Settings.Default.OCDExe.ToString();
-                tbOCDInterface.Text = Properties.Settings.Default.OCDInterface.ToString();
+                textOCDInterfacePrimary = Properties.Settings.Default.OCDInterfacePrimary.ToString();
+                textOCDInterfaceSecondary1 = Properties.Settings.Default.OCDInterfaceSecondary1.ToString();
+                if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
+                    tbOCDInterface.Text = textOCDInterfacePrimary;
+                else
+                    tbOCDInterface.Text = textOCDInterfaceSecondary1;
                 tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
                 tbBuildSourceryPath.Text = Properties.Settings.Default.CSPath.ToString();
 
@@ -582,7 +591,8 @@ namespace TestRig
             try
             {
                 // paths are saved to a settings file
-                Properties.Settings.Default["OCDInterface"] = tbOCDInterface.Text;
+                Properties.Settings.Default["OCDInterfacePrimary"] = textOCDInterfacePrimary;
+                Properties.Settings.Default["OCDInterfaceSecondary1"] = textOCDInterfaceSecondary1;
                 Properties.Settings.Default["OCDTarget"] = tbOCDTarget.Text;
                 Properties.Settings.Default["OCDExe"] = tbOCDExe.Text;
                 Properties.Settings.Default["CSPath"] = tbBuildSourceryPath.Text;
@@ -698,7 +708,7 @@ namespace TestRig
             testDataGrid.Columns[1].Width = 75;
             testDataGrid.Columns[2].Width = 50;
             testDataGrid.Columns[3].Width = 200;
-            testDataGrid.Columns[4].Width = 300;
+            testDataGrid.Columns[4].Width = 280;
             testDataGrid.Columns[1].IsReadOnly = true;
             testDataGrid.Columns[2].IsReadOnly = true;
             testDataGrid.Columns[3].IsReadOnly = true;
@@ -820,6 +830,21 @@ namespace TestRig
         private void cbPowerAutomate_Checked(object sender, RoutedEventArgs e)
         {
             powerAutomateSelected = true;
+        }
+
+        private void cbInterface_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (settingsInitialized == false)
+            {
+                // buttons have not yet been defined by InitializeComponent
+                return;
+            }
+            if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
+                tbOCDInterface.Text = textOCDInterfacePrimary;
+            else
+                tbOCDInterface.Text = textOCDInterfaceSecondary1;
+
+            checkPaths();
         }        
     }
 }
