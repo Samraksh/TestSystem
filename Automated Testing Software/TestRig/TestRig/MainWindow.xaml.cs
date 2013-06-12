@@ -66,7 +66,7 @@ namespace TestRig
         public static string textGCCVersion;
         public static string textMFSelected;
         public static string textJTAGHarness;
-        public bool powerAutomateSelected;
+        public static string textPowerAutomateSelected;
         public string textCOMPort;
         public static TestDescription[] availableTests;
         private static Tasks _tasks;
@@ -114,6 +114,7 @@ namespace TestRig
 
         public void Initialize()
         {
+            textPowerAutomateSelected = false.ToString();
             try
             {
                 // RxSocket is used to send selected test queue to the tester and to listen for incoming test queues if this machine is the tester
@@ -355,7 +356,8 @@ namespace TestRig
                             readTest.testGCCVersion = textGCCVersion;
                         if (readTest.testJTAGHarness == String.Empty)
                             readTest.testJTAGHarness = textJTAGHarness;
-
+                        if (readTest.testPowerAutomateSelected == String.Empty)
+                            readTest.testPowerAutomateSelected = textPowerAutomateSelected;
                         writer.Write(readTest.ToString());
                     }
                 }
@@ -399,10 +401,12 @@ namespace TestRig
                             tempTask.testSolutionType = textSolutionType;
                         if (tempTask.testGCCVersion == String.Empty)
                             tempTask.testGCCVersion = textGCCVersion;
-                        if (tempTask.testSupporting != String.Empty)
-                            QueueSupportTest(tempTask.testSupporting, writer);
                         if (tempTask.testJTAGHarness == String.Empty)
                             tempTask.testJTAGHarness = textJTAGHarness;
+                        if (tempTask.testPowerAutomateSelected == String.Empty)
+                            tempTask.testPowerAutomateSelected = textPowerAutomateSelected;
+                        if (tempTask.testSupporting != String.Empty)
+                            QueueSupportTest(tempTask.testSupporting, writer);
                         writer.Write(tempTask.ToString());
                     }
                 }
@@ -838,12 +842,12 @@ namespace TestRig
 
         private void cbPowerAutomate_Unchecked(object sender, RoutedEventArgs e)
         {
-            powerAutomateSelected = false;
+            textPowerAutomateSelected = false.ToString();
         }
 
         private void cbPowerAutomate_Checked(object sender, RoutedEventArgs e)
         {
-            powerAutomateSelected = true;
+            textPowerAutomateSelected = true.ToString();
         }
 
         private void cbInterface_SelectionChanged(object sender, SelectionChangedEventArgs e)

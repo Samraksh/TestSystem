@@ -345,7 +345,7 @@ namespace TestRig
 					    string inFile2Name = workingDirectory + @"\" + buildOutput + strippedName + ".dat";
 					    string concatFileName = workingDirectory + @"\" + "MF_managed.bin";
 
-					    fastboot = new Fastboot(mainHandle);
+                        fastboot = new Fastboot(mainHandle, currentTest.testPowerAutomateSelected);
 					    currentTest.testState = "Entering Fastboot mode";
 					    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
 					    if (fastboot == null) return "Fastboot failed to load";

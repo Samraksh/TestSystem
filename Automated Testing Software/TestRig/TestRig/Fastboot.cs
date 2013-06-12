@@ -30,10 +30,12 @@ namespace TestRig
 
         private Process FastbootProcess;
         public MainWindow mainHandle;
+        public string testPowerAutomateSelected;
 
-        public Fastboot(MainWindow passedHandle)
+        public Fastboot(MainWindow passedHandle, string testPowerAutomateSelected)
         {
             mainHandle = passedHandle;
+            this.testPowerAutomateSelected = testPowerAutomateSelected;
             ProcessStartInfo FastbootInfo = new ProcessStartInfo();
             FastbootProcess = new Process();
 
@@ -60,55 +62,56 @@ namespace TestRig
         {
             // enter fastboot mode on board
             System.Diagnostics.Debug.WriteLine("Entering fastboot mode");
-            //MainWindow.showMessageBox("Enter fastboot then click OK"); //delete after tbd
-            // TBD power toggle with vol - down
-            int[] output = new int[7];
-            int model, pwrUsbConnected = 0;
-            StringBuilder firmware = new StringBuilder(128);
-
-	        for (int i = 0; i < 7; i++)
-		        output[i] = 0;
-
-	        // Initialize the PowerUSB or else quit
-            if (PwrUSBWrapper.InitPowerUSB(out model, firmware) > 0)
-            {
-                Console.Write("PowerUSB Connected. Model:{0:D}  Firmware:", model);
-                Console.WriteLine(firmware);
-                pwrUsbConnected = PwrUSBWrapper.CheckStatusPowerUSB();                
+            if (testPowerAutomateSelected.Equals(false.ToString())) {
+                MainWindow.showMessageBox("Enter fastboot (hold Vol-, press RESET) then click OK"); //delete after tbd
+                // TBD power toggle with vol - down
             }
-            if (pwrUsbConnected == 0)
-	        {
-                System.Diagnostics.Debug.WriteLine("PowerUSB is not connected\r\n");
-                return false;
-	        }
-            PwrUSBWrapper.SetCurrentPowerUSB(0);		        
+            else {
+                int[] output = new int[7];
+                int model, pwrUsbConnected = 0;
+                StringBuilder firmware = new StringBuilder(128);
 
-            System.Diagnostics.Debug.WriteLine("PowerUSB Connected. Model: " + model.ToString() + ". Version: " + firmware.ToString());	
-            System.Diagnostics.Debug.WriteLine("Turning off USB power strip outlet 1");
-            PwrUSBWrapper.SetPortPowerUSB(0, 0, 0);
+                for (int i = 0; i < 7; i++)
+                    output[i] = 0;
 
-            // 'pushing' button vol -
-	        //output[0] = 1;	// o3
-            //PwrUSBWrapper.SetOutputStatePowerUSB(output);
-            Thread.Sleep(4000);
+                // Initialize the PowerUSB or else quit
+                if (PwrUSBWrapper.InitPowerUSB(out model, firmware) > 0) {
+                    Console.Write("PowerUSB Connected. Model:{0:D}  Firmware:", model);
+                    Console.WriteLine(firmware);
+                    pwrUsbConnected = PwrUSBWrapper.CheckStatusPowerUSB();
+                }
+                if (pwrUsbConnected == 0) {
+                    System.Diagnostics.Debug.WriteLine("PowerUSB is not connected\r\n");
+                    return false;
+                }
+                PwrUSBWrapper.SetCurrentPowerUSB(0);
 
-            System.Diagnostics.Debug.WriteLine("Turning on USB power strip outlet 1");
-            PwrUSBWrapper.SetPortPowerUSB(1, 0, 0);
-            Thread.Sleep(8000);
+                System.Diagnostics.Debug.WriteLine("PowerUSB Connected. Model: " + model.ToString() + ". Version: " + firmware.ToString());
+                System.Diagnostics.Debug.WriteLine("Turning off USB power strip outlet 1");
+                PwrUSBWrapper.SetPortPowerUSB(0, 0, 0);
 
-            // release button vol -
-            //output[0] = 0;	// o3
-            //PwrUSBWrapper.SetOutputStatePowerUSB(output);
+                // 'pushing' button vol -
+                //output[0] = 1;	// o3
+                //PwrUSBWrapper.SetOutputStatePowerUSB(output);
+                Thread.Sleep(4000);
 
-            PwrUSBWrapper.ClosePowerUSB();
-            
+                System.Diagnostics.Debug.WriteLine("Turning on USB power strip outlet 1");
+                PwrUSBWrapper.SetPortPowerUSB(1, 0, 0);
+                Thread.Sleep(8000);
+
+                // release button vol -
+                //output[0] = 0;	// o3
+                //PwrUSBWrapper.SetOutputStatePowerUSB(output);
+
+                PwrUSBWrapper.ClosePowerUSB();
+            }
             if (RunCommand(@"fastboot devices", "fastboot", "error", 10000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("Fastboot failed to connect to board.");
                 return false;
             }
-
             return true;
+
         }
 
         public bool createFinalBinary(string inFile1Name, string inFile2Name, string concatFileName)
@@ -220,48 +223,49 @@ namespace TestRig
         {
             // enter app mode
             System.Diagnostics.Debug.WriteLine("Entering app mode");
-            //MainWindow.showMessageBox("Enter MF mode then click OK"); //delete after tbd
-            // TBD power toggle with vol + down
-            int[] output = new int[7];
-            int model, pwrUsbConnected = 0;
-            StringBuilder firmware = new StringBuilder(128);
-
-            for (int i = 0; i < 7; i++)
-                output[i] = 0;
-
-            // Initialize the PowerUSB or else quit
-            if (PwrUSBWrapper.InitPowerUSB(out model, firmware) > 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PowerUSB Connected. Model: " + model.ToString() + ". Version: " + firmware.ToString());	
-                Console.WriteLine(firmware);
-                pwrUsbConnected = PwrUSBWrapper.CheckStatusPowerUSB();
+            if (testPowerAutomateSelected.Equals(false.ToString())) {
+                MainWindow.showMessageBox("Enter MF mode then click OK"); //delete after tbd
+                // TBD power toggle with vol + down
             }
-            if (pwrUsbConnected == 0)
-            {
-                System.Diagnostics.Debug.WriteLine("PowerUSB is not connected\r\n");
-                return false;
+            else {
+                int[] output = new int[7];
+                int model, pwrUsbConnected = 0;
+                StringBuilder firmware = new StringBuilder(128);
+
+                for (int i = 0; i < 7; i++)
+                    output[i] = 0;
+
+                // Initialize the PowerUSB or else quit
+                if (PwrUSBWrapper.InitPowerUSB(out model, firmware) > 0) {
+                    System.Diagnostics.Debug.WriteLine("PowerUSB Connected. Model: " + model.ToString() + ". Version: " + firmware.ToString());
+                    Console.WriteLine(firmware);
+                    pwrUsbConnected = PwrUSBWrapper.CheckStatusPowerUSB();
+                }
+                if (pwrUsbConnected == 0) {
+                    System.Diagnostics.Debug.WriteLine("PowerUSB is not connected\r\n");
+                    return false;
+                }
+                PwrUSBWrapper.SetCurrentPowerUSB(0);
+
+                System.Diagnostics.Debug.WriteLine("PowerUSB Connected. Model: " + model.ToString() + ". Version: " + firmware.ToString());
+                System.Diagnostics.Debug.WriteLine("Turning off USB power strip outlet 1");
+                PwrUSBWrapper.SetPortPowerUSB(0, 0, 0);
+
+                // 'pushing' button vol +
+                output[1] = 1;	// o2
+                PwrUSBWrapper.SetOutputStatePowerUSB(output);
+                Thread.Sleep(4000);
+
+                System.Diagnostics.Debug.WriteLine("Turning on USB power strip outlet 1");
+                PwrUSBWrapper.SetPortPowerUSB(1, 0, 0);
+                Thread.Sleep(8000);
+
+                // release button vol +
+                output[1] = 0;	// o2
+                PwrUSBWrapper.SetOutputStatePowerUSB(output);
+
+                PwrUSBWrapper.ClosePowerUSB();
             }
-            PwrUSBWrapper.SetCurrentPowerUSB(0);
-
-            System.Diagnostics.Debug.WriteLine("PowerUSB Connected. Model: " + model.ToString() + ". Version: " + firmware.ToString());	
-            System.Diagnostics.Debug.WriteLine("Turning off USB power strip outlet 1");
-            PwrUSBWrapper.SetPortPowerUSB(0, 0, 0);
-
-            // 'pushing' button vol +
-            output[1] = 1;	// o2
-            PwrUSBWrapper.SetOutputStatePowerUSB(output);
-            Thread.Sleep(4000);
-
-            System.Diagnostics.Debug.WriteLine("Turning on USB power strip outlet 1");
-            PwrUSBWrapper.SetPortPowerUSB(1, 0, 0);
-            Thread.Sleep(8000);
-
-            // release button vol +
-            output[1] = 0;	// o2
-            PwrUSBWrapper.SetOutputStatePowerUSB(output);
-
-            PwrUSBWrapper.ClosePowerUSB();
-            
             return true;
         }
 
