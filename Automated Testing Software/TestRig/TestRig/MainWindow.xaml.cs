@@ -580,7 +580,6 @@ namespace TestRig
                 cbMemory.SelectedIndex = Properties.Settings.Default.MTSelection;
                 cbSolutionType.SelectedIndex = Properties.Settings.Default.STSelection;
                 cbGCCVersion.SelectedIndex = Properties.Settings.Default.GVSelection;
-                cbJTAGHarness.SelectedIndex = Properties.Settings.Default.JHSelection;
 
                 cbMFSelected.SelectedIndex = Properties.Settings.Default.MFSelection;
 
@@ -733,18 +732,31 @@ namespace TestRig
                 case 0:
                     textHardware = "Emote v1";
                     textSolution = "STM32F10x";
+                    textJTAGHarness = "Olimex";
+                    cbMemory.SelectedIndex = cbMemory.Items.IndexOf(cbMemory.FindName("FLASH"));
                     break;
                 case 1:
                     textHardware = "Emote.Now";
                     textSolution = "EmoteDotNow";
+                    textJTAGHarness = "Olimex";
+                    cbMemory.SelectedIndex = cbMemory.Items.IndexOf(cbMemory.FindName("FLASH"));
                     break;
                 case 2:
                     textHardware = "Soc8200";
                     textSolution = "SOC8200";
+                    textJTAGHarness = "Olimex";
                     break;
                 case 3:
                     textHardware = "Adapt";
                     textSolution = "SOC_ADAPT";
+                    textJTAGHarness = "fastboot";
+                    cbMemory.SelectedIndex = cbMemory.Items.IndexOf(cbMemory.FindName("RAM"));
+                    break;
+                case 4:
+                    textHardware = "Adapt";
+                    textSolution = "SOC_ADAPT";
+                    textJTAGHarness = "Lauterbach";
+                    cbMemory.SelectedIndex = cbMemory.Items.IndexOf(cbMemory.FindName("RAM"));
                     break;
                 default:
                     textHardware = "Emote v1";
@@ -797,28 +809,6 @@ namespace TestRig
                     break;
                 default:
                     textGCCVersion = "GCC4.2";
-                    break;
-            }
-        }
-
-        private void cbJTAGHarness_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            switch (cbJTAGHarness.SelectedIndex)
-            {
-                case 0:
-                    textJTAGHarness = "Olimex ARM-Tiny-H";
-                    break;
-                case 1:
-                    textJTAGHarness = "fastboot";
-                    break;
-                case 2:
-                    textJTAGHarness = "Lauterbach";
-                    break;
-                case 3:
-                    textJTAGHarness = "None";
-                    break;
-                default:
-                    textJTAGHarness = "Olimex ARM-Tiny-H";
                     break;
             }
         }

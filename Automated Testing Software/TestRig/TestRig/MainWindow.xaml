@@ -79,22 +79,23 @@
                         </Grid>
                     </GroupBox>
                     <Label Content="Location:" Height="28" HorizontalAlignment="Left" Margin="75,540,0,0" Name="label7" VerticalAlignment="Top" Grid.Column="1" />
+                    <Label Content="Memory Type:" HorizontalAlignment="Left" Margin="5,540,0,0" Name="label6" VerticalAlignment="Top" />
+                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="118,543,0,0" Name="cbMemory" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbMemory_SelectionChanged" Grid.ColumnSpan="2">
+                        <ComboBoxItem x:Name="FLASH" Content="FLASH" />
+                        <ComboBoxItem x:Name="RAM" Content="RAM" />
+                        <ComboBoxItem x:Name="External_FLASH" Content="External FLASH" IsEnabled="False" />
+                    </ComboBox>
                     <Label Content="Hardware Solution:" HorizontalAlignment="Left" Margin="5,515,0,0" Name="label1" VerticalAlignment="Top" />
                     <ComboBox Height="23" HorizontalAlignment="Left" Margin="118,518,0,0" Name="cbHardware" SelectedIndex="0" VerticalAlignment="Top" Width="189" SelectionChanged="cbHardware_SelectionChanged" Grid.ColumnSpan="2">
-                        <ComboBoxItem Content="Emote v1 - STM32F10x" />
-                        <ComboBoxItem Content="Emote.Now - EmoteDotNow" />
-                        <ComboBoxItem Content="Soc8200 - SOC8200" />
-                        <ComboBoxItem Content="Adapt - ADAPT" IsEnabled="True" />
+                        <ComboBoxItem Content="Emote v1 - JTAG" />
+                        <ComboBoxItem Content="Emote.Now - JTAG" />
+                        <ComboBoxItem Content="Soc8200 - JTAG" />
+                        <ComboBoxItem Content="Adapt - fastboot" IsEnabled="True" />
+                        <ComboBoxItem Content="Adapt - JTAG"/>
                     </ComboBox>
                     <Label Content="GCC Version:" Height="28" HorizontalAlignment="Left" Margin="5,566,0,0" Name="label3" VerticalAlignment="Top" />
                     <ComboBox Height="23" HorizontalAlignment="Left" Margin="118,569,0,0" Name="cbGCCVersion" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbGCCVersion_SelectionChanged" Grid.ColumnSpan="2">
                         <ComboBoxItem Content="GCC4.2" />
-                    </ComboBox>
-                    <Label Content="Memory Type:" HorizontalAlignment="Left" Margin="5,540,0,0" Name="label6" VerticalAlignment="Top" />
-                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="118,543,0,0" Name="cbMemory" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbMemory_SelectionChanged" Grid.ColumnSpan="2">
-                        <ComboBoxItem Content="FLASH" />
-                        <ComboBoxItem Content="RAM" />
-                        <ComboBoxItem Content="External FLASH" IsEnabled="False" />
                     </ComboBox>
                     <Label Content="Git Setting:" Height="28" HorizontalAlignment="Left" Margin="73,565,0,0" Name="label10" VerticalAlignment="Top" Grid.Column="1" />
                     <ComboBox Height="23" HorizontalAlignment="Left" Margin="144,518,0,0" Name="cbMFSelected" SelectedIndex="0" VerticalAlignment="Top" Width="164" SelectionChanged="cbMFSelected_SelectionChanged" Grid.Column="1">
@@ -106,13 +107,6 @@
                     <ComboBox Height="23" HorizontalAlignment="Left" Margin="119,595,0,0" Name="cbSolutionType" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbSolutionType_SelectionChanged" Visibility="Hidden" Grid.ColumnSpan="2">
                         <ComboBoxItem Content="TinyCLR" />
                         <ComboBoxItem Content="TinyBooter" IsEnabled="True" />
-                    </ComboBox>
-                    <Label Content="JTAG Harness:" Height="28" HorizontalAlignment="Left" Margin="5,592,0,0" x:Name="label13" VerticalAlignment="Top" />
-                    <ComboBox Height="23" HorizontalAlignment="Left" Margin="118,596,0,0" x:Name="cbJTAGHarness" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbJTAGHarness_SelectionChanged" Grid.ColumnSpan="2">
-                        <ComboBoxItem Content="Olimex ARM-Tiny-H" IsEnabled="True"/>
-                        <ComboBoxItem Content="Fastboot" />
-                        <ComboBoxItem Content="Lauterbach" />
-                        <ComboBoxItem Content="None" />
                     </ComboBox>
                 </Grid>
             </TabItem>
