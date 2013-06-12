@@ -28,6 +28,7 @@ namespace TestRig
         public string testSolutionType { get; set; }
         public string testGCCVersion { get; set; }
         public string testSupporting { get; set; }
+        public string testJTAGHarness { get; set; }
 
         // the following are set by the test parameter file
         public int testTimeout { get; set; }
@@ -66,6 +67,7 @@ namespace TestRig
             testSolutionType = String.Empty;
             testGCCVersion = String.Empty;
             testSupporting = String.Empty;
+            testJTAGHarness = String.Empty;
             testUseCOM = false;
             testForceCOM = String.Empty;
             testCOMParameters = String.Empty;
@@ -104,6 +106,7 @@ namespace TestRig
             this.testSolutionType = copy.testSolutionType;
             this.testGCCVersion = copy.testGCCVersion;
             this.testSupporting = copy.testSupporting;
+            this.testJTAGHarness = copy.testJTAGHarness;
             this.testUseCOM = copy.testUseCOM;
             this.testForceCOM = copy.testForceCOM;
             this.testCOMParameters = copy.testCOMParameters;
@@ -129,6 +132,7 @@ namespace TestRig
             returnString += "\t<TestSolutionType>\r\n\t" + testSolutionType + "\r\n\t</TestSolutionType>\r\n";
             returnString += "\t<TestGCCVersion>\r\n\t" + testGCCVersion + "\r\n\t</TestGCCVersion>\r\n";
             returnString += "\t<TestSupporting>\r\n\t" + testSupporting + "\r\n\t</TestSupporting>\r\n";
+            returnString += "\t<TestJTAGHarness>\r\n\t" + testJTAGHarness + "\r\n\t</TestJTAGHarness>\r\n";
             returnString += "\t<TestTimeout>\r\n\t" + testTimeout.ToString() + "\r\n\t</TestTimeout>\r\n";
             returnString += "\t<TestUseLogic>\r\n\t" + testUseLogic + "\r\n\t</TestUseLogic>\r\n";
             returnString += "\t<TestSampleTimeMs>\r\n\t" + testSampleTimeMs.ToString() + "\r\n\t</TestSampleTimeMs>\r\n";

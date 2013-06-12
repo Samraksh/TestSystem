@@ -199,6 +199,39 @@ namespace TestRig
             return true;
         }
 
+
+        /// <summary>
+        /// Creates(default) or updates a DAT with an array of PE files.
+        /// This can be used for newer projects that can't create DAT files.
+        /// TODO: UNTESTED. UNTESTED. UNTESTED. UNTESTED. UNTESTED. UNTESTED.
+        /// </summary>
+        /// <param name="peFileNameArray">array of input pe filenames.</param>
+        /// <param name="datFileName">dat output file.</param>
+        /// <param name="appendExistingDAT">append files to existing DAT if true.</param>
+        /// <returns>null on failure, else DAT file name.</returns>
+        public string ConvertPE2DAT(string[] peFileNameArray, string datFileName = null, bool appendExistingDAT = false) {
+            // create temporary manifest text file.  manifest.txt needed to use v4.3 metadataprocessor
+            string manifestTempFileName = System.IO.Path.GetTempFileName();
+            System.IO.File.WriteAllLines(manifestTempFileName, peFileNameArray);
+            if (!appendExistingDAT) System.IO.File.Delete(datFileName);
+            if (datFileName == null) datFileName = System.IO.Path.GetTempFileName() + ".dat";
+            //TODO: Check that all PE files are correct version (test whether metadataprocessor looks for MSSpot1)?
+            Process metaDataProcessor;
+            try {
+                //TODO: consider watchdog.
+                metaDataProcessor = System.Diagnostics.Process.Start("MetaDataProcessor.exe", "-verbose -create_database " + manifestTempFileName + " " + datFileName);
+                metaDataProcessor.WaitForExit();
+                //TODO: check MetaDataProcessor.exe return codes for error conditions.
+            }
+            catch (System.IO.FileNotFoundException) {
+                // MetaDataProcessor.exe should already be in path at C:\Program Files (x86)\Microsoft .NET Micro Framework\v4.3\Tools\MetaDataProcessor.exe
+                System.Diagnostics.Debug.WriteLine("Error: install MetaDataProcessor to convert PE to DAT.");
+                return null;
+            }
+            return datFileName;
+        }
+
+
         public bool BuildNativeProject(string path, string project, TestDescription currentTest)
         {
             switch (currentTest.testSolution)

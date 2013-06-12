@@ -8,6 +8,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Diagnostics;
 using System.Management.Automation;
+using System.Management.Automation.Runspaces;
 
 namespace TestRig
 {    
@@ -28,6 +29,11 @@ namespace TestRig
         public MSBuild msbuild;
         private TestReceipt testReceipt;
         public Fastboot fastboot;
+
+        private void process_Exited(object sender, System.EventArgs e) {
+            System.Threading.Thread.Sleep(10000);
+
+        }
 
         public TestLaunch(Queue<TestDescription> testCollection, Mutex collectionMutex, MainWindow passedHandle)
         {
@@ -163,6 +169,8 @@ namespace TestRig
                     return null;
         }
 
+
+
         private string ExecuteTest(TestDescription currentTest)
         {
             try
@@ -228,10 +236,15 @@ namespace TestRig
                 {
                     if (currentTest.testUsePrecompiledBinary == String.Empty)
                     {
-                        currentTest.testState = "Building TinyBooter";
-                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                        currentTest.testSolutionType = "TinyBooter";
-                        if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
+						if (currentTest.testSolution.Equals("SOC_ADAPT")) {
+                            // TODO build littlekernel or retrieve it.
+                        }
+                        else {
+							currentTest.testState = "Building TinyBooter";
+							mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+							currentTest.testSolutionType = "TinyBooter";
+							if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
+						}
                         currentTest.testState = "Building TinyCLR";
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                         currentTest.testSolutionType = "TinyCLR";
@@ -288,26 +301,61 @@ namespace TestRig
 
                 if (currentTest.testSolution.Equals("SOC_ADAPT"))
                 {                    
-                    System.Diagnostics.Debug.WriteLine("Executing ADAPT test for:  " + currentTest.testName);
+                    if(currentTest.testJTAGHarness.Equals("Lauterbach")) {
+                        System.Diagnostics.Debug.WriteLine("Executing ADAPT JTAG test for:  " + currentTest.testName);
 
-                    //string inFile1Name = "D:/Test/pad_test/f1.bin";
-                    string inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".bin";
-                    //string inFile2Name = "D:/Test/pad_test/f2.bin";
-                    //string inFile2Name = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
-                    // Adapt uses .dat file instead of converted s19
-                    string inFile2Name = workingDirectory + @"\" + buildOutput + strippedName + ".dat";
-                    string concatFileName = workingDirectory + @"\" + "MF_managed.bin";
+                        string fnameOS = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".axf";
+                        // Lauterbach can use s19.
+                        string fnameMSIL = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
 
-                    fastboot = new Fastboot(mainHandle);
-                    currentTest.testState = "Entering Fastboot mode";
-                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                    if (fastboot == null) return "Fastboot failed to load";
-                    if (fastboot.enterFastbootMode() == false) return "Failed to enter Fastboot mode";
-                    if (fastboot.createFinalBinary(inFile1Name, inFile2Name, concatFileName) == false) return "Failed to create Adapt binary";
-                    currentTest.testState = "Loading Adapt code";
-                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                    if (fastboot.load(concatFileName) == false) return "Failed to load Adapt binary";
-                    if (fastboot.run() == false) return "Failed to run Adapt binary";
+                        if (!System.IO.File.Exists(fnameMSIL)) {
+                            Debug.WriteLine("ERROR: DAT doesn't exist.");
+                            //TODO: get PE file list from user's test config file.
+                            //string ret = ConvertPE2DAT(new string[]{workingDirectory + @"\" + buildOutput + strippedName + ".pe"}, fnameMSIL);
+                            //if (ret == null) Debug.WriteLine("ERROR: couldn't create DAT file " + fnameMSIL);
+                        }
+
+                        //TODO: axf vs ER_FLASH?
+                        currentTest.testState = "Loading MSIL code and OS code via Lauterbach to Adapt";
+                        //currentTest.testState = "Loading OS code via Lauterbach to Adapt";
+
+                        //current plan: just call powershell, then later use library wrapper.  
+                        //string fnameMSIL = @"C:\repo\DotNet-MF\MicroFrameworkPK_v4_3\BuildOutput\ARM\GCC4.2\le\RAM\debug\SOC_ADAPT\bin\tinyclr.axf";
+                        //string fnameOS = @"C:\Executables\HelloThere_Conv.s19";
+                        //TODO: make T32 directories user-configurable
+                        string t32configscript = @"C:\Users\researcher\T32Debug_20120824\T32Debug";
+                        Process t32shell = new Process();
+                        t32shell.StartInfo.FileName = "powershell.exe";
+                        t32shell.StartInfo.Arguments = " -executionpolicy unrestricted \"\"" + t32configscript + "\\start_t32.ps1\"\"  \'" + fnameMSIL + "\' \'" + fnameOS + "\'";
+                        t32shell.StartInfo.WorkingDirectory = t32configscript;
+                        t32shell.StartInfo.UseShellExecute = false;
+                        t32shell.Start();
+                        
+                        t32shell.WaitForExit();
+                       
+                    }
+                    else {
+					    System.Diagnostics.Debug.WriteLine("Executing ADAPT fastboot test for:  " + currentTest.testName);
+
+					    //string fnameOS = "D:/Test/pad_test/f1.bin";
+					    string inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".bin";
+					    //string fnameMSIL = "D:/Test/pad_test/f2.bin";
+					    //string fnameMSIL = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
+					    // Adapt uses .dat file instead of converted s19
+					    string inFile2Name = workingDirectory + @"\" + buildOutput + strippedName + ".dat";
+					    string concatFileName = workingDirectory + @"\" + "MF_managed.bin";
+
+					    fastboot = new Fastboot(mainHandle);
+					    currentTest.testState = "Entering Fastboot mode";
+					    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+					    if (fastboot == null) return "Fastboot failed to load";
+					    if (fastboot.enterFastbootMode() == false) return "Failed to enter Fastboot mode";
+					    if (fastboot.createFinalBinary(inFile1Name, inFile2Name, concatFileName) == false) return "Failed to create final Adapt binary";
+					    currentTest.testState = "Loading via fastboot to Adapt";
+					    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+					    if (fastboot.load(concatFileName) == false) return "Failed to load Adapt binary";
+					    if (fastboot.run() == false) return "Failed to run Adapt binary";
+                    }
                 }
                 else
                 {

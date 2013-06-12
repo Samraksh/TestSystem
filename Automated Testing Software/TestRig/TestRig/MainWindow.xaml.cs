@@ -65,6 +65,7 @@ namespace TestRig
         public static string textSolutionType;
         public static string textGCCVersion;
         public static string textMFSelected;
+        public static string textJTAGHarness;
         public bool powerAutomateSelected;
         public string textCOMPort;
         public static TestDescription[] availableTests;
@@ -352,6 +353,8 @@ namespace TestRig
                             readTest.testSolutionType = textSolutionType;
                         if (readTest.testGCCVersion == String.Empty)
                             readTest.testGCCVersion = textGCCVersion;
+                        if (readTest.testJTAGHarness == String.Empty)
+                            readTest.testJTAGHarness = textJTAGHarness;
 
                         writer.Write(readTest.ToString());
                     }
@@ -398,6 +401,8 @@ namespace TestRig
                             tempTask.testGCCVersion = textGCCVersion;
                         if (tempTask.testSupporting != String.Empty)
                             QueueSupportTest(tempTask.testSupporting, writer);
+                        if (tempTask.testJTAGHarness == String.Empty)
+                            tempTask.testJTAGHarness = textJTAGHarness;
                         writer.Write(tempTask.ToString());
                     }
                 }
@@ -575,6 +580,7 @@ namespace TestRig
                 cbMemory.SelectedIndex = Properties.Settings.Default.MTSelection;
                 cbSolutionType.SelectedIndex = Properties.Settings.Default.STSelection;
                 cbGCCVersion.SelectedIndex = Properties.Settings.Default.GVSelection;
+                cbJTAGHarness.SelectedIndex = Properties.Settings.Default.JHSelection;
 
                 cbMFSelected.SelectedIndex = Properties.Settings.Default.MFSelection;
 
@@ -740,10 +746,6 @@ namespace TestRig
                     textHardware = "Adapt";
                     textSolution = "SOC_ADAPT";
                     break;
-                case 4:
-                    textHardware = "Lauterbach";
-                    textSolution = "Lauterbach";
-                    break;
                 default:
                     textHardware = "Emote v1";
                     textSolution = "STM32F10x";
@@ -795,6 +797,28 @@ namespace TestRig
                     break;
                 default:
                     textGCCVersion = "GCC4.2";
+                    break;
+            }
+        }
+
+        private void cbJTAGHarness_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (cbJTAGHarness.SelectedIndex)
+            {
+                case 0:
+                    textJTAGHarness = "Olimex ARM-Tiny-H";
+                    break;
+                case 1:
+                    textJTAGHarness = "fastboot";
+                    break;
+                case 2:
+                    textJTAGHarness = "Lauterbach";
+                    break;
+                case 3:
+                    textJTAGHarness = "None";
+                    break;
+                default:
+                    textJTAGHarness = "Olimex ARM-Tiny-H";
                     break;
             }
         }

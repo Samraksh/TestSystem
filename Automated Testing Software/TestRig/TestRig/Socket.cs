@@ -176,6 +176,10 @@ namespace TestRig
                 readTest.testSupporting = strip(reader.ReadElementContentAsString());
             else
                 readTest.testSupporting = String.Empty;
+            if (reader.ReadToFollowing("TestJTAGHarness") == true)
+                readTest.testJTAGHarness = strip(reader.ReadElementContentAsString());
+            else
+                readTest.testJTAGHarness = String.Empty;
 
             readTest.testReadComplete = true;
             return readTest;
