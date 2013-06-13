@@ -95,6 +95,8 @@ namespace TestRig
             removeDelegate = new RemoveTestItem(RemoveTestItemMethod);
             updateDelegate = new DisplayUpdate(DisplayUpdateMethod);
 
+            textPowerAutomateSelected = false.ToString();
+
             // sometimes openOCD is running so we will check and warn here.
             bool openOCDRunning = false;
             foreach (Process clsProcess in Process.GetProcesses())
@@ -114,7 +116,6 @@ namespace TestRig
 
         public void Initialize()
         {
-            textPowerAutomateSelected = false.ToString();
             try
             {
                 // RxSocket is used to send selected test queue to the tester and to listen for incoming test queues if this machine is the tester

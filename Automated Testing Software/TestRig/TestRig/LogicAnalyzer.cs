@@ -130,6 +130,11 @@ namespace TestRig
             if (mLogic != null) mLogic.SampleRateHz = mSampleRateHz;
             if (mLogic16 != null) mLogic16.SampleRateHz = mSampleRateHz;
 
+            ignoreGlitch = true;
+            lastLevels = 0;
+            changeLevels = 0;
+            analyzeI2C = false;
+
             return true;
         }
 

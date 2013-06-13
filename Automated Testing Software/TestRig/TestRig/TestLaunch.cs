@@ -29,6 +29,10 @@ namespace TestRig
         public MSBuild msbuild;
         private TestReceipt testReceipt;
         public Fastboot fastboot;
+        private StreamWriter sessionResult;
+        private int sessionTestTotal;
+        private int sessionTestComplete;
+        private int sessionTestPass;        
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
@@ -40,7 +44,27 @@ namespace TestRig
             testCollectionLaunch = testCollection;
             testCollectionMutex = collectionMutex;
 
-            mainHandle = passedHandle;            
+            mainHandle = passedHandle;
+
+            sessionTestTotal = 0;
+            sessionTestComplete = 0;
+            sessionTestPass = 0;
+
+            DateTime fileTime = DateTime.Now;
+            string fileName;
+            fileName = fileTime.Year.ToString() + fileTime.Month.ToString("D2") + fileTime.Day.ToString("D2") + "_" + fileTime.Hour.ToString("D2") + fileTime.Minute.ToString("D2");
+            //stripping first two digits of year
+            fileName = fileName.Substring(2);
+            string fullFileName = fileName + "_session.txt";
+
+            // if a file already exists a number is appended to the file so as to not overwrite the file
+            int num = 1;
+            while (File.Exists(mainHandle.textTestReceiptPath + @"\" + fullFileName))
+            {
+                fullFileName = fileName + "_session" + num.ToString() + ".txt";
+                num++;
+            }
+            sessionResult = new StreamWriter(mainHandle.textTestReceiptPath + @"\" + fullFileName);
 
             // starting thread to launch any locally queued up tests
             LaunchThread = new Thread(new ThreadStart(LaunchThreadFunction));
@@ -51,6 +75,9 @@ namespace TestRig
         public void KillLaunchThread()
         {
             // used when the program is quiting
+            sessionResult.WriteLine("Tests completed: " + sessionTestComplete.ToString() + " of  " + sessionTestTotal.ToString());
+            sessionResult.WriteLine("Tests passed: " + sessionTestPass.ToString() + " of  " + sessionTestTotal.ToString());
+            sessionResult.Close();
             System.Diagnostics.Debug.WriteLine("Killing launch test thread.");
             if (LaunchThread != null)
             {
@@ -122,7 +149,14 @@ namespace TestRig
 
                         // we won't write test receipts for support projects
                         if (currentTest.testSupporting.Contains("support project") == false)
-                            testReceipt.WriteFile(TRPath);                                                
+                        {
+                            testReceipt.WriteFile(TRPath);
+                            sessionTestTotal++;
+                            if (testReceipt.testPass == true)
+                                sessionTestPass++;
+                            if (testReceipt.testComplete == true)
+                                sessionTestComplete++;
+                        }
 
                         // The test is over so we will pull it from the "Test Status" tab display
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.removeDelegate);

@@ -172,16 +172,16 @@ namespace TestRig
                 readTest.testGCCVersion = strip(reader.ReadElementContentAsString());
             else
                 readTest.testGCCVersion = String.Empty;
-            if (reader.ReadToFollowing("TestJTAGHarness") == true)
+            if (reader.ReadToFollowing("TestSupporting") == true)
+                readTest.testSupporting = strip(reader.ReadElementContentAsString());
+            else
+                readTest.testSupporting = String.Empty;
+			if (reader.ReadToFollowing("TestJTAGHarness") == true)
                 readTest.testJTAGHarness = strip(reader.ReadElementContentAsString());
             else
                 readTest.testJTAGHarness = String.Empty;
             if (reader.ReadToFollowing("TestPowerAutomateSelected") == true)
                 readTest.testPowerAutomateSelected = strip(reader.ReadElementContentAsString());
-            if (reader.ReadToFollowing("TestSupporting") == true)
-                readTest.testSupporting = strip(reader.ReadElementContentAsString());
-            else
-                readTest.testSupporting = String.Empty;
 
             readTest.testReadComplete = true;
             return readTest;

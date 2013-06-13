@@ -134,9 +134,9 @@ namespace TestRig
             returnString += "\t<TestMemoryType>\r\n\t" + testMemoryType + "\r\n\t</TestMemoryType>\r\n";
             returnString += "\t<TestSolutionType>\r\n\t" + testSolutionType + "\r\n\t</TestSolutionType>\r\n";
             returnString += "\t<TestGCCVersion>\r\n\t" + testGCCVersion + "\r\n\t</TestGCCVersion>\r\n";
-            returnString += "\t<TestJTAGHarness>\r\n\t" + testJTAGHarness + "\r\n\t</TestJTAGHarness>\r\n";
-            returnString += "\t<TestPowerAutomateSelected>\r\n\t" + testPowerAutomateSelected + "\r\n\t</TestPowerAutomateSelected>\r\n";
             returnString += "\t<TestSupporting>\r\n\t" + testSupporting + "\r\n\t</TestSupporting>\r\n";
+			returnString += "\t<TestJTAGHarness>\r\n\t" + testJTAGHarness + "\r\n\t</TestJTAGHarness>\r\n";
+            returnString += "\t<TestPowerAutomateSelected>\r\n\t" + testPowerAutomateSelected + "\r\n\t</TestPowerAutomateSelected>\r\n";
             returnString += "\t<TestTimeout>\r\n\t" + testTimeout.ToString() + "\r\n\t</TestTimeout>\r\n";
             returnString += "\t<TestUseLogic>\r\n\t" + testUseLogic + "\r\n\t</TestUseLogic>\r\n";
             returnString += "\t<TestSampleTimeMs>\r\n\t" + testSampleTimeMs.ToString() + "\r\n\t</TestSampleTimeMs>\r\n";

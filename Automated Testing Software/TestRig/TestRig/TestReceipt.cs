@@ -91,8 +91,12 @@ namespace TestRig
             // removing .csproj or .proj from project name
             int index = testDescription.buildProj.LastIndexOf('.');
             string strippedProject = testDescription.buildProj.Substring(0, index);
-            string fullFileName = fileName + strippedProject +"_receipt.xml";
+            string fullFileName;
 
+            if (testPass == true)
+                fullFileName = fileName + strippedProject +"_receipt.xml";
+            else
+                fullFileName = fileName + strippedProject + "_FAIL_receipt.xml";
             // if a file already exists a number is appended to the file so as to not overwrite the file
             int num = 1;
             while (File.Exists(path + @"\" + fullFileName))
