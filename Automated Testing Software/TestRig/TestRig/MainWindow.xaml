@@ -108,6 +108,7 @@
                         <ComboBoxItem Content="TinyCLR" />
                         <ComboBoxItem Content="TinyBooter" IsEnabled="True" />
                     </ComboBox>
+                    <Button Content="Create Batch" Height="23" Margin="350,0,18,158" Name="btnBatch" VerticalAlignment="Bottom" Width="83" Grid.Column="1" Click="btnBatch_Click" />
                 </Grid>
             </TabItem>
             <TabItem Header="Test Status" Name="tabTestStatus">

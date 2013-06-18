@@ -72,6 +72,8 @@ namespace TestRig
         private static Tasks _tasks;
         private static int testNum;
         private bool settingsInitialized = false;
+        private int batchCall;
+        private bool commandLineMode = false;
 
         public MainWindow()
         {
@@ -129,6 +131,14 @@ namespace TestRig
 
                 // read Test XML file to discover which tests are available to test
                 activateTests(activateTestsOptions.parseTestFile);
+
+                string[] arguments = Environment.GetCommandLineArgs();
+                System.Diagnostics.Debug.WriteLine("Command line: " + arguments[1]);
+                if (arguments[1] != String.Empty)
+                {
+                    commandLineMode = true;
+                    uploadOneBatch(arguments[1]);
+                }                
             }
             catch (Exception ex)
             {
@@ -158,15 +168,19 @@ namespace TestRig
             }
         }
 
-        public void OnClosing(object sender, CancelEventArgs e)
+        private void closingTasks()
         {
             // saving tester paths
             saveSettings();
             Properties.Settings.Default.Save();
 
             // killing all running threads
-            Kill();
+            Kill();            
+        }
 
+        public void OnClosing(object sender, CancelEventArgs e)
+        {
+            closingTasks();
             e.Cancel = false;
         }
 
@@ -180,6 +194,14 @@ namespace TestRig
         {
             // the method used by other threads to remove items from  _displayTestCollection
             _displayTestCollection.RemoveAt(0);
+
+            // if we are running only one batch file from the command line then when all the tests are done we quit
+            if ((_displayTestCollection.Count == 0) && (commandLineMode == true))
+            {
+                System.Diagnostics.Debug.WriteLine("No more tasks to run in command line mode. Quitting.");
+                closingTasks();
+                Environment.Exit(0);
+            }
         }
 
         public void DisplayUpdateMethod()
@@ -262,10 +284,17 @@ namespace TestRig
                     // where the file has been deleted since the call to TraverseTree().     
               
                     // filtering out template test description file
-                    if (fi.Name.Equals("tests.xml") && !fi.FullName.Contains("Template") )
+                    if (!fi.FullName.Contains("Template"))
                     {
-                        System.Diagnostics.Debug.WriteLine(fi.FullName);
-                        AddTests(fi);
+                        if ( fi.Name.Equals("tests.xml") )
+                        {
+                            System.Diagnostics.Debug.WriteLine(fi.FullName);
+                            AddTests(fi);
+                        }
+                        else if (fi.Name.EndsWith(".batch"))
+                        {
+                            AddBatch(fi);
+                        }
                     }
                 }
 
@@ -279,7 +308,42 @@ namespace TestRig
                 }
             }
         }
-        
+
+        private static void AddBatch(System.IO.FileInfo fi)
+        {
+            System.Diagnostics.Debug.WriteLine("adding batch file: " + fi.Name);
+            try
+            {
+                using (StreamReader reader = new StreamReader(fi.FullName))
+                {
+
+                    string line;                                        
+                    line = reader.ReadLine();  // Description
+                    availableTests[testNum - 1] = null;
+                    string batchName = fi.Name;
+                    int index = batchName.LastIndexOf('.');
+                    batchName = batchName.Substring(0, index);
+                    index = fi.FullName.LastIndexOf(@"TestSuite");
+                    string strippedPath = fi.FullName.Substring(index+10);
+                    _tasks.Add(new Task()
+                    {
+                        TestNum = testNum,
+                        Name = batchName,
+                        Type = "Batch",
+                        Path = strippedPath,
+                        Description = line,
+                        Selected = false
+                    });
+                    testNum++;
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("AddTests: " + ex.ToString());
+            }
+        }
+
         private static void AddTests(System.IO.FileInfo fi){
             StreamReader testReader = new StreamReader(fi.FullName);
             try
@@ -369,8 +433,116 @@ namespace TestRig
             }
         }
 
+        private void UploadBatch(string path, StreamWriter writer)
+        {
+            // this function will read batch files and queue up any tests
+            // this function is recursive if a batch file lists other batch files (we will only allow upto 10 batch calls to prevent endless batch loop call)            
+            batchCall++;
+            System.Diagnostics.Debug.WriteLine("Upload batch call: " + batchCall.ToString());
+            if (batchCall >= 10)
+                return;
+
+            try
+            {
+                StreamReader reader = new StreamReader(textTestSourcePath + @"\" + path);
+                string line;
+                line = reader.ReadLine();  // Description
+                line = reader.ReadLine();
+                while (line != null)
+                {
+                    if (line.EndsWith(".batch"))
+                    {
+                        UploadBatch(line, writer);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine(line);
+                        for (int testIndex = 1; testIndex <= testNum; testIndex++)
+                        {
+                            if (availableTests[testIndex - 1] != null)
+                            {
+                                if (availableTests[testIndex - 1].testPath.Equals(line))
+                                {
+                                    System.Diagnostics.Debug.WriteLine("queueing " + testIndex.ToString() + " with path " + line);
+                                    UploadTask(testIndex, writer);
+                                }
+                            }
+                        }
+                    }
+                    line = reader.ReadLine();
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("UploadBatch: " + ex.ToString());
+            }
+        }
+
+        private void UploadTask(int passedTestNum, StreamWriter writer)
+        {
+            TestDescription tempTask = new TestDescription(availableTests[passedTestNum - 1]);
+            // if the follow items are specified already we keep those parameters, otherwise those test parameters are populated here
+            if (tempTask.testerName == String.Empty)
+                tempTask.testerName = System.Environment.UserName.ToString();
+            if (tempTask.testLocation == String.Empty)
+                tempTask.testLocation = System.Environment.MachineName.ToString();
+            if (tempTask.testMFVersionNum == String.Empty)
+                tempTask.testMFVersionNum = textMFSelected;
+            if (tempTask.testGitOption == String.Empty)
+                tempTask.testGitOption = textGitCodeLocation;
+            if (tempTask.testGitBranch == String.Empty)
+                tempTask.testGitBranch = textGitCodeBranch;
+            if (tempTask.testHardware == String.Empty)
+                tempTask.testHardware = textHardware;
+            if (tempTask.testSolution == String.Empty)
+                tempTask.testSolution = textSolution;
+            if (tempTask.testMemoryType == String.Empty)
+                tempTask.testMemoryType = textMemoryType;
+            if (tempTask.testSolutionType == String.Empty)
+                tempTask.testSolutionType = textSolutionType;
+            if (tempTask.testGCCVersion == String.Empty)
+                tempTask.testGCCVersion = textGCCVersion;
+            if (tempTask.testJTAGHarness == String.Empty)
+                tempTask.testJTAGHarness = textJTAGHarness;
+            if (tempTask.testPowerAutomateSelected == String.Empty)
+                tempTask.testPowerAutomateSelected = textPowerAutomateSelected;
+            if (tempTask.testSupporting != String.Empty)
+                QueueSupportTest(tempTask.testSupporting, writer);
+            writer.Write(tempTask.ToString());
+        }
+
+        // this function is used to upload a batch file specified in the command line of the TestRig
+        private void uploadOneBatch(string batchName)
+        {            
+            // clearing variable keeping track of batch calls (in case of endless loop)
+            batchCall = 0;
+
+            // upon click any tests selected will generate a test description in a file which will then be sent to the test machine (to localhost if this machine is the tester)
+            string fileName = "test.config";
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                writer.WriteLine("<TestSuite>");
+                foreach (Task queueTask in _tasks)
+                {
+                    if (queueTask.Type.Equals("Batch")){                        
+                        int index = batchName.LastIndexOf('.');
+                        string strippedBatchName = batchName.Substring(0, index);
+                        if (queueTask.Name.Equals(strippedBatchName))
+                            UploadBatch(queueTask.Path, writer);  
+                    }
+                }
+                writer.WriteLine("</TestSuite>");
+            }
+            // sending the generated test file to the test machine queue
+            rxSocket.uploadTests();
+        }
+
         private void Upload_Click(object sender, RoutedEventArgs e)
         {
+            // clearing variable keeping track of batch calls (in case of endless loop)
+            batchCall = 0;
+
             // upon click any tests selected will generate a test description in a file which will then be sent to the test machine (to localhost if this machine is the tester)
             string fileName = "test.config";
             using (StreamWriter writer = new StreamWriter(fileName))
@@ -380,35 +552,10 @@ namespace TestRig
                 {
                     if (queueTask.Selected == true)
                     {
-                        TestDescription tempTask = new TestDescription(availableTests[queueTask.TestNum - 1]);
-                        // if the follow items are specified already we keep those parameters, otherwise those test parameters are populated here
-                        if (tempTask.testerName == String.Empty)
-                            tempTask.testerName = System.Environment.UserName.ToString();
-                        if (tempTask.testLocation == String.Empty)
-                            tempTask.testLocation = System.Environment.MachineName.ToString();
-                        if (tempTask.testMFVersionNum == String.Empty)
-                            tempTask.testMFVersionNum = textMFSelected;
-                        if (tempTask.testGitOption == String.Empty)
-                            tempTask.testGitOption = textGitCodeLocation;
-                        if (tempTask.testGitBranch == String.Empty)
-                            tempTask.testGitBranch = textGitCodeBranch;
-                        if (tempTask.testHardware == String.Empty)
-                            tempTask.testHardware = textHardware;
-                        if (tempTask.testSolution == String.Empty)
-                            tempTask.testSolution = textSolution;
-                        if (tempTask.testMemoryType == String.Empty)
-                            tempTask.testMemoryType = textMemoryType;
-                        if (tempTask.testSolutionType == String.Empty)
-                            tempTask.testSolutionType = textSolutionType;
-                        if (tempTask.testGCCVersion == String.Empty)
-                            tempTask.testGCCVersion = textGCCVersion;
-                        if (tempTask.testJTAGHarness == String.Empty)
-                            tempTask.testJTAGHarness = textJTAGHarness;
-                        if (tempTask.testPowerAutomateSelected == String.Empty)
-                            tempTask.testPowerAutomateSelected = textPowerAutomateSelected;
-                        if (tempTask.testSupporting != String.Empty)
-                            QueueSupportTest(tempTask.testSupporting, writer);
-                        writer.Write(tempTask.ToString());
+                        if (queueTask.Type.Equals("Batch"))
+                            UploadBatch(queueTask.Path, writer);
+                        else
+                            UploadTask(queueTask.TestNum, writer);
                     }
                 }
                 writer.WriteLine("</TestSuite>");
@@ -864,6 +1011,37 @@ namespace TestRig
                 tbOCDInterface.Text = textOCDInterfaceSecondary1;
 
             checkPaths();
+        }
+
+        private void btnBatch_Click(object sender, RoutedEventArgs e)
+        {
+            BatchDlg batchDialog = new BatchDlg();
+            System.Windows.Forms.Application.Run(batchDialog);
+            if (batchDialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                System.Diagnostics.Debug.WriteLine("dialog results: " + batchDialog.batchName + " " + batchDialog.batchDesc);
+                string fullPath = textTestSourcePath;
+                int index = fullPath.LastIndexOf(@"TestSuite");
+                string strippedPath = fullPath.Substring(0, index);
+                strippedPath = strippedPath + @"TestSuite\Batch Files\";
+
+                // upon click any tests selected will be added to a batch file
+                string fileName = strippedPath + batchDialog.batchName + ".batch";
+                using (StreamWriter writer = new StreamWriter(fileName))
+                {
+                    writer.WriteLine(batchDialog.batchDesc);
+                    foreach (Task queueTask in _tasks)
+                    {
+                        if (queueTask.Selected == true)
+                        {
+                            TestDescription tempTask = new TestDescription(availableTests[queueTask.TestNum - 1]);
+                            writer.WriteLine(tempTask.testPath);
+                        }
+                    }
+                    writer.Close();
+                }
+                activateTests(activateTestsOptions.parseTestFile);
+            }
         }        
     }
 }

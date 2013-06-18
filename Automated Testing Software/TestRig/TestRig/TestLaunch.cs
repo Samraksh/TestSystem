@@ -121,6 +121,8 @@ namespace TestRig
                         DateTime startTime = DateTime.Now;
 
                         string returnReason = ExecuteTest(currentTest);
+                        //string returnReason="";   // for debugging
+                        //Thread.Sleep(5000);       // for debugging
 
                         DateTime stopTime = DateTime.Now;
                         TimeSpan duration = stopTime - startTime;

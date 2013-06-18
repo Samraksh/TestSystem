@@ -130,18 +130,6 @@ namespace TestRig.Properties {
                 this["MFPathSelection"] = value;
             }
         }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int JHSelection {
-            get {
-                return ((int)(this["JHSelection"]));
-            }
-            set {
-                this["JHSelection"] = value;
-            }
-        }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -157,7 +145,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\SamTest\\openocd-bin\\interface\\olimex-arm-usb-tiny-h.cfg")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-bin\\interface\\olimex-arm-usb-tiny-h.cfg")]
         public string OCDInterfacePrimary {
             get {
                 return ((string)(this["OCDInterfacePrimary"]));
@@ -169,7 +157,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\SamTest\\openocd-bin\\target\\stm32xl.cfg")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-bin\\target\\stm32xl.cfg")]
         public string OCDTarget {
             get {
                 return ((string)(this["OCDTarget"]));
@@ -181,7 +169,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\SamTest\\openocd-bin\\openocd.exe")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-bin\\openocd.exe")]
         public string OCDExe {
             get {
                 return ((string)(this["OCDExe"]));
@@ -193,7 +181,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\SamTest\\codesourcery")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\codesourcery")]
         public string CSPath {
             get {
                 return ((string)(this["CSPath"]));
@@ -205,7 +193,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\SamTest\\Automated Testing Software\\GitBin")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\Automated Testing Software\\GitBin")]
         public string GitPath {
             get {
                 return ((string)(this["GitPath"]));
@@ -217,7 +205,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSys")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSuite")]
         public string TSPath {
             get {
                 return ((string)(this["TSPath"]));
@@ -229,7 +217,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\SamTest\\openocd-bin\\interface\\olimex-arm-usb-ocd.cfg")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-bin\\interface\\olimex-arm-usb-ocd.cfg")]
         public string OCDInterfaceSecondary1 {
             get {
                 return ((string)(this["OCDInterfaceSecondary1"]));
