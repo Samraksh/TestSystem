@@ -156,6 +156,9 @@ namespace TestRig
             {
                 sr = new StreamReader(FileName);
                 line = sr.ReadLine();
+                while (line != null && !line.Contains("If Name=\"TARGETLOCATION\" In=\""+currentTest.testSolutionType)) { //advance to addresses of correct solution type.
+                    line = sr.ReadLine();
+                }
                 while (line != null)
                 {
                     if (line.Contains("Set Name=\"Deploy_BaseAddress\"") == true)
@@ -167,11 +170,14 @@ namespace TestRig
                         value = value.TrimEnd(trimChars);
                         value = value.Remove(0, 2);
                         applicationStartAddress = value;
+                        applicationStartAddressFound = true;
                     } 
                     line = sr.ReadLine();
                 }
+                if (line == null) {
+                    System.Diagnostics.Debug.WriteLine("WARNING: applicationStartAddress not found via Deploy_BaseAddress in scatterfile.  Will try to use default value.");
+                }
                 sr.Close();
-                applicationStartAddressFound = true;
             }
             if (applicationStartAddressFound == false)
             {
@@ -191,6 +197,7 @@ namespace TestRig
                         break;
                     default:
                         applicationStartAddress = "80A2000";
+                        System.Diagnostics.Debug.WriteLine("WARNING: applicationStartAddress not found and no default is defined for project type " + currentTest.testSolution);
                         break;
                 }
             }
