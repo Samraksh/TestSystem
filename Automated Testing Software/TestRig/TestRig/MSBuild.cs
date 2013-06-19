@@ -143,7 +143,7 @@ namespace TestRig
             ChangeDirectories(MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType);
 
             // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
-            if (currentTest.testSolutionType == "TinyBooter")
+            if (currentTest.testSolutionType == "TinyBooter" || currentTest.testSolution == "SOC_ADAPT")
             {
                 if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
                 {
