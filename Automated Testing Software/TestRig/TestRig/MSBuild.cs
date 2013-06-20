@@ -151,15 +151,21 @@ namespace TestRig
             System.Diagnostics.Debug.WriteLine("Searching scatterfile");
             // discovering applicationStartAddress value
             bool applicationStartAddressFound = false;
-            string FileName = MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType +  @"\" + "scatterfile_tinyclr_gcc.xml";
+            string FileName;
+            if (currentTest.testSolutionType == "TinyBooter")
+                FileName = MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType + @"\" + "scatterfile_bootloader_gcc.xml";
+            else
+                FileName = MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType +  @"\" + "scatterfile_tinyclr_gcc.xml";
             if (File.Exists(FileName) == true)
             {
                 sr = new StreamReader(FileName);
                 line = sr.ReadLine();
-                while (line != null && !line.Contains("If Name=\"TARGETLOCATION\" In=\""+currentTest.testSolutionType)) { //advance to addresses of correct solution type.
+                //advance to addresses of correct solution type.
+                while (line != null && !line.Contains("If Name=\"TARGETLOCATION\" In=\"" + currentTest.testMemoryType))
+                { 
                     line = sr.ReadLine();
                 }
-                while (line != null)
+                while ((line != null) && (applicationStartAddressFound == false))
                 {
                     if (line.Contains("Set Name=\"Deploy_BaseAddress\"") == true)
                     {
