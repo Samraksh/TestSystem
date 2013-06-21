@@ -357,10 +357,10 @@ namespace TestRig
                         // read in each defined test within the configuration file and activate the appropriate checkbox
                         TestDescription readTest = rxSocket.readXMLTest(reader);
                         if (readTest.testReadComplete == false)
-                            return;                        
+                            return;
 
-                        // if this is a test supporting a primary test then we don't list it. It will automatically be loaded by primary test if selected.
-                        if (readTest.testSupporting.Contains("support project") == true)
+                        // if this is a test supporting a primary test then we don't list it (contains the words "support project" but not the word "load"). It will automatically be loaded by primary test if selected.
+                        if ((readTest.testSupporting.Contains("load") == false) && (readTest.testSupporting.Contains("support project") == true))
                             return;
 
                         availableTests[testNum - 1] = readTest;
@@ -384,7 +384,7 @@ namespace TestRig
         }
 
         private void QueueSupportTest(string fileName, StreamWriter writer)
-        {
+        {            
             StreamReader testReader = new StreamReader(textTestSourcePath + @"\" + fileName);
             try
             {
@@ -508,7 +508,23 @@ namespace TestRig
             if (tempTask.testPowerAutomateSelected == String.Empty)
                 tempTask.testPowerAutomateSelected = textPowerAutomateSelected;
             if (tempTask.testSupporting != String.Empty)
-                QueueSupportTest(tempTask.testSupporting, writer);
+            {
+                // queueing up support files
+                string tempString;
+                if (tempTask.testSupporting.StartsWith("load support projects")){
+                    tempString = tempTask.testSupporting.Remove(0, 21);
+                    int indexColon = tempString.IndexOf(':');
+                    tempString = tempString.Remove(0, indexColon+1);
+                    tempString = tempString.Trim();
+                    string[] queueProjects = tempString.Split(' ');
+                    int projectNum = queueProjects.Length;
+                    for (int k = 0; k < projectNum; k++)
+                    {
+                        System.Diagnostics.Debug.WriteLine("support project: " + queueProjects[k]);
+                        QueueSupportTest(queueProjects[k], writer);
+                    }
+                }
+            }
             writer.Write(tempTask.ToString());
         }
 

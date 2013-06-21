@@ -32,7 +32,8 @@ namespace TestRig
         private StreamWriter sessionResult;
         private int sessionTestTotal;
         private int sessionTestComplete;
-        private int sessionTestPass;        
+        private int sessionTestPass;
+        private int currentOpenOCDInstance;
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
@@ -45,6 +46,8 @@ namespace TestRig
             testCollectionMutex = collectionMutex;
 
             mainHandle = passedHandle;
+
+            openOCD = new OpenOCD();
 
             sessionTestTotal = 0;
             sessionTestComplete = 0;
@@ -85,8 +88,8 @@ namespace TestRig
                 if (gdb != null) gdb.Kill();
                 if (git != null) git.Kill();                                                
                 if (COM != null) COM.Kill();
-                if (fTest != null) fTest.Kill();                
-                if (openOCD != null) openOCD.Kill();
+                if (fTest != null) fTest.Kill();
+                if (openOCD.active == true) openOCD.Kill();                               
                 if (matlab != null) matlab.Kill();
                 if (msbuild != null) msbuild.Kill();
                 if (fastboot != null) fastboot.Kill();
@@ -139,7 +142,7 @@ namespace TestRig
                             if (COM != null) COM.Kill();
                             if (fTest != null) fTest.Kill();                            
                             if (gdb != null) gdb.Kill();
-                            if (openOCD != null) openOCD.Kill();
+                            if (openOCD.active == true) openOCD.Kill();
                             if (fastboot != null) fastboot.Kill();
                             
                             System.Diagnostics.Debug.WriteLine("Test FAILED because of:" + returnReason);
@@ -149,8 +152,8 @@ namespace TestRig
 
                         string TRPath = mainHandle.textTestReceiptPath;
 
-                        // we won't write test receipts for support projects
-                        if (currentTest.testSupporting.Contains("support project") == false)
+                        // we won't write test receipts for support projects (contains the words "support project" but not the word "load")
+                        if ((currentTest.testSupporting.Contains("load") == true) || (currentTest.testSupporting.Contains("support project") == false))
                         {
                             testReceipt.WriteFile(TRPath);
                             sessionTestTotal++;
@@ -397,61 +400,105 @@ namespace TestRig
                 {
                     System.Diagnostics.Debug.WriteLine("Executing test for:  " + currentTest.testName);
 
-                    openOCD = new OpenOCD(mainHandle, currentTest);
-                    if (openOCD == null) return "OpenOCD failed to load";
-                    gdb = new GDB(mainHandle);
-                    if (gdb == null) return "GDB failed to load";
-                    telnet = new TelnetBoard(mainHandle);
-                    if (telnet == null) return "Telnet failed to load";
+                    int numberOfCodeLoads;
+                    // some tests will load code to multiple devices (load  indentical) and others will load tests to support devices (support project)
+                    if (currentTest.testSupporting.StartsWith("support project"))
+                    {
+                        // this support project will load code to the secondary device number listed in the test description (i.e. "support project 1" will be programmed to the support device 1)
+                        string tempString = currentTest.testSupporting;
+                        tempString = tempString.Trim();
+                        tempString = currentTest.testSupporting.Remove(0, 15);
+                        tempString = tempString.Trim();
+                        int instanceNum = int.Parse(tempString);
 
-                    if (telnet.Start() == false) return "Telnet failed to start";
-                    if (telnet.Clear() == false) return "Telnet failed to clear FLASH";                    
-                    
-                    if (currentTest.testType == "C#")
+                        numberOfCodeLoads = 1;
+                        currentOpenOCDInstance = instanceNum;
+                        System.Diagnostics.Debug.WriteLine("Support project: " + numberOfCodeLoads.ToString() + " instance: " + currentOpenOCDInstance.ToString());
+                    }
+                    else if (currentTest.testSupporting.StartsWith("load indentical"))
                     {                        
-                        if (currentTest.testUsePrecompiledBinary != String.Empty)
-                        {
-                            currentTest.testState = "Loading MF AXF";
-                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                            if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled MF AXF file: " + currentTest.testUsePrecompiledBinary;
-                        }
-                        else
-                        {
-                            currentTest.testState = "Loading TinyBooter";
-                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                            currentTest.testSolutionType = "TinyBooter";
-                            if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
-                            currentTest.testState = "Loading TinyCLR";
-                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                            currentTest.testSolutionType = "TinyCLR";
-                            if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
-                        }
+                        // this project will get loaded to the primary and secondary devices (i.e. "load identical 3" will be loaded wo the primary and two secondary devices)
+                        string tempString = currentTest.testSupporting;
+                        tempString = tempString.Trim();
+                        tempString = currentTest.testSupporting.Remove(0, 16);
+                        tempString = tempString.Trim();
+                        int supportNum = int.Parse(tempString);
 
-                       currentTest.testState = "Loading managed code";
-                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-
-                        if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";
+                        numberOfCodeLoads = supportNum;
+                        currentOpenOCDInstance = 0;
+                        System.Diagnostics.Debug.WriteLine("Load identical project: " + numberOfCodeLoads.ToString() + " instance: " + currentOpenOCDInstance.ToString());
                     }
                     else
-                    {                        
-                        if (currentTest.testUsePrecompiledBinary != String.Empty)
+                    {
+                        // this project will only be loaded onto the primary device
+                        numberOfCodeLoads = 1;
+                        currentOpenOCDInstance = 0;
+                        System.Diagnostics.Debug.WriteLine("Normal project: " + numberOfCodeLoads.ToString() + " instance: " + currentOpenOCDInstance.ToString());
+                    }
+
+                    for (int indexLoad = 0; indexLoad < numberOfCodeLoads; indexLoad++)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Code load number " + indexLoad.ToString() + " instance: " + currentOpenOCDInstance.ToString());
+                        openOCD.Connect(mainHandle, currentOpenOCDInstance);
+                        if (openOCD.active == false) return "OpenOCD failed to load";
+                        gdb = new GDB(mainHandle);
+                        if (gdb == null) return "GDB failed to load";
+                        telnet = new TelnetBoard(mainHandle);
+                        if (telnet == null) return "Telnet failed to load";
+
+                        if (telnet.Start() == false) return "Telnet failed to start";
+                        if (telnet.Clear() == false) return "Telnet failed to clear FLASH";
+
+                        if (currentTest.testType == "C#")
                         {
-                            currentTest.testState = "Loading test AXF";
+                            if (currentTest.testUsePrecompiledBinary != String.Empty)
+                            {
+                                currentTest.testState = "Loading MF AXF";
+                                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                                if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled MF AXF file: " + currentTest.testUsePrecompiledBinary;
+                            }
+                            else
+                            {
+                                currentTest.testState = "Loading TinyBooter";
+                                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                                currentTest.testSolutionType = "TinyBooter";
+                                if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                currentTest.testState = "Loading TinyCLR";
+                                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                                currentTest.testSolutionType = "TinyCLR";
+                                if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                            }
+
+                            currentTest.testState = "Loading managed code";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                            if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled AXF file: " + currentTest.testUsePrecompiledBinary;
+
+                            if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";
                         }
                         else
-                        {                                                        
-                            currentTest.testState = "Loading native code";
-                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                            currentTest.testSolutionType = "TinyCLR";                                                   
-                            if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                        {
+                            if (currentTest.testUsePrecompiledBinary != String.Empty)
+                            {
+                                currentTest.testState = "Loading test AXF";
+                                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                                if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled AXF file: " + currentTest.testUsePrecompiledBinary;
+                            }
+                            else
+                            {
+                                currentTest.testState = "Loading native code";
+                                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                                currentTest.testSolutionType = "TinyCLR";
+                                if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                            }
                         }
+
+                        currentTest.testState = "Starting processor";
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                        if (gdb.Continue() == false) return "GDB failed to start processor";
+                        telnet.Kill();
+                        gdb.Kill();
+                        openOCD.Kill();                        
+                        currentOpenOCDInstance++;
                     }
-                    
-                    currentTest.testState = "Starting processor";
-                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                    if (gdb.Continue() == false) return "GDB failed to start processor";
                 }
                 #endregion
 
@@ -766,7 +813,7 @@ namespace TestRig
                 if (COM != null) COM.Kill();
                 if (telnet != null) telnet.Kill();
                 if (gdb != null) gdb.Kill();
-                if (openOCD != null) openOCD.Kill(); 
+                if (openOCD.active == true) openOCD.Kill();
                 if (fastboot != null) fastboot.Kill();
 
                 #region Analyzing test
@@ -880,6 +927,15 @@ namespace TestRig
             }
             catch (Exception ex)
             {
+                if (telnet != null) telnet.Kill();
+                if (gdb != null) gdb.Kill();
+                if (git != null) git.Kill();
+                if (COM != null) COM.Kill();
+                if (fTest != null) fTest.Kill();
+                if (openOCD.active == true) openOCD.Kill();
+                if (matlab != null) matlab.Kill();
+                if (msbuild != null) msbuild.Kill();
+                if (fastboot != null) fastboot.Kill();
                 System.Diagnostics.Debug.WriteLine("ExecuteTest FAIL: " + ex.Message);
                 return "Exception failure: " + ex.Message;
             }

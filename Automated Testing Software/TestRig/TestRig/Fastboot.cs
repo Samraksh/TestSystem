@@ -305,7 +305,7 @@ namespace TestRig
 
         private void StandardOutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
-            System.Diagnostics.Debug.WriteLine("******************Fastboot command result: " + outLine.Data);
+            //System.Diagnostics.Debug.WriteLine("******************Fastboot command result: " + outLine.Data);
             if (!String.IsNullOrEmpty(outLine.Data))
             {
                 ProcessResponse(outLine.Data);
@@ -314,7 +314,7 @@ namespace TestRig
 
         private void StandardErrorHandler(object sendingProcess, DataReceivedEventArgs errLine)
         {
-            System.Diagnostics.Debug.WriteLine("******************Fastboot error: " + errLine.Data);
+            //System.Diagnostics.Debug.WriteLine("******************Fastboot error: " + errLine.Data);
             if (!String.IsNullOrEmpty(errLine.Data))
             {
                 ProcessResponse(errLine.Data);

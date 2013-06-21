@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 
 namespace TestRig
-{    
+{
     public class OpenOCD
     {
         public enum CommandStatus
@@ -28,12 +28,19 @@ namespace TestRig
 
         private static AutoResetEvent ARE_result = new AutoResetEvent(false);
 
-        private Process OCDProcess;        
+        private Process OCDProcess;
         public MainWindow mainHandle;
+        public bool active;
 
-        public OpenOCD(MainWindow passedHandle, TestDescription currentTest)
+        public OpenOCD()
+        {            
+            active = false;
+        }
+
+        public void Connect(MainWindow passedHandle, int OCDNum)
         {
             mainHandle = passedHandle;
+            active = true;
             ProcessStartInfo openOCDInfo = new ProcessStartInfo();
             OCDProcess = new Process();
 
@@ -45,14 +52,20 @@ namespace TestRig
             openOCDInfo.UseShellExecute = false;
             openOCDInfo.RedirectStandardError = true;
             openOCDInfo.WorkingDirectory = Path.GetDirectoryName(mainHandle.textOCDExe);
-            if (currentTest.testSupporting.StartsWith("1") == true) 
+
+            switch (OCDNum)
             {
-                openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfaceSecondary1 + " -f " + mainHandle.textOCDTarget;
-            } 
-            else
-            {
-                openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfacePrimary + " -f " + mainHandle.textOCDTarget;
+                case (0):
+                    openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfacePrimary + " -f " + mainHandle.textOCDTarget;
+                    break;
+                case (1):
+                    openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfaceSecondary1 + " -f " + mainHandle.textOCDTarget;
+                    break;
+                default:
+                    openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfacePrimary + " -f " + mainHandle.textOCDTarget;
+                    break;
             }
+
             openOCDInfo.FileName = mainHandle.textOCDExe;
 
             OCDProcess.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
@@ -66,10 +79,12 @@ namespace TestRig
 
         public void Kill()
         {
-            try{
+            try
+            {
                 OCDProcess.Kill();
                 OCDProcess = null;
                 System.Diagnostics.Debug.WriteLine("OCDProcess killed.");
+                active = false;
             }
             catch (Exception ex)
             {
@@ -81,7 +96,7 @@ namespace TestRig
         {
             if (response.Contains(expectedResponse))
             {
-                commandResult = CommandStatus.Done; 
+                commandResult = CommandStatus.Done;
                 ARE_result.Set();
             }
         }
@@ -90,7 +105,7 @@ namespace TestRig
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine("------OCDstd--------> " + outLine.Data.ToString());
+                //System.Diagnostics.Debug.WriteLine("------OCDstd--------> " + outLine.Data.ToString());
                 if (!String.IsNullOrEmpty(outLine.Data))
                 {
                     ProcessResponse(outLine.Data);
@@ -106,7 +121,7 @@ namespace TestRig
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine("------OCDerr--------> " + errLine.Data.ToString());
+                //System.Diagnostics.Debug.WriteLine("------OCDerr--------> " + errLine.Data.ToString());
                 if (!String.IsNullOrEmpty(errLine.Data))
                 {
                     ProcessResponse(errLine.Data);
