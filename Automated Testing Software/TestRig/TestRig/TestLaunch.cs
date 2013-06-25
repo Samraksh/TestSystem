@@ -22,7 +22,7 @@ namespace TestRig
         public Git git;
         public GDB gdb;
         public TelnetBoard telnet;
-        public COMPort COM;
+        public COMPort[] COM;
         public FileTest fTest;
         public LogicAnalyzer logicTest;
         public Matlab matlab;
@@ -34,6 +34,8 @@ namespace TestRig
         private int sessionTestComplete;
         private int sessionTestPass;
         private int currentOpenOCDInstance;
+        private int currentOpenCOMInstance;
+        private int maxCOMInstances = 8;
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
@@ -48,6 +50,11 @@ namespace TestRig
             mainHandle = passedHandle;
 
             openOCD = new OpenOCD();
+            COM = new COMPort[maxCOMInstances];
+            for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
+            {
+                COM[indexCOM] = new COMPort(mainHandle);
+            }
 
             sessionTestTotal = 0;
             sessionTestComplete = 0;
@@ -86,8 +93,12 @@ namespace TestRig
             {
                 if (telnet != null) telnet.Kill();
                 if (gdb != null) gdb.Kill();
-                if (git != null) git.Kill();                                                
-                if (COM != null) COM.Kill();
+                if (git != null) git.Kill();
+                for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
+                {
+                    if (COM[indexCOM].active == true)
+                        COM[indexCOM].Kill();
+                }                              
                 if (fTest != null) fTest.Kill();
                 if (openOCD.active == true) openOCD.Kill();                               
                 if (matlab != null) matlab.Kill();
@@ -139,7 +150,11 @@ namespace TestRig
                             if (msbuild != null) msbuild.Kill();
                             if (git != null) git.Kill();
                             if (telnet != null) telnet.Kill();
-                            if (COM != null) COM.Kill();
+                            for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
+                            {
+                                if (COM[indexCOM].active == true)
+                                    COM[indexCOM].Kill();
+                            } 
                             if (fTest != null) fTest.Kill();                            
                             if (gdb != null) gdb.Kill();
                             if (openOCD.active == true) openOCD.Kill();
@@ -176,36 +191,40 @@ namespace TestRig
 
         public string DebugFunction(){
 
-                    /*openOCD = new OpenOCD(mainHandle, currentTest);
-                    if (openOCD == null) return "OpenOCD failed to load";
-                    gdb = new GDB(mainHandle);
-                    if (gdb == null) return "GDB failed to load";
-                    telnet = new TelnetBoard(mainHandle);
-                    if (telnet == null) return "Telnet failed to load";
+            /*openOCD = new OpenOCD(mainHandle, currentTest);
+            if (openOCD == null) return "OpenOCD failed to load";
+            gdb = new GDB(mainHandle);
+            if (gdb == null) return "GDB failed to load";
+            telnet = new TelnetBoard(mainHandle);
+            if (telnet == null) return "Telnet failed to load";
 
-                    if (telnet.Start() == false) return "Telnet failed to start";
-                    if (telnet.Clear() == false) return "Telnet failed to clear FLASH";                    
+            if (telnet.Start() == false) return "Telnet failed to start";
+            if (telnet.Clear() == false) return "Telnet failed to clear FLASH";                    
 
                         
-                            //if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                    //if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                         
 
 
-                        //if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";
+                //if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";
                    
                     
-                    if (gdb.Continue() == false) return "GDB failed to start processor";
+            if (gdb.Continue() == false) return "GDB failed to start processor";
 
-                    if (msbuild != null) msbuild.Kill();
-                    if (git != null) git.Kill();
-                    if (telnet != null) telnet.Kill();
-                    if (COM != null) COM.Kill();
-                    if (fTest != null) fTest.Kill();            
-                    if (gdb != null) gdb.Kill();
-                    if (openOCD != null) openOCD.Kill();
-                    if (fastboot != null) fastboot.Kill();
-                    */
-                    return null;
+            if (msbuild != null) msbuild.Kill();
+            if (git != null) git.Kill();
+            if (telnet != null) telnet.Kill();
+            ifor (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
+        {
+            if (COM[indexCOM].active == true)
+                        COM[indexCOM].Kill();
+        } 
+            if (fTest != null) fTest.Kill();            
+            if (gdb != null) gdb.Kill();
+            if (openOCD != null) openOCD.Kill();
+            if (fastboot != null) fastboot.Kill();
+            */
+            return null;
         }
 
 
@@ -225,6 +244,8 @@ namespace TestRig
                 Process TestExecutableProcess = new Process();
                 Process TestAnalysisExecutableProcess = new Process();
                 DateTime testStartTime = DateTime.Now;
+                int indexDevice;
+                int numberOfCodeLoads = 1;
 
                 switch (currentTest.testMFVersionNum)
                 {
@@ -399,8 +420,7 @@ namespace TestRig
                 else
                 {
                     System.Diagnostics.Debug.WriteLine("Executing test for:  " + currentTest.testName);
-
-                    int numberOfCodeLoads;
+                    
                     // some tests will load code to multiple devices (load  indentical) and others will load tests to support devices (support project)
                     if (currentTest.testSupporting.StartsWith("support project"))
                     {
@@ -413,6 +433,7 @@ namespace TestRig
 
                         numberOfCodeLoads = 1;
                         currentOpenOCDInstance = instanceNum;
+                        currentOpenCOMInstance = instanceNum;
                         System.Diagnostics.Debug.WriteLine("Support project: " + numberOfCodeLoads.ToString() + " instance: " + currentOpenOCDInstance.ToString());
                     }
                     else if (currentTest.testSupporting.StartsWith("load indentical"))
@@ -426,6 +447,7 @@ namespace TestRig
 
                         numberOfCodeLoads = supportNum;
                         currentOpenOCDInstance = 0;
+                        currentOpenCOMInstance = 0;
                         System.Diagnostics.Debug.WriteLine("Load identical project: " + numberOfCodeLoads.ToString() + " instance: " + currentOpenOCDInstance.ToString());
                     }
                     else
@@ -433,12 +455,13 @@ namespace TestRig
                         // this project will only be loaded onto the primary device
                         numberOfCodeLoads = 1;
                         currentOpenOCDInstance = 0;
+                        currentOpenCOMInstance = 0;
                         System.Diagnostics.Debug.WriteLine("Normal project: " + numberOfCodeLoads.ToString() + " instance: " + currentOpenOCDInstance.ToString());
                     }
 
-                    for (int indexLoad = 0; indexLoad < numberOfCodeLoads; indexLoad++)
+                    for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
                     {
-                        System.Diagnostics.Debug.WriteLine("Code load number " + indexLoad.ToString() + " instance: " + currentOpenOCDInstance.ToString());
+                        System.Diagnostics.Debug.WriteLine("Code load number " + indexDevice.ToString() + " instance: " + currentOpenOCDInstance.ToString());
                         openOCD.Connect(mainHandle, currentOpenOCDInstance);
                         if (openOCD.active == false) return "OpenOCD failed to load";
                         gdb = new GDB(mainHandle);
@@ -505,8 +528,10 @@ namespace TestRig
                 #region Getting ready to run test
                 if (currentTest.testUseCOM == true)
                 {
-                    COM = new COMPort(mainHandle, currentTest, testReceipt);
-                    if (COM == null) return "COM failed to open";
+                    for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
+                    {
+                        if (COM[currentOpenCOMInstance].Connect(currentTest, testReceipt, currentOpenCOMInstance) == false) return "COM " + indexDevice.ToString() + " failed to open";
+                    }
                 }
                 if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
                 Directory.CreateDirectory(workingDirectory + @"\" + "testTemp");
@@ -555,10 +580,16 @@ namespace TestRig
                 if (currentTest.testUseScript == true)
                 {
                     Thread.Sleep(15000);
-                    if (COM != null) COM.Kill();
+                    for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
+                    {
+                        if (COM[indexCOM].active == true)
+                            COM[indexCOM].Kill();
+                    }
                     Thread.Sleep(6000);
-                    COM = new COMPort(mainHandle, currentTest, testReceipt);
-                    if (COM == null) return "COM failed to open";
+                    for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
+                    {
+                        if (COM[currentOpenCOMInstance].Connect(currentTest, testReceipt, currentOpenCOMInstance) == false) return "COM " + indexDevice.ToString() + " failed to open";
+                    }
                     fTest = new FileTest(mainHandle, currentTest);
                     if (fTest == null) return "FileTest failed to open";
 
@@ -674,7 +705,7 @@ namespace TestRig
                                 for (int i = 0; i < byteNum; i++)
                                 {
                                     randomNumber = random.Next(lowerBound, upperBound);
-                                    COM.Send(randomNumber.ToString() + "\r\n");
+                                    COM[currentOpenCOMInstance].Send(randomNumber.ToString() + "\r\n");
                                 }
                             }
                             else if (parsedLine[1].Contains("file"))
@@ -682,12 +713,12 @@ namespace TestRig
                                 string fileName = parsedLine[2].Trim();
                                 if (File.Exists(workingDirectory + @"\" + fileName) == false) return "Specified COM_send file: " + fileName + " does not exist.";
                                 System.Diagnostics.Debug.WriteLine("Sending data file: " + workingDirectory + @"\" + fileName + " to COM port");
-                                COM.SendFile(workingDirectory + @"\" + fileName);
+                                COM[currentOpenCOMInstance].SendFile(workingDirectory + @"\" + fileName);
                             }
                             else if (parsedLine[1].Contains("string"))
                             {
                                 int location = line.IndexOf("string ");
-                                COM.Send(line.Remove(0, location + 7));
+                                COM[currentOpenCOMInstance].Send(line.Remove(0, location + 7));
                             }
                         }
                         else if (line.StartsWith("COM_receive"))
@@ -695,7 +726,7 @@ namespace TestRig
                             if (parsedLine[1].Contains("file"))
                             {
                                 string fileName = parsedLine[3].Trim();
-                                if (COM.SaveToFile(parsedLine[2].Trim(), workingDirectory + @"\" + fileName) == false) return "Specified COM_receive file: " + workingDirectory + @"\" + fileName + " could not be opened.";
+                                if (COM[currentOpenCOMInstance].SaveToFile(parsedLine[2].Trim(), workingDirectory + @"\" + fileName) == false) return "Specified COM_receive file: " + workingDirectory + @"\" + fileName + " could not be opened.";
                             }
                         }
                         else if (line.StartsWith("sleep"))
@@ -810,7 +841,11 @@ namespace TestRig
                     remainingCOMtimeMs = currentTest.testTimeout - (int)duration.TotalMilliseconds;
                 }
                 #endregion
-                if (COM != null) COM.Kill();
+                for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
+                {
+                    if (COM[indexCOM].active == true)
+                        COM[indexCOM].Kill();
+                } 
                 if (telnet != null) telnet.Kill();
                 if (gdb != null) gdb.Kill();
                 if (openOCD.active == true) openOCD.Kill();
@@ -930,7 +965,11 @@ namespace TestRig
                 if (telnet != null) telnet.Kill();
                 if (gdb != null) gdb.Kill();
                 if (git != null) git.Kill();
-                if (COM != null) COM.Kill();
+                for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
+                {
+                    if (COM[indexCOM].active == true)
+                        COM[indexCOM].Kill();
+                } 
                 if (fTest != null) fTest.Kill();
                 if (openOCD.active == true) openOCD.Kill();
                 if (matlab != null) matlab.Kill();

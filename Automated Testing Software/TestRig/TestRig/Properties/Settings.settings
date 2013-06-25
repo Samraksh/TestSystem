@@ -29,7 +29,7 @@
     <Setting Name="MFPathSelection" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="COMPort" Type="System.Int32" Scope="User">
+    <Setting Name="COMPortPrimary" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="OCDInterfacePrimary" Type="System.String" Scope="User">
@@ -52,6 +52,9 @@
     </Setting>
     <Setting Name="OCDInterfaceSecondary1" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Work\TestSystem\openocd-bin\interface\olimex-arm-usb-ocd.cfg</Value>
+    </Setting>
+    <Setting Name="COMPortSecondary1" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

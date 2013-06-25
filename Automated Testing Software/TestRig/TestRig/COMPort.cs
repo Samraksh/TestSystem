@@ -22,11 +22,32 @@ namespace TestRig
         private static bool saveToFile;
         private static string saveFileName;
         private static System.IO.StreamWriter receiveFile;
+        private static string textCOMPort;
+        public bool active;
 
-        public COMPort(MainWindow passedHandle, TestDescription currentTest, TestReceipt results)
+        public COMPort(MainWindow passedHandle)
         {
-
             mainHandle = passedHandle;
+            active = false;
+        }
+
+        public bool Connect(TestDescription currentTest, TestReceipt results, int COMNum)
+        {                        
+            switch (COMNum)
+            {
+                case (0):
+                    textCOMPort = mainHandle.textCOMPortPrimary;
+                    break;
+                case (1):
+                    textCOMPort = mainHandle.textCOMPortSecondary1;
+                    break;
+                default:
+                    textCOMPort = mainHandle.textCOMPortPrimary;
+                    break;
+            }
+
+            System.Diagnostics.Debug.WriteLine("Connecting to COM port: " + textCOMPort);
+
             testResults = results;
             accumReceiveString = String.Empty;
             saveToFile = false;
@@ -39,8 +60,8 @@ namespace TestRig
                 }
                 else
                 {
-                    serialPort = new SerialPort(mainHandle.textCOMPort);
-                }                
+                    serialPort = new SerialPort(textCOMPort);
+                }
                 string[] COMParameters = currentTest.testCOMParameters.Split(',');
                 serialPort.BaudRate = int.Parse(COMParameters[0]);
                 switch (COMParameters[1])
@@ -90,11 +111,13 @@ namespace TestRig
                 RxThread = new Thread(new ThreadStart(ListenThreadFunction));
                 RxThread.Start();
                 RxThread.Name = "Receive COM Thread";
+                active = true;
+                return true;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("COM port open failed:" + ex.ToString());
-                return;
+                return false;
             }
         }
 
@@ -223,6 +246,7 @@ namespace TestRig
                     receiveFile.Close();
                     receiveFile = null;
                 }
+                active = false;
             }
             catch (Exception ex)
             {
@@ -247,7 +271,7 @@ namespace TestRig
 
                 if (rxString != String.Empty)
                 {
-                    System.Diagnostics.Debug.WriteLine("COM processing: " + rxString.ToString());
+                    System.Diagnostics.Debug.WriteLine("COM processing (" + textCOMPort + "): " + rxString.ToString());
                     if (rxString.Contains("result =") || rxString.Contains("result="))
                     {
                         if (rxString.Contains("PASS"))
