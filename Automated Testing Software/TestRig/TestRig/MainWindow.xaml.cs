@@ -100,7 +100,6 @@ namespace TestRig
             removeDelegate = new RemoveTestItem(RemoveTestItemMethod);
             updateDelegate = new DisplayUpdate(DisplayUpdateMethod);
 
-            textPowerAutomateSelected = false.ToString();
 
             // sometimes openOCD is running so we will check and warn here.
             bool openOCDRunning = false;
@@ -767,7 +766,7 @@ namespace TestRig
                 textCOMPortPrimary = textCOMPortPrimary.Remove(3, 1);
                 textCOMPortSecondary1 = ((ComboBoxItem)cbCOMPort.Items[COMPortSelectionSecondary1]).Content.ToString();
                 textCOMPortSecondary1 = textCOMPortSecondary1.Remove(3, 1);
-                
+                cbPowerAutomate.IsChecked = Properties.Settings.Default.PowerCycleAutomated;
 
                 settingsInitialized = true;
             }
@@ -800,6 +799,8 @@ namespace TestRig
                 Properties.Settings.Default["STSelection"] = cbSolutionType.SelectedIndex;
                 Properties.Settings.Default["GVSelection"] = cbGCCVersion.SelectedIndex;
                 Properties.Settings.Default["MFSelection"] = cbMFSelected.SelectedIndex;
+                Properties.Settings.Default["PowerCycleAutomated"] = cbPowerAutomate.IsChecked;
+                
                 Properties.Settings.Default.Save();
             }
             catch (Exception ex)

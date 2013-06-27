@@ -238,5 +238,17 @@ namespace TestRig.Properties {
                 this["COMPortSecondary1"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PowerCycleAutomated {
+            get {
+                return ((bool)(this["PowerCycleAutomated"]));
+            }
+            set {
+                this["PowerCycleAutomated"] = value;
+            }
+        }
     }
 }

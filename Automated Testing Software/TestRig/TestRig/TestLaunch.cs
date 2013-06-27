@@ -316,10 +316,17 @@ namespace TestRig
                 }
                 else
                 {
-                    currentTest.testState = "Building TinyBooter";
-                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                    currentTest.testSolutionType = "TinyBooter";
-                    if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
+                    if (currentTest.testSolution.Equals("SOC_ADAPT"))
+                    {
+                        // TODO build littlekernel or retrieve it.
+                    }
+                    else
+                    {
+                        currentTest.testState = "Building TinyBooter";
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                        currentTest.testSolutionType = "TinyBooter";
+                        if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
+                    }
                     currentTest.testState = "Building native code";
                     mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                     currentTest.testSolutionType = "TinyCLR";
@@ -396,24 +403,35 @@ namespace TestRig
                     }
                     else {
 					    System.Diagnostics.Debug.WriteLine("Executing ADAPT fastboot test for:  " + currentTest.testName);
-
-					    //string fnameOS = "D:/Test/pad_test/f1.bin";
-					    string inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".bin";
-					    //string fnameMSIL = "D:/Test/pad_test/f2.bin";
-					    //string fnameMSIL = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
-					    // Adapt uses .dat file instead of converted s19
-					    string inFile2Name = workingDirectory + @"\" + buildOutput + strippedName + ".dat";
-					    string concatFileName = workingDirectory + @"\" + "MF_managed.bin";
-
                         fastboot = new Fastboot(mainHandle, currentTest.testPowerAutomateSelected);
-					    currentTest.testState = "Entering Fastboot mode";
-					    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-					    if (fastboot == null) return "Fastboot failed to load";
-					    if (fastboot.enterFastbootMode() == false) return "Failed to enter Fastboot mode";
-					    if (fastboot.createFinalBinary(inFile1Name, inFile2Name, concatFileName) == false) return "Failed to create final Adapt binary";
-					    currentTest.testState = "Loading via fastboot to Adapt";
-					    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-					    if (fastboot.load(concatFileName) == false) return "Failed to load Adapt binary";
+                        currentTest.testState = "Entering Fastboot mode";
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                        if (fastboot == null) return "Fastboot failed to load";
+                        if (fastboot.enterFastbootMode() == false) return "Failed to enter Fastboot mode";
+
+                        if (currentTest.testType == "C#")
+                        {
+                            //string fnameOS = "D:/Test/pad_test/f1.bin";
+                            string inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".bin";
+                            //string fnameMSIL = "D:/Test/pad_test/f2.bin";
+                            //string fnameMSIL = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
+                            // Adapt uses .dat file instead of converted s19
+                            string inFile2Name = workingDirectory + @"\" + buildOutput + strippedName + ".dat";
+                            string concatFileName = workingDirectory + @"\" + "MF_managed.bin";                            
+                            if (fastboot.createFinalBinary(inFile1Name, inFile2Name, concatFileName) == false) return "Failed to create final Adapt binary";
+                            currentTest.testState = "Loading via fastboot to Adapt";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                            if (fastboot.load(concatFileName) == false) return "Failed to load Adapt binary";
+                        }
+                        else
+                        {
+                            string fileName = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + strippedName + @".bin"; 
+                            currentTest.testState = "Loading via fastboot to Adapt";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                            currentTest.testState = "Loading via fastboot to Adapt";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                            if (fastboot.load(fileName) == false) return "Failed to load Adapt binary";
+                        }
 					    if (fastboot.run() == false) return "Failed to run Adapt binary";
                     }
                 }
