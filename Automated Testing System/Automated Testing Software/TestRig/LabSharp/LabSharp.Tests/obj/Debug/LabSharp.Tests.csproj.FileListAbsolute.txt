@@ -1,0 +1,16 @@
+D:\Users\Chris\Desktop\LabSharp\LabSharp.Tests\obj\Debug\ResolveAssemblyReference.cache
+D:\Users\Chris\Desktop\LabSharp\LabSharp.Tests\bin\Debug\LabSharp.Tests.dll
+D:\Users\Chris\Desktop\LabSharp\LabSharp.Tests\bin\Debug\LabSharp.Tests.pdb
+D:\Users\Chris\Desktop\LabSharp\LabSharp.Tests\bin\Debug\LabSharp.dll
+D:\Users\Chris\Desktop\LabSharp\LabSharp.Tests\bin\Debug\LabSharp.NativeFunctions.dll
+D:\Users\Chris\Desktop\LabSharp\LabSharp.Tests\bin\Debug\nunit.framework.dll
+D:\Users\Chris\Desktop\LabSharp\LabSharp.Tests\obj\Debug\LabSharp.Tests.dll
+D:\Users\Chris\Desktop\LabSharp\LabSharp.Tests\obj\Debug\LabSharp.Tests.pdb
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\CSharpEx\LabSharp\LabSharp.Tests\bin\Debug\LabSharp.Tests.dll
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\CSharpEx\LabSharp\LabSharp.Tests\bin\Debug\LabSharp.Tests.pdb
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\CSharpEx\LabSharp\LabSharp.Tests\bin\Debug\LabSharp.dll
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\CSharpEx\LabSharp\LabSharp.Tests\bin\Debug\LabSharp.NativeFunctions.dll
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\CSharpEx\LabSharp\LabSharp.Tests\bin\Debug\nunit.framework.dll
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\CSharpEx\LabSharp\LabSharp.Tests\obj\Debug\ResolveAssemblyReference.cache
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\CSharpEx\LabSharp\LabSharp.Tests\obj\Debug\LabSharp.Tests.dll
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\CSharpEx\LabSharp\LabSharp.Tests\obj\Debug\LabSharp.Tests.pdb

@@ -1,0 +1,173 @@
+__________________________________________________________________________
+
+Mon Aug 09 09:34:32 EDT 2010
+
+Free Memory: 11754 kB
+Total Memory: 16320 kB
+
+4 Command Line Args:
+0:  -f
+1:  C:/Documents and Settings/Administrator/Local Settings/Temp/548480.tmp/arm2010q1188armnoneeabi1.properties
+2:  -l
+3:  en
+
+java.class.path:
+    C:\Documents and Settings\Administrator\Local Settings\Temp\548480.tmp\SubInstaller1.zip
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\InstallerData\IAClasses.zip
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\InstallerData\Execute.zip
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\InstallerData
+
+ZGUtil.CLASS_PATH:
+    C:\Documents and Settings\Administrator\Local Settings\Temp\548480.tmp\SubInstaller1.zip
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\InstallerData\IAClasses.zip
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\InstallerData\Execute.zip
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\InstallerData
+
+sun.boot.class.path:
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\Windows\resource\jre\lib\rt.jar
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\Windows\resource\jre\lib\i18n.jar
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\Windows\resource\jre\lib\sunrsasign.jar
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\Windows\resource\jre\lib\jsse.jar
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\Windows\resource\jre\lib\jce.jar
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\Windows\resource\jre\lib\charsets.jar
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\Windows\resource\jre\classes
+
+java.ext.dirs:
+    C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\Windows\resource\jre\lib\ext
+
+java.version                  == 1.5.0_09 (Java 2+)
+java.vm.name                  == Java HotSpot(TM) Client VM
+java.vm.vendor                == Sun Microsystems Inc.
+java.vm.version               == 1.5.0_09-b03
+java.vm.specification.name    == Java Virtual Machine Specification
+java.vm.specification.vendor  == Sun Microsystems Inc.
+java.vm.specification.version == 1.0
+java.specification.name       == Java Platform API Specification
+java.specification.vendor     == Sun Microsystems Inc.
+java.specification.version    == 1.5
+java.vendor                   == Sun Microsystems Inc.
+java.vendor.url               == http://java.sun.com/
+java.class.version            == 49.0
+java.compiler                 == null
+java.home                     == C:\Documents and Settings\Administrator\Local Settings\Temp\I1281360616\Windows\resource\jre
+java.io.tmpdir                == C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\
+os.name                       == Windows XP
+os.arch                       == x86
+os.version                    == 5.1
+path.separator                == ;
+file.separator                == \
+file.encoding                 == Cp1252
+user.name                     == Administrator
+user.home                     == C:\Documents and Settings\Administrator
+user.dir                      == C:\Documents and Settings\Administrator\Local Settings\Temp\548480.tmp
+user.language                 == en
+user.region                   == null
+__________________________________________________________________________
+
+Install Begin: Mon Aug 09 09:34:24 EDT 2010
+Install End: Mon Aug 09 09:34:31 EDT 2010
+
+Installed by InstallAnywhere 9.0 Enterprise Build 3428, by Macrovision
+
+
+User Interactions
+-----------------
+
+
+Summary
+-------
+
+Installation: Successful.
+
+26 Successes
+0 Warnings
+0 NonFatalErrors
+0 FatalErrors
+
+Action Notes:
+
+None
+
+Install Log Detail:
+
+Install Action:           InstallAnywhere Variable
+                          Status: SUCCESSFUL
+
+Install Action:           InstallAnywhere Variable
+                          Status: SUCCESSFUL
+
+Install Action:           InstallAnywhere Variable
+                          Status: SUCCESSFUL
+
+Check Disk Space:         C:\CodeSourcery
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Required Disk Space: 1,736,923; Free Disk Space: 5,939,441,664
+
+Install Directory:        C:\CodeSourcery\
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Directory already existed
+
+Install Directory:        C:\CodeSourcery\uninstall\
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Directory already existed
+
+Install Directory:        C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\
+                          Status: SUCCESSFUL
+
+Install Uninstaller:      Sourcery G++ Common (Install All Uninstaller Components)
+                          Status: SUCCESSFUL
+
+Install File:             C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\Uninstall Sourcery G++ Common.exe
+                          Status: SUCCESSFUL
+
+
+Install File:             C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\Uninstall Sourcery G++ Common.lax
+                          Status: SUCCESSFUL
+
+Install Directory:        C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\resource\
+                          Status: SUCCESSFUL
+
+Install File:             C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\resource\iawin32.dll
+                          Status: SUCCESSFUL
+
+Install File:             C:\CodeSourcery\uninstall\Uninstall Sourcery G++ Common\resource\remove.exe
+                          Status: SUCCESSFUL
+
+Install Uninstaller:      Sourcery G++ Common (Install All Uninstaller Components)
+                          Status: SUCCESSFUL
+
+Install Directory:        C:\CodeSourcery\uninstall\
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Directory already existed
+
+Install Directory:        C:\CodeSourcery\uninstall/features\
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Directory already existed
+
+Install File:             C:\CodeSourcery\uninstall/features\Common.key
+                          Status: SUCCESSFUL
+
+Install Directory:        C:\CodeSourcery\bin\
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Directory already existed
+
+Install File:             C:\CodeSourcery\bin\cs-rm.exe
+                          Status: SUCCESSFUL
+
+Install File:             C:\CodeSourcery\bin\cs-make.exe
+                          Status: SUCCESSFUL
+
+Install Directory:        C:\CodeSourcery\uninstall\
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Directory already existed
+
+Install File:             C:\CodeSourcery\uninstall\create-links-iamm-common_files-arm-2010q1-188-arm-none-eabi.exe
+                          Status: SUCCESSFUL
+
+Install File:             C:\CodeSourcery\uninstall\remove-links-iamm-common_files-arm-2010q1-188-arm-none-eabi.exe
+                          Status: SUCCESSFUL
+
+
+Execute Target File:      Creating links...
+                          Status: SUCCESSFUL
+
