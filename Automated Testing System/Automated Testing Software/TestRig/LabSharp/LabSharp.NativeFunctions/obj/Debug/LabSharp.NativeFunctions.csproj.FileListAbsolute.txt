@@ -1,5 +1,0 @@
-D:\Users\Chris\Desktop\LabSharp\LabSharp.NativeFunctions\bin\Debug\LabSharp.NativeFunctions.dll
-D:\Users\Chris\Desktop\LabSharp\LabSharp.NativeFunctions\bin\Debug\LabSharp.NativeFunctions.pdb
-D:\Users\Chris\Desktop\LabSharp\LabSharp.NativeFunctions\obj\Debug\ResolveAssemblyReference.cache
-D:\Users\Chris\Desktop\LabSharp\LabSharp.NativeFunctions\obj\Debug\LabSharp.NativeFunctions.dll
-D:\Users\Chris\Desktop\LabSharp\LabSharp.NativeFunctions\obj\Debug\LabSharp.NativeFunctions.pdb
