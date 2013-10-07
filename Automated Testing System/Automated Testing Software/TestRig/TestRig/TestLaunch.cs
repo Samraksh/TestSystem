@@ -401,7 +401,8 @@ namespace TestRig
                         t32shell.WaitForExit();
                        
                     }
-                    else {
+                    else 
+                    {
 					    System.Diagnostics.Debug.WriteLine("Executing ADAPT fastboot test for:  " + currentTest.testName);
                         fastboot = new Fastboot(mainHandle, currentTest.testPowerAutomateSelected);
                         currentTest.testState = "Entering Fastboot mode";
@@ -534,6 +535,13 @@ namespace TestRig
 
                         currentTest.testState = "Starting processor";
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                        if (currentTest.testUseCOM == true)
+                        {
+                            for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
+                            {
+                                if (COM[currentOpenCOMInstance].Connect(currentTest, testReceipt, currentOpenCOMInstance) == false) return "COM " + indexDevice.ToString() + " failed to open";
+                            }
+                        }
                         if (gdb.Continue() == false) return "GDB failed to start processor";
                         telnet.Kill();
                         gdb.Kill();
@@ -544,13 +552,13 @@ namespace TestRig
                 #endregion
 
                 #region Getting ready to run test
-                if (currentTest.testUseCOM == true)
+                /*if (currentTest.testUseCOM == true)
                 {
                     for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
                     {
                         if (COM[currentOpenCOMInstance].Connect(currentTest, testReceipt, currentOpenCOMInstance) == false) return "COM " + indexDevice.ToString() + " failed to open";
                     }
-                }
+                }*/
                 if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
                 Directory.CreateDirectory(workingDirectory + @"\" + "testTemp");
                 if ((currentTest.testUseLogic.Equals("normal") == true) || (currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
@@ -597,7 +605,10 @@ namespace TestRig
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);                
                 if (currentTest.testUseScript == true)
                 {
-                    Thread.Sleep(15000);
+                    System.Diagnostics.Debug.WriteLine("Waiting 5 seconds for DUT to startup and flush serial buffer");
+                    Thread.Sleep(5000);
+
+                    // if there is a COM port already open we will close it now so we can start a new COM port with possibly different settings
                     for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
                     {
                         if (COM[indexCOM].active == true)
@@ -608,6 +619,7 @@ namespace TestRig
                     {
                         if (COM[currentOpenCOMInstance].Connect(currentTest, testReceipt, currentOpenCOMInstance) == false) return "COM " + indexDevice.ToString() + " failed to open";
                     }
+
                     fTest = new FileTest(mainHandle, currentTest);
                     if (fTest == null) return "FileTest failed to open";
 
@@ -724,6 +736,8 @@ namespace TestRig
                                 {
                                     randomNumber = random.Next(lowerBound, upperBound);
                                     COM[currentOpenCOMInstance].Send(randomNumber.ToString() + "\r\n");
+                                    // we have to throttle sending data for now or the eMote COM receive breaks
+									Thread.Sleep(100);
                                 }
                             }
                             else if (parsedLine[1].Contains("file"))

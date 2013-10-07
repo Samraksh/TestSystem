@@ -220,8 +220,8 @@ namespace TestRig
             {
                 int i;
                 byte levels;
-                int maskSDA = 0x2;
-                int maskSCL = 0x4;
+                int maskSDA = 0x1;
+                int maskSCL = 0x2;
                 //string writeStr;
                 //byte[] asciiBytes;
 

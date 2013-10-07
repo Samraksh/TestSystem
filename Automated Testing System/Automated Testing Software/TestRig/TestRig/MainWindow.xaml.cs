@@ -100,7 +100,6 @@ namespace TestRig
             removeDelegate = new RemoveTestItem(RemoveTestItemMethod);
             updateDelegate = new DisplayUpdate(DisplayUpdateMethod);
 
-
             // sometimes openOCD is running so we will check and warn here.
             bool openOCDRunning = false;
             foreach (Process clsProcess in Process.GetProcesses())
@@ -766,6 +765,7 @@ namespace TestRig
                 textCOMPortPrimary = textCOMPortPrimary.Remove(3, 1);
                 textCOMPortSecondary1 = ((ComboBoxItem)cbCOMPort.Items[COMPortSelectionSecondary1]).Content.ToString();
                 textCOMPortSecondary1 = textCOMPortSecondary1.Remove(3, 1);
+
                 cbPowerAutomate.IsChecked = Properties.Settings.Default.PowerCycleAutomated;
 
                 settingsInitialized = true;

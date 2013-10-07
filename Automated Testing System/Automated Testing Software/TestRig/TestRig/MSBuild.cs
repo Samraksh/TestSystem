@@ -130,7 +130,7 @@ namespace TestRig
             // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
             if (currentTest.testSolutionType == "TinyBooter")
             {
-                if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
                 {
                     System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
                     return false;
@@ -140,7 +140,7 @@ namespace TestRig
             }
 
             //if (RunCommand(@"msbuild /t:build /p:configuration=Release /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
-            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
@@ -283,15 +283,15 @@ namespace TestRig
                     RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
                     break;
             }
-            ChangeDirectories(path);            
-            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+            ChangeDirectories(path);
+            if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
                 return false;
             }
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
@@ -341,7 +341,7 @@ namespace TestRig
                     break;
             }
             ChangeDirectories(path);
-            if (RunCommand(@"msbuild /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
                 return false;
@@ -349,7 +349,7 @@ namespace TestRig
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
             // msbuild /t:build /p:memory=" + currentTest.testMemoryType + @" (default) (/p:memory=RAM)
-            if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+            if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
                 return false;
@@ -413,7 +413,7 @@ namespace TestRig
 
         private void StandardOutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
-            //System.Diagnostics.Debug.WriteLine("******************MSBuild command result: " + outLine.Data);
+            System.Diagnostics.Debug.WriteLine("******************MSBuild command result: " + outLine.Data);
             if (!String.IsNullOrEmpty(outLine.Data))
             {
                 ProcessResponse(outLine.Data);
@@ -422,7 +422,7 @@ namespace TestRig
 
         private void StandardErrorHandler(object sendingProcess, DataReceivedEventArgs errLine)
         {
-            //System.Diagnostics.Debug.WriteLine("******************MSBuild error: " + errLine.Data);
+            System.Diagnostics.Debug.WriteLine("******************MSBuild error: " + errLine.Data);
             if (!String.IsNullOrEmpty(errLine.Data))
             {
                 ProcessResponse(errLine.Data);
