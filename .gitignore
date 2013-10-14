@@ -1,0 +1,12 @@
+old software/*
+mfsdk/*
+openocd-0.4.0/*
+openocd-0.5.0/*
+pk_bkp/*
+parser/__pycache__/*
+git/*
+SamTest.dll
+server/SamServer.dll
+Automated Testing Software/TestRig/TestRig/bin/*
+Automated Testing Software/TestRig/TestRig/obj/*
+!*.gitkeep
