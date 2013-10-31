@@ -224,6 +224,16 @@ namespace TestRig
             if (openOCD != null) openOCD.Kill();
             if (fastboot != null) fastboot.Kill();
             */
+           /* Process psShell = new Process();
+            psShell.StartInfo.FileName = "powershell.exe";
+            psShell.StartInfo.Arguments = " -executionpolicy unrestricted \"\"" + @"C:\Work\Test\Level_0B" + @"\" + "analyze.ps1";
+            psShell.StartInfo.WorkingDirectory = @"C:\Work\Test\Level_0B";
+            psShell.StartInfo.UseShellExecute = false;
+            psShell.Start();
+
+            psShell.WaitForExit(10000);
+            if (psShell.HasExited == false)
+                psShell.Kill();*/
             return null;
         }
 
@@ -920,6 +930,19 @@ namespace TestRig
                     TestAnalysisExecutableProcess.WaitForExit(analysisTimeout);
                     if (TestAnalysisExecutableProcess.HasExited == false)
                         TestAnalysisExecutableProcess.Kill();
+                }
+                else if ((currentTest.testAnalysis.Equals("powershell") == true) || (currentTest.testAnalysis.Equals("Powershell") == true))
+                {
+                    Process psShell = new Process();
+                    psShell.StartInfo.FileName = "powershell.exe";
+                    psShell.StartInfo.Arguments = " -executionpolicy unrestricted \"\"" + workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim();
+                    psShell.StartInfo.WorkingDirectory = workingDirectory;
+                    psShell.StartInfo.UseShellExecute = false;
+                    psShell.Start();
+
+                    psShell.WaitForExit(analysisTimeout);
+                    if (psShell.HasExited == false)
+                        psShell.Kill();
                 }
 
                 if (currentTest.testUseResultsFile == true)
