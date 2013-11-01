@@ -224,16 +224,16 @@ namespace TestRig
             if (openOCD != null) openOCD.Kill();
             if (fastboot != null) fastboot.Kill();
             */
-           /* Process psShell = new Process();
+            Process psShell = new Process();
             psShell.StartInfo.FileName = "powershell.exe";
-            psShell.StartInfo.Arguments = " -executionpolicy unrestricted \"\"" + @"C:\Work\Test\Level_0B" + @"\" + "analyze.ps1";
-            psShell.StartInfo.WorkingDirectory = @"C:\Work\Test\Level_0B";
+            psShell.StartInfo.Arguments = " -executionpolicy unrestricted \"\"" + @"D:\Test\test.ps1";
+            psShell.StartInfo.WorkingDirectory = @"D:\Test\";
             psShell.StartInfo.UseShellExecute = false;
             psShell.Start();
 
             psShell.WaitForExit(10000);
             if (psShell.HasExited == false)
-                psShell.Kill();*/
+                psShell.Kill();
             return null;
         }
 
@@ -326,21 +326,24 @@ namespace TestRig
                 }
                 else
                 {
-                    if (currentTest.testSolution.Equals("SOC_ADAPT"))
+                    if (currentTest.testUsePrecompiledBinary == String.Empty)
                     {
-                        // TODO build littlekernel or retrieve it.
-                    }
-                    else
-                    {
-                        currentTest.testState = "Building TinyBooter";
+                        if (currentTest.testSolution.Equals("SOC_ADAPT"))
+                        {
+                            // TODO build littlekernel or retrieve it.
+                        }
+                        else
+                        {
+                            currentTest.testState = "Building TinyBooter";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                            currentTest.testSolutionType = "TinyBooter";
+                            if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
+                        }
+                        currentTest.testState = "Building native code";
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                        currentTest.testSolutionType = "TinyBooter";
-                        if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
+                        currentTest.testSolutionType = "TinyCLR";
+                        if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build native project";
                     }
-                    currentTest.testState = "Building native code";
-                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                    currentTest.testSolutionType = "TinyCLR";
-                    if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build native project";
                 }
 
                 msbuild.Kill();
@@ -571,6 +574,8 @@ namespace TestRig
                 }*/
                 if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
                 Directory.CreateDirectory(workingDirectory + @"\" + "testTemp");
+                // if we try to do too much while the logic analyzer is running we get an error:
+                // Logic Reported an Error.  This probably means that Logic could not keep up at the given data rate, or was disconnected. You can re-start the capture automatically, if your application can tolerate gaps in the data.
                 if ((currentTest.testUseLogic.Equals("normal") == true) || (currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
                 {
                     if (logicTest == null)
@@ -896,7 +901,7 @@ namespace TestRig
                 #region Analyzing test
                 currentTest.testState = "Analyzing test";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                
+                System.Diagnostics.Debug.WriteLine("**************** Analyzing test ************");
                 Thread.Sleep(50);
 
                 testStopTime = DateTime.Now;
@@ -933,6 +938,7 @@ namespace TestRig
                 }
                 else if ((currentTest.testAnalysis.Equals("powershell") == true) || (currentTest.testAnalysis.Equals("Powershell") == true))
                 {
+                    System.Diagnostics.Debug.WriteLine("Starting to run analysis powershell: " + workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim());
                     Process psShell = new Process();
                     psShell.StartInfo.FileName = "powershell.exe";
                     psShell.StartInfo.Arguments = " -executionpolicy unrestricted \"\"" + workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim();
@@ -940,9 +946,17 @@ namespace TestRig
                     psShell.StartInfo.UseShellExecute = false;
                     psShell.Start();
 
+                    System.Diagnostics.Debug.Write("Waiting for powershell to finish execution...");
                     psShell.WaitForExit(analysisTimeout);
                     if (psShell.HasExited == false)
+                    {
+                        System.Diagnostics.Debug.WriteLine("failed to finish on time. Killing powershell.");
                         psShell.Kill();
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("finished.");
+                    }
                 }
 
                 if (currentTest.testUseResultsFile == true)
