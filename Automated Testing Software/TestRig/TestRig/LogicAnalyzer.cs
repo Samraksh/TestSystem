@@ -159,7 +159,7 @@ namespace TestRig
 
             //accessorOffset = 0;
             sampleNumber = 0;
-
+            Thread.BeginCriticalRegion();
             if (mLogic != null)
             {
                 System.Diagnostics.Debug.WriteLine("Logic: ReadStart()");
@@ -180,7 +180,7 @@ namespace TestRig
         {
             if (mLogic != null) mLogic.Stop();
             if (mLogic16 != null) mLogic16.Stop();
-
+            Thread.EndCriticalRegion();
             file.Close();
             System.Diagnostics.Debug.WriteLine("Logic: StopMeasure; Closed file");
             //accessor.Dispose();
@@ -191,7 +191,31 @@ namespace TestRig
 
         void devices_LogicOnConnect(ulong device_id, MLogic logic)
         {
+            bool sampleRateSupported = false;
             mLogic = logic;
+            List<uint> sample_rates = new List<uint>();
+            sample_rates = mLogic.GetSupportedSampleRates();
+            for (int i = 0; i < sample_rates.Count; ++i)
+            {
+                if (mSampleRateHz == sample_rates[i])
+                    sampleRateSupported = true;                
+            }
+            if (sampleRateSupported == true)
+            {
+                mLogic.SampleRateHz = mSampleRateHz;
+                System.Diagnostics.Debug.WriteLine("Logic: setting sample rate to: " + mSampleRateHz.ToString());
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Error, unsupported sample rate: " + mSampleRateHz.ToString());
+                MainWindow.showMessageBox("Error, unsupported sample rate: " + mSampleRateHz.ToString());
+                for (int i = 0; i < sample_rates.Count; ++i)
+                {
+                    if (mSampleRateHz == sample_rates[i])
+                        sampleRateSupported = true;
+                    System.Diagnostics.Debug.WriteLine("Logic: supported sample rate: " + sample_rates[i].ToString());
+                }
+            }
             mLogic.OnReadData += new MLogic.OnReadDataDelegate(mLogic_OnReadData);
             mLogic.OnWriteData += new MLogic.OnWriteDataDelegate(mLogic_OnWriteData);
             mLogic.OnError += new MLogic.OnErrorDelegate(mLogic_OnError);
@@ -379,8 +403,7 @@ namespace TestRig
 
         void mLogic_OnError(ulong device_id)
         {
-            System.Diagnostics.Debug.WriteLine("Logic Reported an Error.  This probably means that Logic could not keep up at the given data rate, or was disconnected. You can re-start the capture automatically, if your application can tolerate gaps in the data.");
-            Console.WriteLine("Logic Reported an Error.  This probably means that Logic could not keep up at the given data rate, or was disconnected. You can re-start the capture automatically, if your application can tolerate gaps in the data.");
+            System.Diagnostics.Debug.WriteLine("Logic Reported an Error.  This probably means that Logic could not keep up at the given data rate, or was disconnected. You can re-start the capture automatically, if your application can tolerate gaps in the data.");            
         }
     }
 

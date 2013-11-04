@@ -27,6 +27,7 @@ namespace TestRig
         public MainWindow mainHandle;
         private CommandStatus commandResult;
         private string expectedResponse = String.Empty;
+        private static string accumReceiveString;
 
         private static AutoResetEvent ARE_result = new AutoResetEvent(false);
 
@@ -45,7 +46,7 @@ namespace TestRig
                 connectSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
                 System.Diagnostics.Debug.WriteLine("Connecting to board through telnet.");
                 connectSocket.Connect(ipEnd);
-
+                accumReceiveString = String.Empty;
                 if (connectSocket != null)
                 {
                     // starting thread to receive data over TCP/IP
@@ -73,12 +74,18 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("Sending commands to board: ");
                 waitForMessages();
 
-                /*if (RunCommand("stm32f1x mass_erase 0\r\n", "stm32x mass erase complete", 5000) != CommandStatus.Done)
+                /*
+                if (RunCommand("stm32f1x mass_erase 0\r\n", "stm32x mass erase complete", 5000) != CommandStatus.Done)
                 {
                     System.Diagnostics.Debug.WriteLine("Telnet failed to stm32f1x mass_erase 0.");
                     return false;
                 }*/
-                if (RunCommand("stm32f1x mass_erase 1\r\n", "stm32x mass erase complete", 5000) != CommandStatus.Done)
+                if (RunCommand("reset init\r\n", "target state: halted", 5000) != CommandStatus.Done)
+                {
+                    System.Diagnostics.Debug.WriteLine("Telnet failed to stm32f1x mass_erase 0.");
+                    return false;
+                }
+                if (RunCommand("stm32f1x mass_erase 1\r\n", "stm32x mass erase complete", 50000) != CommandStatus.Done)
                 {
                     System.Diagnostics.Debug.WriteLine("Telnet failed to stm32f1x mass_erase 1.");
                     return false;
@@ -190,11 +197,40 @@ namespace TestRig
             while (true)
             {
                 try
-                {
-                    System.Diagnostics.Debug.Write(">>>>>>>>>>>>>>>>>>>>>>>> telnet from board: " + connectSocket.RemoteEndPoint.ToString() + " : ");
+                {                    
                     int receivedBytesLen = connectSocket.Receive(clientData);
+                    System.Text.Encoding encoding = new System.Text.ASCIIEncoding();
+                    String rxString = encoding.GetString(clientData);
+                    accumReceiveString = String.Concat(accumReceiveString, rxString);
 
-                    processResponse(clientData);
+                    string strippedReceive = String.Empty;
+                    while (accumReceiveString.Contains("\n"))
+                    {
+                        // remove all /0 /b /r
+                        while (accumReceiveString.Contains("\r"))
+                        {
+                            accumReceiveString = accumReceiveString.Remove(accumReceiveString.IndexOf('\r'), 1);
+                        }
+                        while (accumReceiveString.Contains("\b"))
+                        {
+                            accumReceiveString = accumReceiveString.Remove(accumReceiveString.IndexOf('\b'), 1);
+                        }
+                        // this string contains both \0 (usually a huge 500k string of these) and a \n so we will strip the \0 if they occur first
+                        if (accumReceiveString.Contains("\0") && ((accumReceiveString.IndexOf('\0') < accumReceiveString.IndexOf('\n'))) )
+                        {
+                            strippedReceive = accumReceiveString.Substring(0, accumReceiveString.IndexOf('\0'));
+                            accumReceiveString = accumReceiveString.Remove(0, accumReceiveString.IndexOf('\0'));
+                            accumReceiveString = accumReceiveString.TrimStart('\0');
+                        }
+                        else
+                        {
+                            strippedReceive = accumReceiveString.Substring(0, accumReceiveString.IndexOf('\n') + 1);
+                            accumReceiveString = accumReceiveString.Remove(0, accumReceiveString.IndexOf('\n') + 1);
+                        }
+
+                        if (strippedReceive.Length > 0) 
+                            processResponse(strippedReceive);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -203,21 +239,19 @@ namespace TestRig
             }
         }
 
-        private void processResponse(byte[] clientData)
-        {
-            System.Text.Encoding encoding = new System.Text.ASCIIEncoding();
-            String rxString = encoding.GetString(clientData);
-
+        private void processResponse(string rxString)
+        {            
             try
             {
-                System.Diagnostics.Debug.WriteLine(rxString.ToString());
+                rxString = rxString.TrimEnd('\n');                              
+                
+                System.Diagnostics.Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> telnet from board: " + connectSocket.RemoteEndPoint.ToString() + " : " + rxString.ToString());
                 if (rxString.Contains(expectedResponse))
                 {
                     commandResult = CommandStatus.Done;
                     System.Diagnostics.Debug.WriteLine("\r\nTelnet: matched response: " + expectedResponse);
                     ARE_result.Set();
-                }
-                    
+                }                                  
             }
             catch (Exception ex)
             {
