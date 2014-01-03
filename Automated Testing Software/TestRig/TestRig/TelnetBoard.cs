@@ -82,7 +82,7 @@ namespace TestRig
                 }*/
                 if (RunCommand("reset init\r\n", "target state: halted", 5000) != CommandStatus.Done)
                 {
-                    System.Diagnostics.Debug.WriteLine("Telnet failed to stm32f1x mass_erase 0.");
+                    System.Diagnostics.Debug.WriteLine("Telnet failed to reset init.");
                     return false;
                 }
                 if (RunCommand("stm32f1x mass_erase 1\r\n", "stm32x mass erase complete", 50000) != CommandStatus.Done)
@@ -245,7 +245,7 @@ namespace TestRig
             {
                 rxString = rxString.TrimEnd('\n');                              
                 
-                System.Diagnostics.Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> telnet from board: " + connectSocket.RemoteEndPoint.ToString() + " : " + rxString.ToString());
+                //System.Diagnostics.Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> telnet from board: " + connectSocket.RemoteEndPoint.ToString() + " : " + rxString.ToString());
                 if (rxString.Contains(expectedResponse))
                 {
                     commandResult = CommandStatus.Done;

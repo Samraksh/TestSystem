@@ -936,7 +936,7 @@ namespace TestRig
                     if (TestAnalysisExecutableProcess.HasExited == false)
                         TestAnalysisExecutableProcess.Kill();
                 }
-                else if ((currentTest.testAnalysis.Equals("powershell") == true) || (currentTest.testAnalysis.Equals("Powershell") == true))
+                else if ((currentTest.testAnalysis.Equals("powershell") == true) || (currentTest.testAnalysis.Equals("Powershell") == true) || (currentTest.testAnalysis.Equals("PowerShell") == true))
                 {
                     System.Diagnostics.Debug.WriteLine("Starting to run analysis powershell: " + workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim());
                     Process psShell = new Process();
@@ -969,7 +969,7 @@ namespace TestRig
                         resultLine = tResult.ReadLine();
                         while (resultLine != null)
                         {
-                            if (resultLine.Contains("result ="))
+                            if (resultLine.Contains("result"))
                             {
                                 if (resultLine.Contains("PASS"))
                                     testReceipt.testPass = true;
