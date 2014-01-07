@@ -36,6 +36,7 @@ namespace TestRig
         private int currentOpenOCDInstance;
         private int currentOpenCOMInstance;
         private int maxCOMInstances = 8;
+        private bool debugDoNotBuild = false;
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
@@ -302,47 +303,52 @@ namespace TestRig
                 msbuild = new MSBuild(mainHandle, currentTest.testMFVersionNum);
                 if (msbuild == null) return "MSBuild failed to load";
 
-                if (currentTest.testType == "C#")
+                if (debugDoNotBuild == false)
                 {
-                    if (currentTest.testUsePrecompiledBinary == String.Empty)
+                    if (currentTest.testType == "C#")
                     {
-						if (currentTest.testSolution.Equals("SOC_ADAPT")) {
-                            // TODO build littlekernel or retrieve it.
-                        }
-                        else {
-							currentTest.testState = "Building TinyBooter";
-							mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-							currentTest.testSolutionType = "TinyBooter";
-							if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
-						}
-                        currentTest.testState = "Building TinyCLR";
-                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                        currentTest.testSolutionType = "TinyCLR";
-                        if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyCLR";
-                    }
-                    currentTest.testState = "Building managed code";
-                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                    if (msbuild.BuildManagedProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build managed project";
-                }
-                else
-                {
-                    if (currentTest.testUsePrecompiledBinary == String.Empty)
-                    {
-                        if (currentTest.testSolution.Equals("SOC_ADAPT"))
+                        if (currentTest.testUsePrecompiledBinary == String.Empty)
                         {
-                            // TODO build littlekernel or retrieve it.
-                        }
-                        else
-                        {
-                            currentTest.testState = "Building TinyBooter";
+                            if (currentTest.testSolution.Equals("SOC_ADAPT"))
+                            {
+                                // TODO build littlekernel or retrieve it.
+                            }
+                            else
+                            {
+                                currentTest.testState = "Building TinyBooter";
+                                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                                currentTest.testSolutionType = "TinyBooter";
+                                if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
+                            }
+                            currentTest.testState = "Building TinyCLR";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                            currentTest.testSolutionType = "TinyBooter";
-                            if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
+                            currentTest.testSolutionType = "TinyCLR";
+                            if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyCLR";
                         }
-                        currentTest.testState = "Building native code";
+                        currentTest.testState = "Building managed code";
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                        currentTest.testSolutionType = "TinyCLR";
-                        if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build native project";
+                        if (msbuild.BuildManagedProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build managed project";
+                    }
+                    else
+                    {
+                        if (currentTest.testUsePrecompiledBinary == String.Empty)
+                        {
+                            if (currentTest.testSolution.Equals("SOC_ADAPT"))
+                            {
+                                // TODO build littlekernel or retrieve it.
+                            }
+                            else
+                            {
+                                currentTest.testState = "Building TinyBooter";
+                                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                                currentTest.testSolutionType = "TinyBooter";
+                                if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
+                            }
+                            currentTest.testState = "Building native code";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                            currentTest.testSolutionType = "TinyCLR";
+                            if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build native project";
+                        }
                     }
                 }
 

@@ -767,6 +767,10 @@ namespace TestRig
                 textCOMPortSecondary1 = textCOMPortSecondary1.Remove(3, 1);
 
                 cbPowerAutomate.IsChecked = Properties.Settings.Default.PowerCycleAutomated;
+                if (cbPowerAutomate.IsChecked == true)
+                    textPowerAutomateSelected = true.ToString();
+                else
+                    textPowerAutomateSelected = false.ToString();
 
                 settingsInitialized = true;
             }
