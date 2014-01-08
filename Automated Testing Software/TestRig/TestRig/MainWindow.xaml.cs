@@ -385,10 +385,10 @@ namespace TestRig
         }
 
         private void QueueSupportTest(string fileName, StreamWriter writer)
-        {            
-            StreamReader testReader = new StreamReader(textTestSourcePath + @"\" + fileName);
+        {                
             try
             {
+                StreamReader testReader = new StreamReader(textTestSourcePath + @"\" + fileName);
                 // Create an XmlReader
                 using (XmlReader reader = XmlReader.Create(testReader))
                 {
@@ -431,6 +431,7 @@ namespace TestRig
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("QueueSupportTest: " + ex.ToString());
+                MainWindow.showMessageBox("Error reading file: " + textTestSourcePath + @"\" + fileName);
             }
         }
 
