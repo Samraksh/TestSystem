@@ -969,49 +969,50 @@ namespace TestRig
                 {
                     try
                     {
-                        StreamReader tResult = new StreamReader(workingDirectory + @"\testTemp\" + currentTest.testResultsFileName);
+                        StreamReader tResult = new StreamReader(workingDirectory + @"\" + currentTest.testResultsFileName);
                         string resultLine;
 
                         resultLine = tResult.ReadLine();
                         while (resultLine != null)
                         {
-                            if (resultLine.Contains("result"))
+                            
+                            if (resultLine.Contains("accuracy"))
+                            {
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testAccuracy = double.Parse(resultLine.Substring(index, resultLine.Length - index));
+                            }
+                            else if (resultLine.Contains("resultParameter1"))
+                            {
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testReturnParameter1 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter2"))
+                            {
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testReturnParameter2 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter3"))
+                            {
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testReturnParameter3 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter4"))
+                            {
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testReturnParameter4 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter5"))
+                            {
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testReturnParameter5 = resultLine.Substring(index, resultLine.Length - index);
+                                testReceipt.testComplete = true;
+                            }
+                            else if (resultLine.Contains("result"))
                             {
                                 if (resultLine.Contains("PASS"))
                                     testReceipt.testPass = true;
                                 else
                                     testReceipt.testPass = false;
-                            }
-                            else if (resultLine.Contains("accuracy"))
-                            {
-                                index = resultLine.IndexOf('=') + 2;
-                                testReceipt.testAccuracy = double.Parse(resultLine.Substring(index, resultLine.Length - index));
-                            }
-                            else if (resultLine.Contains("resultParameter1"))
-                            {
-                                index = resultLine.IndexOf('=') + 2;
-                                testReceipt.testReturnParameter1 = resultLine.Substring(index, resultLine.Length - index);
-                            }
-                            else if (resultLine.Contains("resultParameter2"))
-                            {
-                                index = resultLine.IndexOf('=') + 2;
-                                testReceipt.testReturnParameter2 = resultLine.Substring(index, resultLine.Length - index);
-                            }
-                            else if (resultLine.Contains("resultParameter3"))
-                            {
-                                index = resultLine.IndexOf('=') + 2;
-                                testReceipt.testReturnParameter3 = resultLine.Substring(index, resultLine.Length - index);
-                            }
-                            else if (resultLine.Contains("resultParameter4"))
-                            {
-                                index = resultLine.IndexOf('=') + 2;
-                                testReceipt.testReturnParameter4 = resultLine.Substring(index, resultLine.Length - index);
-                            }
-                            else if (resultLine.Contains("resultParameter5"))
-                            {
-                                index = resultLine.IndexOf('=') + 2;
-                                testReceipt.testReturnParameter5 = resultLine.Substring(index, resultLine.Length - index);
-                                testReceipt.testComplete = true;
                             }
                             resultLine = tResult.ReadLine();
                         }
