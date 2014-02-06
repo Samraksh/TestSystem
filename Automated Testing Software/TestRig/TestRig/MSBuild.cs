@@ -308,18 +308,23 @@ namespace TestRig
             {
                 case "STM32F10x":
                     preprocessorString = "HARDWARE_EMOTE";
+                    //applicationStartAddress = "80A2000";
                     break;
                 case "EmoteDotNow":
                     preprocessorString = "HARDWARE_EMOTE";
+                    //applicationStartAddress = "80A7000";
                     break;
                 case "SOC8200":
                     preprocessorString = "HARDWARE_SOC8200";
+                    //applicationStartAddress = "80A2000";
                     break;
                 case "SOC_ADAPT":
                     preprocessorString = "HARDWARE_ADAPT";
+                    //applicationStartAddress = "805E8000";
                     break;
                 default:
                     preprocessorString = "HARDWARE_UNKNOWN";
+                    //applicationStartAddress = "80A2000";
                     break;
             }    
             ChangeDirectories(MFPath);

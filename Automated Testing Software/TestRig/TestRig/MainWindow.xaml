@@ -190,6 +190,40 @@
                         <ComboBoxItem Content="COM 23" />
                         <ComboBoxItem Content="COM 24" />
                         <ComboBoxItem Content="COM 25" />
+                        <ComboBoxItem Content="COM 26" />
+                        <ComboBoxItem Content="COM 27" />
+                        <ComboBoxItem Content="COM 28" />
+                        <ComboBoxItem Content="COM 29" />
+                        <ComboBoxItem Content="COM 30" />
+                        <ComboBoxItem Content="COM 31" />
+                        <ComboBoxItem Content="COM 32" />
+                        <ComboBoxItem Content="COM 33" />
+                        <ComboBoxItem Content="COM 34" />
+                        <ComboBoxItem Content="COM 35" />
+                        <ComboBoxItem Content="COM 36" />
+                        <ComboBoxItem Content="COM 37" />
+                        <ComboBoxItem Content="COM 38" />
+                        <ComboBoxItem Content="COM 39" />
+                        <ComboBoxItem Content="COM 40" />
+                        <ComboBoxItem Content="COM 41" />
+                        <ComboBoxItem Content="COM 42" />
+                        <ComboBoxItem Content="COM 43" />
+                        <ComboBoxItem Content="COM 44" />
+                        <ComboBoxItem Content="COM 45" />
+                        <ComboBoxItem Content="COM 46" />
+                        <ComboBoxItem Content="COM 47" />
+                        <ComboBoxItem Content="COM 48" />
+                        <ComboBoxItem Content="COM 49" />
+                        <ComboBoxItem Content="COM 50" />
+                        <ComboBoxItem Content="COM 51" />
+                        <ComboBoxItem Content="COM 52" />
+                        <ComboBoxItem Content="COM 53" />
+                        <ComboBoxItem Content="COM 54" />
+                        <ComboBoxItem Content="COM 55" />
+                        <ComboBoxItem Content="COM 56" />
+                        <ComboBoxItem Content="COM 57" />
+                        <ComboBoxItem Content="COM 58" />
+                        <ComboBoxItem Content="COM 59" />
                     </ComboBox>
                     <Label Content="COM Port:" Height="28" HorizontalAlignment="Left" Margin="6,478,0,0" Name="label12" VerticalAlignment="Top" />
                     <CheckBox Content="Automate power cycle during code loading" Height="16" HorizontalAlignment="Left" Margin="12,512,0,0" Name="cbPowerAutomate" VerticalAlignment="Top" Width="259" Unchecked="cbPowerAutomate_Unchecked" Checked="cbPowerAutomate_Checked" />
