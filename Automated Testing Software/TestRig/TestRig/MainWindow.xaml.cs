@@ -349,6 +349,10 @@ namespace TestRig
             StreamReader testReader = new StreamReader(fi.FullName);
             try
             {
+                int index = fi.FullName.LastIndexOf(@"TestSuite");
+                string strippedPath = fi.FullName.Substring(index + 10);
+                index = strippedPath.LastIndexOf('\\');
+                strippedPath = strippedPath.Substring(0, index);
                 // Create an XmlReader
                 using (XmlReader reader = XmlReader.Create(testReader))
                 {
@@ -370,7 +374,8 @@ namespace TestRig
                             TestNum = testNum,
                             Name = readTest.testName,
                             Type = readTest.testType,
-                            Path = readTest.testPath,
+                            Path = strippedPath,
+                            //Path = readTest.testPath,
                             Description = readTest.testDescription,
                             Selected = false
                         });
