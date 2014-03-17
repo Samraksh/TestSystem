@@ -118,10 +118,10 @@ namespace TestRig
                     RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
                     break;
                 case "4.3":
-                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
                     break;
                 default:
-                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
                     break;
             }
 
@@ -277,10 +277,10 @@ namespace TestRig
                     RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
                     break;
                 case "4.3":
-                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
                     break;
                 default:
-                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
                     break;
             }
             ChangeDirectories(path);
@@ -339,10 +339,10 @@ namespace TestRig
                     RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
                     break;
                 case "4.3":
-                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
                     break;
                 default:
-                    RunCommand(@"setenv_gcc.cmd 4.2.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
                     break;
             }
             ChangeDirectories(path);

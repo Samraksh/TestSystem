@@ -1000,6 +1000,9 @@ namespace TestRig
                 case 0:
                     textGCCVersion = "GCC4.2";
                     break;
+                case 1:
+                    textGCCVersion = "GCC4.4";
+                    break;
                 default:
                     textGCCVersion = "GCC4.2";
                     break;
