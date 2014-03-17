@@ -369,13 +369,13 @@ namespace TestRig
                             return;
 
                         availableTests[testNum - 1] = readTest;
+                        readTest.testPath = strippedPath;                            
                         _tasks.Add(new Task()
                         {
                             TestNum = testNum,
                             Name = readTest.testName,
                             Type = readTest.testType,
-                            Path = strippedPath,
-                            //Path = readTest.testPath,
+                            Path = readTest.testPath,
                             Description = readTest.testDescription,
                             Selected = false
                         });
