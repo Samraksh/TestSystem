@@ -225,7 +225,7 @@ namespace TestRig
             if (openOCD != null) openOCD.Kill();
             if (fastboot != null) fastboot.Kill();
             */
-            Process psShell = new Process();
+            /*Process psShell = new Process();
             psShell.StartInfo.FileName = "powershell.exe";
             psShell.StartInfo.Arguments = " -executionpolicy unrestricted \"\"" + @"D:\Test\test.ps1";
             psShell.StartInfo.WorkingDirectory = @"D:\Test\";
@@ -235,6 +235,48 @@ namespace TestRig
             psShell.WaitForExit(10000);
             if (psShell.HasExited == false)
                 psShell.Kill();
+            return null;*/
+
+            int[] output = new int[7];
+            int model, pwrUsbConnected = 0;
+            StringBuilder firmware = new StringBuilder(128);
+
+            for (int i = 0; i < 7; i++)
+                output[i] = 0;
+
+            // Initialize the PowerUSB or else quit
+            if (PwrUSBWrapper.InitPowerUSB(out model, firmware) > 0)
+            {
+                System.Diagnostics.Debug.WriteLine("PowerUSB Connected. Model: " + model.ToString() + ". Version: " + firmware.ToString());
+                Console.WriteLine(firmware);
+                pwrUsbConnected = PwrUSBWrapper.CheckStatusPowerUSB();
+            }
+            if (pwrUsbConnected == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("PowerUSB is not connected\r\n");
+                return null;
+            }
+            PwrUSBWrapper.SetCurrentPowerUSB(0);
+
+            System.Diagnostics.Debug.WriteLine("PowerUSB Connected. Model: " + model.ToString() + ". Version: " + firmware.ToString());
+            System.Diagnostics.Debug.WriteLine("Turning off USB power strip outlet 1");
+            PwrUSBWrapper.SetPortPowerUSB(0, 0, 0);
+
+            // 'pushing' button vol +
+            output[1] = 1;	// o2
+            PwrUSBWrapper.SetOutputStatePowerUSB(output);
+            Thread.Sleep(4000);
+
+            System.Diagnostics.Debug.WriteLine("Turning on USB power strip outlet 1");
+            PwrUSBWrapper.SetPortPowerUSB(1, 0, 0);
+            Thread.Sleep(8000);
+
+            // release button vol +
+            output[1] = 0;	// o2
+            PwrUSBWrapper.SetOutputStatePowerUSB(output);
+
+            PwrUSBWrapper.ClosePowerUSB();
+
             return null;
         }
 
