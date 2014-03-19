@@ -275,6 +275,10 @@ namespace TestRig
             output[1] = 0;	// o2
             PwrUSBWrapper.SetOutputStatePowerUSB(output);
 
+            Thread.Sleep(4000);
+            System.Diagnostics.Debug.WriteLine("Turning off USB power strip outlet 1");
+            PwrUSBWrapper.SetPortPowerUSB(0, 0, 0);
+
             PwrUSBWrapper.ClosePowerUSB();
 
             return null;
