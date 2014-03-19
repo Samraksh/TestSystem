@@ -33,13 +33,13 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="OCDInterfacePrimary" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\TestSystem\openocd-bin\interface\olimex-arm-usb-tiny-h.cfg</Value>
+      <Value Profile="(Default)">D:\Work\TestSystem\openocd-0.7.0\scripts\interface\olimex-arm-usb-tiny-h.cfg</Value>
     </Setting>
     <Setting Name="OCDTarget" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\TestSystem\openocd-bin\target\stm32xl.cfg</Value>
+      <Value Profile="(Default)">D:\Work\TestSystem\openocd-0.7.0\scripts\target\stm32xl.cfg</Value>
     </Setting>
     <Setting Name="OCDExe" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\TestSystem\openocd-bin\openocd.exe</Value>
+      <Value Profile="(Default)">D:\Work\TestSystem\openocd-0.7.0\bin-x64\openocd-x64-0.7.0.exe</Value>
     </Setting>
     <Setting Name="CSPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Work\TestSystem\codesourcery</Value>
