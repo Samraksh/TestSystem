@@ -1,0 +1,177 @@
+__________________________________________________________________________
+
+Wed Oct 09 18:09:22 EDT 2013
+
+Free Memory: 5450 kB
+Total Memory: 15936 kB
+
+4 Command Line Args:
+0:  -f
+1:  C:/Users/researcher/AppData/Local/Temp/306306.tmp/arm-2013.05-23-arm-none-eabi1.properties
+2:  -l
+3:  en
+
+java.class.path:
+    C:\Users\researcher\AppData\Local\Temp\306306.tmp\SubInstaller2.zip
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\InstallerData\IAClasses.zip
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\InstallerData\Execute.zip
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\InstallerData
+
+ZGUtil.CLASS_PATH:
+    C:\Users\researcher\AppData\Local\Temp\306306.tmp\SubInstaller2.zip
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\InstallerData\IAClasses.zip
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\InstallerData\Execute.zip
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\InstallerData
+
+sun.boot.class.path:
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\Windows\resource\jre\lib\resources.jar
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\Windows\resource\jre\lib\rt.jar
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\Windows\resource\jre\lib\sunrsasign.jar
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\Windows\resource\jre\lib\jsse.jar
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\Windows\resource\jre\lib\jce.jar
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\Windows\resource\jre\lib\charsets.jar
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\Windows\resource\jre\lib\jfr.jar
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\Windows\resource\jre\classes
+
+java.ext.dirs:
+    C:\Users\researcher\AppData\Local\Temp\I1381356419\Windows\resource\jre\lib\ext
+    C:\Windows\Sun\Java\lib\ext
+
+java.version                  == 1.7.0_07 (Java 1)
+java.vm.name                  == Java HotSpot(TM) Client VM
+java.vm.vendor                == Oracle Corporation
+java.vm.version               == 23.3-b01
+java.vm.specification.name    == Java Virtual Machine Specification
+java.vm.specification.vendor  == Oracle Corporation
+java.vm.specification.version == 1.7
+java.specification.name       == Java Platform API Specification
+java.specification.vendor     == Oracle Corporation
+java.specification.version    == 1.7
+java.vendor                   == Oracle Corporation
+java.vendor.url               == http://java.oracle.com/
+java.class.version            == 51.0
+java.compiler                 == null
+java.home                     == C:\Users\researcher\AppData\Local\Temp\I1381356419\Windows\resource\jre
+java.io.tmpdir                == C:\Users\RESEAR~1\AppData\Local\Temp\
+os.name                       == Windows 7
+os.arch                       == x86
+os.version                    == 6.1
+path.separator                == ;
+file.separator                == \
+file.encoding                 == Cp1252
+user.name                     == researcher
+user.home                     == C:\Users\researcher
+user.dir                      == C:\Users\researcher\AppData\Local\Temp\306306.tmp
+user.language                 == en
+user.region                   == null
+__________________________________________________________________________
+
+Install Begin: Wed Oct 09 18:09:17 EDT 2013
+Install End: Wed Oct 09 18:09:21 EDT 2013
+
+Installed by InstallAnywhere 11.0 Enterprise Build 3890
+
+
+User Interactions
+-----------------
+
+
+#Install
+#-------
+-fileOverwrite_C\:\\CodeSourcery-2013\\uninstall\\Uninstall_Sourcery_Gxx_JVM\\Uninstall_Sourcery_Gxx_JVM.lax=Yes
+-fileOverwrite_C\:\\CodeSourcery-2013\\uninstall\\Uninstall_Sourcery_Gxx_JVM\\resource\\iawin32.dll=Yes
+-fileOverwrite_C\:\\CodeSourcery-2013\\uninstall\\Uninstall_Sourcery_Gxx_JVM\\resource\\win64_32_x64.exe=Yes
+-fileOverwrite_C\:\\CodeSourcery-2013\\uninstall\\Uninstall_Sourcery_Gxx_JVM\\resource\\remove.exe=Yes
+-fileOverwrite_C\:\\CodeSourcery-2013\\uninstall\\create-links-iamm-jvm_files-arm-2013.05-23-arm-none-eabi.exe=Yes
+-fileOverwrite_C\:\\CodeSourcery-2013\\uninstall\\features\\JVM.key=Yes
+-fileOverwrite_C\:\\CodeSourcery-2013\\uninstall\\remove-links-iamm-jvm_files-arm-2013.05-23-arm-none-eabi.exe=Yes
+
+Summary
+-------
+
+Installation: Successful.
+
+24 Successes
+0 Warnings
+0 NonFatalErrors
+0 FatalErrors
+
+Action Notes:
+
+None
+
+Install Log Detail:
+
+Install Action:           InstallAnywhere Variable
+                          Status: SUCCESSFUL
+
+Install Action:           InstallAnywhere Variable
+                          Status: SUCCESSFUL
+
+Install Action:           InstallAnywhere Variable
+                          Status: SUCCESSFUL
+
+Check Disk Space:         C:\CodeSourcery-2013
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Required Disk Space: 136,446,732; Free Disk Space: 41,626,882,048
+
+Install Directory:        C:\CodeSourcery-2013\jre
+                          Status: SUCCESSFUL
+
+Install JRE:              C:\CodeSourcery-2013\jre
+                          Status: SUCCESSFUL
+
+Install Directory:        C:\CodeSourcery-2013\
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Directory already existed
+
+Install Directory:        C:\CodeSourcery-2013\uninstall\
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Directory already existed
+
+Install Directory:        C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\
+                          Status: SUCCESSFUL
+
+Install Uninstaller:      Sourcery G++ JVM (Install All Uninstaller Components)
+                          Status: SUCCESSFUL
+
+Install File:             C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\Uninstall_Sourcery_Gxx_JVM.exe
+                          Status: SUCCESSFUL
+
+
+Install File:             C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\Uninstall_Sourcery_Gxx_JVM.lax
+                          Status: SUCCESSFUL
+
+Install Directory:        C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\resource\
+                          Status: SUCCESSFUL
+
+Install File:             C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\resource\iawin32.dll
+                          Status: SUCCESSFUL
+
+Install File:             C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\resource\win64_32_x64.exe
+                          Status: SUCCESSFUL
+
+Install File:             C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\resource\remove.exe
+                          Status: SUCCESSFUL
+
+Install Uninstaller:      Sourcery G++ JVM (Install All Uninstaller Components)
+                          Status: SUCCESSFUL
+
+Install Directory:        C:\CodeSourcery-2013\uninstall\
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Directory already existed
+
+Install File:             C:\CodeSourcery-2013\uninstall\create-links-iamm-jvm_files-arm-2013.05-23-arm-none-eabi.exe
+                          Status: SUCCESSFUL
+
+Install Directory:        C:\CodeSourcery-2013\uninstall\features\
+                          Status: SUCCESSFUL
+                          Additional Notes: NOTE - Directory already existed
+
+Install File:             C:\CodeSourcery-2013\uninstall\features\JVM.key
+                          Status: SUCCESSFUL
+
+Install File:             C:\CodeSourcery-2013\uninstall\remove-links-iamm-jvm_files-arm-2013.05-23-arm-none-eabi.exe
+                          Status: SUCCESSFUL
+
+

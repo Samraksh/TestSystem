@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<registry install_date="2013-10-09 18:09:17" version="1.1" last_modified="2013-10-09 18:09:22">
+	<products>
+		<product name="Sourcery G++ JVM" id="148fcc56-69ab-46cd-8078-3815f7a49cac" version="1.0.0.3" copyright="" info_url="http://www.mentor.com/embedded-software/codesourcery" support_url="http://www.mentor.com/embedded-software/sourcery-tools/support" location="C:\CodeSourcery-2013" last_modified="2013-10-09 18:09:21">
+		<![CDATA[Sourcery G++ JVM]]>
+			<vendor name="CodeSourcery" id="7f1ebb3c-1ec7-11b2-8037-c0d9e9f9d7a6" home_page="http://www.mentor.com/embedded-software/codesourcery" email="Sourcery_Sales@mentor.com"/>
+			<feature short_name="Sourcery G++ JVM" name="Sourcery G++ JVM" last_modified="2013-10-09 18:09:21">
+			<![CDATA[This installs the Sourcery G++ JVM feature.]]>
+				<component ref_id="0cf79ee6-9237-4fb5-ba5a-8664a3b8463e" version="1.0.0.3" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\Uninstall_Sourcery_Gxx_JVM.exe"/>
+				<component ref_id="7db8e13c-c3a8-4e5b-bcd8-4e94aed5ffad" version="1.0.0.3" location="C:\CodeSourcery-2013\jre"/>
+				<component ref_id="adbdf545-5ecf-4cf0-a607-0cd328b19ace" version="1.0.0.3" location="C:\CodeSourcery-2013\uninstall\features\JVM.key"/>
+			</feature>
+		</product>
+	</products>
+	<components>
+		<component id="0cf79ee6-9237-4fb5-ba5a-8664a3b8463e" version="1.0.0.3" name="InstallAnywhere Uninstall Component" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\Uninstall_Sourcery_Gxx_JVM.exe" vendor="CodeSourcery">
+			<resource keyfile="false" name="Sourcery_Gxx_JVM Installer.log" location="C:\CodeSourcery-2013\uninstall\Sourcery_Gxx_JVM Installer.log" type="file" uninstall="true" rollbackEnabledCancel="true"/>
+			<resource keyfile="false" name="jre" location="C:\CodeSourcery-2013\jre" type="directory" uninstall="true" rollbackEnabledCancel="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="false" name="uninstall" location="C:\CodeSourcery-2013\uninstall" type="directory" uninstall="true" rollbackEnabledCancel="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="false" name="Uninstall_Sourcery_Gxx_JVM" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM" type="directory" uninstall="true" rollbackEnabledCancel="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="false" name="uninstaller.jar" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\uninstaller.jar" type="file" uninstall="true" rollbackEnabledCancel="true"/>
+			<resource keyfile="true" name="Uninstall_Sourcery_Gxx_JVM.exe" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\Uninstall_Sourcery_Gxx_JVM.exe" type="executable" uninstall="true" rollbackEnabledCancel="true"/>
+			<resource keyfile="false" name="Uninstall_Sourcery_Gxx_JVM.lax" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\Uninstall_Sourcery_Gxx_JVM.lax" type="file" uninstall="true" rollbackEnabledCancel="true"/>
+			<resource keyfile="false" name="resource" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\resource" type="directory" uninstall="true" rollbackEnabledCancel="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="false" name="iawin32.dll" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\resource\iawin32.dll" type="file" uninstall="true" rollbackEnabledCancel="true"/>
+			<resource keyfile="false" name="win64_32_x64.exe" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\resource\win64_32_x64.exe" type="file" uninstall="true" rollbackEnabledCancel="true"/>
+			<resource keyfile="false" name="remove.exe" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\resource\remove.exe" type="file" uninstall="true" rollbackEnabledCancel="true"/>
+			<resource keyfile="false" name="ZGWin32LaunchHelper.exe" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\resource\ZGWin32LaunchHelper.exe" type="file" uninstall="true" rollbackEnabledCancel="true"/>
+			<resource keyfile="false" name=".com.zerog.registry.xml" location="C:\CodeSourcery-2013\uninstall\Uninstall_Sourcery_Gxx_JVM\.com.zerog.registry.xml" type="file" uninstall="true" rollbackEnabledCancel="true"/>
+		</component>
+		<component id="adbdf545-5ecf-4cf0-a607-0cd328b19ace" version="1.0.0.3" name="Sourcery G++ JVM" location="C:\CodeSourcery-2013\uninstall\features\JVM.key">
+			<resource keyfile="false" name="uninstall" location="C:\CodeSourcery-2013\uninstall" type="directory" uninstall="true" rollbackEnabledCancel="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="false" name="create-links-iamm-jvm_files-arm-2013.05-23-arm-none-eabi.exe" location="C:\CodeSourcery-2013\uninstall\create-links-iamm-jvm_files-arm-2013.05-23-arm-none-eabi.exe" type="file" uninstall="true" rollbackEnabledCancel="true"/>
+			<resource keyfile="false" name="features" location="C:\CodeSourcery-2013\uninstall\features" type="directory" uninstall="true" rollbackEnabledCancel="true">
+			<![CDATA[false]]>
+			</resource>
+			<resource keyfile="true" name="JVM.key" location="C:\CodeSourcery-2013\uninstall\features\JVM.key" type="file" uninstall="true" rollbackEnabledCancel="true"/>
+			<resource keyfile="false" name="remove-links-iamm-jvm_files-arm-2013.05-23-arm-none-eabi.exe" location="C:\CodeSourcery-2013\uninstall\remove-links-iamm-jvm_files-arm-2013.05-23-arm-none-eabi.exe" type="file" uninstall="true" rollbackEnabledCancel="true"/>
+		</component>
+		<component id="7db8e13c-c3a8-4e5b-bcd8-4e94aed5ffad" version="1.0.0.3" name="InstallAnywhere VM Component" location="C:\CodeSourcery-2013\jre" vendor="CodeSourcery">
+			<resource keyfile="true" name="jre" location="C:\CodeSourcery-2013\jre" type="post_processed_dir" uninstall="true" rollbackEnabledCancel="true">
+			<![CDATA[true]]>
+			</resource>
+		</component>
+	</components>
+</registry>
