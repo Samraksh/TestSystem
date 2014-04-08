@@ -7,15 +7,16 @@
 <link title="Top" rel="start" href="index.html#Top">
 <link rel="up" href="Analyze-Collected-Data.html#Analyze-Collected-Data" title="Analyze Collected Data">
 <link rel="prev" href="tfind.html#tfind" title="tfind">
-<link rel="next" href="save_002dtracepoints.html#save_002dtracepoints" title="save-tracepoints">
+<link rel="next" href="save-tracepoints.html#save-tracepoints" title="save tracepoints">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -42,7 +43,7 @@ developing GNU and promoting software freedom.''-->
 <div class="node">
 <a name="tdump"></a>
 <p>
-Next:&nbsp;<a rel="next" accesskey="n" href="save_002dtracepoints.html#save_002dtracepoints">save-tracepoints</a>,
+Next:&nbsp;<a rel="next" accesskey="n" href="save-tracepoints.html#save-tracepoints">save tracepoints</a>,
 Previous:&nbsp;<a rel="previous" accesskey="p" href="tfind.html#tfind">tfind</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="Analyze-Collected-Data.html#Analyze-Collected-Data">Analyze Collected Data</a>
 <hr>
@@ -50,7 +51,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Analyze-Collected-Data.html#Analyze-Col
 
 <h4 class="subsection">13.2.2 <code>tdump</code></h4>
 
-<p><a name="index-tdump-709"></a><a name="index-dump-all-data-collected-at-tracepoint-710"></a><a name="index-tracepoint-data_002c-display-711"></a>
+<p><a name="index-tdump-804"></a><a name="index-dump-all-data-collected-at-tracepoint-805"></a><a name="index-tracepoint-data_002c-display-806"></a>
 This command takes no arguments.  It prints all the data collected at
 the current trace snapshot.
 
@@ -101,5 +102,21 @@ the current trace snapshot.
      
      (gdb)
 </pre>
+   <p><code>tdump</code> works by scanning the tracepoint's current collection
+actions and printing the value of each expression listed.  So
+<code>tdump</code> can fail, if after a run, you change the tracepoint's
+actions to mention variables that were not collected during the run.
+
+   <p>Also, for tracepoints with <code>while-stepping</code> loops, <code>tdump</code>
+uses the collected value of <code>$pc</code> to distinguish between trace
+frames that were collected at the tracepoint hit, and frames that were
+collected while stepping.  This allows it to correctly choose whether
+to display the basic list of collections, or the collections from the
+body of the while-stepping loop.  However, if <code>$pc</code> was not collected,
+then <code>tdump</code> will always attempt to dump using the basic collection
+list, and may fail if a while-stepping frame does not include all the
+same data that is collected at the tracepoint hit. 
+<!-- This is getting pretty arcane, example would be good. -->
+
    </body></html>
 

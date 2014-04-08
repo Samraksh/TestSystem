@@ -6,8 +6,8 @@
 <meta name="generator" content="makeinfo 4.13">
 <link title="Top" rel="start" href="index.html#Top">
 <link rel="up" href="Math.html#Math" title="Math">
-<link rel="prev" href="remainder.html#remainder" title="remainder">
-<link rel="next" href="sin.html#sin" title="sin">
+<link rel="prev" href="round.html#round" title="round">
+<link rel="next" href="signbit.html#signbit" title="signbit">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <style type="text/css"><!--
@@ -27,34 +27,41 @@
 <div class="node">
 <a name="scalbn"></a>
 <p>
-Next:&nbsp;<a rel="next" accesskey="n" href="sin.html#sin">sin</a>,
-Previous:&nbsp;<a rel="previous" accesskey="p" href="remainder.html#remainder">remainder</a>,
+Next:&nbsp;<a rel="next" accesskey="n" href="signbit.html#signbit">signbit</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="round.html#round">round</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="Math.html#Math">Math</a>
 <hr>
 </div>
 
-<h3 class="section">1.35 <code>scalbn</code>, <code>scalbnf</code>&mdash;scale by power of two</h3>
+<h3 class="section">1.50 <code>scalbn</code>, <code>scalbnf</code>, <code>scalbln</code>, <code>scalblnf</code>&ndash;scale by power of FLT_RADIX (=2)</h3>
 
-<p><a name="index-scalbn-92"></a><a name="index-scalbnf-93"></a><strong>Synopsis</strong>
+<p><a name="index-scalbn-135"></a><a name="index-scalbnf-136"></a><a name="index-scalbln-137"></a><a name="index-scalblnf-138"></a><strong>Synopsis</strong>
 <pre class="example">     #include &lt;math.h&gt;
-     double scalbn(double <var>x</var>, int <var>y</var>);
-     float scalbnf(float <var>x</var>, int <var>y</var>);
+     double scalbn(double <var>x</var>, int <var>n</var>);
+     float scalbnf(float <var>x</var>, int <var>n</var>);
+     double scalbln(double <var>x</var>, long int <var>n</var>);
+     float scalblnf(float <var>x</var>, long int <var>n</var>);
      
 </pre>
    <p><strong>Description</strong><br>
-<code>scalbn</code> and <code>scalbnf</code> scale <var>x</var> by <var>n</var>, returning <var>x</var> times
-2 to the power <var>n</var>.  The result is computed by manipulating the
-exponent, rather than by actually performing an exponentiation or
-multiplication.
+The <code>scalbn</code> and <code>scalbln</code> functions compute
+<var>x</var> times FLT_RADIX to the power <var>n</var>. 
+efficiently.  The result is computed by manipulating the exponent, rather than
+by actually performing an exponentiation or multiplication.  In this
+floating-point implementation FLT_RADIX=2, which makes the <code>scalbn</code>
+functions equivalent to the <code>ldexp</code> functions.
 
    <p><br>
 <strong>Returns</strong><br>
-<var>x</var> times 2 to the power <var>n</var>.
+<var>x</var> times 2 to the power <var>n</var>.  A range error may occur.
 
    <p><br>
 <strong>Portability</strong><br>
-Neither <code>scalbn</code> nor <code>scalbnf</code> is required by ANSI C or by the System V
-Interface Definition (Issue 2).
+ANSI C, POSIX
+
+   <p><br>
+<strong>See Also</strong><br>
+<code>ldexp</code>
 
    <p><br>
 

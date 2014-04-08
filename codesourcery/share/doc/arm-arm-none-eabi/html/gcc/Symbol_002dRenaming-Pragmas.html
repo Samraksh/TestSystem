@@ -10,12 +10,12 @@
 <link rel="next" href="Structure_002dPacking-Pragmas.html#Structure_002dPacking-Pragmas" title="Structure-Packing Pragmas">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
-Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
-2008 Free Software Foundation, Inc.
+Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997,
+1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+2010 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Funding Free Software'', the Front-Cover
 Texts being (a) (see below), and with the Back-Cover Texts being (b)
@@ -56,22 +56,21 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Pragmas.html#Pragmas">Pragmas</a>
 <hr>
 </div>
 
-<h4 class="subsection">5.53.6 Symbol-Renaming Pragmas</h4>
+<h4 class="subsection">6.57.7 Symbol-Renaming Pragmas</h4>
 
 <p>For compatibility with the Solaris and Tru64 UNIX system headers, GCC
 supports two <code>#pragma</code> directives which change the name used in
-assembly for a given declaration.  These pragmas are only available on
-platforms whose system headers need them.  To get this effect on all
-platforms supported by GCC, use the asm labels extension (see <a href="Asm-Labels.html#Asm-Labels">Asm Labels</a>).
+assembly for a given declaration.  <code>#pragma extern_prefix</code> is only
+available on platforms whose system headers need it. To get this effect
+on all platforms supported by GCC, use the asm labels extension (see <a href="Asm-Labels.html#Asm-Labels">Asm Labels</a>).
 
      <dl>
-<dt><code>redefine_extname </code><var>oldname</var> <var>newname</var><dd><a name="index-pragma_002c-redefine_005fextname-2955"></a>
+<dt><code>redefine_extname </code><var>oldname</var> <var>newname</var><dd><a name="index-pragma_002c-redefine_005fextname-3375"></a>
 This pragma gives the C function <var>oldname</var> the assembly symbol
 <var>newname</var>.  The preprocessor macro <code>__PRAGMA_REDEFINE_EXTNAME</code>
-will be defined if this pragma is available (currently only on
-Solaris).
+will be defined if this pragma is available (currently on all platforms).
 
-     <br><dt><code>extern_prefix </code><var>string</var><dd><a name="index-pragma_002c-extern_005fprefix-2956"></a>
+     <br><dt><code>extern_prefix </code><var>string</var><dd><a name="index-pragma_002c-extern_005fprefix-3376"></a>
 This pragma causes all subsequent external function and variable
 declarations to have <var>string</var> prepended to their assembly symbols. 
 This effect may be terminated with another <code>extern_prefix</code> pragma

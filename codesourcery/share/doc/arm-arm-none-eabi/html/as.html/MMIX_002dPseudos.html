@@ -11,8 +11,9 @@
 <!--
 This file documents the GNU Assembler "as".
 
-Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 2001, 2002,
-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+2000, 2001, 2002, 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation,
+Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
@@ -46,11 +47,11 @@ Up:&nbsp;<a rel="up" accesskey="u" href="MMIX_002dSyntax.html#MMIX_002dSyntax">M
 <hr>
 </div>
 
-<h5 class="subsubsection">9.24.3.4 Assembler Directives</h5>
+<h5 class="subsubsection">9.28.3.4 Assembler Directives</h5>
 
-<p><a name="index-assembler-directives_002c-MMIX-1313"></a><a name="index-pseudo_002dops_002c-MMIX-1314"></a><a name="index-MMIX-assembler-directives-1315"></a><a name="index-MMIX-pseudo_002dops-1316"></a>
+<p><a name="index-assembler-directives_002c-MMIX-1464"></a><a name="index-pseudo_002dops_002c-MMIX-1465"></a><a name="index-MMIX-assembler-directives-1466"></a><a name="index-MMIX-pseudo_002dops-1467"></a>
      <dl>
-<dt><code>LOC</code><dd><a name="index-assembler-directive-LOC_002c-MMIX-1317"></a><a name="index-pseudo_002dop-LOC_002c-MMIX-1318"></a><a name="index-MMIX-assembler-directive-LOC-1319"></a><a name="index-MMIX-pseudo_002dop-LOC-1320"></a>
+<dt><code>LOC</code><dd><a name="index-assembler-directive-LOC_002c-MMIX-1468"></a><a name="index-pseudo_002dop-LOC_002c-MMIX-1469"></a><a name="index-MMIX-assembler-directive-LOC-1470"></a><a name="index-MMIX-pseudo_002dop-LOC-1471"></a>
 <a name="MMIX_002dloc"></a>The <code>LOC</code> directive sets the current location to the value of the
 operand field, which may include changing sections.  If the operand is a
 constant, the section is set to either <code>.data</code> if the value is
@@ -71,7 +72,7 @@ address.  Note that if multiple files are linked, the first object file
 with that section will be mapped to that address (not necessarily the file
 with the LOC definition).
 
-     <br><dt><code>LOCAL</code><dd><a name="index-assembler-directive-LOCAL_002c-MMIX-1321"></a><a name="index-pseudo_002dop-LOCAL_002c-MMIX-1322"></a><a name="index-MMIX-assembler-directive-LOCAL-1323"></a><a name="index-MMIX-pseudo_002dop-LOCAL-1324"></a>
+     <br><dt><code>LOCAL</code><dd><a name="index-assembler-directive-LOCAL_002c-MMIX-1472"></a><a name="index-pseudo_002dop-LOCAL_002c-MMIX-1473"></a><a name="index-MMIX-assembler-directive-LOCAL-1474"></a><a name="index-MMIX-pseudo_002dop-LOCAL-1475"></a>
 <a name="MMIX_002dlocal"></a>Example:
      <pre class="smallexample">           LOCAL external_symbol
            LOCAL 42
@@ -84,7 +85,7 @@ treated as the register having that number.  There is one restriction on
 the use of this directive: the pseudo-directive must be placed in a
 section with contents, code or data.
 
-     <br><dt><code>IS</code><dd><a name="index-assembler-directive-IS_002c-MMIX-1325"></a><a name="index-pseudo_002dop-IS_002c-MMIX-1326"></a><a name="index-MMIX-assembler-directive-IS-1327"></a><a name="index-MMIX-pseudo_002dop-IS-1328"></a>
+     <br><dt><code>IS</code><dd><a name="index-assembler-directive-IS_002c-MMIX-1476"></a><a name="index-pseudo_002dop-IS_002c-MMIX-1477"></a><a name="index-MMIX-assembler-directive-IS-1478"></a><a name="index-MMIX-pseudo_002dop-IS-1479"></a>
 <a name="MMIX_002dis"></a>The <code>IS</code> directive:
      <pre class="smallexample">          asymbol IS an_expression
 </pre>
@@ -93,7 +94,7 @@ be set more than once using this directive.  Local labels may be set using
 this directive, for example:
      <pre class="smallexample">          5H IS @+4
 </pre>
-     <br><dt><code>GREG</code><dd><a name="index-assembler-directive-GREG_002c-MMIX-1329"></a><a name="index-pseudo_002dop-GREG_002c-MMIX-1330"></a><a name="index-MMIX-assembler-directive-GREG-1331"></a><a name="index-MMIX-pseudo_002dop-GREG-1332"></a>
+     <br><dt><code>GREG</code><dd><a name="index-assembler-directive-GREG_002c-MMIX-1480"></a><a name="index-pseudo_002dop-GREG_002c-MMIX-1481"></a><a name="index-MMIX-assembler-directive-GREG-1482"></a><a name="index-MMIX-pseudo_002dop-GREG-1483"></a>
 <a name="MMIX_002dgreg"></a>This directive reserves a global register, gives it an initial value and
 optionally gives it a symbolic name.  Some examples:
 
@@ -168,7 +169,7 @@ together.  With the options &lsquo;<samp><span class="samp">-x</span></samp>&rsq
 can be omitted.  Sufficient global registers will then be allocated by the
 linker.
 
-     <br><dt><code>BYTE</code><dd><a name="index-assembler-directive-BYTE_002c-MMIX-1333"></a><a name="index-pseudo_002dop-BYTE_002c-MMIX-1334"></a><a name="index-MMIX-assembler-directive-BYTE-1335"></a><a name="index-MMIX-pseudo_002dop-BYTE-1336"></a>
+     <br><dt><code>BYTE</code><dd><a name="index-assembler-directive-BYTE_002c-MMIX-1484"></a><a name="index-pseudo_002dop-BYTE_002c-MMIX-1485"></a><a name="index-MMIX-assembler-directive-BYTE-1486"></a><a name="index-MMIX-pseudo_002dop-BYTE-1487"></a>
 <a name="MMIX_002dbyte"></a>The &lsquo;<samp><span class="samp">BYTE</span></samp>&rsquo; directive takes a series of operands separated by a comma. 
 If an operand is a string (see <a href="Strings.html#Strings">Strings</a>), each character of that string
 is emitted as a byte.  Other operands must be constant expressions without
@@ -176,7 +177,7 @@ forward references, in the range 0<small class="dots">...</small>255.  If you ne
 expressions with forward references, use &lsquo;<samp><span class="samp">.byte</span></samp>&rsquo; (see <a href="Byte.html#Byte">Byte</a>).  An
 operand can be omitted, defaulting to a zero value.
 
-     <br><dt><code>WYDE</code><dt><code>TETRA</code><dt><code>OCTA</code><dd><a name="index-assembler-directive-WYDE_002c-MMIX-1337"></a><a name="index-pseudo_002dop-WYDE_002c-MMIX-1338"></a><a name="index-MMIX-assembler-directive-WYDE-1339"></a><a name="index-MMIX-pseudo_002dop-WYDE-1340"></a><a name="index-assembler-directive-TETRA_002c-MMIX-1341"></a><a name="index-pseudo_002dop-TETRA_002c-MMIX-1342"></a><a name="index-MMIX-assembler-directive-TETRA-1343"></a><a name="index-MMIX-pseudo_002dop-TETRA-1344"></a><a name="index-assembler-directive-OCTA_002c-MMIX-1345"></a><a name="index-pseudo_002dop-OCTA_002c-MMIX-1346"></a><a name="index-MMIX-assembler-directive-OCTA-1347"></a><a name="index-MMIX-pseudo_002dop-OCTA-1348"></a>
+     <br><dt><code>WYDE</code><dt><code>TETRA</code><dt><code>OCTA</code><dd><a name="index-assembler-directive-WYDE_002c-MMIX-1488"></a><a name="index-pseudo_002dop-WYDE_002c-MMIX-1489"></a><a name="index-MMIX-assembler-directive-WYDE-1490"></a><a name="index-MMIX-pseudo_002dop-WYDE-1491"></a><a name="index-assembler-directive-TETRA_002c-MMIX-1492"></a><a name="index-pseudo_002dop-TETRA_002c-MMIX-1493"></a><a name="index-MMIX-assembler-directive-TETRA-1494"></a><a name="index-MMIX-pseudo_002dop-TETRA-1495"></a><a name="index-assembler-directive-OCTA_002c-MMIX-1496"></a><a name="index-pseudo_002dop-OCTA_002c-MMIX-1497"></a><a name="index-MMIX-assembler-directive-OCTA-1498"></a><a name="index-MMIX-pseudo_002dop-OCTA-1499"></a>
 <a name="MMIX_002dconstants"></a>The directives &lsquo;<samp><span class="samp">WYDE</span></samp>&rsquo;, &lsquo;<samp><span class="samp">TETRA</span></samp>&rsquo; and &lsquo;<samp><span class="samp">OCTA</span></samp>&rsquo; emit constants of
 two, four and eight bytes size respectively.  Before anything else happens
 for the directive, the current location is aligned to the respective
@@ -187,7 +188,7 @@ can be expressed as strings (see <a href="Strings.html#Strings">Strings</a>), in
 character in the string is emitted as a separate constant of the size
 indicated by the directive.
 
-     <br><dt><code>PREFIX</code><dd><a name="index-assembler-directive-PREFIX_002c-MMIX-1349"></a><a name="index-pseudo_002dop-PREFIX_002c-MMIX-1350"></a><a name="index-MMIX-assembler-directive-PREFIX-1351"></a><a name="index-MMIX-pseudo_002dop-PREFIX-1352"></a>
+     <br><dt><code>PREFIX</code><dd><a name="index-assembler-directive-PREFIX_002c-MMIX-1500"></a><a name="index-pseudo_002dop-PREFIX_002c-MMIX-1501"></a><a name="index-MMIX-assembler-directive-PREFIX-1502"></a><a name="index-MMIX-pseudo_002dop-PREFIX-1503"></a>
 <a name="MMIX_002dprefix"></a>The &lsquo;<samp><span class="samp">PREFIX</span></samp>&rsquo; directive sets a symbol name prefix to be prepended to
 all symbols (except local symbols, see <a href="MMIX_002dSymbols.html#MMIX_002dSymbols">MMIX-Symbols</a>), that are not
 prefixed with &lsquo;<samp><span class="samp">:</span></samp>&rsquo;, until the next &lsquo;<samp><span class="samp">PREFIX</span></samp>&rsquo; directive.  Such
@@ -198,7 +199,7 @@ prefixes accumulate.  For example,
 </pre>
      <p>defines a symbol &lsquo;<samp><span class="samp">abc</span></samp>&rsquo; with the value 0.
 
-     <br><dt><code>BSPEC</code><dt><code>ESPEC</code><dd><a name="index-assembler-directive-BSPEC_002c-MMIX-1353"></a><a name="index-pseudo_002dop-BSPEC_002c-MMIX-1354"></a><a name="index-MMIX-assembler-directive-BSPEC-1355"></a><a name="index-MMIX-pseudo_002dop-BSPEC-1356"></a><a name="index-assembler-directive-ESPEC_002c-MMIX-1357"></a><a name="index-pseudo_002dop-ESPEC_002c-MMIX-1358"></a><a name="index-MMIX-assembler-directive-ESPEC-1359"></a><a name="index-MMIX-pseudo_002dop-ESPEC-1360"></a>
+     <br><dt><code>BSPEC</code><dt><code>ESPEC</code><dd><a name="index-assembler-directive-BSPEC_002c-MMIX-1504"></a><a name="index-pseudo_002dop-BSPEC_002c-MMIX-1505"></a><a name="index-MMIX-assembler-directive-BSPEC-1506"></a><a name="index-MMIX-pseudo_002dop-BSPEC-1507"></a><a name="index-assembler-directive-ESPEC_002c-MMIX-1508"></a><a name="index-pseudo_002dop-ESPEC_002c-MMIX-1509"></a><a name="index-MMIX-assembler-directive-ESPEC-1510"></a><a name="index-MMIX-pseudo_002dop-ESPEC-1511"></a>
 <a name="MMIX_002dspec"></a>A pair of &lsquo;<samp><span class="samp">BSPEC</span></samp>&rsquo; and &lsquo;<samp><span class="samp">ESPEC</span></samp>&rsquo; directives delimit a section of
 special contents (without specified semantics).  Example:
      <pre class="smallexample">           BSPEC 42

@@ -11,11 +11,12 @@
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
 Copyright (C) 1987, 1989, 1991, 1992, 1993, 1994, 1995, 1996,
-1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
+1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
+2008, 2009, 2010, 2011
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation.  A copy of
 the license is included in the
 section entitled ``GNU Free Documentation License''.
@@ -117,8 +118,8 @@ calculate a single number, then compare that against a threshold:
 testing <code>(__GNUC__&nbsp;&amp;&amp;&nbsp;__cplusplus)<!-- /@w --></code>.
 
      <br><dt><code>__STRICT_ANSI__</code><dd>GCC defines this macro if and only if the <samp><span class="option">-ansi</span></samp> switch, or a
-<samp><span class="option">-std</span></samp> switch specifying strict conformance to some version of ISO C,
-was specified when GCC was invoked.  It is defined to &lsquo;<samp><span class="samp">1</span></samp>&rsquo;. 
+<samp><span class="option">-std</span></samp> switch specifying strict conformance to some version of ISO C
+or ISO C++, was specified when GCC was invoked.  It is defined to &lsquo;<samp><span class="samp">1</span></samp>&rsquo;. 
 This macro exists primarily to direct GNU libc's header files to
 restrict their definitions to the minimal set found in the 1989 C
 standard.
@@ -154,7 +155,7 @@ sure that programs will execute with the same effect whether or not they
 are defined.  If they are defined, their value is 1.
 
      <br><dt><code>__GNUC_GNU_INLINE__</code><dd>GCC defines this macro if functions declared <code>inline</code> will be
-handled in GCC's traditional gnu89 mode.  Object files will contain
+handled in GCC's traditional gnu90 mode.  Object files will contain
 externally visible definitions of all functions declared <code>inline</code>
 without <code>extern</code> or <code>static</code>.  They will not contain any
 definitions of any functions declared <code>extern inline</code>.
@@ -166,10 +167,10 @@ inline</code>.  They will not contain definitions of any functions declared
 <code>inline</code> without <code>extern</code>.
 
      <p>If this macro is defined, GCC supports the <code>gnu_inline</code> function
-attribute as a way to always get the gnu89 behavior.  Support for
+attribute as a way to always get the gnu90 behavior.  Support for
 this and <code>__GNUC_GNU_INLINE__</code> was added in GCC 4.1.3.  If
 neither macro is defined, an older version of GCC is being used:
-<code>inline</code> functions will be compiled in gnu89 mode, and the
+<code>inline</code> functions will be compiled in gnu90 mode, and the
 <code>gnu_inline</code> function attribute will not be recognized.
 
      <br><dt><code>__CHAR_UNSIGNED__</code><dd>GCC defines this macro if and only if the data type <code>char</code> is
@@ -197,31 +198,82 @@ the <code>m68k-aout</code> environment it expands to an &lsquo;<samp><span class
 target-specific options that adjust this prefix are used (e.g. the
 OSF/rose <samp><span class="option">-mno-underscores</span></samp> option).
 
-     <br><dt><code>__SIZE_TYPE__</code><dt><code>__PTRDIFF_TYPE__</code><dt><code>__WCHAR_TYPE__</code><dt><code>__WINT_TYPE__</code><dt><code>__INTMAX_TYPE__</code><dt><code>__UINTMAX_TYPE__</code><dd>These macros are defined to the correct underlying types for the
+     <br><dt><code>__SIZE_TYPE__</code><dt><code>__PTRDIFF_TYPE__</code><dt><code>__WCHAR_TYPE__</code><dt><code>__WINT_TYPE__</code><dt><code>__INTMAX_TYPE__</code><dt><code>__UINTMAX_TYPE__</code><dt><code>__SIG_ATOMIC_TYPE__</code><dt><code>__INT8_TYPE__</code><dt><code>__INT16_TYPE__</code><dt><code>__INT32_TYPE__</code><dt><code>__INT64_TYPE__</code><dt><code>__UINT8_TYPE__</code><dt><code>__UINT16_TYPE__</code><dt><code>__UINT32_TYPE__</code><dt><code>__UINT64_TYPE__</code><dt><code>__INT_LEAST8_TYPE__</code><dt><code>__INT_LEAST16_TYPE__</code><dt><code>__INT_LEAST32_TYPE__</code><dt><code>__INT_LEAST64_TYPE__</code><dt><code>__UINT_LEAST8_TYPE__</code><dt><code>__UINT_LEAST16_TYPE__</code><dt><code>__UINT_LEAST32_TYPE__</code><dt><code>__UINT_LEAST64_TYPE__</code><dt><code>__INT_FAST8_TYPE__</code><dt><code>__INT_FAST16_TYPE__</code><dt><code>__INT_FAST32_TYPE__</code><dt><code>__INT_FAST64_TYPE__</code><dt><code>__UINT_FAST8_TYPE__</code><dt><code>__UINT_FAST16_TYPE__</code><dt><code>__UINT_FAST32_TYPE__</code><dt><code>__UINT_FAST64_TYPE__</code><dt><code>__INTPTR_TYPE__</code><dt><code>__UINTPTR_TYPE__</code><dd>These macros are defined to the correct underlying types for the
 <code>size_t</code>, <code>ptrdiff_t</code>, <code>wchar_t</code>, <code>wint_t</code>,
-<code>intmax_t</code>, and <code>uintmax_t</code>
-typedefs, respectively.  They exist to make the standard header files
-<samp><span class="file">stddef.h</span></samp> and <samp><span class="file">wchar.h</span></samp> work correctly.  You should not use
-these macros directly; instead, include the appropriate headers and use
-the typedefs.
+<code>intmax_t</code>, <code>uintmax_t</code>, <code>sig_atomic_t</code>, <code>int8_t</code>,
+<code>int16_t</code>, <code>int32_t</code>, <code>int64_t</code>, <code>uint8_t</code>,
+<code>uint16_t</code>, <code>uint32_t</code>, <code>uint64_t</code>,
+<code>int_least8_t</code>, <code>int_least16_t</code>, <code>int_least32_t</code>,
+<code>int_least64_t</code>, <code>uint_least8_t</code>, <code>uint_least16_t</code>,
+<code>uint_least32_t</code>, <code>uint_least64_t</code>, <code>int_fast8_t</code>,
+<code>int_fast16_t</code>, <code>int_fast32_t</code>, <code>int_fast64_t</code>,
+<code>uint_fast8_t</code>, <code>uint_fast16_t</code>, <code>uint_fast32_t</code>,
+<code>uint_fast64_t</code>, <code>intptr_t</code>, and <code>uintptr_t</code> typedefs,
+respectively.  They exist to make the standard header files
+<samp><span class="file">stddef.h</span></samp>, <samp><span class="file">stdint.h</span></samp>, and <samp><span class="file">wchar.h</span></samp> work correctly. 
+You should not use these macros directly; instead, include the
+appropriate headers and use the typedefs.  Some of these macros may
+not be defined on particular systems if GCC does not provide a
+<samp><span class="file">stdint.h</span></samp> header on those systems.
 
      <br><dt><code>__CHAR_BIT__</code><dd>Defined to the number of bits used in the representation of the
 <code>char</code> data type.  It exists to make the standard header given
 numerical limits work correctly.  You should not use
 this macro directly; instead, include the appropriate headers.
 
-     <br><dt><code>__SCHAR_MAX__</code><dt><code>__WCHAR_MAX__</code><dt><code>__SHRT_MAX__</code><dt><code>__INT_MAX__</code><dt><code>__LONG_MAX__</code><dt><code>__LONG_LONG_MAX__</code><dt><code>__INTMAX_MAX__</code><dd>Defined to the maximum value of the <code>signed char</code>, <code>wchar_t</code>,
+     <br><dt><code>__SCHAR_MAX__</code><dt><code>__WCHAR_MAX__</code><dt><code>__SHRT_MAX__</code><dt><code>__INT_MAX__</code><dt><code>__LONG_MAX__</code><dt><code>__LONG_LONG_MAX__</code><dt><code>__WINT_MAX__</code><dt><code>__SIZE_MAX__</code><dt><code>__PTRDIFF_MAX__</code><dt><code>__INTMAX_MAX__</code><dt><code>__UINTMAX_MAX__</code><dt><code>__SIG_ATOMIC_MAX__</code><dt><code>__INT8_MAX__</code><dt><code>__INT16_MAX__</code><dt><code>__INT32_MAX__</code><dt><code>__INT64_MAX__</code><dt><code>__UINT8_MAX__</code><dt><code>__UINT16_MAX__</code><dt><code>__UINT32_MAX__</code><dt><code>__UINT64_MAX__</code><dt><code>__INT_LEAST8_MAX__</code><dt><code>__INT_LEAST16_MAX__</code><dt><code>__INT_LEAST32_MAX__</code><dt><code>__INT_LEAST64_MAX__</code><dt><code>__UINT_LEAST8_MAX__</code><dt><code>__UINT_LEAST16_MAX__</code><dt><code>__UINT_LEAST32_MAX__</code><dt><code>__UINT_LEAST64_MAX__</code><dt><code>__INT_FAST8_MAX__</code><dt><code>__INT_FAST16_MAX__</code><dt><code>__INT_FAST32_MAX__</code><dt><code>__INT_FAST64_MAX__</code><dt><code>__UINT_FAST8_MAX__</code><dt><code>__UINT_FAST16_MAX__</code><dt><code>__UINT_FAST32_MAX__</code><dt><code>__UINT_FAST64_MAX__</code><dt><code>__INTPTR_MAX__</code><dt><code>__UINTPTR_MAX__</code><dt><code>__WCHAR_MIN__</code><dt><code>__WINT_MIN__</code><dt><code>__SIG_ATOMIC_MIN__</code><dd>Defined to the maximum value of the <code>signed char</code>, <code>wchar_t</code>,
 <code>signed short</code>,
-<code>signed int</code>, <code>signed long</code>, <code>signed long long</code>, and
-<code>intmax_t</code> types
-respectively.  They exist to make the standard header given numerical limits
-work correctly.  You should not use these macros directly; instead, include
-the appropriate headers.
+<code>signed int</code>, <code>signed long</code>, <code>signed long long</code>,
+<code>wint_t</code>, <code>size_t</code>, <code>ptrdiff_t</code>,
+<code>intmax_t</code>, <code>uintmax_t</code>, <code>sig_atomic_t</code>, <code>int8_t</code>,
+<code>int16_t</code>, <code>int32_t</code>, <code>int64_t</code>, <code>uint8_t</code>,
+<code>uint16_t</code>, <code>uint32_t</code>, <code>uint64_t</code>,
+<code>int_least8_t</code>, <code>int_least16_t</code>, <code>int_least32_t</code>,
+<code>int_least64_t</code>, <code>uint_least8_t</code>, <code>uint_least16_t</code>,
+<code>uint_least32_t</code>, <code>uint_least64_t</code>, <code>int_fast8_t</code>,
+<code>int_fast16_t</code>, <code>int_fast32_t</code>, <code>int_fast64_t</code>,
+<code>uint_fast8_t</code>, <code>uint_fast16_t</code>, <code>uint_fast32_t</code>,
+<code>uint_fast64_t</code>, <code>intptr_t</code>, and <code>uintptr_t</code> types and
+to the minimum value of the <code>wchar_t</code>, <code>wint_t</code>, and
+<code>sig_atomic_t</code> types respectively.  They exist to make the
+standard header given numerical limits work correctly.  You should not
+use these macros directly; instead, include the appropriate headers. 
+Some of these macros may not be defined on particular systems if GCC
+does not provide a <samp><span class="file">stdint.h</span></samp> header on those systems.
+
+     <br><dt><code>__INT8_C</code><dt><code>__INT16_C</code><dt><code>__INT32_C</code><dt><code>__INT64_C</code><dt><code>__UINT8_C</code><dt><code>__UINT16_C</code><dt><code>__UINT32_C</code><dt><code>__UINT64_C</code><dt><code>__INTMAX_C</code><dt><code>__UINTMAX_C</code><dd>Defined to implementations of the standard <samp><span class="file">stdint.h</span></samp> macros with
+the same names without the leading <code>__</code>.  They exist the make the
+implementation of that header work correctly.  You should not use
+these macros directly; instead, include the appropriate headers.  Some
+of these macros may not be defined on particular systems if GCC does
+not provide a <samp><span class="file">stdint.h</span></samp> header on those systems.
 
      <br><dt><code>__SIZEOF_INT__</code><dt><code>__SIZEOF_LONG__</code><dt><code>__SIZEOF_LONG_LONG__</code><dt><code>__SIZEOF_SHORT__</code><dt><code>__SIZEOF_POINTER__</code><dt><code>__SIZEOF_FLOAT__</code><dt><code>__SIZEOF_DOUBLE__</code><dt><code>__SIZEOF_LONG_DOUBLE__</code><dt><code>__SIZEOF_SIZE_T__</code><dt><code>__SIZEOF_WCHAR_T__</code><dt><code>__SIZEOF_WINT_T__</code><dt><code>__SIZEOF_PTRDIFF_T__</code><dd>Defined to the number of bytes of the C standard data types: <code>int</code>,
 <code>long</code>, <code>long long</code>, <code>short</code>, <code>void *</code>, <code>float</code>,
 <code>double</code>, <code>long double</code>, <code>size_t</code>, <code>wchar_t</code>, <code>wint_t</code>
 and <code>ptrdiff_t</code>.
+
+     <br><dt><code>__BYTE_ORDER__</code><dt><code>__ORDER_LITTLE_ENDIAN__</code><dt><code>__ORDER_BIG_ENDIAN__</code><dt><code>__ORDER_PDP_ENDIAN__</code><dd><code>__BYTE_ORDER__</code> is defined to one of the values
+<code>__ORDER_LITTLE_ENDIAN__</code>, <code>__ORDER_BIG_ENDIAN__</code>, or
+<code>__ORDER_PDP_ENDIAN__</code> to reflect the layout of multi-byte and
+multi-word quantities in memory.  If <code>__BYTE_ORDER__</code> is equal to
+<code>__ORDER_LITTLE_ENDIAN__</code> or <code>__ORDER_BIG_ENDIAN__</code>, then
+multi-byte and multi-word quantities are laid out identically: the
+byte (word) at the lowest address is the least significant or most
+significant byte (word) of the quantity, respectively.  If
+<code>__BYTE_ORDER__</code> is equal to <code>__ORDER_PDP_ENDIAN__</code>, then
+bytes in 16-bit words are laid out in a little-endian fashion, whereas
+the 16-bit subwords of a 32-bit quantity are laid out in big-endian
+fashion.
+
+     <p>You should use these macros for testing like this:
+
+     <pre class="smallexample">          /* <span class="roman">Test for a little-endian machine</span> */
+          #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+</pre>
+     <br><dt><code>__FLOAT_WORD_ORDER__</code><dd><code>__FLOAT_WORD_ORDER__</code> is defined to one of the values
+<code>__ORDER_LITTLE_ENDIAN__</code> or <code>__ORDER_BIG_ENDIAN__</code> to reflect
+the layout of the words of multi-word floating-point quantities.
 
      <br><dt><code>__DEPRECATED</code><dd>This macro is defined, with value 1, when compiling a C++ source file
 with warnings about deprecated constructs enabled.  These warnings are
@@ -284,7 +336,13 @@ and swap operations on operands 1, 2, 4, 8 or 16 bytes in length, respectively.
 
      <br><dt><code>__GCC_HAVE_DWARF2_CFI_ASM</code><dd>This macro is defined when the compiler is emitting Dwarf2 CFI directives
 to the assembler.  When this is defined, it is possible to emit those same
-directives in inline assembly. 
+directives in inline assembly.
+
+     <br><dt><code>__FP_FAST_FMA</code><dt><code>__FP_FAST_FMAF</code><dt><code>__FP_FAST_FMAL</code><dd>These macros are defined with value 1 if the backend supports the
+<code>fma</code>, <code>fmaf</code>, and <code>fmal</code> builtin functions, so that
+the include file <samp><span class="file">math.h</span></samp> can define the macros
+<code>FP_FAST_FMA</code>, <code>FP_FAST_FMAF</code>, and <code>FP_FAST_FMAL</code>
+for compatibility with the 1999 C standard. 
 </dl>
 
    </body></html>

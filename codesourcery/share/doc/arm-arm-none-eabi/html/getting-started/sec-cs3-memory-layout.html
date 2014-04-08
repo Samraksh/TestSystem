@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>5.3. Memory Layout</title><link rel="stylesheet" href="cs.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.74.0"><link rel="home" href="index.html" title="Sourcery G++ Lite"><link rel="up" href="chap-cs3.html" title="Chapter 5. CS3&#8482;: The CodeSourcery Common Startup Code Sequence"><link rel="prev" href="sec-cs3-startup.html" title="5.2. Program Startup and Termination"><link rel="next" href="sec-cs3-interrupts.html" title="5.4. Interrupt Vectors and Handlers"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">5.3. Memory Layout</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="sec-cs3-startup.html">Prev</a> </td><th width="60%" align="center">Chapter 5. CS3&#8482;: The CodeSourcery Common Startup Code Sequence</th><td width="20%" align="right"> <a accesskey="n" href="sec-cs3-interrupts.html">Next</a></td></tr></table><hr></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="sec-cs3-memory-layout"></a>5.3. Memory Layout</h2></div></div></div><p>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>5.3. Memory Layout</title><link rel="stylesheet" type="text/css" href="cs.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.0"><link rel="home" href="index.html" title="Sourcery CodeBench Lite"><link rel="up" href="chap-cs3.html" title="Chapter 5. CS3&#8482;: The CodeSourcery Common Startup Code Sequence"><link rel="prev" href="sec-cs3-startup.html" title="5.2. Program Startup and Termination"><link rel="next" href="sec-cs3-interrupts.html" title="5.4. Interrupt Vectors and Handlers"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">5.3. Memory Layout</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="sec-cs3-startup.html">Prev</a> </td><th width="60%" align="center">Chapter 5. CS3&#8482;: The CodeSourcery Common Startup Code Sequence</th><td width="20%" align="right"> <a accesskey="n" href="sec-cs3-interrupts.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="sec-cs3-memory-layout"></a>5.3. Memory Layout</h2></div></div></div><p>
       Boards supported by CS3 can have multiple banks or regions of
       memory with different characteristics.
       This section describes how program sections are mapped onto
@@ -7,7 +7,7 @@
       CS3 also provides a uniform set of symbolic names for each region,
       allowing you to programmatically refer to each region's address range
       from C or assembly language as well as from the linker script.
-    </p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="sec-cs3-regions"></a>5.3.1. Memory Regions and Program Sections</h3></div></div></div><p>
+    </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec-cs3-regions"></a>5.3.1. Memory Regions and Program Sections</h3></div></div></div><p>
         The regions that are available on a particular board are listed
         in the table for that board in
 	<a class="xref" href="sec-cs3-supported-boards.html" title="5.5. Supported Boards for ARM EABI">Section 5.5, &#8220;Supported Boards for ARM EABI&#8221;</a>, below.
@@ -85,11 +85,11 @@
         declared in <code class="filename">cs3.h</code>,
 	as described in <a class="xref" href="sec-cs3-memory-layout.html#sec-cs3-memory-hooks" title="5.3.2. Programmatic Access to the CS3 Memory Map">Section 5.3.2, &#8220;Programmatic Access to the CS3 Memory Map&#8221;</a>.
       </p><p>
-        Memory maps for boards supported by Sourcery G++ Lite for ARM EABI
+        Memory maps for boards supported by Sourcery CodeBench Lite for ARM EABI
         are documented in
         XML files in the <code class="filename">arm-none-eabi/lib/boards/</code>
-        subdirectory of your Sourcery G++ installation directory.
-      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="sec-cs3-memory-hooks"></a>5.3.2. Programmatic Access to the CS3 Memory Map</h3></div></div></div><p>
+        subdirectory of your Sourcery CodeBench installation directory.
+      </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec-cs3-memory-hooks"></a>5.3.2. Programmatic Access to the CS3 Memory Map</h3></div></div></div><p>
         CS3 makes C declarations describing the memory regions on the
 	target board available to your program via the header file
         <code class="filename">cs3.h</code>, which you can
@@ -133,7 +133,7 @@
         These descriptors are also exposed in 
         <code class="filename">cs3.h</code>;
 	refer to the header file for details.
-      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="sec-cs3-heap-stack"></a>5.3.3. Heap and Stack Placement</h3></div></div></div><p>
+      </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec-cs3-heap-stack"></a>5.3.3. Heap and Stack Placement</h3></div></div></div><p>
         CS3 linker scripts provide default placement of the heap and
 	stack in the RAM region.  However, you can override the defaults
 	by providing your own definitions of the associated CS3 variables.
@@ -154,10 +154,31 @@ unsigned char *__cs3_heap_limit = __cs3_heap_start + HEAPSIZE;
 </pre><p>
       </p><p>
 	The default initial stack pointer for bare-metal profiles
-	is given by the symbol <code class="varname">__cs3_stack</code>.
+	is given by the symbol <code class="varname">__cs3_stack</code>, and the stack
+        grows downward from this address.
 	Stack initialization is discussed in more detail in
 	<a class="xref" href="sec-cs3-startup.html#sec-cs3-assembly-initialization" title="5.2.2. The Assembly Initialization Phase">Section 5.2.2, &#8220;The Assembly Initialization Phase&#8221;</a>.
       </p><p>
         You can find C declarations for the CS3 heap and stack symbols
 	in the header file <code class="filename">cs3.h</code>.
+      </p><p>
+        The <code class="filename">cs3.h</code> header file also
+        defines a macro for creating a custom stack.  The custom stack is
+        created as a block of RAM in the zero-initialized data section (BSS).
+        The specified size must be a compile-time constant.  To account for
+        alignment, the final size of the stack may be a few bytes less than the
+        requested size.  The symbol <code class="varname">__cs3_stack</code> is
+        initialized to point to the last extent of the stack block, and is
+        16-byte aligned.
+
+        For example, the following fragment of C code creates a stack of 8192
+        bytes:
+
+        </p><pre class="programlisting">#include &lt;cs3.h&gt;
+
+CS3_STACK(2 * 4096);</pre><p>
+
+	As indicated in <a class="xref" href="sec-cs3-startup.html#sec-cs3-assembly-initialization" title="5.2.2. The Assembly Initialization Phase">Section 5.2.2, &#8220;The Assembly Initialization Phase&#8221;</a>,
+	there are cases where a boot monitor or simulator overrides a custom
+	stack.
       </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="sec-cs3-startup.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="chap-cs3.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="sec-cs3-interrupts.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">5.2. Program Startup and Termination </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 5.4. Interrupt Vectors and Handlers</td></tr></table></div></body></html>

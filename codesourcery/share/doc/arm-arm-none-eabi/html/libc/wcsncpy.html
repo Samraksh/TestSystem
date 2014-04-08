@@ -33,7 +33,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Wchar-strings.html#Wchar-strings">Wchar
 <hr>
 </div>
 
-<h3 class="section">6.18 <code>wcsncpy</code>&mdash;copy part of a wide-character string</h3>
+<h3 class="section">6.19 <code>wcsncpy</code>&mdash;copy part of a wide-character string</h3>
 
 <p><strong>Synopsis</strong>
 <pre class="example">     #include &lt;wchar.h&gt;
@@ -41,11 +41,13 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Wchar-strings.html#Wchar-strings">Wchar
      
 </pre>
    <p><strong>Description</strong><br>
-The <code>wcsncpy</code> function copies not more than n wide-character codes
+The <code>wcsncpy</code> function copies not more than <var>n</var> wide-character codes
 (wide-character codes that follow a null wide-character code are not
 copied) from the array pointed to by <var>s2</var> to the array pointed to
 by <var>s1</var>. If copying takes place between objects that overlap, the
-behaviour is undefined.
+behaviour is undefined.  Note that if <var>s1</var> contains more than <var>n</var>
+wide characters before its terminating null, the result is not
+null-terminated.
 
    <p>If the array pointed to by <var>s2</var> is a wide-character string that is
 shorter than <var>n</var> wide-character codes, null wide-character codes are
@@ -59,7 +61,7 @@ indicate an error.
 
    <p><br>
 <strong>Portability</strong><br>
-<code>wcsncpy</code> is ISO/IEC 9899/AMD1:1995 (ISO C).
+ISO/IEC 9899; POSIX.1.
 
    <p>No supporting OS subroutines are required.
 

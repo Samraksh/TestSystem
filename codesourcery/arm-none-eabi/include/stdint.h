@@ -242,6 +242,13 @@ typedef uint64_t  	uint_least32_t;
 #if defined(__PTRDIFF_TYPE__)
 typedef signed __PTRDIFF_TYPE__ intptr_t;
 typedef unsigned __PTRDIFF_TYPE__ uintptr_t;
+#define INTPTR_MAX PTRDIFF_MAX
+#define INTPTR_MIN PTRDIFF_MIN
+#ifdef __UINTPTR_MAX__
+#define UINTPTR_MAX __UINTPTR_MAX__
+#else
+#define UINTPTR_MAX (2UL * PTRDIFF_MAX + 1)
+#endif
 #else
 /*
  * Fallback to hardcoded values, 
@@ -249,6 +256,9 @@ typedef unsigned __PTRDIFF_TYPE__ uintptr_t;
  */
 typedef signed long intptr_t;
 typedef unsigned long uintptr_t;
+#define INTPTR_MAX __STDINT_EXP(LONG_MAX)
+#define INTPTR_MIN (-__STDINT_EXP(LONG_MAX) - 1)
+#define UINTPTR_MAX (__STDINT_EXP(LONG_MAX) * 2UL + 1)
 #endif
 
 /* Limits of Specified-Width Integer Types */

@@ -31,9 +31,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Wchar-strings.html#Wchar-strings">Wchar
 <hr>
 </div>
 
-<h3 class="section">6.28 <code>wcwidth</code>&mdash;number of column positions of a wide-character code</h3>
+<h3 class="section">6.29 <code>wcwidth</code>&mdash;number of column positions of a wide-character code</h3>
 
-<p><a name="index-wcwidth-379"></a><strong>Synopsis</strong>
+<p><a name="index-wcwidth-421"></a><strong>Synopsis</strong>
 <pre class="example">     #include &lt;wchar.h&gt;
      int wcwidth(const wchar_t <var>wc</var>);
      
@@ -51,10 +51,6 @@ The <code>wcwidth</code> function shall either return 0 (if <var>wc</var> is a n
 wide-character code), or return the number of column positions to
 be occupied by the wide-character code <var>wc</var>, or return -1 (if <var>wc</var>
 does not correspond to a printable wide-character code).
-
-   <p>The current implementation of <code>wcwidth</code> simply sets the width
-of all printable characters to 1 since newlib has no character
-tables around.
 
    <p><br>
 <strong>Portability</strong><br>

@@ -6,14 +6,15 @@
 <meta name="generator" content="makeinfo 4.13">
 <link title="Top" rel="start" href="index.html#Top">
 <link rel="up" href="i386_002dDependent.html#i386_002dDependent" title="i386-Dependent">
-<link rel="prev" href="i386_002dSIMD.html#i386_002dSIMD" title="i386-SIMD">
+<link rel="prev" href="i386_002dTBM.html#i386_002dTBM" title="i386-TBM">
 <link rel="next" href="i386_002dArch.html#i386_002dArch" title="i386-Arch">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
 This file documents the GNU Assembler "as".
 
-Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 2001, 2002,
-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+2000, 2001, 2002, 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation,
+Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
@@ -43,20 +44,21 @@ section entitled ``GNU Free Documentation License''.
 <a name="i386_002d16bit"></a>
 <p>
 Next:&nbsp;<a rel="next" accesskey="n" href="i386_002dArch.html#i386_002dArch">i386-Arch</a>,
-Previous:&nbsp;<a rel="previous" accesskey="p" href="i386_002dSIMD.html#i386_002dSIMD">i386-SIMD</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="i386_002dTBM.html#i386_002dTBM">i386-TBM</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="i386_002dDependent.html#i386_002dDependent">i386-Dependent</a>
 <hr>
 </div>
 
-<h4 class="subsection">9.13.12 Writing 16-bit Code</h4>
+<h4 class="subsection">9.15.15 Writing 16-bit Code</h4>
 
-<p><a name="index-i386-16_002dbit-code-970"></a><a name="index-g_t16_002dbit-code_002c-i386-971"></a><a name="index-real_002dmode-code_002c-i386-972"></a><a name="index-g_t_0040code_007bcode16gcc_007d-directive_002c-i386-973"></a><a name="index-g_t_0040code_007bcode16_007d-directive_002c-i386-974"></a><a name="index-g_t_0040code_007bcode32_007d-directive_002c-i386-975"></a><a name="index-g_t_0040code_007bcode64_007d-directive_002c-i386-976"></a><a name="index-g_t_0040code_007bcode64_007d-directive_002c-x86_002d64-977"></a>While <code>as</code> normally writes only &ldquo;pure&rdquo; 32-bit i386 code
+<p><a name="index-i386-16_002dbit-code-1052"></a><a name="index-g_t16_002dbit-code_002c-i386-1053"></a><a name="index-real_002dmode-code_002c-i386-1054"></a><a name="index-g_t_0040code_007bcode16gcc_007d-directive_002c-i386-1055"></a><a name="index-g_t_0040code_007bcode16_007d-directive_002c-i386-1056"></a><a name="index-g_t_0040code_007bcode32_007d-directive_002c-i386-1057"></a><a name="index-g_t_0040code_007bcode64_007d-directive_002c-i386-1058"></a><a name="index-g_t_0040code_007bcode64_007d-directive_002c-x86_002d64-1059"></a>While <code>as</code> normally writes only &ldquo;pure&rdquo; 32-bit i386 code
 or 64-bit x86-64 code depending on the default configuration,
 it also supports writing code to run in real mode or in 16-bit protected
 mode code segments.  To do this, put a &lsquo;<samp><span class="samp">.code16</span></samp>&rsquo; or
 &lsquo;<samp><span class="samp">.code16gcc</span></samp>&rsquo; directive before the assembly language instructions to
-be run in 16-bit mode.  You can switch <code>as</code> back to writing
-normal 32-bit code with the &lsquo;<samp><span class="samp">.code32</span></samp>&rsquo; directive.
+be run in 16-bit mode.  You can switch <code>as</code> to writing
+32-bit code with the &lsquo;<samp><span class="samp">.code32</span></samp>&rsquo; directive or 64-bit code with the
+&lsquo;<samp><span class="samp">.code64</span></samp>&rsquo; directive.
 
    <p>&lsquo;<samp><span class="samp">.code16gcc</span></samp>&rsquo; provides experimental support for generating 16-bit
 code from gcc, and differs from &lsquo;<samp><span class="samp">.code16</span></samp>&rsquo; in that &lsquo;<samp><span class="samp">call</span></samp>&rsquo;,

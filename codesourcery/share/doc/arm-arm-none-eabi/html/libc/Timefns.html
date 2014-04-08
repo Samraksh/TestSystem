@@ -68,6 +68,8 @@ the following fields:
 
      <br><dt><code>tm_isdst</code><dd>Daylight Savings Time flag: positive means DST in effect, zero means DST
 not in effect, negative means no information about DST is available. 
+Although for mktime(), negative means that it should decide if DST is in
+effect or not. 
 </dl>
 
 <ul class="menu">
@@ -78,7 +80,7 @@ not in effect, negative means no information about DST is available.
 <li><a accesskey="5" href="gmtime.html#gmtime">gmtime</a>:       Convert time to UTC (GMT) traditional representation
 <li><a accesskey="6" href="localtime.html#localtime">localtime</a>:    Convert time to local representation
 <li><a accesskey="7" href="mktime.html#mktime">mktime</a>:       Convert time to arithmetic representation
-<li><a accesskey="8" href="strftime.html#strftime">strftime</a>:     Flexible calendar time formatter
+<li><a accesskey="8" href="strftime.html#strftime">strftime</a>:     Convert date and time to a user-formatted string
 <li><a accesskey="9" href="time.html#time">time</a>:         Get current calendar time (as single number)
 <li><a href="_005f_005ftz_005flock.html#g_t_005f_005ftz_005flock">__tz_lock</a>:    Lock time zone global variables
 <li><a href="tzset.html#tzset">tzset</a>:        Set timezone info

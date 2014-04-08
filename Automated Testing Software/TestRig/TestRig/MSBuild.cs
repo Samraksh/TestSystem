@@ -21,6 +21,8 @@ namespace TestRig
         private string expectedPassResponse = String.Empty, expectedFailResponse = String.Empty;
         public StreamWriter input = null;
 
+        private string codesourceryVersion = "4.7.3";
+        //private string codesourceryVersion = "4.4.1";
         private StringWriter stdOutput = new StringWriter();
         public StringWriter Output { get { return stdOutput; } }
         private StringWriter stdError = new StringWriter();
@@ -118,10 +120,10 @@ namespace TestRig
                     RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
                     break;
                 case "4.3":
-                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
                     break;
                 default:
-                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
                     break;
             }
 
@@ -277,10 +279,10 @@ namespace TestRig
                     RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
                     break;
                 case "4.3":
-                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
                     break;
                 default:
-                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
                     break;
             }
             ChangeDirectories(path);
@@ -339,10 +341,10 @@ namespace TestRig
                     RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
                     break;
                 case "4.3":
-                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
                     break;
                 default:
-                    RunCommand(@"setenv_gcc.cmd 4.4.1 " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
                     break;
             }
             ChangeDirectories(path);

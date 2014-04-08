@@ -1,9 +1,10 @@
 /* Linker script for Altera Cyclone III Cortex-M1
  *
- * Version: Sourcery G++ Lite 2010q1-188
- * Support: https://support.codesourcery.com/GNUToolchain/
+ * Version: Sourcery CodeBench Lite 2013.05-23
+ * Support: https://sourcery.mentor.com/GNUToolchain/
  *
- * Copyright (c) 2007, 2008, 2009, 2010 CodeSourcery, Inc.
+ * Copyright (c) 2007-2010 CodeSourcery, Inc.
+ * Copyright (c) 2010-2013 Mentor Graphics, Inc.
  *
  * The authors hereby grant permission to use, copy, modify, distribute,
  * and license this software and its documentation for any purpose, provided
@@ -22,7 +23,7 @@ GROUP(-lgcc -lc -lcs3 -lcs3hosted -lcs3micro)
 
 MEMORY
 {
-  itcm (rwx) : ORIGIN = 0x00000000, LENGTH = 32K
+  itcm (rwx) : ORIGIN = 0x0, LENGTH = 32K
   ram (rwx) : ORIGIN = 0x20100000, LENGTH = 1M
   rom (rx) : ORIGIN = 0x60000000, LENGTH = 16M
 }
@@ -54,8 +55,8 @@ SECTIONS
   {
     CREATE_OBJECT_SYMBOLS
     __cs3_region_start_ram = .;
+    _ftext = .;
     *(.cs3.region-head.ram)
-    ASSERT (. == __cs3_region_start_ram, ".cs3.region-head.ram not permitted");
 
     PROVIDE(__cs3_reset = __cs3_reset_cycloneiii_cm1_ram);
     *(.cs3.reset)
@@ -73,10 +74,11 @@ SECTIONS
   .eh_frame_hdr : ALIGN (4)
   {
     KEEP (*(.eh_frame_hdr))
+    *(.eh_frame_entry .eh_frame_entry.*)
   } >ram
   .eh_frame : ALIGN (4)
   {
-    KEEP (*(.eh_frame))
+    KEEP (*(.eh_frame)) *(.eh_frame.*)
   } >ram
   /* .ARM.exidx is sorted, so has to go in its own output section.  */
   PROVIDE_HIDDEN (__exidx_start = .);
@@ -141,6 +143,14 @@ SECTIONS
     _etext = .;
   } >ram
 
+  ASSERT (!(__cs3_region_init_itcm & 7), "__cs3_region_init_itcm not aligned")
+  ASSERT (!(__cs3_region_start_itcm & 7), "__cs3_region_start_itcm not aligned")
+  ASSERT (!(__cs3_region_init_size_itcm & 7), "__cs3_region_init_size_itcm not aligned")
+  ASSERT (!(__cs3_region_zero_size_itcm & 7), "__cs3_region_zero_size_itcm not aligned")
+  ASSERT (!(__cs3_region_init_ram & 7), "__cs3_region_init_ram not aligned")
+  ASSERT (!(__cs3_region_start_ram & 7), "__cs3_region_start_ram not aligned")
+  ASSERT (!(__cs3_region_init_size_ram & 7), "__cs3_region_init_size_ram not aligned")
+  ASSERT (!(__cs3_region_zero_size_ram & 7), "__cs3_region_zero_size_ram not aligned")
   .cs3.itcm : ALIGN (8)
   {
     __cs3_region_start_itcm = .;
@@ -192,15 +202,17 @@ SECTIONS
     *(.data .data.* .gnu.linkonce.d.*)
     . = ALIGN (8);
     *(.ram)
+    . = ALIGN (8);
     _edata = .;
   } >ram
-  .bss :
+  .bss : ALIGN (8)
   {
     *(.shbss)
     *(.bss .bss.* .gnu.linkonce.b.*)
     *(COMMON)
     . = ALIGN (8);
     *(.ram.b .bss.ram)
+    . = ALIGN (8);
     _end = .;
     __end = .;
   } >ram
@@ -246,4 +258,4 @@ SECTIONS
   .ARM.attributes 0 : { KEEP (*(.ARM.attributes)) }
   /DISCARD/ : { *(.note.GNU-stack) }
 }
-/* checksum: 030fd69ce0f2110813017e2d */
+/* checksum: 0742540440c105759632813ed47 */

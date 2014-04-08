@@ -12,10 +12,11 @@
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -51,13 +52,13 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Altering.html#Altering">Altering</a>
 <h3 class="section">17.5 Calling Program Functions</h3>
 
      
-<a name="index-calling-functions-896"></a>
-<a name="index-inferior-functions_002c-calling-897"></a>
+<a name="index-calling-functions-1004"></a>
+<a name="index-inferior-functions_002c-calling-1005"></a>
 <dl><dt><code>print </code><var>expr</var><dd>Evaluate the expression <var>expr</var> and display the resulting value. 
 <var>expr</var> may include calls to functions in the program being
 debugged.
 
-     <p><a name="index-call-898"></a><br><dt><code>call </code><var>expr</var><dd>Evaluate the expression <var>expr</var> without displaying <code>void</code>
+     <p><a name="index-call-1006"></a><br><dt><code>call </code><var>expr</var><dd>Evaluate the expression <var>expr</var> without displaying <code>void</code>
 returned values.
 
      <p>You can use this variant of the <code>print</code> command if you want to
@@ -84,29 +85,29 @@ in that case is controlled by the
 <code>set unwind-on-terminating-exception</code> command.
 
      <dl>
-<dt><code>set unwindonsignal</code><dd><a name="index-set-unwindonsignal-899"></a><a name="index-unwind-stack-in-called-functions-900"></a><a name="index-call-dummy-stack-unwinding-901"></a>Set unwinding of the stack if a signal is received while in a function
+<dt><code>set unwindonsignal</code><dd><a name="index-set-unwindonsignal-1007"></a><a name="index-unwind-stack-in-called-functions-1008"></a><a name="index-call-dummy-stack-unwinding-1009"></a>Set unwinding of the stack if a signal is received while in a function
 that <span class="sc">gdb</span> called in the program being debugged.  If set to on,
 <span class="sc">gdb</span> unwinds the stack it created for the call and restores
 the context to what it was before the call.  If set to off (the
 default), <span class="sc">gdb</span> stops in the frame where the signal was
 received.
 
-     <br><dt><code>show unwindonsignal</code><dd><a name="index-show-unwindonsignal-902"></a>Show the current setting of stack unwinding in the functions called by
+     <br><dt><code>show unwindonsignal</code><dd><a name="index-show-unwindonsignal-1010"></a>Show the current setting of stack unwinding in the functions called by
 <span class="sc">gdb</span>.
 
-     <br><dt><code>set unwind-on-terminating-exception</code><dd><a name="index-set-unwind_002don_002dterminating_002dexception-903"></a><a name="index-unwind-stack-in-called-functions-with-unhandled-exceptions-904"></a><a name="index-call-dummy-stack-unwinding-on-unhandled-exception_002e-905"></a>Set unwinding of the stack if a C<tt>++</tt> exception is raised, but left
+     <br><dt><code>set unwind-on-terminating-exception</code><dd><a name="index-set-unwind_002don_002dterminating_002dexception-1011"></a><a name="index-unwind-stack-in-called-functions-with-unhandled-exceptions-1012"></a><a name="index-call-dummy-stack-unwinding-on-unhandled-exception_002e-1013"></a>Set unwinding of the stack if a C<tt>++</tt> exception is raised, but left
 unhandled while in a function that <span class="sc">gdb</span> called in the program being
 debugged.  If set to on (the default), <span class="sc">gdb</span> unwinds the stack
 it created for the call and restores the context to what it was before
 the call.  If set to off, <span class="sc">gdb</span> the exception is delivered to
 the default C<tt>++</tt> exception handler and the inferior terminated.
 
-     <br><dt><code>show unwind-on-terminating-exception</code><dd><a name="index-show-unwind_002don_002dterminating_002dexception-906"></a>Show the current setting of stack unwinding in the functions called by
+     <br><dt><code>show unwind-on-terminating-exception</code><dd><a name="index-show-unwind_002don_002dterminating_002dexception-1014"></a>Show the current setting of stack unwinding in the functions called by
 <span class="sc">gdb</span>.
 
    </dl>
 
-   <p><a name="index-weak-alias-functions-907"></a>Sometimes, a function you wish to call is actually a <dfn>weak alias</dfn>
+   <p><a name="index-weak-alias-functions-1015"></a>Sometimes, a function you wish to call is actually a <dfn>weak alias</dfn>
 for another function.  In such case, <span class="sc">gdb</span> might not pick up
 the type information, including the types of the function arguments,
 which causes <span class="sc">gdb</span> to call the inferior function incorrectly. 

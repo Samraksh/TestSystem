@@ -10,12 +10,12 @@
 <link rel="next" href="Gcov-and-Optimization.html#Gcov-and-Optimization" title="Gcov and Optimization">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
-Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
-2008 Free Software Foundation, Inc.
+Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997,
+1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+2010 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Funding Free Software'', the Front-Cover
 Texts being (a) (see below), and with the Back-Cover Texts being (b)
@@ -55,9 +55,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Gcov.html#Gcov">Gcov</a>
 <hr>
 </div>
 
-<h3 class="section">9.2 Invoking <samp><span class="command">gcov</span></samp></h3>
+<h3 class="section">10.2 Invoking <samp><span class="command">gcov</span></samp></h3>
 
-<pre class="smallexample">     gcov <span class="roman">[</span><var>options</var><span class="roman">]</span> <var>sourcefiles</var>
+<pre class="smallexample">     gcov <span class="roman">[</span><var>options</var><span class="roman">]</span> <var>files</var>
 </pre>
  <p><samp><span class="command">gcov</span></samp> accepts the following options:
 
@@ -86,19 +86,25 @@ the percentage of branches taken.
 
      <br><dt><code>-l</code><dt><code>--long-file-names</code><dd>Create long file names for included source files.  For example, if the
 header file <samp><span class="file">x.h</span></samp> contains code, and was included in the file
-<samp><span class="file">a.c</span></samp>, then running <samp><span class="command">gcov</span></samp> on the file <samp><span class="file">a.c</span></samp> will produce
-an output file called <samp><span class="file">a.c##x.h.gcov</span></samp> instead of <samp><span class="file">x.h.gcov</span></samp>. 
-This can be useful if <samp><span class="file">x.h</span></samp> is included in multiple source
-files.  If you use the &lsquo;<samp><span class="samp">-p</span></samp>&rsquo; option, both the including and
-included file names will be complete path names.
+<samp><span class="file">a.c</span></samp>, then running <samp><span class="command">gcov</span></samp> on the file <samp><span class="file">a.c</span></samp> will
+produce an output file called <samp><span class="file">a.c##x.h.gcov</span></samp> instead of
+<samp><span class="file">x.h.gcov</span></samp>.  This can be useful if <samp><span class="file">x.h</span></samp> is included in
+multiple source files and you want to see the individual
+contributions.  If you use the &lsquo;<samp><span class="samp">-p</span></samp>&rsquo; option, both the including
+and included file names will be complete path names.
 
      <br><dt><code>-p</code><dt><code>--preserve-paths</code><dd>Preserve complete path information in the names of generated
 <samp><span class="file">.gcov</span></samp> files.  Without this option, just the filename component is
 used.  With this option, all directories are used, with &lsquo;<samp><span class="samp">/</span></samp>&rsquo; characters
 translated to &lsquo;<samp><span class="samp">#</span></samp>&rsquo; characters, <samp><span class="file">.</span></samp> directory components
-removed and <samp><span class="file">..</span></samp>
+removed and unremoveable <samp><span class="file">..</span></samp>
 components renamed to &lsquo;<samp><span class="samp">^</span></samp>&rsquo;.  This is useful if sourcefiles are in several
-different directories.  It also affects the &lsquo;<samp><span class="samp">-l</span></samp>&rsquo; option.
+different directories.
+
+     <br><dt><code>-r</code><dt><code>--relative-only</code><dd>Only output information about source files with a relative pathname
+(after source prefix elision).  Absolute paths are usually system
+header files and coverage of any inline functions therein is normally
+uninteresting.
 
      <br><dt><code>-f</code><dt><code>--function-summaries</code><dd>Output summaries for each function in addition to the file level summary.
 
@@ -106,12 +112,19 @@ different directories.  It also affects the &lsquo;<samp><span class="samp">-l</
 object path name.  The <samp><span class="file">.gcno</span></samp>, and
 <samp><span class="file">.gcda</span></samp> data files are searched for using this option.  If a directory
 is specified, the data files are in that directory and named after the
-source file name, without its extension.  If a file is specified here,
-the data files are named after that file, without its extension.  If this
-option is not supplied, it defaults to the current directory.
+input file name, without its extension.  If a file is specified here,
+the data files are named after that file, without its extension.
+
+     <br><dt><code>-s </code><var>directory</var><dt><code>--source-prefix </code><var>directory</var><dd>A prefix for source file names to remove when generating the output
+coverage files.  This option is useful when building in a separate
+directory, and the pathname to the source directory is not wanted when
+determining the output file names.  Note that this prefix detection is
+applied before determining whether the source file is absolute.
 
      <br><dt><code>-u</code><dt><code>--unconditional-branches</code><dd>When branch probabilities are given, include those of unconditional branches. 
 Unconditional branches are normally not interesting.
+
+     <br><dt><code>-d</code><dt><code>--display-progress</code><dd>Display the progress on the standard output.
 
  </dl>
 
@@ -120,11 +133,16 @@ when you invoked the compiler.  Otherwise it will not be able to locate
 the source files.  <samp><span class="command">gcov</span></samp> produces files called
 <samp><var>mangledname</var><span class="file">.gcov</span></samp> in the current directory.  These contain
 the coverage information of the source file they correspond to. 
-One <samp><span class="file">.gcov</span></samp> file is produced for each source file containing code,
+One <samp><span class="file">.gcov</span></samp> file is produced for each source (or header) file
+containing code,
 which was compiled to produce the data files.  The <var>mangledname</var> part
 of the output file name is usually simply the source file name, but can
 be something more complicated if the &lsquo;<samp><span class="samp">-l</span></samp>&rsquo; or &lsquo;<samp><span class="samp">-p</span></samp>&rsquo; options are
 given.  Refer to those options for details.
+
+ <p>If you invoke <samp><span class="command">gcov</span></samp> with multiple input files, the
+contributions from each input file are summed.  Typically you would
+invoke it with the same list of files as the final link of your executable.
 
  <p>The <samp><span class="file">.gcov</span></samp> files contain the &lsquo;<samp><span class="samp">:</span></samp>&rsquo; separated fields along with
 program source code.  The format is
@@ -133,10 +151,13 @@ program source code.  The format is
 </pre>
  <p>Additional block information may succeed each line, when requested by
 command line option.  The <var>execution_count</var> is &lsquo;<samp><span class="samp">-</span></samp>&rsquo; for lines
-containing no code and &lsquo;<samp><span class="samp">#####</span></samp>&rsquo; for lines which were never executed. 
-Some lines of information at the start have <var>line_number</var> of zero.
+containing no code.  Unexecuted lines are marked &lsquo;<samp><span class="samp">#####</span></samp>&rsquo; or
+&lsquo;<samp><span class="samp">====</span></samp>&rsquo;, depending on whether they are reachable by
+non-exceptional paths or only exceptional paths such as C++ exception
+handlers, respectively.
 
- <p>The preamble lines are of the form
+ <p>Some lines of information at the start have <var>line_number</var> of zero. 
+These preamble lines are of the form
 
 <pre class="smallexample">     -:0:<var>tag</var>:<var>value</var>
 </pre>

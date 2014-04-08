@@ -11,10 +11,11 @@
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -47,12 +48,12 @@ Up:&nbsp;<a rel="up" accesskey="u" href="GDB_002fMI.html#GDB_002fMI">GDB/MI</a>
 <hr>
 </div>
 
-<h3 class="section">27.20 Miscellaneous <span class="sc">gdb/mi</span> Commands</h3>
+<h3 class="section">27.21 Miscellaneous <span class="sc">gdb/mi</span> Commands</h3>
 
 <!-- @subheading -gdb-complete -->
 <h4 class="subheading">The <code>-gdb-exit</code> Command</h4>
 
-<p><a name="index-g_t_002dgdb_002dexit-1869"></a>
+<p><a name="index-g_t_002dgdb_002dexit-2309"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -72,7 +73,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="GDB_002fMI.html#GDB_002fMI">GDB/MI</a>
 </pre>
 <h4 class="subheading">The <code>-gdb-set</code> Command</h4>
 
-<p><a name="index-g_t_002dgdb_002dset-1870"></a>
+<p><a name="index-g_t_002dgdb_002dset-2310"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -94,7 +95,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="GDB_002fMI.html#GDB_002fMI">GDB/MI</a>
 </pre>
 <h4 class="subheading">The <code>-gdb-show</code> Command</h4>
 
-<p><a name="index-g_t_002dgdb_002dshow-1871"></a>
+<p><a name="index-g_t_002dgdb_002dshow-2311"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -116,7 +117,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="GDB_002fMI.html#GDB_002fMI">GDB/MI</a>
 <!-- @subheading -gdb-source -->
 <h4 class="subheading">The <code>-gdb-version</code> Command</h4>
 
-<p><a name="index-g_t_002dgdb_002dversion-1872"></a>
+<p><a name="index-g_t_002dgdb_002dversion-2312"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -150,7 +151,7 @@ default shows this information when you start an interactive session.
 </pre>
 <h4 class="subheading">The <code>-list-features</code> Command</h4>
 
-<p><a name="index-g_t_002dlist_002dfeatures-1873"></a>
+<p><a name="index-g_t_002dlist_002dfeatures-2313"></a>
 Returns a list of particular features of the MI protocol that
 this version of gdb implements.  A feature can be a command,
 or a new field in an output of some command, or even an
@@ -171,20 +172,25 @@ is given below.
    <p>The current list of features is:
 
      <dl>
-<dt>&lsquo;<samp><span class="samp">frozen-varobjs</span></samp>&rsquo;<dd>Indicates presence of the <code>-var-set-frozen</code> command, as well
+<dt>&lsquo;<samp><span class="samp">frozen-varobjs</span></samp>&rsquo;<dd>Indicates support for the <code>-var-set-frozen</code> command, as well
 as possible presense of the <code>frozen</code> field in the output
 of <code>-varobj-create</code>. 
-<br><dt>&lsquo;<samp><span class="samp">pending-breakpoints</span></samp>&rsquo;<dd>Indicates presence of the <samp><span class="option">-f</span></samp> option to the <code>-break-insert</code> command. 
-<br><dt>&lsquo;<samp><span class="samp">python</span></samp>&rsquo;<dd>Indicates presence of Python scripting support, Python-based
+<br><dt>&lsquo;<samp><span class="samp">pending-breakpoints</span></samp>&rsquo;<dd>Indicates support for the <samp><span class="option">-f</span></samp> option to the <code>-break-insert</code>
+command. 
+<br><dt>&lsquo;<samp><span class="samp">python</span></samp>&rsquo;<dd>Indicates Python scripting support, Python-based
 pretty-printing commands, and possible presence of the
 &lsquo;<samp><span class="samp">display_hint</span></samp>&rsquo; field in the output of <code>-var-list-children</code>
-<br><dt>&lsquo;<samp><span class="samp">thread-info</span></samp>&rsquo;<dd>Indicates presence of the <code>-thread-info</code> command.
-
-   </dl>
+<br><dt>&lsquo;<samp><span class="samp">thread-info</span></samp>&rsquo;<dd>Indicates support for the <code>-thread-info</code> command. 
+<br><dt>&lsquo;<samp><span class="samp">data-read-memory-bytes</span></samp>&rsquo;<dd>Indicates support for the <code>-data-read-memory-bytes</code> and the
+<code>-data-write-memory-bytes</code> commands. 
+<br><dt>&lsquo;<samp><span class="samp">breakpoint-notifications</span></samp>&rsquo;<dd>Indicates that changes to breakpoints and breakpoints created via the
+CLI will be announced via async records. 
+<br><dt>&lsquo;<samp><span class="samp">ada-task-info</span></samp>&rsquo;<dd>Indicates support for the <code>-ada-task-info</code> command. 
+</dl>
 
 <h4 class="subheading">The <code>-list-target-features</code> Command</h4>
 
-<p><a name="index-g_t_002dlist_002dtarget_002dfeatures-1874"></a>
+<p><a name="index-g_t_002dlist_002dtarget_002dfeatures-2314"></a>
 Returns a list of particular features that are supported by the
 target.  Those features affect the permitted MI commands, but
 unlike the features reported by the <code>-list-features</code> command, the
@@ -204,11 +210,14 @@ Example output:
 execution, which means that <span class="sc">gdb</span> will accept further commands
 while the target is running.
 
+     <br><dt>&lsquo;<samp><span class="samp">reverse</span></samp>&rsquo;<dd>Indicates that the target is capable of reverse execution. 
+See <a href="Reverse-Execution.html#Reverse-Execution">Reverse Execution</a>, for more information.
+
    </dl>
 
 <h4 class="subheading">The <code>-list-thread-groups</code> Command</h4>
 
-<p><a name="index-g_t_002dlist_002dthread_002dgroups-1875"></a>
+<p><a name="index-g_t_002dlist_002dthread_002dgroups-2315"></a>
 
 <h4 class="subheading">Synopsis</h4>
 
@@ -260,13 +269,15 @@ is always an expensive operation and cache the results.
 have the following fields:
 
      <dl>
-<dt><code>id</code><dd>Identifier of the thread group.  This field is always present.
+<dt><code>id</code><dd>Identifier of the thread group.  This field is always present. 
+The identifier is an opaque string; frontends should not try to
+convert it to an integer, even though it might look like one.
 
      <br><dt><code>type</code><dd>The type of the thread group.  At present, only &lsquo;<samp><span class="samp">process</span></samp>&rsquo; is a
 valid type.
 
      <br><dt><code>pid</code><dd>The target-specific process identifier.  This field is only present
-for thread groups of type &lsquo;<samp><span class="samp">process</span></samp>&rsquo;.
+for thread groups of type &lsquo;<samp><span class="samp">process</span></samp>&rsquo; and only if the process exists.
 
      <br><dt><code>num_children</code><dd>The number of children this thread group has.  This field may be
 absent for an available thread group.
@@ -278,6 +289,10 @@ specified, and it's actually possible to obtain the threads.
      <br><dt><code>cores</code><dd>This field is a list of integers, each identifying a core that one
 thread of the group is running on.  This field may be absent if
 such information is not available.
+
+     <br><dt><code>executable</code><dd>The name of the executable file that corresponds to this thread group. 
+The field is only present for thread groups of type &lsquo;<samp><span class="samp">process</span></samp>&rsquo;,
+and only if there is a corresponding executable file.
 
    </dl>
 
@@ -303,9 +318,100 @@ such information is not available.
                     threads=[{id="1",target-id="Thread 0xb7e14b90",cores=[1]},
                              {id="2",target-id="Thread 0xb7e14b90",cores=[2]}]},...]
 </pre>
+<h4 class="subheading">The <code>-info-os</code> Command</h4>
+
+<p><a name="index-g_t_002dinfo_002dos-2316"></a>
+
+<h5 class="subsubheading">Synopsis</h5>
+
+<pre class="smallexample">     -info-os [ <var>type</var> ]
+</pre>
+   <p>If no argument is supplied, the command returns a table of available
+operating-system-specific information types.  If one of these types is
+supplied as an argument <var>type</var>, then the command returns a table
+of data of that type.
+
+   <p>The types of information available depend on the target operating
+system.
+
+<h5 class="subsubheading"><span class="sc">gdb</span> Command</h5>
+
+<p>The corresponding <span class="sc">gdb</span> command is &lsquo;<samp><span class="samp">info os</span></samp>&rsquo;.
+
+<h5 class="subsubheading">Example</h5>
+
+<p>When run on a <span class="sc">gnu</span>/Linux system, the output will look something
+like this:
+
+<pre class="smallexample">     gdb
+     -info-os
+     ^done,OSDataTable={nr_rows="9",nr_cols="3",
+     hdr=[{width="10",alignment="-1",col_name="col0",colhdr="Type"},
+          {width="10",alignment="-1",col_name="col1",colhdr="Description"},
+          {width="10",alignment="-1",col_name="col2",colhdr="Title"}],
+     body=[item={col0="processes",col1="Listing of all processes",
+                 col2="Processes"},
+           item={col0="procgroups",col1="Listing of all process groups",
+                 col2="Process groups"},
+           item={col0="threads",col1="Listing of all threads",
+                 col2="Threads"},
+           item={col0="files",col1="Listing of all file descriptors",
+                 col2="File descriptors"},
+           item={col0="sockets",col1="Listing of all internet-domain sockets",
+                 col2="Sockets"},
+           item={col0="shm",col1="Listing of all shared-memory regions",
+                 col2="Shared-memory regions"},
+           item={col0="semaphores",col1="Listing of all semaphores",
+                 col2="Semaphores"},
+           item={col0="msg",col1="Listing of all message queues",
+                 col2="Message queues"},
+           item={col0="modules",col1="Listing of all loaded kernel modules",
+                 col2="Kernel modules"}]}
+     gdb
+     -info-os processes
+     ^done,OSDataTable={nr_rows="190",nr_cols="4",
+     hdr=[{width="10",alignment="-1",col_name="col0",colhdr="pid"},
+          {width="10",alignment="-1",col_name="col1",colhdr="user"},
+          {width="10",alignment="-1",col_name="col2",colhdr="command"},
+          {width="10",alignment="-1",col_name="col3",colhdr="cores"}],
+     body=[item={col0="1",col1="root",col2="/sbin/init",col3="0"},
+           item={col0="2",col1="root",col2="[kthreadd]",col3="1"},
+           item={col0="3",col1="root",col2="[ksoftirqd/0]",col3="0"},
+           ...
+           item={col0="26446",col1="stan",col2="bash",col3="0"},
+           item={col0="28152",col1="stan",col2="bash",col3="1"}]}
+     (gdb)
+</pre>
+   <p>(Note that the MI output here includes a <code>"Title"</code> column that
+does not appear in command-line <code>info os</code>; this column is useful
+for MI clients that want to enumerate the types of data, such as in a
+popup menu, but is needless clutter on the command line, and
+<code>info os</code> omits it.)
+
+<h4 class="subheading">The <code>-add-inferior</code> Command</h4>
+
+<p><a name="index-g_t_002dadd_002dinferior-2317"></a>
+
+<h4 class="subheading">Synopsis</h4>
+
+<pre class="smallexample">     -add-inferior
+</pre>
+   <p>Creates a new inferior (see <a href="Inferiors-and-Programs.html#Inferiors-and-Programs">Inferiors and Programs</a>).  The created
+inferior is not associated with any executable.  Such association may
+be established with the &lsquo;<samp><span class="samp">-file-exec-and-symbols</span></samp>&rsquo; command
+(see <a href="GDB_002fMI-File-Commands.html#GDB_002fMI-File-Commands">GDB/MI File Commands</a>).  The command response has a single
+field, &lsquo;<samp><span class="samp">thread-group</span></samp>&rsquo;, whose value is the identifier of the
+thread group corresponding to the new inferior.
+
+<h4 class="subheading">Example</h4>
+
+<pre class="smallexample">     gdb
+     -add-inferior
+     ^done,thread-group="i3"
+</pre>
 <h4 class="subheading">The <code>-interpreter-exec</code> Command</h4>
 
-<p><a name="index-g_t_002dinterpreter_002dexec-1876"></a>
+<p><a name="index-g_t_002dinterpreter_002dexec-2318"></a>
 
 <h4 class="subheading">Synopsis</h4>
 
@@ -329,7 +435,7 @@ such information is not available.
 </pre>
 <h4 class="subheading">The <code>-inferior-tty-set</code> Command</h4>
 
-<p><a name="index-g_t_002dinferior_002dtty_002dset-1877"></a>
+<p><a name="index-g_t_002dinferior_002dtty_002dset-2319"></a>
 
 <h4 class="subheading">Synopsis</h4>
 
@@ -350,7 +456,7 @@ such information is not available.
 </pre>
 <h4 class="subheading">The <code>-inferior-tty-show</code> Command</h4>
 
-<p><a name="index-g_t_002dinferior_002dtty_002dshow-1878"></a>
+<p><a name="index-g_t_002dinferior_002dtty_002dshow-2320"></a>
 
 <h4 class="subheading">Synopsis</h4>
 
@@ -374,7 +480,7 @@ such information is not available.
 </pre>
 <h4 class="subheading">The <code>-enable-timings</code> Command</h4>
 
-<p><a name="index-g_t_002denable_002dtimings-1879"></a>
+<p><a name="index-g_t_002denable_002dtimings-2321"></a>
 
 <h4 class="subheading">Synopsis</h4>
 

@@ -12,10 +12,11 @@
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -49,9 +50,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="GDB_002fMI.html#GDB_002fMI">GDB/MI</a>
 <hr>
 </div>
 
-<h3 class="section">27.14 <span class="sc">gdb/mi</span> Data Manipulation</h3>
+<h3 class="section">27.15 <span class="sc">gdb/mi</span> Data Manipulation</h3>
 
-<p><a name="index-data-manipulation_002c-in-_0040sc_007bgdb_002fmi_007d-1847"></a><a name="index-g_t_0040sc_007bgdb_002fmi_007d_002c-data-manipulation-1848"></a>This section describes the <span class="sc">gdb/mi</span> commands that manipulate data:
+<p><a name="index-data-manipulation_002c-in-_0040sc_007bgdb_002fmi_007d-2277"></a><a name="index-g_t_0040sc_007bgdb_002fmi_007d_002c-data-manipulation-2278"></a>This section describes the <span class="sc">gdb/mi</span> commands that manipulate data:
 examine memory and registers, evaluate expressions, etc.
 
 <!-- REMOVED FROM THE INTERFACE. -->
@@ -63,7 +64,7 @@ examine memory and registers, evaluate expressions, etc.
 <!-- N.A. -->
 <h4 class="subheading">The <code>-data-disassemble</code> Command</h4>
 
-<p><a name="index-g_t_002ddata_002ddisassemble-1849"></a>
+<p><a name="index-g_t_002ddata_002ddisassemble-2279"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -87,8 +88,9 @@ specified.  If <var>end-addr</var> is specified as a non-zero value, and
 displayed; if <var>lines</var> is higher than the number of lines between
 <var>start-addr</var> and <var>end-addr</var>, only the lines up to <var>end-addr</var>
 are displayed. 
-<br><dt>&lsquo;<samp><var>mode</var></samp>&rsquo;<dd>is either 0 (meaning only disassembly) or 1 (meaning mixed source and
-disassembly). 
+<br><dt>&lsquo;<samp><var>mode</var></samp>&rsquo;<dd>is either 0 (meaning only disassembly), 1 (meaning mixed source and
+disassembly), 2 (meaning disassembly with raw opcodes), or 3 (meaning
+mixed source and disassembly with raw opcodes). 
 </dl>
 
 <h5 class="subsubheading">Result</h5>
@@ -179,7 +181,7 @@ directly by <span class="sc">gdb/mi</span>, i.e., it is not possible to adjust i
 </pre>
    <h4 class="subheading">The <code>-data-evaluate-expression</code> Command</h4>
 
-<p><a name="index-g_t_002ddata_002devaluate_002dexpression-1850"></a>
+<p><a name="index-g_t_002ddata_002devaluate_002dexpression-2280"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -216,7 +218,7 @@ output.
 </pre>
    <h4 class="subheading">The <code>-data-list-changed-registers</code> Command</h4>
 
-<p><a name="index-g_t_002ddata_002dlist_002dchanged_002dregisters-1851"></a>
+<p><a name="index-g_t_002ddata_002dlist_002dchanged_002dregisters-2281"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -250,7 +252,7 @@ has the corresponding command &lsquo;<samp><span class="samp">gdb_changed_regist
 </pre>
    <h4 class="subheading">The <code>-data-list-register-names</code> Command</h4>
 
-<p><a name="index-g_t_002ddata_002dlist_002dregister_002dnames-1852"></a>
+<p><a name="index-g_t_002ddata_002dlist_002dregister_002dnames-2282"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -288,7 +290,7 @@ corresponding command &lsquo;<samp><span class="samp">gdb_regnames</span></samp>
 </pre>
    <h4 class="subheading">The <code>-data-list-register-values</code> Command</h4>
 
-<p><a name="index-g_t_002ddata_002dlist_002dregister_002dvalues-1853"></a>
+<p><a name="index-g_t_002ddata_002dlist_002dregister_002dvalues-2283"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -366,7 +368,8 @@ don't appear in the actual output):
 </pre>
    <h4 class="subheading">The <code>-data-read-memory</code> Command</h4>
 
-<p><a name="index-g_t_002ddata_002dread_002dmemory-1854"></a>
+<p><a name="index-g_t_002ddata_002dread_002dmemory-2284"></a>
+This command is deprecated, use <code>-data-read-memory-bytes</code> instead.
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -462,6 +465,106 @@ used as the non-printable character.
      {addr="0x000013bc",data=["0x2c","0x2d","0x2e","0x2f"],ascii=",-./"}]
      (gdb)
 </pre>
-   <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+   <h4 class="subheading">The <code>-data-read-memory-bytes</code> Command</h4>
+
+<p><a name="index-g_t_002ddata_002dread_002dmemory_002dbytes-2285"></a>
+
+<h5 class="subsubheading">Synopsis</h5>
+
+<pre class="smallexample">      -data-read-memory-bytes [ -o <var>byte-offset</var> ]
+        <var>address</var> <var>count</var>
+</pre>
+<p class="noindent">where:
+
+     <dl>
+<dt>&lsquo;<samp><var>address</var></samp>&rsquo;<dd>An expression specifying the address of the first memory word to be
+read.  Complex expressions containing embedded white space should be
+quoted using the C convention.
+
+     <br><dt>&lsquo;<samp><var>count</var></samp>&rsquo;<dd>The number of bytes to read.  This should be an integer literal.
+
+     <br><dt>&lsquo;<samp><var>byte-offset</var></samp>&rsquo;<dd>The offsets in bytes relative to <var>address</var> at which to start
+reading.  This should be an integer literal.  This option is provided
+so that a frontend is not required to first evaluate address and then
+perform address arithmetics itself.
+
+   </dl>
+
+   <p>This command attempts to read all accessible memory regions in the
+specified range.  First, all regions marked as unreadable in the memory
+map (if one is defined) will be skipped.  See <a href="Memory-Region-Attributes.html#Memory-Region-Attributes">Memory Region Attributes</a>.  Second, <span class="sc">gdb</span> will attempt to read the remaining
+regions.  For each one, if reading full region results in an errors,
+<span class="sc">gdb</span> will try to read a subset of the region.
+
+   <p>In general, every single byte in the region may be readable or not,
+and the only way to read every readable byte is to try a read at
+every address, which is not practical.   Therefore, <span class="sc">gdb</span> will
+attempt to read all accessible bytes at either beginning or the end
+of the region, using a binary division scheme.  This heuristic works
+well for reading accross a memory map boundary.  Note that if a region
+has a readable range that is neither at the beginning or the end,
+<span class="sc">gdb</span> will not read it.
+
+   <p>The result record (see <a href="GDB_002fMI-Result-Records.html#GDB_002fMI-Result-Records">GDB/MI Result Records</a>) that is output of
+the command includes a field named &lsquo;<samp><span class="samp">memory</span></samp>&rsquo; whose content is a
+list of tuples.  Each tuple represent a successfully read memory block
+and has the following fields:
+
+     <dl>
+<dt><code>begin</code><dd>The start address of the memory block, as hexadecimal literal.
+
+     <br><dt><code>end</code><dd>The end address of the memory block, as hexadecimal literal.
+
+     <br><dt><code>offset</code><dd>The offset of the memory block, as hexadecimal literal, relative to
+the start address passed to <code>-data-read-memory-bytes</code>.
+
+     <br><dt><code>contents</code><dd>The contents of the memory block, in hex.
+
+   </dl>
+
+<h5 class="subsubheading"><span class="sc">gdb</span> Command</h5>
+
+<p>The corresponding <span class="sc">gdb</span> command is &lsquo;<samp><span class="samp">x</span></samp>&rsquo;.
+
+<h5 class="subsubheading">Example</h5>
+
+<pre class="smallexample">     (gdb)
+     -data-read-memory-bytes &amp;a 10
+     ^done,memory=[{begin="0xbffff154",offset="0x00000000",
+                   end="0xbffff15e",
+                   contents="01000000020000000300"}]
+     (gdb)
+</pre>
+<h4 class="subheading">The <code>-data-write-memory-bytes</code> Command</h4>
+
+<p><a name="index-g_t_002ddata_002dwrite_002dmemory_002dbytes-2286"></a>
+
+<h5 class="subsubheading">Synopsis</h5>
+
+<pre class="smallexample">      -data-write-memory-bytes <var>address</var> <var>contents</var>
+</pre>
+<p class="noindent">where:
+
+     <dl>
+<dt>&lsquo;<samp><var>address</var></samp>&rsquo;<dd>An expression specifying the address of the first memory word to be
+read.  Complex expressions containing embedded white space should be
+quoted using the C convention.
+
+     <br><dt>&lsquo;<samp><var>contents</var></samp>&rsquo;<dd>The hex-encoded bytes to write.
+
+   </dl>
+
+<h5 class="subsubheading"><span class="sc">gdb</span> Command</h5>
+
+<p>There's no corresponding <span class="sc">gdb</span> command.
+
+<h5 class="subsubheading">Example</h5>
+
+<pre class="smallexample">     (gdb)
+     -data-write-memory-bytes &amp;a "aabbccdd"
+     ^done
+     (gdb)
+</pre>
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
    </body></html>
 

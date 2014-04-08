@@ -10,12 +10,12 @@
 <link rel="next" href="C_002b_002b-Attributes.html#C_002b_002b-Attributes" title="C++ Attributes">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
-Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
-2008 Free Software Foundation, Inc.
+Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997,
+1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+2010 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Funding Free Software'', the Front-Cover
 Texts being (a) (see below), and with the Back-Cover Texts being (b)
@@ -55,9 +55,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="C_002b_002b-Extensions.html#C_002b_002b
 <hr>
 </div>
 
-<h3 class="section">6.6 Extracting the function pointer from a bound pointer to member function</h3>
+<h3 class="section">7.6 Extracting the function pointer from a bound pointer to member function</h3>
 
-<p><a name="index-pmf-3003"></a><a name="index-pointer-to-member-function-3004"></a><a name="index-bound-pointer-to-member-function-3005"></a>
+<p><a name="index-pmf-3424"></a><a name="index-pointer-to-member-function-3425"></a><a name="index-bound-pointer-to-member-function-3426"></a>
 In C++, pointer to member functions (PMFs) are implemented using a wide
 pointer of sorts to handle all the possible call mechanisms; the PMF
 needs to store information about how to adjust the &lsquo;<samp><span class="samp">this</span></samp>&rsquo; pointer,
@@ -87,7 +87,7 @@ converted to function pointers directly:
 
 <pre class="smallexample">     fptr p1 = (fptr)(&amp;A::foo);
 </pre>
- <p><a name="index-Wno_002dpmf_002dconversions-3006"></a>You must specify <samp><span class="option">-Wno-pmf-conversions</span></samp> to use this extension.
+ <p><a name="index-Wno_002dpmf_002dconversions-3427"></a>You must specify <samp><span class="option">-Wno-pmf-conversions</span></samp> to use this extension.
 
  </body></html>
 

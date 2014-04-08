@@ -12,10 +12,11 @@
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -48,7 +49,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Agent-Expressions.html#Agent-Expression
 <hr>
 </div>
 
-<h3 class="section">E.2 Bytecode Descriptions</h3>
+<h3 class="section">F.2 Bytecode Descriptions</h3>
 
 <p>Each bytecode description has the following form:
 
@@ -198,6 +199,14 @@ exception of some sort, terminate with an error.
 
      <br><dt><code>pop</code> (0x29): <var>a</var> =&gt;<dd>Discard the top value on the stack.
 
+     <br><dt><code>pick</code> (0x32) <var>n</var>: <var>a</var> <small class="dots">...</small> <var>b</var> =&gt; <var>a</var> <small class="dots">...</small> <var>b</var> <var>a</var><dd>Duplicate an item from the stack and push it on the top of the stack. 
+<var>n</var>, a single byte, indicates the stack item to copy.  If <var>n</var>
+is zero, this is the same as <code>dup</code>; if <var>n</var> is one, it copies
+the item under the top item, etc.  If <var>n</var> exceeds the number of
+items on the stack, terminate with an error.
+
+     <br><dt><code>rot</code> (0x33): <var>a</var> <var>b</var> <var>c</var> =&gt; <var>c</var> <var>b</var> <var>a</var><dd>Rotate the top three items on the stack.
+
      <br><dt><code>if_goto</code> (0x20) <var>offset</var>: <var>a</var> &rArr;<dd>Pop an integer off the stack; if it is non-zero, branch to the given
 offset in the bytecode string.  Otherwise, continue to the next
 instruction in the bytecode stream.  In other words, if <var>a</var> is
@@ -272,6 +281,26 @@ named <code>trace_quick16</code>, for consistency.
 
      <br><dt><code>tracev</code> (0x2e) <var>n</var>: &rArr; <var>a</var><dd>Record the value of trace state variable number <var>n</var> in the trace
 buffer.  The handling of <var>n</var> is as described for <code>getv</code>.
+
+     <br><dt><code>tracenz</code> (0x2f)  <var>addr</var> <var>size</var> &rArr;<dd>Record the bytes at <var>addr</var> in a trace buffer, for later retrieval
+by GDB.  Stop at either the first zero byte, or when <var>size</var> bytes
+have been recorded, whichever occurs first.
+
+     <br><dt><code>printf</code> (0x34)  <var>numargs</var> <var>string</var> &rArr;<dd>Do a formatted print, in the style of the C function <code>printf</code>). 
+The value of <var>numargs</var> is the number of arguments to expect on the
+stack, while <var>string</var> is the format string, prefixed with a
+two-byte length.  The last byte of the string must be zero, and is
+included in the length.  The format string includes escaped sequences
+just as it appears in C source, so for instance the format string
+<code>"\t%d\n"</code> is six characters long, and the output will consist of
+a tab character, a decimal number, and a newline.  At the top of the
+stack, above the values to be printed, this bytecode will pop a
+&ldquo;function&rdquo; and &ldquo;channel&rdquo;.  If the function is nonzero, then the
+target may treat it as a function and call it, passing the channel as
+a first argument, as with the C function <code>fprintf</code>.  If the
+function is zero, then the target may simply call a standard formatted
+print function of its choice.  In all, this bytecode pops 2 +
+<var>numargs</var> stack elements, and pushes nothing.
 
      <br><dt><code>end</code> (0x27): &rArr;<dd>Stop executing bytecode; the result should be the top element of the
 stack.  If the purpose of the expression was to compute an lvalue or a

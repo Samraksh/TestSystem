@@ -33,9 +33,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Stdio.html#Stdio">Stdio</a>
 <hr>
 </div>
 
-<h3 class="section">4.59 <code>sprintf</code>, <code>fprintf</code>, <code>printf</code>, <code>snprintf</code>, <code>asprintf</code>, <code>asnprintf</code>&mdash;format output</h3>
+<h3 class="section">4.60 <code>sprintf</code>, <code>fprintf</code>, <code>printf</code>, <code>snprintf</code>, <code>asprintf</code>, <code>asnprintf</code>&mdash;format output</h3>
 
-<p><a name="index-fprintf-272"></a><a name="index-g_t_005ffprintf_005fr-273"></a><a name="index-printf-274"></a><a name="index-g_t_005fprintf_005fr-275"></a><a name="index-asprintf-276"></a><a name="index-g_t_005fasprintf_005fr-277"></a><a name="index-sprintf-278"></a><a name="index-g_t_005fsprintf_005fr-279"></a><a name="index-snprintf-280"></a><a name="index-g_t_005fsnprintf_005fr-281"></a><a name="index-asnprintf-282"></a><a name="index-g_t_005fasnprintf_005fr-283"></a><strong>Synopsis</strong>
+<p><a name="index-fprintf-284"></a><a name="index-g_t_005ffprintf_005fr-285"></a><a name="index-printf-286"></a><a name="index-g_t_005fprintf_005fr-287"></a><a name="index-asprintf-288"></a><a name="index-g_t_005fasprintf_005fr-289"></a><a name="index-sprintf-290"></a><a name="index-g_t_005fsprintf_005fr-291"></a><a name="index-snprintf-292"></a><a name="index-g_t_005fsnprintf_005fr-293"></a><a name="index-asnprintf-294"></a><a name="index-g_t_005fasnprintf_005fr-295"></a><strong>Synopsis</strong>
 <pre class="example">     #include &lt;stdio.h&gt;
      
      int printf(const char *<var>format</var>, ...);
@@ -125,7 +125,9 @@ specifying <var>pos</var>, which is a decimal integer followed by
 limits.h, and if argument <code>%n$</code> is requested, all earlier
 arguments must be requested somewhere within <var>format</var>.  If
 positional parameters are used, then all conversion
-specifications except for <code>%%</code> must specify a position.
+specifications except for <code>%%</code> must specify a position. 
+This positional parameters method is a POSIX extension to the C
+standard definition for the functions.
 
      <li><var>flags</var>
 
@@ -138,12 +140,13 @@ combination, although not all flags can be used for all
 conversion specification types.
 
           <dl>
-<dt><code>'</code><dd>Since newlib only supports the C locale, this
-flag has no effect in this implementation. 
-But in other locales, when <var>type</var> is <code>i</code>,
-<code>d</code>, <code>u</code>, <code>f</code>, <code>F</code>, <code>g</code>, or <code>G</code>,
-the locale-dependent thousand's separator is
-inserted prior to zero padding.
+<dt><code>'</code><dd>A POSIX extension to the C standard.  However, this
+implementation presently treats it as a no-op, which
+is the default behavior for the C locale, anyway.  (If
+it did what it is supposed to, when <var>type</var> were <code>i</code>,
+<code>d</code>, <code>u</code>, <code>f</code>, <code>F</code>, <code>g</code>, or <code>G</code>, the
+integer portion of the conversion would be formatted
+with thousands' grouping wide characters.)
 
           <br><dt><code>-</code><dd>The result of the conversion is left
 justified, and the right is padded with
@@ -167,7 +170,7 @@ appear, the space flag is ignored.
 
           <br><dt><code>0</code><dd>If the <var>type</var> character is <code>d</code>, <code>i</code>,
 <code>o</code>, <code>u</code>, <code>x</code>, <code>X</code>, <code>a</code>, <code>A</code>,
-<code>e</code>, <code>E</code>, <code>f</code>, <code>g</code>, or <code>G</code>: leading
+<code>e</code>, <code>E</code>, <code>f</code>, <code>F</code>, <code>g</code>, or <code>G</code>:  leading
 zeros are used to pad the field width
 (following any indication of sign or base); no
 spaces are used for padding.  If the zero
@@ -322,11 +325,10 @@ pointer to a <code>long long</code>.
 pointer to an <code>intmax_t</code>.
 
           <br><dt><code>z</code><dd>With <code>d</code>, <code>i</code>, <code>o</code>, <code>u</code>, <code>x</code>, or
-<code>X</code>, specifies that the argument is a
-<code>ssize_t</code> or <code>size_t</code>.
+<code>X</code>, specifies that the argument is a <code>size_t</code>.
 
           <p>With <code>n</code>, specifies that the argument is a
-pointer to a <code>ssize_t</code>.
+pointer to a <code>size_t</code>.
 
           <br><dt><code>t</code><dd>With <code>d</code>, <code>i</code>, <code>o</code>, <code>u</code>, <code>x</code>, or
 <code>X</code>, specifies that the argument is a
@@ -353,7 +355,7 @@ performs.  Here is a table of these:
 <code>l</code> size specifier is in effect, a multibyte
 character is printed.
 
-          <br><dt><code>C</code><dd>Short for <code>%lc</code>.
+          <br><dt><code>C</code><dd>Short for <code>%lc</code>.  A POSIX extension to the C standard.
 
           <br><dt><code>s</code><dd>Prints the elements of a pointer to <code>char</code>
 until the precision or a null character is
@@ -362,34 +364,34 @@ effect, the pointer is to an array of
 <code>wchar_t</code>, and the string is converted to
 multibyte characters before printing.
 
-          <br><dt><code>S</code><dd>Short for <code>%ls</code>.
+          <br><dt><code>S</code><dd>Short for <code>%ls</code>.  A POSIX extension to the C standard.
 
           <br><dt><code>d or i</code><dd>Prints a signed decimal integer; takes an
 <code>int</code>.  Leading zeros are inserted as
-necessary to reach the precision.  A precision
-of 0 produces an empty string.
+necessary to reach the precision.  A value of 0 with
+a precision of 0 produces an empty string.
 
           <br><dt><code>D</code><dd>Newlib extension, short for <code>%ld</code>.
 
           <br><dt><code>o</code><dd>Prints an unsigned octal integer; takes an
 <code>unsigned</code>.  Leading zeros are inserted as
-necessary to reach the precision.  A precision
-of 0 produces an empty string.
+necessary to reach the precision.  A value of 0 with
+a precision of 0 produces an empty string.
 
           <br><dt><code>O</code><dd>Newlib extension, short for <code>%lo</code>.
 
           <br><dt><code>u</code><dd>Prints an unsigned decimal integer; takes an
 <code>unsigned</code>.  Leading zeros are inserted as
-necessary to reach the precision.  A precision
-of 0 produces an empty string.
+necessary to reach the precision.  A value of 0 with
+a precision of 0 produces an empty string.
 
           <br><dt><code>U</code><dd>Newlib extension, short for <code>%lu</code>.
 
           <br><dt><code>x</code><dd>Prints an unsigned hexadecimal integer (using
 <code>abcdef</code> as digits beyond <code>9</code>); takes an
 <code>unsigned</code>.  Leading zeros are inserted as
-necessary to reach the precision.  A precision
-of 0 produces an empty string.
+necessary to reach the precision.  A value of 0 with
+a precision of 0 produces an empty string.
 
           <br><dt><code>X</code><dd>Like <code>x</code>, but uses <code>ABCDEF</code> as digits
 beyond <code>9</code>.
@@ -485,6 +487,10 @@ otherwise it returns an allocated string.
 <code>fputc</code>.  For <code>asprintf</code> and <code>asnprintf</code>, <code>errno</code> may be set
 to ENOMEM if allocation fails, and for <code>snprintf</code>, <code>errno</code> may be
 set to EOVERFLOW if <var>size</var> or the output length exceeds INT_MAX.
+
+   <p><br>
+<strong>Bugs</strong><br>
+The &ldquo;&rdquo;' (quote) flag does not work when locale's thousands_sep is not empty.
 
    <p><br>
 <strong>Portability</strong><br>

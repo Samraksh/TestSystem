@@ -7,6 +7,7 @@
 #ifndef _STDLIB_H_
 #define _STDLIB_H_
 
+#include <machine/ieeefp.h>
 #include "_ansi.h"
 
   /* Indicate that we honor AEABI portability if requested.  */
@@ -59,13 +60,13 @@ typedef struct
 
 #define RAND_MAX __RAND_MAX
 
+int	_EXFUN(__locale_mb_cur_max,(_VOID));
+
 #ifdef _AEABI_PORTABLE
 extern int _EXFUN(__aeabi_MB_CUR_MAX,(void));
 #define MB_CUR_MAX (__aeabi_MB_CUR_MAX())
 #else
-extern __IMPORT int __mb_cur_max;
-
-#define MB_CUR_MAX __mb_cur_max
+#define MB_CUR_MAX __locale_mb_cur_max()
 #endif /* _AEABI_PORTABLE */
 
 _VOID	_EXFUN(abort,(_VOID) _ATTRIBUTE ((noreturn)));
@@ -83,7 +84,7 @@ _PTR	_EXFUN(bsearch,(const _PTR __key,
 		       const _PTR __base,
 		       size_t __nmemb,
 		       size_t __size,
-		       int _EXPARM(_compar,(const _PTR, const _PTR))));
+		       int _EXFNPTR(_compar,(const _PTR, const _PTR))));
 _PTR	_EXFUN_NOTHROW(calloc,(size_t __nmemb, size_t __size));
 div_t	_EXFUN(div,(int __numer, int __denom));
 _VOID	_EXFUN(exit,(int __status) _ATTRIBUTE ((noreturn)));
@@ -92,6 +93,10 @@ char *  _EXFUN(getenv,(const char *__string));
 char *	_EXFUN(_getenv_r,(struct _reent *, const char *__string));
 char *	_EXFUN(_findenv,(_CONST char *, int *));
 char *	_EXFUN(_findenv_r,(struct _reent *, _CONST char *, int *));
+#ifndef __STRICT_ANSI__
+extern char *suboptarg;			/* getsubopt(3) external variable */
+int	_EXFUN(getsubopt,(char **, char * const *, char **));
+#endif
 long	_EXFUN(labs,(long));
 ldiv_t	_EXFUN(ldiv,(long __numer, long __denom));
 _PTR	_EXFUN_NOTHROW(malloc,(size_t __size));
@@ -107,9 +112,19 @@ size_t	_EXFUN(wcstombs,(char *, const wchar_t *, size_t));
 size_t	_EXFUN(_wcstombs_r,(struct _reent *, char *, const wchar_t *, size_t, _mbstate_t *));
 #ifndef __STRICT_ANSI__
 #ifndef _REENT_ONLY
-int     _EXFUN(mkstemp,(char *));
-char *  _EXFUN(mktemp,(char *));
+char *	_EXFUN(mkdtemp,(char *));
+int	_EXFUN(mkostemp,(char *, int));
+int	_EXFUN(mkostemps,(char *, int, int));
+int	_EXFUN(mkstemp,(char *));
+int	_EXFUN(mkstemps,(char *, int));
+char *	_EXFUN(mktemp,(char *) _ATTRIBUTE ((__warning__ ("the use of `mktemp' is dangerous; use `mkstemp' instead"))));
 #endif
+char *	_EXFUN(_mkdtemp_r, (struct _reent *, char *));
+int	_EXFUN(_mkostemp_r, (struct _reent *, char *, int));
+int	_EXFUN(_mkostemps_r, (struct _reent *, char *, int, int));
+int	_EXFUN(_mkstemp_r, (struct _reent *, char *));
+int	_EXFUN(_mkstemps_r, (struct _reent *, char *, int));
+char *	_EXFUN(_mktemp_r, (struct _reent *, char *) _ATTRIBUTE ((__warning__ ("the use of `mktemp' is dangerous; use `mkstemp' instead"))));
 #endif
 _VOID	_EXFUN(qsort,(_PTR __base, size_t __nmemb, size_t __size, int(*_compar)(const _PTR, const _PTR)));
 int	_EXFUN(rand,(_VOID));
@@ -192,6 +207,10 @@ int	_EXFUN(unsetenv,(const char *__string));
 int	_EXFUN(_unsetenv_r,(struct _reent *, const char *__string));
 #endif
 
+#ifdef __rtems__
+int _EXFUN(posix_memalign,(void **, size_t, size_t));
+#endif
+
 #endif /* ! __STRICT_ANSI__ */
 
 char *	_EXFUN(_dtoa_r,(struct _reent *, double, int, int, int *, int*, char**));
@@ -205,6 +224,12 @@ _VOID	_EXFUN(_mstats_r,(struct _reent *, char *));
 int	_EXFUN(_system_r,(struct _reent *, const char *));
 
 _VOID	_EXFUN(__eprintf,(const char *, const char *, unsigned int, const char *));
+
+/* On platforms where long double equals double.  */
+#ifdef _LDBL_EQ_DBL
+extern long double strtold (const char *, char **);
+extern long double wcstold (const wchar_t *, wchar_t **);
+#endif /* _LDBL_EQ_DBL */
 
 _END_STD_C
 

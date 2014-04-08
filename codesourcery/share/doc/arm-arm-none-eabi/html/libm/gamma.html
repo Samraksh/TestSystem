@@ -33,9 +33,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Math.html#Math">Math</a>
 <hr>
 </div>
 
-<h3 class="section">1.20 <code>gamma</code>, <code>gammaf</code>, <code>lgamma</code>, <code>lgammaf</code>, <code>gamma_r</code>,</h3>
+<h3 class="section">1.26 <code>gamma</code>, <code>gammaf</code>, <code>lgamma</code>, <code>lgammaf</code>, <code>gamma_r</code>, <code>gammaf_r</code>, <code>lgamma_r</code>, <code>lgammaf_r</code>, <code>tgamma</code>, and <code>tgammaf</code>&ndash;logarithmic and plain gamma functions</h3>
 
-<p><a name="index-gamma-53"></a><a name="index-gammaf-54"></a><a name="index-lgamma-55"></a><a name="index-lgammaf-56"></a><a name="index-gamma_005fr-57"></a><a name="index-gammaf_005fr-58"></a><a name="index-lgamma_005fr-59"></a><a name="index-lgammaf_005fr-60"></a><strong>Synopsis</strong>
+<p><a name="index-gamma-63"></a><a name="index-gammaf-64"></a><a name="index-lgamma-65"></a><a name="index-lgammaf-66"></a><a name="index-gamma_005fr-67"></a><a name="index-gammaf_005fr-68"></a><a name="index-lgamma_005fr-69"></a><a name="index-lgammaf_005fr-70"></a><a name="index-tgamma-71"></a><a name="index-tgammaf-72"></a><strong>Synopsis</strong>
 <pre class="example">     #include &lt;math.h&gt;
      double gamma(double <var>x</var>);
      float gammaf(float <var>x</var>);
@@ -45,6 +45,8 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Math.html#Math">Math</a>
      float gammaf_r(float <var>x</var>, int *<var>signgamp</var>);
      double lgamma_r(double <var>x</var>, int *<var>signgamp</var>);
      float lgammaf_r(float <var>x</var>, int *<var>signgamp</var>);
+     double tgamma(double <var>x</var>);
+     float tgammaf(float <var>x</var>);
      
 </pre>
    <p><strong>Description</strong><br>
@@ -79,6 +81,12 @@ variable <code>signgam</code> is not used.  These functions may be used for
 reentrant calls (but they will still set the global variable <code>errno</code>
 if an error occurs).
 
+   <p><code>tgamma</code> and <code>tgammaf</code> are the "true gamma" functions, returning
+the gamma function of <var>x</var>&ndash;without a logarithm. 
+(They are apparently so named because of the prior existence of the old,
+poorly-named <code>gamma</code> functions which returned the log of gamma up
+through BSD 4.2.)
+
    <p><br>
 <strong>Returns</strong><br>
 Normally, the computed result is returned.
@@ -91,8 +99,13 @@ returns <code>HUGE_VAL</code> and <code>errno</code> is set to <code>ERANGE</cod
 
    <p><br>
 <strong>Portability</strong><br>
-Neither <code>gamma</code> nor <code>gammaf</code> is ANSI C. 
-<br>
+Neither <code>gamma</code> nor <code>gammaf</code> is ANSI C.  It is better not to use either
+of these; use <code>lgamma</code> or <code>tgamma</code> instead.<br>
+<code>lgamma</code>, <code>lgammaf</code>, <code>tgamma</code>, and <code>tgammaf</code> are nominally C standard
+in terms of the base return values, although the <code>matherr</code> error-handling
+is not standard, nor is the <var>signgam</var> global for <code>lgamma</code>.
+
+   <p><br>
 
    </body></html>
 

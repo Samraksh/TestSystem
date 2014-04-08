@@ -10,12 +10,12 @@
 <link rel="next" href="Nested-Functions.html#Nested-Functions" title="Nested Functions">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
-Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
-2008 Free Software Foundation, Inc.
+Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997,
+1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+2010 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Funding Free Software'', the Front-Cover
 Texts being (a) (see below), and with the Back-Cover Texts being (b)
@@ -55,9 +55,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="C-Extensions.html#C-Extensions">C Exten
 <hr>
 </div>
 
-<h3 class="section">5.3 Labels as Values</h3>
+<h3 class="section">6.3 Labels as Values</h3>
 
-<p><a name="index-labels-as-values-2049"></a><a name="index-computed-gotos-2050"></a><a name="index-goto-with-computed-label-2051"></a><a name="index-address-of-a-label-2052"></a>
+<p><a name="index-labels-as-values-2343"></a><a name="index-computed-gotos-2344"></a><a name="index-goto-with-computed-label-2345"></a><a name="index-address-of-a-label-2346"></a>
 You can get the address of a label defined in the current function
 (or a containing function) with the unary operator &lsquo;<samp><span class="samp">&amp;&amp;</span></samp>&rsquo;.  The
 value has type <code>void *</code>.  This value is a constant and can be used
@@ -110,11 +110,12 @@ never pass it as an argument.
 the number of dynamic relocations that are needed, and by consequence,
 allows the data to be read-only.
 
- <p>The <code>&amp;&amp;foo</code> expressions for the same label might have different values
-if the containing function is inlined or cloned.  If a program relies on
-them being always the same, <code>__attribute__((__noinline__))</code> should
-be used to prevent inlining.  If <code>&amp;&amp;foo</code> is used
-in a static variable initializer, inlining is forbidden.
+ <p>The <code>&amp;&amp;foo</code> expressions for the same label might have different
+values if the containing function is inlined or cloned.  If a program
+relies on them being always the same,
+<code>__attribute__((__noinline__,__noclone__))</code> should be used to
+prevent inlining and cloning.  If <code>&amp;&amp;foo</code> is used in a static
+variable initializer, inlining and cloning is forbidden.
 
  <div class="footnote">
 <hr>

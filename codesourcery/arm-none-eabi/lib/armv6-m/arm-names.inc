@@ -1,9 +1,10 @@
 /* ISR names for arm
  *
- * Version: Sourcery G++ Lite 2010q1-188
- * Support: https://support.codesourcery.com/GNUToolchain/
+ * Version: Sourcery CodeBench Lite 2013.05-23
+ * Support: https://sourcery.mentor.com/GNUToolchain/
  *
- * Copyright (c) 2007, 2008, 2009, 2010 CodeSourcery, Inc.
+ * Copyright (c) 2007-2010 CodeSourcery, Inc.
+ * Copyright (c) 2010-2013 Mentor Graphics, Inc.
  *
  * The authors hereby grant permission to use, copy, modify, distribute,
  * and license this software and its documentation for any purpose, provided

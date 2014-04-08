@@ -11,10 +11,11 @@
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -57,7 +58,7 @@ program's symbol table, in the file indicated when you started <span class="sc">
 (see <a href="File-Options.html#File-Options">Choosing Files</a>), or by one of the
 file-management commands (see <a href="Files.html#Files">Commands to Specify Files</a>).
 
-   <p><a name="index-symbol-names-846"></a><a name="index-names-of-symbols-847"></a><a name="index-quoting-names-848"></a>Occasionally, you may need to refer to symbols that contain unusual
+   <p><a name="index-symbol-names-957"></a><a name="index-names-of-symbols-958"></a><a name="index-quoting-names-959"></a>Occasionally, you may need to refer to symbols that contain unusual
 characters, which <span class="sc">gdb</span> ordinarily treats as word delimiters.  The
 most frequent case is in referring to static variables in other
 source files (see <a href="Variables.html#Variables">Program Variables</a>).  File names
@@ -71,9 +72,9 @@ ordinarily parse a typical file name, like <samp><span class="file">foo.c</span>
    <p class="noindent">looks up the value of <code>x</code> in the scope of the file <samp><span class="file">foo.c</span></samp>.
 
      
-<a name="index-case_002dinsensitive-symbol-names-849"></a>
-<a name="index-case-sensitivity-in-symbol-names-850"></a>
-<a name="index-set-case_002dsensitive-851"></a>
+<a name="index-case_002dinsensitive-symbol-names-960"></a>
+<a name="index-case-sensitivity-in-symbol-names-961"></a>
+<a name="index-set-case_002dsensitive-962"></a>
 <dl><dt><code>set case-sensitive on</code><dt><code>set case-sensitive off</code><dt><code>set case-sensitive auto</code><dd>Normally, when <span class="sc">gdb</span> looks up symbols, it matches their names
 with case sensitivity determined by the current source language. 
 Occasionally, you may wish to control that.  The command <code>set
@@ -84,10 +85,10 @@ suitable for the source language.  The default is case-sensitive
 matches for all languages except for Fortran, for which the default is
 case-insensitive matches.
 
-     <p><a name="index-show-case_002dsensitive-852"></a><br><dt><code>show case-sensitive</code><dd>This command shows the current setting of case sensitivity for symbols
+     <p><a name="index-show-case_002dsensitive-963"></a><br><dt><code>show case-sensitive</code><dd>This command shows the current setting of case sensitivity for symbols
 lookups.
 
-     <p><a name="index-info-address-853"></a><a name="index-address-of-a-symbol-854"></a><br><dt><code>info address </code><var>symbol</var><dd>Describe where the data for <var>symbol</var> is stored.  For a register
+     <p><a name="index-info-address-964"></a><a name="index-address-of-a-symbol-965"></a><br><dt><code>info address </code><var>symbol</var><dd>Describe where the data for <var>symbol</var> is stored.  For a register
 variable, this says which register it is kept in.  For a non-register
 local variable, this prints the stack-frame offset at which the variable
 is always stored.
@@ -96,7 +97,7 @@ is always stored.
 at all for a register variable, and for a stack local variable prints
 the exact address of the current instantiation of the variable.
 
-     <p><a name="index-info-symbol-855"></a><a name="index-symbol-from-address-856"></a><a name="index-closest-symbol-and-offset-for-an-address-857"></a><br><dt><code>info symbol </code><var>addr</var><dd>Print the name of a symbol which is stored at the address <var>addr</var>. 
+     <p><a name="index-info-symbol-966"></a><a name="index-symbol-from-address-967"></a><a name="index-closest-symbol-and-offset-for-an-address-968"></a><br><dt><code>info symbol </code><var>addr</var><dd>Print the name of a symbol which is stored at the address <var>addr</var>. 
 If no symbol is stored exactly at <var>addr</var>, <span class="sc">gdb</span> prints the
 nearest symbol and an offset from it:
 
@@ -114,39 +115,83 @@ library containing the symbol is also printed:
           (gdb) info symbol 0x2aaaac2811cf
           __read_nocancel + 6 in section .text of /usr/lib64/libc.so.6
 </pre>
-     <p><a name="index-whatis-858"></a><br><dt><code>whatis [</code><var>arg</var><code>]</code><dd>Print the data type of <var>arg</var>, which can be either an expression or
-a data type.  With no argument, print the data type of <code>$</code>, the
-last value in the value history.  If <var>arg</var> is an expression, it is
-not actually evaluated, and any side-effecting operations (such as
-assignments or function calls) inside it do not take place.  If
-<var>arg</var> is a type name, it may be the name of a type or typedef, or
-for C code it may have the form &lsquo;<samp><span class="samp">class </span><var>class-name</var></samp>&rsquo;,
-&lsquo;<samp><span class="samp">struct </span><var>struct-tag</var></samp>&rsquo;, &lsquo;<samp><span class="samp">union </span><var>union-tag</var></samp>&rsquo; or
-&lsquo;<samp><span class="samp">enum </span><var>enum-tag</var></samp>&rsquo;. 
-See <a href="Expressions.html#Expressions">Expressions</a>.
+     <p><a name="index-whatis-969"></a><br><dt><code>whatis [</code><var>arg</var><code>]</code><dd>Print the data type of <var>arg</var>, which can be either an expression
+or a name of a data type.  With no argument, print the data type of
+<code>$</code>, the last value in the value history.
 
-     <p><a name="index-ptype-859"></a><br><dt><code>ptype [</code><var>arg</var><code>]</code><dd><code>ptype</code> accepts the same arguments as <code>whatis</code>, but prints a
+     <p>If <var>arg</var> is an expression (see <a href="Expressions.html#Expressions">Expressions</a>), it
+is not actually evaluated, and any side-effecting operations (such as
+assignments or function calls) inside it do not take place.
+
+     <p>If <var>arg</var> is a variable or an expression, <code>whatis</code> prints its
+literal type as it is used in the source code.  If the type was
+defined using a <code>typedef</code>, <code>whatis</code> will <em>not</em> print
+the data type underlying the <code>typedef</code>.  If the type of the
+variable or the expression is a compound data type, such as
+<code>struct</code> or  <code>class</code>, <code>whatis</code> never prints their
+fields or methods.  It just prints the <code>struct</code>/<code>class</code>
+name (a.k.a. its <dfn>tag</dfn>).  If you want to see the members of
+such a compound data type, use <code>ptype</code>.
+
+     <p>If <var>arg</var> is a type name that was defined using <code>typedef</code>,
+<code>whatis</code> <dfn>unrolls</dfn> only one level of that <code>typedef</code>. 
+Unrolling means that <code>whatis</code> will show the underlying type used
+in the <code>typedef</code> declaration of <var>arg</var>.  However, if that
+underlying type is also a <code>typedef</code>, <code>whatis</code> will not
+unroll it.
+
+     <p>For C code, the type names may also have the form &lsquo;<samp><span class="samp">class
+</span><var>class-name</var></samp>&rsquo;, &lsquo;<samp><span class="samp">struct </span><var>struct-tag</var></samp>&rsquo;, &lsquo;<samp><span class="samp">union
+</span><var>union-tag</var></samp>&rsquo; or &lsquo;<samp><span class="samp">enum </span><var>enum-tag</var></samp>&rsquo;.
+
+     <p><a name="index-ptype-970"></a><br><dt><code>ptype [</code><var>arg</var><code>]</code><dd><code>ptype</code> accepts the same arguments as <code>whatis</code>, but prints a
 detailed description of the type, instead of just the name of the type. 
 See <a href="Expressions.html#Expressions">Expressions</a>.
 
+     <p>Contrary to <code>whatis</code>, <code>ptype</code> always unrolls any
+<code>typedef</code>s in its argument declaration, whether the argument is
+a variable, expression, or a data type.  This means that <code>ptype</code>
+of a variable or an expression will not print literally its type as
+present in the source code&mdash;use <code>whatis</code> for that.  <code>typedef</code>s at
+the pointer or reference targets are also unrolled.  Only <code>typedef</code>s of
+fields, methods and inner <code>class typedef</code>s of <code>struct</code>s,
+<code>class</code>es and <code>union</code>s are not unrolled even with <code>ptype</code>.
+
      <p>For example, for this variable declaration:
 
-     <pre class="smallexample">          struct complex {double real; double imag;} v;
+     <pre class="smallexample">          typedef double real_t;
+          struct complex { real_t real; double imag; };
+          typedef struct complex complex_t;
+          complex_t var;
+          real_t *real_pointer_var;
 </pre>
      <p class="noindent">the two commands give this output:
 
-     <pre class="smallexample">          (gdb) whatis v
-          type = struct complex
-          (gdb) ptype v
+     <pre class="smallexample">          (gdb) whatis var
+          type = complex_t
+          (gdb) ptype var
           type = struct complex {
-              double real;
+              real_t real;
               double imag;
           }
+          (gdb) whatis complex_t
+          type = struct complex
+          (gdb) whatis struct complex
+          type = struct complex
+          (gdb) ptype struct complex
+          type = struct complex {
+              real_t real;
+              double imag;
+          }
+          (gdb) whatis real_pointer_var
+          type = real_t *
+          (gdb) ptype real_pointer_var
+          type = double *
 </pre>
      <p class="noindent">As with <code>whatis</code>, using <code>ptype</code> without an argument refers to
 the type of <code>$</code>, the last value in the value history.
 
-     <p><a name="index-incomplete-type-860"></a>Sometimes, programs use opaque data types or incomplete specifications
+     <p><a name="index-incomplete-type-971"></a>Sometimes, programs use opaque data types or incomplete specifications
 of complex data structure.  If the debug information included in the
 program does not allow <span class="sc">gdb</span> to display a full declaration of
 the data type, it will say &lsquo;<samp><span class="samp">&lt;incomplete type&gt;</span></samp>&rsquo;.  For example,
@@ -163,7 +208,7 @@ given these declarations:
      <p class="noindent">&ldquo;Incomplete type&rdquo; is C terminology for data types that are not
 completely specified.
 
-     <p><a name="index-info-types-861"></a><br><dt><code>info types </code><var>regexp</var><dt><code>info types</code><dd>Print a brief description of all types whose names match the regular
+     <p><a name="index-info-types-972"></a><br><dt><code>info types </code><var>regexp</var><dt><code>info types</code><dd>Print a brief description of all types whose names match the regular
 expression <var>regexp</var> (or all types in your program, if you supply
 no argument).  Each complete typename is matched as though it were a
 complete line; thus, &lsquo;<samp><span class="samp">i type value</span></samp>&rsquo; gives information on all
@@ -175,7 +220,7 @@ name is <code>value</code>.
 <code>whatis</code>, it does not print a detailed description; second, it
 lists all source files where a type is defined.
 
-     <p><a name="index-info-scope-862"></a><a name="index-local-variables-863"></a><br><dt><code>info scope </code><var>location</var><dd>List all the variables local to a particular scope.  This command
+     <p><a name="index-info-scope-973"></a><a name="index-local-variables-974"></a><br><dt><code>info scope </code><var>location</var><dd>List all the variables local to a particular scope.  This command
 accepts a <var>location</var> argument&mdash;a function name, a source line, or
 an address preceded by a &lsquo;<samp><span class="samp">*</span></samp>&rsquo;, and prints all the variables local
 to the scope defined by that location.  (See <a href="Specify-Location.html#Specify-Location">Specify Location</a>, for
@@ -194,7 +239,7 @@ details about supported forms of <var>location</var>.)  For example:
      <p class="noindent">This command is especially useful for determining what data to collect
 during a <dfn>trace experiment</dfn>, see <a href="Tracepoint-Actions.html#Tracepoint-Actions">collect</a>.
 
-     <p><a name="index-info-source-864"></a><br><dt><code>info source</code><dd>Show information about the current source file&mdash;that is, the source file for
+     <p><a name="index-info-source-975"></a><br><dt><code>info source</code><dd>Show information about the current source file&mdash;that is, the source file for
 the function containing the current point of execution:
           <ul>
 <li>the name of the source file, and the directory containing it,
@@ -207,11 +252,11 @@ if so, what format the information is in (e.g., STABS, Dwarf 2, etc.), and
 preprocessor macros. 
 </ul>
 
-     <p><a name="index-info-sources-865"></a><br><dt><code>info sources</code><dd>Print the names of all source files in your program for which there is
+     <p><a name="index-info-sources-976"></a><br><dt><code>info sources</code><dd>Print the names of all source files in your program for which there is
 debugging information, organized into two lists: files whose symbols
 have already been read, and files whose symbols will be read when needed.
 
-     <p><a name="index-info-functions-866"></a><br><dt><code>info functions</code><dd>Print the names and data types of all defined functions.
+     <p><a name="index-info-functions-977"></a><br><dt><code>info functions</code><dd>Print the names and data types of all defined functions.
 
      <br><dt><code>info functions </code><var>regexp</var><dd>Print the names and data types of all defined functions
 whose names contain a match for regular expression <var>regexp</var>. 
@@ -221,44 +266,22 @@ start with <code>step</code>.  If a function name contains characters
 that conflict with the regular expression language (e.g. 
 &lsquo;<samp><span class="samp">operator*()</span></samp>&rsquo;), they may be quoted with a backslash.
 
-     <p><a name="index-info-variables-867"></a><br><dt><code>info variables</code><dd>Print the names and data types of all variables that are defined
+     <p><a name="index-info-variables-978"></a><br><dt><code>info variables</code><dd>Print the names and data types of all variables that are defined
 outside of functions (i.e. excluding local variables).
 
      <br><dt><code>info variables </code><var>regexp</var><dd>Print the names and data types of all variables (except for local
 variables) whose names contain a match for regular expression
 <var>regexp</var>.
 
-     <p><a name="index-info-classes-868"></a><a name="index-Objective_002dC_002c-classes-and-selectors-869"></a><br><dt><code>info classes</code><dt><code>info classes </code><var>regexp</var><dd>Display all Objective-C classes in your program, or
+     <p><a name="index-info-classes-979"></a><a name="index-Objective_002dC_002c-classes-and-selectors-980"></a><br><dt><code>info classes</code><dt><code>info classes </code><var>regexp</var><dd>Display all Objective-C classes in your program, or
 (with the <var>regexp</var> argument) all those matching a particular regular
 expression.
 
-     <p><a name="index-info-selectors-870"></a><br><dt><code>info selectors</code><dt><code>info selectors </code><var>regexp</var><dd>Display all Objective-C selectors in your program, or
+     <p><a name="index-info-selectors-981"></a><br><dt><code>info selectors</code><dt><code>info selectors </code><var>regexp</var><dd>Display all Objective-C selectors in your program, or
 (with the <var>regexp</var> argument) all those matching a particular regular
 expression.
 
-     <p><a name="index-reloading-symbols-871"></a>Some systems allow individual object files that make up your program to
-be replaced without stopping and restarting your program.  For example,
-in VxWorks you can simply recompile a defective object file and keep on
-running.  If you are running on one of these systems, you can allow
-<span class="sc">gdb</span> to reload the symbols for automatically relinked modules:
-
-          
-<a name="index-set-symbol_002dreloading-872"></a>
-<dl><dt><code>set symbol-reloading on</code><dd>Replace symbol definitions for the corresponding source file when an
-object file with a particular name is seen again.
-
-          <br><dt><code>set symbol-reloading off</code><dd>Do not replace symbol definitions when encountering object files of the
-same name more than once.  This is the default state; if you are not
-running on a system that permits automatic relinking of modules, you
-should leave <code>symbol-reloading</code> off, since otherwise <span class="sc">gdb</span>
-may discard symbols when linking large programs, that may contain
-several modules (from different directories or libraries) with the same
-name.
-
-          <p><a name="index-show-symbol_002dreloading-873"></a><br><dt><code>show symbol-reloading</code><dd>Show the current <code>on</code> or <code>off</code> setting. 
-</dl>
-
-     <p><a name="index-opaque-data-types-874"></a><a name="index-set-opaque_002dtype_002dresolution-875"></a><br><dt><code>set opaque-type-resolution on</code><dd>Tell <span class="sc">gdb</span> to resolve opaque types.  An opaque type is a type
+     <p><a name="index-opaque-data-types-982"></a><a name="index-set-opaque_002dtype_002dresolution-983"></a><br><dt><code>set opaque-type-resolution on</code><dd>Tell <span class="sc">gdb</span> to resolve opaque types.  An opaque type is a type
 declared as a pointer to a <code>struct</code>, <code>class</code>, or
 <code>union</code>&mdash;for example, <code>struct MyType *</code>&mdash;that is used in one
 source file although the full declaration of <code>struct MyType</code> is in
@@ -271,9 +294,9 @@ the next time symbols for a file are loaded.
 is printed as follows:
      <pre class="smallexample">          {&lt;no data fields&gt;}
 </pre>
-     <p><a name="index-show-opaque_002dtype_002dresolution-876"></a><br><dt><code>show opaque-type-resolution</code><dd>Show whether opaque types are resolved or not.
+     <p><a name="index-show-opaque_002dtype_002dresolution-984"></a><br><dt><code>show opaque-type-resolution</code><dd>Show whether opaque types are resolved or not.
 
-     <p><a name="index-maint-print-symbols-877"></a><a name="index-symbol-dump-878"></a><a name="index-maint-print-psymbols-879"></a><a name="index-partial-symbol-dump-880"></a><br><dt><code>maint print symbols </code><var>filename</var><dt><code>maint print psymbols </code><var>filename</var><dt><code>maint print msymbols </code><var>filename</var><dd>Write a dump of debugging symbol data into the file <var>filename</var>. 
+     <p><a name="index-maint-print-symbols-985"></a><a name="index-symbol-dump-986"></a><a name="index-maint-print-psymbols-987"></a><a name="index-partial-symbol-dump-988"></a><br><dt><code>maint print symbols </code><var>filename</var><dt><code>maint print psymbols </code><var>filename</var><dt><code>maint print msymbols </code><var>filename</var><dd>Write a dump of debugging symbol data into the file <var>filename</var>. 
 These commands are used to debug the <span class="sc">gdb</span> symbol-reading code.  Only
 symbols with debugging data are included.  If you use &lsquo;<samp><span class="samp">maint print
 symbols</span></samp>&rsquo;, <span class="sc">gdb</span> includes all the symbols for which it has already
@@ -288,7 +311,7 @@ required for each object file from which <span class="sc">gdb</span> has read so
 See <a href="Files.html#Files">Commands to Specify Files</a>, for a discussion of how
 <span class="sc">gdb</span> reads symbols (in the description of <code>symbol-file</code>).
 
-     <p><a name="index-maint-info-symtabs-881"></a><a name="index-maint-info-psymtabs-882"></a><a name="index-listing-_0040value_007bGDBN_007d_0027s-internal-symbol-tables-883"></a><a name="index-symbol-tables_002c-listing-_0040value_007bGDBN_007d_0027s-internal-884"></a><a name="index-full-symbol-tables_002c-listing-_0040value_007bGDBN_007d_0027s-internal-885"></a><a name="index-partial-symbol-tables_002c-listing-_0040value_007bGDBN_007d_0027s-internal-886"></a><br><dt><code>maint info symtabs </code><span class="roman">[</span> <var>regexp</var> <span class="roman">]</span><dt><code>maint info psymtabs </code><span class="roman">[</span> <var>regexp</var> <span class="roman">]</span><dd>
+     <p><a name="index-maint-info-symtabs-989"></a><a name="index-maint-info-psymtabs-990"></a><a name="index-listing-_0040value_007bGDBN_007d_0027s-internal-symbol-tables-991"></a><a name="index-symbol-tables_002c-listing-_0040value_007bGDBN_007d_0027s-internal-992"></a><a name="index-full-symbol-tables_002c-listing-_0040value_007bGDBN_007d_0027s-internal-993"></a><a name="index-partial-symbol-tables_002c-listing-_0040value_007bGDBN_007d_0027s-internal-994"></a><br><dt><code>maint info symtabs </code><span class="roman">[</span> <var>regexp</var> <span class="roman">]</span><dt><code>maint info psymtabs </code><span class="roman">[</span> <var>regexp</var> <span class="roman">]</span><dd>
 List the <code>struct symtab</code> or <code>struct partial_symtab</code>
 structures whose names match <var>regexp</var>.  If <var>regexp</var> is not
 given, list them all.  The output includes expressions which you can

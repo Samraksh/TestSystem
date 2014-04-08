@@ -12,6 +12,9 @@ _BEGIN_STD_C
 #endif
 
 typedef int	sig_atomic_t;		/* Atomic entity type (ANSI) */
+#ifndef _POSIX_SOURCE
+typedef _sig_func_ptr sighandler_t;	/* glibc naming */
+#endif /* !_POSIX_SOURCE */
 
 #ifdef _AEABI_PORTABLE
 void _EXFUN(__aeabi_SIG_DFL, (int));

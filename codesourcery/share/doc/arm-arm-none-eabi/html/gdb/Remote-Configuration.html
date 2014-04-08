@@ -12,10 +12,11 @@
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -50,25 +51,25 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Remote-Debugging.html#Remote-Debugging"
 
 <h3 class="section">20.4 Remote Configuration</h3>
 
-<p><a name="index-set-remote-1045"></a><a name="index-show-remote-1046"></a>This section documents the configuration options available when
+<p><a name="index-set-remote-1172"></a><a name="index-show-remote-1173"></a>This section documents the configuration options available when
 debugging remote programs.  For the options related to the File I/O
 extensions of the remote protocol, see <a href="system.html#system">system-call-allowed</a>.
 
      <dl>
-<dt><code>set remoteaddresssize </code><var>bits</var><dd><a name="index-address-size-for-remote-targets-1047"></a><a name="index-bits-in-remote-address-1048"></a>Set the maximum size of address in a memory packet to the specified
+<dt><code>set remoteaddresssize </code><var>bits</var><dd><a name="index-address-size-for-remote-targets-1174"></a><a name="index-bits-in-remote-address-1175"></a>Set the maximum size of address in a memory packet to the specified
 number of bits.  <span class="sc">gdb</span> will mask off the address bits above
 that number, when it passes addresses to the remote target.  The
 default value is the number of bits in the target's address.
 
      <br><dt><code>show remoteaddresssize</code><dd>Show the current value of remote address size in bits.
 
-     <br><dt><code>set remotebaud </code><var>n</var><dd><a name="index-baud-rate-for-remote-targets-1049"></a>Set the baud rate for the remote serial I/O to <var>n</var> baud.  The
+     <br><dt><code>set remotebaud </code><var>n</var><dd><a name="index-baud-rate-for-remote-targets-1176"></a>Set the baud rate for the remote serial I/O to <var>n</var> baud.  The
 value is used to set the speed of the serial port used for debugging
 remote targets.
 
      <br><dt><code>show remotebaud</code><dd>Show the current speed of the remote connection.
 
-     <br><dt><code>set remotebreak</code><dd><a name="index-interrupt-remote-programs-1050"></a><a name="index-BREAK-signal-instead-of-Ctrl_002dC-1051"></a><a name="set-remotebreak"></a>If set to on, <span class="sc">gdb</span> sends a <code>BREAK</code> signal to the remote
+     <br><dt><code>set remotebreak</code><dd><a name="index-interrupt-remote-programs-1177"></a><a name="index-BREAK-signal-instead-of-Ctrl_002dC-1178"></a><a name="set-remotebreak"></a>If set to on, <span class="sc">gdb</span> sends a <code>BREAK</code> signal to the remote
 when you type <kbd>Ctrl-c</kbd> to interrupt the program running
 on the remote.  If set to off, <span class="sc">gdb</span> sends the &lsquo;<samp><span class="samp">Ctrl-C</span></samp>&rsquo;
 character instead.  The default is off, since most remote systems
@@ -77,10 +78,10 @@ expect to see &lsquo;<samp><span class="samp">Ctrl-C</span></samp>&rsquo; as the
      <br><dt><code>show remotebreak</code><dd>Show whether <span class="sc">gdb</span> sends <code>BREAK</code> or &lsquo;<samp><span class="samp">Ctrl-C</span></samp>&rsquo; to
 interrupt the remote program.
 
-     <br><dt><code>set remoteflow on</code><dt><code>set remoteflow off</code><dd><a name="index-set-remoteflow-1052"></a>Enable or disable hardware flow control (<code>RTS</code>/<code>CTS</code>)
+     <br><dt><code>set remoteflow on</code><dt><code>set remoteflow off</code><dd><a name="index-set-remoteflow-1179"></a>Enable or disable hardware flow control (<code>RTS</code>/<code>CTS</code>)
 on the serial port used to communicate to the remote target.
 
-     <br><dt><code>show remoteflow</code><dd><a name="index-show-remoteflow-1053"></a>Show the current setting of hardware flow control.
+     <br><dt><code>show remoteflow</code><dd><a name="index-show-remoteflow-1180"></a>Show the current setting of hardware flow control.
 
      <br><dt><code>set remotelogbase </code><var>base</var><dd>Set the base (a.k.a. radix) of logging serial protocol
 communications to <var>base</var>.  Supported values of <var>base</var> are:
@@ -90,22 +91,29 @@ communications to <var>base</var>.  Supported values of <var>base</var> are:
      <br><dt><code>show remotelogbase</code><dd>Show the current setting of the radix for logging remote serial
 protocol.
 
-     <br><dt><code>set remotelogfile </code><var>file</var><dd><a name="index-record-serial-communications-on-file-1054"></a>Record remote serial communications on the named <var>file</var>.  The
+     <br><dt><code>set remotelogfile </code><var>file</var><dd><a name="index-record-serial-communications-on-file-1181"></a>Record remote serial communications on the named <var>file</var>.  The
 default is not to record at all.
 
      <br><dt><code>show remotelogfile.</code><dd>Show the current setting  of the file name on which to record the
 serial communications.
 
-     <br><dt><code>set remotetimeout </code><var>num</var><dd><a name="index-timeout-for-serial-communications-1055"></a><a name="index-remote-timeout-1056"></a>Set the timeout limit to wait for the remote target to respond to
+     <br><dt><code>set remotetimeout </code><var>num</var><dd><a name="index-timeout-for-serial-communications-1182"></a><a name="index-remote-timeout-1183"></a>Set the timeout limit to wait for the remote target to respond to
 <var>num</var> seconds.  The default is 2 seconds.
 
      <br><dt><code>show remotetimeout</code><dd>Show the current number of seconds to wait for the remote target
 responses.
 
-     <p><a name="index-limit-hardware-breakpoints-and-watchpoints-1057"></a><a name="index-remote-target_002c-limit-break_002d-and-watchpoints-1058"></a><a name="set-remote-hardware_002dwatchpoint_002dlimit"></a><a name="set-remote-hardware_002dbreakpoint_002dlimit"></a><br><dt><code>set remote hardware-watchpoint-limit </code><var>limit</var><dt><code>set remote hardware-breakpoint-limit </code><var>limit</var><dd>Restrict <span class="sc">gdb</span> to using <var>limit</var> remote hardware breakpoint or
+     <p><a name="index-limit-hardware-breakpoints-and-watchpoints-1184"></a><a name="index-remote-target_002c-limit-break_002d-and-watchpoints-1185"></a><a name="set-remote-hardware_002dwatchpoint_002dlimit"></a><a name="set-remote-hardware_002dbreakpoint_002dlimit"></a><br><dt><code>set remote hardware-watchpoint-limit </code><var>limit</var><dt><code>set remote hardware-breakpoint-limit </code><var>limit</var><dd>Restrict <span class="sc">gdb</span> to using <var>limit</var> remote hardware breakpoint or
 watchpoints.  A limit of -1, the default, is treated as unlimited.
 
-     <br><dt><code>set remote exec-file </code><var>filename</var><dt><code>show remote exec-file</code><dd><a name="set-remote-exec_002dfile"></a><a name="index-executable-file_002c-for-remote-target-1059"></a>Select the file used for <code>run</code> with <code>target
+     <p><a name="index-limit-hardware-watchpoints-length-1186"></a><a name="index-remote-target_002c-limit-watchpoints-length-1187"></a><a name="set-remote-hardware_002dwatchpoint_002dlength_002dlimit"></a><br><dt><code>set remote hardware-watchpoint-length-limit </code><var>limit</var><dd>Restrict <span class="sc">gdb</span> to using <var>limit</var> bytes for the maximum length of
+a remote hardware watchpoint.  A limit of -1, the default, is treated
+as unlimited.
+
+     <br><dt><code>show remote hardware-watchpoint-length-limit</code><dd>Show the current limit (in bytes) of the maximum length of
+a remote hardware watchpoint.
+
+     <br><dt><code>set remote exec-file </code><var>filename</var><dt><code>show remote exec-file</code><dd><a name="set-remote-exec_002dfile"></a><a name="index-executable-file_002c-for-remote-target-1188"></a>Select the file used for <code>run</code> with <code>target
 extended-remote</code>.  This should be set to a filename valid on the
 target system.  If it is not set, the target will use a default
 filename (e.g. the last program run).
@@ -116,7 +124,7 @@ username is an arbitary string.
      <br><dt><code>set remote password </code><var>password</var><dt><code>show remote password</code><dd>Set the password to be sent to targets that require a login.  The
 password is an arbitary string. At present it is stored as cleartext.
 
-     <br><dt><code>set remote interrupt-sequence</code><dd><a name="index-interrupt-remote-programs-1060"></a><a name="index-select-Ctrl_002dC_002c-BREAK-or-BREAK_002dg-1061"></a>Allow the user to select one of &lsquo;<samp><span class="samp">Ctrl-C</span></samp>&rsquo;, a <code>BREAK</code> or
+     <br><dt><code>set remote interrupt-sequence</code><dd><a name="index-interrupt-remote-programs-1189"></a><a name="index-select-Ctrl_002dC_002c-BREAK-or-BREAK_002dg-1190"></a>Allow the user to select one of &lsquo;<samp><span class="samp">Ctrl-C</span></samp>&rsquo;, a <code>BREAK</code> or
 &lsquo;<samp><span class="samp">BREAK-g</span></samp>&rsquo; as the
 sequence to the remote target in order to interrupt the execution. 
 &lsquo;<samp><span class="samp">Ctrl-C</span></samp>&rsquo; is a default.  Some system prefers <code>BREAK</code> which
@@ -129,7 +137,7 @@ is sent by <span class="sc">gdb</span> to interrupt the remote program.
 <code>BREAK-g</code> is BREAK signal followed by <code>g</code> and
 also known as Magic SysRq g.
 
-     <br><dt><code>set remote interrupt-on-connect</code><dd><a name="index-send-interrupt_002dsequence-on-start-1062"></a>Specify whether interrupt-sequence is sent to remote target when
+     <br><dt><code>set remote interrupt-on-connect</code><dd><a name="index-send-interrupt_002dsequence-on-start-1191"></a>Specify whether interrupt-sequence is sent to remote target when
 <span class="sc">gdb</span> connects to it.  This is mostly needed when you debug
 Linux kernel.  Linux kernel expects <code>BREAK</code> followed by <code>g</code>
 which is known as Magic SysRq g in order to connect <span class="sc">gdb</span>.
@@ -137,7 +145,7 @@ which is known as Magic SysRq g in order to connect <span class="sc">gdb</span>.
      <br><dt><code>show interrupt-on-connect</code><dd>Show whether interrupt-sequence is sent
 to remote target when <span class="sc">gdb</span> connects to it.
 
-     <p><a name="index-set-tcp-1063"></a><a name="index-show-tcp-1064"></a><br><dt><code>set tcp auto-retry on</code><dd><a name="index-auto_002dretry_002c-for-remote-TCP-target-1065"></a>Enable auto-retry for remote TCP connections.  This is useful if the remote
+     <p><a name="index-set-tcp-1192"></a><a name="index-show-tcp-1193"></a><br><dt><code>set tcp auto-retry on</code><dd><a name="index-auto_002dretry_002c-for-remote-TCP-target-1194"></a>Enable auto-retry for remote TCP connections.  This is useful if the remote
 debugging agent is launched in parallel with <span class="sc">gdb</span>; there is a race
 condition because the agent may not become ready to accept the connection
 before <span class="sc">gdb</span> attempts to connect.  When auto-retry is
@@ -149,7 +157,7 @@ to establish the connection using the timeout specified by
 
      <br><dt><code>show tcp auto-retry</code><dd>Show the current auto-retry setting.
 
-     <br><dt><code>set tcp connect-timeout </code><var>seconds</var><dd><a name="index-connection-timeout_002c-for-remote-TCP-target-1066"></a><a name="index-timeout_002c-for-remote-target-connection-1067"></a>Set the timeout for establishing a TCP connection to the remote target to
+     <br><dt><code>set tcp connect-timeout </code><var>seconds</var><dd><a name="index-connection-timeout_002c-for-remote-TCP-target-1195"></a><a name="index-timeout_002c-for-remote-target-connection-1196"></a>Set the timeout for establishing a TCP connection to the remote target to
 <var>seconds</var>.  The timeout affects both polling to retry failed connections
 (enabled by <code>set tcp auto-retry on</code>) and waiting for connections
 that are merely slow to complete, and represents an approximate cumulative
@@ -158,7 +166,7 @@ value.
      <br><dt><code>show tcp connect-timeout</code><dd>Show the current connection timeout setting. 
 </dl>
 
-   <p><a name="index-remote-packets_002c-enabling-and-disabling-1068"></a>The <span class="sc">gdb</span> remote protocol autodetects the packets supported by
+   <p><a name="index-remote-packets_002c-enabling-and-disabling-1197"></a>The <span class="sc">gdb</span> remote protocol autodetects the packets supported by
 your debugging stub.  If you need to override the autodetection, you
 can use these commands to enable or disable individual packets.  Each
 packet can be set to &lsquo;<samp><span class="samp">on</span></samp>&rsquo; (the remote target supports this
@@ -244,6 +252,10 @@ are:
 </td><td valign="top" width="32%"><code>qXfer:memory-map:read</code>
 </td><td valign="top" width="25%"><code>info mem</code>
 
+<p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>read-sdata-object</code>
+</td><td valign="top" width="32%"><code>qXfer:sdata:read</code>
+</td><td valign="top" width="25%"><code>print $_sdata</code>
+
 <p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>read-spu-object</code>
 </td><td valign="top" width="32%"><code>qXfer:spu:read</code>
 </td><td valign="top" width="25%"><code>info spu</code>
@@ -268,6 +280,10 @@ are:
 </td><td valign="top" width="32%"><code>qGetTLSAddr</code>
 </td><td valign="top" width="25%">Displaying <code>__thread</code> variables
 
+<p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>get-thread-information-block-address</code>
+</td><td valign="top" width="32%"><code>qGetTIBAddr</code>
+</td><td valign="top" width="25%">Display MS-Windows Thread Information Block.
+
 <p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>search-memory</code>
 </td><td valign="top" width="32%"><code>qSearch:memory</code>
 </td><td valign="top" width="25%"><code>find</code>
@@ -278,6 +294,10 @@ are:
 
 <p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>pass-signals</code>
 </td><td valign="top" width="32%"><code>QPassSignals</code>
+</td><td valign="top" width="25%"><code>handle </code><var>signal</var>
+
+<p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>program-signals</code>
+</td><td valign="top" width="32%"><code>QProgramSignals</code>
 </td><td valign="top" width="25%"><code>handle </code><var>signal</var>
 
 <p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>hostio-close-packet</code>
@@ -300,6 +320,10 @@ are:
 </td><td valign="top" width="32%"><code>vFile:unlink</code>
 </td><td valign="top" width="25%"><code>remote delete</code>
 
+<p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>hostio-readlink-packet</code>
+</td><td valign="top" width="32%"><code>vFile:readlink</code>
+</td><td valign="top" width="25%">Host I/O
+
 <p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>noack-packet</code>
 </td><td valign="top" width="32%"><code>QStartNoAckMode</code>
 </td><td valign="top" width="25%">Packet acknowledgment
@@ -311,6 +335,22 @@ are:
 <p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>query-attached</code>
 </td><td valign="top" width="32%"><code>qAttached</code>
 </td><td valign="top" width="25%">Querying remote process attach state.
+
+<p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>traceframe-info</code>
+</td><td valign="top" width="32%"><code>qXfer:traceframe-info:read</code>
+</td><td valign="top" width="25%">Traceframe info
+
+<p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>install-in-trace</code>
+</td><td valign="top" width="32%"><code>InstallInTrace</code>
+</td><td valign="top" width="25%">Install tracepoint in tracing
+
+<p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>disable-randomization</code>
+</td><td valign="top" width="32%"><code>QDisableRandomization</code>
+</td><td valign="top" width="25%"><code>set disable-randomization</code>
+
+<p><br></td></tr><tr align="left"><td valign="top" width="28%"><code>conditional-breakpoints-packet</code>
+</td><td valign="top" width="32%"><code>Z0 and Z1</code>
+</td><td valign="top" width="25%"><code>Support for target-side breakpoint condition evaluation</code>
    <br></td></tr></table>
 
    </body></html>

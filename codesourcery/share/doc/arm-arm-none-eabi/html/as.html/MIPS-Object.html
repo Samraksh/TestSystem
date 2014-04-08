@@ -12,8 +12,9 @@
 <!--
 This file documents the GNU Assembler "as".
 
-Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 2001, 2002,
-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+2000, 2001, 2002, 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation,
+Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
@@ -47,15 +48,15 @@ Up:&nbsp;<a rel="up" accesskey="u" href="MIPS_002dDependent.html#MIPS_002dDepend
 <hr>
 </div>
 
-<h4 class="subsection">9.23.2 MIPS ECOFF object code</h4>
+<h4 class="subsection">9.27.2 MIPS ECOFF object code</h4>
 
-<p><a name="index-ECOFF-sections-1250"></a><a name="index-MIPS-ECOFF-sections-1251"></a>Assembling for a <span class="sc">mips</span> <span class="sc">ecoff</span> target supports some additional sections
+<p><a name="index-ECOFF-sections-1392"></a><a name="index-MIPS-ECOFF-sections-1393"></a>Assembling for a <span class="sc">mips</span> <span class="sc">ecoff</span> target supports some additional sections
 besides the usual <code>.text</code>, <code>.data</code> and <code>.bss</code>.  The
 additional sections are <code>.rdata</code>, used for read-only data,
 <code>.sdata</code>, used for small data, and <code>.sbss</code>, used for small
 common objects.
 
-   <p><a name="index-small-objects_002c-MIPS-ECOFF-1252"></a><a name="index-g_t_0040code_007bgp_007d-register_002c-MIPS-1253"></a>When assembling for <span class="sc">ecoff</span>, the assembler uses the <code>$gp</code> (<code>$28</code>)
+   <p><a name="index-small-objects_002c-MIPS-ECOFF-1394"></a><a name="index-g_t_0040code_007bgp_007d-register_002c-MIPS-1395"></a>When assembling for <span class="sc">ecoff</span>, the assembler uses the <code>$gp</code> (<code>$28</code>)
 register to form the address of a &ldquo;small object&rdquo;.  Any object in the
 <code>.sdata</code> or <code>.sbss</code> sections is considered &ldquo;small&rdquo; in this sense. 
 For external objects, or for objects in the <code>.bss</code> section, you can use

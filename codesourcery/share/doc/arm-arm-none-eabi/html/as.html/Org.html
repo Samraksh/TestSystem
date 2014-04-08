@@ -6,14 +6,15 @@
 <meta name="generator" content="makeinfo 4.13">
 <link title="Top" rel="start" href="index.html#Top">
 <link rel="up" href="Pseudo-Ops.html#Pseudo-Ops" title="Pseudo Ops">
-<link rel="prev" href="Octa.html#Octa" title="Octa">
+<link rel="prev" href="Offset.html#Offset" title="Offset">
 <link rel="next" href="P2align.html#P2align" title="P2align">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
 This file documents the GNU Assembler "as".
 
-Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 2001, 2002,
-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+2000, 2001, 2002, 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation,
+Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
@@ -42,14 +43,14 @@ section entitled ``GNU Free Documentation License''.
 <a name="Org"></a>
 <p>
 Next:&nbsp;<a rel="next" accesskey="n" href="P2align.html#P2align">P2align</a>,
-Previous:&nbsp;<a rel="previous" accesskey="p" href="Octa.html#Octa">Octa</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Offset.html#Offset">Offset</a>,
 Up:&nbsp;<a rel="up" accesskey="u" href="Pseudo-Ops.html#Pseudo-Ops">Pseudo Ops</a>
 <hr>
 </div>
 
-<h3 class="section">7.82 <code>.org </code><var>new-lc</var><code> , </code><var>fill</var></h3>
+<h3 class="section">7.87 <code>.org </code><var>new-lc</var><code> , </code><var>fill</var></h3>
 
-<p><a name="index-g_t_0040code_007borg_007d-directive-409"></a><a name="index-location-counter_002c-advancing-410"></a><a name="index-advancing-location-counter-411"></a><a name="index-current-address_002c-advancing-412"></a>Advance the location counter of the current section to
+<p><a name="index-g_t_0040code_007borg_007d-directive-417"></a><a name="index-location-counter_002c-advancing-418"></a><a name="index-advancing-location-counter-419"></a><a name="index-current-address_002c-advancing-420"></a>Advance the location counter of the current section to
 <var>new-lc</var>.  <var>new-lc</var> is either an absolute expression or an
 expression with the same section as the current subsection.  That is,
 you can't use <code>.org</code> to cross sections: if <var>new-lc</var> has the

@@ -10,12 +10,12 @@
 <link rel="next" href="Alignment.html#Alignment" title="Alignment">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
-Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
-2008 Free Software Foundation, Inc.
+Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997,
+1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+2010 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Funding Free Software'', the Front-Cover
 Texts being (a) (see below), and with the Back-Cover Texts being (b)
@@ -55,9 +55,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="C-Extensions.html#C-Extensions">C Exten
 <hr>
 </div>
 
-<h3 class="section">5.36 Specifying Attributes of Types</h3>
+<h3 class="section">6.37 Specifying Attributes of Types</h3>
 
-<p><a name="index-attribute-of-types-2357"></a><a name="index-type-attributes-2358"></a>
+<p><a name="index-attribute-of-types-2706"></a><a name="index-type-attributes-2707"></a>
 The keyword <code>__attribute__</code> allows you to specify special
 attributes of <code>struct</code> and <code>union</code> types when you define
 such types.  This keyword is followed by an attribute specification
@@ -86,7 +86,7 @@ former syntax is preferred.
 attributes.
 
      
-<a name="index-g_t_0040code_007baligned_007d-attribute-2359"></a>
+<a name="index-g_t_0040code_007baligned_007d-attribute-2708"></a>
 <dl><dt><code>aligned (</code><var>alignment</var><code>)</code><dd>This attribute specifies a minimum alignment (in bytes) for variables
 of the specified type.  For example, the declarations:
 
@@ -165,7 +165,7 @@ of the structure or union is placed to minimize the memory required.  When
 attached to an <code>enum</code> definition, it indicates that the smallest
 integral type should be used.
 
-     <p><a name="index-fshort_002denums-2360"></a>Specifying this attribute for <code>struct</code> and <code>union</code> types is
+     <p><a name="index-fshort_002denums-2709"></a>Specifying this attribute for <code>struct</code> and <code>union</code> types is
 equivalent to specifying the <code>packed</code> attribute on each of the
 structure or union members.  Specifying the <samp><span class="option">-fshort-enums</span></samp>
 flag on the line is equivalent to specifying the <code>packed</code>
@@ -189,7 +189,7 @@ be packed too.
                struct my_unpacked_struct s;
             };
 </pre>
-     <p>You may only specify this attribute on the definition of a <code>enum</code>,
+     <p>You may only specify this attribute on the definition of an <code>enum</code>,
 <code>struct</code> or <code>union</code>, not on a <code>typedef</code> which does not
 also define the enumerated type, structure or union.
 
@@ -252,7 +252,7 @@ the case with lock or thread classes, which are usually defined and then
 not referenced, but contain constructors and destructors that have
 nontrivial bookkeeping functions.
 
-     <br><dt><code>deprecated</code><dd>The <code>deprecated</code> attribute results in a warning if the type
+     <br><dt><code>deprecated</code><dt><code>deprecated (</code><var>msg</var><code>)</code><dd>The <code>deprecated</code> attribute results in a warning if the type
 is used anywhere in the source file.  This is useful when identifying
 types that are expected to be removed in a future version of a program. 
 If possible, the warning also includes the location of the declaration
@@ -272,7 +272,9 @@ declared as deprecated.
      <p>results in a warning on line 2 and 3 but not lines 4, 5, or 6.  No
 warning is issued for line 4 because T2 is not explicitly
 deprecated.  Line 5 has no warning because T3 is explicitly
-deprecated.  Similarly for line 6.
+deprecated.  Similarly for line 6.  The optional msg
+argument, which must be a string, will be printed in the warning if
+present.
 
      <p>The <code>deprecated</code> attribute can also be used for functions and
 variables (see <a href="Function-Attributes.html#Function-Attributes">Function Attributes</a>, see <a href="Variable-Attributes.html#Variable-Attributes">Variable Attributes</a>.)
@@ -325,7 +327,7 @@ typeinfo node and exception handling will break.
 
  </dl>
 
-<h4 class="subsection">5.36.1 ARM Type Attributes</h4>
+<h4 class="subsection">6.37.1 ARM Type Attributes</h4>
 
 <p>On those ARM targets that support <code>dllimport</code> (such as Symbian
 OS), you can use the <code>notshared</code> attribute to indicate that the
@@ -346,15 +348,24 @@ virtual table for <code>C</code> is not exported.  (You can use
 <code>__attribute__</code> instead of <code>__declspec</code> if you prefer, but
 most Symbian OS code uses <code>__declspec</code>.)
 
+ <p><a name="MeP-Type-Attributes"></a>
+
+<h4 class="subsection">6.37.2 MeP Type Attributes</h4>
+
+<p>Many of the MeP variable attributes may be applied to types as well. 
+Specifically, the <code>based</code>, <code>tiny</code>, <code>near</code>, and
+<code>far</code> attributes may be applied to either.  The <code>io</code> and
+<code>cb</code> attributes may not be applied to types.
+
  <p><a name="i386-Type-Attributes"></a>
 
-<h4 class="subsection">5.36.2 i386 Type Attributes</h4>
+<h4 class="subsection">6.37.3 i386 Type Attributes</h4>
 
 <p>Two attributes are currently defined for i386 configurations:
 <code>ms_struct</code> and <code>gcc_struct</code>.
 
      <dl>
-<dt><code>ms_struct</code><dt><code>gcc_struct</code><dd><a name="index-g_t_0040code_007bms_005fstruct_007d-2361"></a><a name="index-g_t_0040code_007bgcc_005fstruct_007d-2362"></a>
+<dt><code>ms_struct</code><dt><code>gcc_struct</code><dd><a name="index-g_t_0040code_007bms_005fstruct_007d-2710"></a><a name="index-g_t_0040code_007bgcc_005fstruct_007d-2711"></a>
 If <code>packed</code> is used on a structure, or if bit-fields are used
 it may be that the Microsoft ABI packs them differently
 than GCC would normally pack them.  Particularly when moving packed
@@ -372,7 +383,7 @@ packed))</span></samp>&rsquo;.
 
  <p><a name="PowerPC-Type-Attributes"></a>
 
-<h4 class="subsection">5.36.3 PowerPC Type Attributes</h4>
+<h4 class="subsection">6.37.4 PowerPC Type Attributes</h4>
 
 <p>Three attributes currently are defined for PowerPC configurations:
 <code>altivec</code>, <code>ms_struct</code> and <code>gcc_struct</code>.
@@ -395,7 +406,7 @@ and <code>bool__</code> (always followed by unsigned).
 
  <p><a name="SPU-Type-Attributes"></a>
 
-<h4 class="subsection">5.36.4 SPU Type Attributes</h4>
+<h4 class="subsection">6.37.5 SPU Type Attributes</h4>
 
 <p>The SPU supports the <code>spu_vector</code> attribute for types.  This attribute
 allows one to declare vector data types supported by the Sony/Toshiba/IBM SPU

@@ -24,6 +24,8 @@ Individual utilities
 * cxxfilt: (binutils)c++filt.                   MS-DOS name for c++filt.
 * dlltool: (binutils)dlltool.                   Create files needed to build 
                                                   and use DLLs.
+* elfedit: (binutils)elfedit.                   Update the ELF header of ELF 
+                                                  files.
 * nlmconv: (binutils)nlmconv.                   Converts object code into an 
                                                   NLM.
 * nm: (binutils)nm.                             List symbols from object files.
@@ -44,15 +46,13 @@ Individual utilities
                                                   resources.
 * windres: (binutils)windres.                   Manipulate Windows resources.
 
-Miscellaneous
-* As: (as).                     The GNU assembler.
-* Gas: (as).                    The GNU assembler.
-* Ld: (ld).                     The GNU linker.
-* gprof: (gprof).               Profiling your program's execution
-
 Software development
+* As: (as).                     The GNU assembler.
 * Binutils: (binutils).         The GNU binary utilities.
 * Cpp: (cpp).                   The GNU C preprocessor.
+* Gas: (as).                    The GNU assembler.
 * Gdb: (gdb).                   The GNU debugger.
+* Ld: (ld).                     The GNU linker.
 * g++: (gcc).                   The GNU C++ compiler.
 * gcc: (gcc).                   The GNU Compiler Collection.
+* gprof: (gprof).               Profiling your program's execution

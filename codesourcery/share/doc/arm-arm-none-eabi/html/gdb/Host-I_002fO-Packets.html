@@ -12,10 +12,11 @@
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -49,9 +50,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Remote-Protocol.html#Remote-Protocol">R
 <hr>
 </div>
 
-<h3 class="section">D.8 Host I/O Packets</h3>
+<h3 class="section">E.8 Host I/O Packets</h3>
 
-<p><a name="index-Host-I_002fO_002c-remote-protocol-2225"></a><a name="index-file-transfer_002c-remote-protocol-2226"></a>
+<p><a name="index-Host-I_002fO_002c-remote-protocol-2741"></a><a name="index-file-transfer_002c-remote-protocol-2742"></a>
 The <dfn>Host I/O</dfn> packets allow <span class="sc">gdb</span> to perform I/O
 operations on the far side of a remote link.  For example, Host I/O is
 used to upload and download files to a remote target with its own
@@ -131,6 +132,15 @@ error occurred.
 
      <br><dt>&lsquo;<samp><span class="samp">vFile:unlink: </span><var>pathname</var></samp>&rsquo;<dd>Delete the file at <var>pathname</var> on the target.  Return 0,
 or -1 if an error occurs.  <var>pathname</var> is a string.
+
+     <br><dt>&lsquo;<samp><span class="samp">vFile:readlink: </span><var>filename</var></samp>&rsquo;<dd>Read value of symbolic link <var>filename</var> on the target.  Return
+the number of bytes read, or -1 if an error occurs.
+
+     <p>The data read should be returned as a binary attachment on success. 
+If zero bytes were read, the response should include an empty binary
+attachment (i.e. a trailing semicolon).  The return value is the
+number of target bytes read; the binary attachment may be longer if
+some characters were escaped.
 
    </dl>
 

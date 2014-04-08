@@ -11,10 +11,11 @@
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -48,7 +49,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Source.html#Source">Source</a>
 
 <h3 class="section">9.6 Source and Machine Code</h3>
 
-<p><a name="index-source-line-and-its-code-address-455"></a>
+<p><a name="index-source-line-and-its-code-address-498"></a>
 You can use the command <code>info line</code> to map source lines to program
 addresses (and vice versa), and the command <code>disassemble</code> to display
 a range of addresses as machine instructions.  You can use the command
@@ -59,7 +60,7 @@ line specified.  Also, <code>info line</code> prints addresses in symbolic form 
 well as hex.
 
      
-<a name="index-info-line-456"></a>
+<a name="index-info-line-499"></a>
 <dl><dt><code>info line </code><var>linespec</var><dd>Print the starting and ending addresses of the compiled code for
 source line <var>linespec</var>.  You can specify source lines in any of
 the ways documented in <a href="Specify-Location.html#Specify-Location">Specify Location</a>. 
@@ -74,22 +75,22 @@ the object code for the first line of function
 <pre class="smallexample">     (gdb) info line m4_changequote
      Line 895 of "builtin.c" starts at pc 0x634c and ends at 0x6350.
 </pre>
-   <p class="noindent"><a name="index-code-address-and-its-source-line-457"></a>We can also inquire (using <code>*</code><var>addr</var> as the form for
+   <p class="noindent"><a name="index-code-address-and-its-source-line-500"></a>We can also inquire (using <code>*</code><var>addr</var> as the form for
 <var>linespec</var>) what source line covers a particular address:
 <pre class="smallexample">     (gdb) info line *0x63ff
      Line 926 of "builtin.c" starts at pc 0x63e4 and ends at 0x6404.
 </pre>
-   <p><a name="index-g_t_0040code_007b_0024_005f_007d-and-_0040code_007binfo-line_007d-458"></a><a name="index-g_t_0040code_007bx_007d-command_002c-default-address-459"></a><a name="index-x_0040r_007b_0028examine_0029_002c-and_007d-info-line-460"></a>After <code>info line</code>, the default address for the <code>x</code> command
+   <p><a name="index-g_t_0040code_007b_0024_005f_007d-and-_0040code_007binfo-line_007d-501"></a><a name="index-g_t_0040code_007bx_007d-command_002c-default-address-502"></a><a name="index-x_0040r_007b_0028examine_0029_002c-and_007d-info-line-503"></a>After <code>info line</code>, the default address for the <code>x</code> command
 is changed to the starting address of the line, so that &lsquo;<samp><span class="samp">x/i</span></samp>&rsquo; is
 sufficient to begin examining the machine code (see <a href="Memory.html#Memory">Examining Memory</a>).  Also, this address is saved as the value of the
 convenience variable <code>$_</code> (see <a href="Convenience-Vars.html#Convenience-Vars">Convenience Variables</a>).
 
      
-<a name="index-disassemble-461"></a>
-<a name="index-assembly-instructions-462"></a>
-<a name="index-instructions_002c-assembly-463"></a>
-<a name="index-machine-instructions-464"></a>
-<a name="index-listing-machine-instructions-465"></a>
+<a name="index-disassemble-504"></a>
+<a name="index-assembly-instructions-505"></a>
+<a name="index-instructions_002c-assembly-506"></a>
+<a name="index-machine-instructions-507"></a>
+<a name="index-listing-machine-instructions-508"></a>
 <dl><dt><code>disassemble</code><dt><code>disassemble /m</code><dt><code>disassemble /r</code><dd>This specialized command dumps a range of memory as machine
 instructions.  It can also print mixed source+disassembly by specifying
 the <code>/m</code> modifier and print the raw instructions in hex as well as
@@ -99,9 +100,16 @@ program counter of the selected frame.  A single argument to this
 command is a program counter value; <span class="sc">gdb</span> dumps the function
 surrounding this value.  When two arguments are given, they should
 be separated by a comma, possibly surrounded by whitespace.  The
-arguments specify a range of addresses (first inclusive, second exclusive)
-to dump.  In that case, the name of the function is also printed (since
-there could be several functions in the given range).
+arguments specify a range of addresses to dump, in one of two forms:
+
+          <dl>
+<dt><var>start</var><code>,</code><var>end</var><dd>the addresses from <var>start</var> (inclusive) to <var>end</var> (exclusive)
+<br><dt><var>start</var><code>,+</code><var>length</var><dd>the addresses from <var>start</var> (inclusive) to
+<var>start</var><code>+</code><var>length</var> (exclusive). 
+</dl>
+
+     <p class="noindent">When 2 arguments are specified, the name of the function is also
+printed (since there could be several functions in the given range).
 
      <p>The argument(s) can be any expression yielding a numeric value, such as
 &lsquo;<samp><span class="samp">0x32c4</span></samp>&rsquo;, &lsquo;<samp><span class="samp">&amp;main+10</span></samp>&rsquo; or &lsquo;<samp><span class="samp">$pc - 8</span></samp>&rsquo;.
@@ -149,6 +157,16 @@ program is stopped just after function prologue:
      
      End of assembler dump.
 </pre>
+   <p>Here is another example showing raw instructions in hex for AMD x86-64,
+
+<pre class="smallexample">     (gdb) disas /r 0x400281,+10
+     Dump of assembler code from 0x400281 to 0x40028b:
+        0x0000000000400281:  38 36  cmp    %dh,(%rsi)
+        0x0000000000400283:  2d 36 34 2e 73 sub    $0x732e3436,%eax
+        0x0000000000400288:  6f     outsl  %ds:(%rsi),(%dx)
+        0x0000000000400289:  2e 32 00       xor    %cs:(%rax),%al
+     End of assembler dump.
+</pre>
    <p>Some architectures have more than one commonly-used set of instruction
 mnemonics or other syntax.
 
@@ -159,9 +177,9 @@ location of the relocation table.  On some architectures, <span class="sc">gdb</
 might be able to resolve these to actual function names.
 
      
-<a name="index-set-disassembly_002dflavor-466"></a>
-<a name="index-Intel-disassembly-flavor-467"></a>
-<a name="index-AT_0026T-disassembly-flavor-468"></a>
+<a name="index-set-disassembly_002dflavor-509"></a>
+<a name="index-Intel-disassembly-flavor-510"></a>
+<a name="index-AT_0026T-disassembly-flavor-511"></a>
 <dl><dt><code>set disassembly-flavor </code><var>instruction-set</var><dd>Select the instruction set to use when disassembling the
 program via the <code>disassemble</code> or <code>x/i</code> commands.
 
@@ -170,12 +188,12 @@ can set <var>instruction-set</var> to either <code>intel</code> or <code>att</co
 The default is <code>att</code>, the AT&amp;T flavor used by default by Unix
 assemblers for x86-based targets.
 
-     <p><a name="index-show-disassembly_002dflavor-469"></a><br><dt><code>show disassembly-flavor</code><dd>Show the current setting of the disassembly flavor. 
+     <p><a name="index-show-disassembly_002dflavor-512"></a><br><dt><code>show disassembly-flavor</code><dd>Show the current setting of the disassembly flavor. 
 </dl>
 
      
-<a name="index-set-disassemble_002dnext_002dline-470"></a>
-<a name="index-show-disassemble_002dnext_002dline-471"></a>
+<a name="index-set-disassemble_002dnext_002dline-513"></a>
+<a name="index-show-disassemble_002dnext_002dline-514"></a>
 <dl><dt><code>set disassemble-next-line</code><dt><code>show disassemble-next-line</code><dd>Control whether or not <span class="sc">gdb</span> will disassemble the next source
 line or instruction when execution stops.  If ON, <span class="sc">gdb</span> will
 display disassembly of the next source line when execution of the

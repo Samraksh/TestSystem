@@ -12,10 +12,11 @@
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -49,11 +50,11 @@ Up:&nbsp;<a rel="up" accesskey="u" href="GDB_002fMI.html#GDB_002fMI">GDB/MI</a>
 <hr>
 </div>
 
-<h3 class="section">27.13 <span class="sc">gdb/mi</span> Variable Objects</h3>
+<h3 class="section">27.14 <span class="sc">gdb/mi</span> Variable Objects</h3>
 
 <h4 class="subheading">Introduction to Variable Objects</h4>
 
-<p><a name="index-variable-objects-in-_0040sc_007bgdb_002fmi_007d-1828"></a>
+<p><a name="index-variable-objects-in-_0040sc_007bgdb_002fmi_007d-2258"></a>
 Variable objects are "object-oriented" MI interface for examining and
 changing values of expressions.  Unlike some other MI interfaces that
 work with expressions, variable objects are specifically designed for
@@ -117,7 +118,7 @@ frame.  Consider this example:
      }
 </pre>
    <p>If a fixed variable object for the <code>state</code> variable is created in
-this function, and we enter the recursive call, the the variable
+this function, and we enter the recursive call, the variable
 object will report the value of <code>state</code> in the top-level
 <code>do_work</code> invocation.  On the other hand, a floating variable
 object will report the value of <code>state</code> in the current frame.
@@ -176,7 +177,7 @@ how it can be used.
 
 <h4 class="subheading">The <code>-enable-pretty-printing</code> Command</h4>
 
-<p><a name="index-g_t_002denable_002dpretty_002dprinting-1829"></a>
+<p><a name="index-g_t_002denable_002dpretty_002dprinting-2259"></a>
 <pre class="smallexample">     -enable-pretty-printing
 </pre>
    <p><span class="sc">gdb</span> allows Python-based visualizers to affect the output of the
@@ -194,7 +195,7 @@ may work differently in future versions of <span class="sc">gdb</span>.
 
 <h4 class="subheading">The <code>-var-create</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dcreate-1830"></a>
+<p><a name="index-g_t_002dvar_002dcreate-2260"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -227,7 +228,7 @@ begin with a &lsquo;<samp><span class="samp">*</span></samp>&rsquo;), or one of 
      <li>&lsquo;<samp><span class="samp">$</span><var>regname</var></samp>&rsquo; &mdash; a CPU register name
 </ul>
 
-   <p><a name="index-dynamic-varobj-1831"></a>A varobj's contents may be provided by a Python-based pretty-printer.  In this
+   <p><a name="index-dynamic-varobj-2261"></a>A varobj's contents may be provided by a Python-based pretty-printer.  In this
 case the varobj is known as a <dfn>dynamic varobj</dfn>.  Dynamic varobjs
 have slightly different semantics in some cases.  If the
 <code>-enable-pretty-printing</code> command is not sent, then <span class="sc">gdb</span>
@@ -251,7 +252,10 @@ aggregate (e.g., a <code>struct</code>), or for a dynamic varobj, this value
 will not be interesting.
 
      <br><dt>&lsquo;<samp><span class="samp">type</span></samp>&rsquo;<dd>The varobj's type.  This is a string representation of the type, as
-would be printed by the <span class="sc">gdb</span> CLI.
+would be printed by the <span class="sc">gdb</span> CLI.  If &lsquo;<samp><span class="samp">print object</span></samp>&rsquo;
+(see <a href="Print-Settings.html#Print-Settings">set print object</a>) is set to <code>on</code>, the
+<em>actual</em> (derived) type of the object is shown rather than the
+<em>declared</em> one.
 
      <br><dt>&lsquo;<samp><span class="samp">thread-id</span></samp>&rsquo;<dd>If a variable object is bound to a specific thread, then this is the
 thread's identifier.
@@ -265,7 +269,16 @@ then this attribute will not be present.
 
      <br><dt>&lsquo;<samp><span class="samp">displayhint</span></samp>&rsquo;<dd>A dynamic varobj can supply a display hint to the front end.  The
 value comes directly from the Python pretty-printer object's
-<code>display_hint</code> method.  See <a href="Pretty-Printing.html#Pretty-Printing">Pretty Printing</a>. 
+<code>display_hint</code> method.  See <a href="Pretty-Printing-API.html#Pretty-Printing-API">Pretty Printing API</a>.
+
+     <br><dt>&lsquo;<samp><span class="samp">has-side-effects</span></samp>&rsquo;<dd>If updating this varobj, or any of its children, is known to have
+a side effect on the target (such as modifying the state of a
+hardware device), this will be 1.  Otherwise, it will be omitted. 
+If it is this varobj (rather than just a child) which has side effects,
+then the varobj will be created frozen.  Otherwise, the varobj
+may be safely updated but its frozen children will be skipped
+by default.  Care should be taken passing this varobj's expression
+to e.g. <code>-data-evaluate-expression</code>. 
 </dl>
 
    <p>Typical output will look like this:
@@ -275,7 +288,7 @@ value comes directly from the Python pretty-printer object's
 </pre>
    <h4 class="subheading">The <code>-var-delete</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002ddelete-1832"></a>
+<p><a name="index-g_t_002dvar_002ddelete-2262"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -288,7 +301,7 @@ With the &lsquo;<samp><span class="samp">-c</span></samp>&rsquo; option, just de
 
 <h4 class="subheading">The <code>-var-set-format</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dset_002dformat-1833"></a>
+<p><a name="index-g_t_002dvar_002dset_002dformat-2263"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -311,7 +324,7 @@ variable itself, and the children are not affected.
 
 <h4 class="subheading">The <code>-var-show-format</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dshow_002dformat-1834"></a>
+<p><a name="index-g_t_002dvar_002dshow_002dformat-2264"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -324,7 +337,7 @@ variable itself, and the children are not affected.
 </pre>
    <h4 class="subheading">The <code>-var-info-num-children</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dinfo_002dnum_002dchildren-1835"></a>
+<p><a name="index-g_t_002dvar_002dinfo_002dnum_002dchildren-2265"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -340,7 +353,7 @@ be available.
 
 <h4 class="subheading">The <code>-var-list-children</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dlist_002dchildren-1836"></a>
+<p><a name="index-g_t_002dvar_002dlist_002dchildren-2266"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -348,7 +361,7 @@ be available.
 </pre>
    <p><a name="g_t_002dvar_002dlist_002dchildren"></a>Return a list of the children of the specified variable object and
 create variable objects for them, if they do not already exist.  With
-a single argument or if <var>print-values</var> has a value for of 0 or
+a single argument or if <var>print-values</var> has a value of 0 or
 <code>--no-values</code>, print only the names of the variables; if
 <var>print-values</var> is 1 or <code>--all-values</code>, also print their
 values; and if it is 2 or <code>--simple-values</code> print the name and
@@ -394,7 +407,10 @@ available at all with a dynamic varobj.
      <br><dt><var>numchild</var><dd>Number of children this child has.  For a dynamic varobj, this will be
 0.
 
-     <br><dt><var>type</var><dd>The type of the child.
+     <br><dt><var>type</var><dd>The type of the child.  If &lsquo;<samp><span class="samp">print object</span></samp>&rsquo;
+(see <a href="Print-Settings.html#Print-Settings">set print object</a>) is set to <code>on</code>, the
+<em>actual</em> (derived) type of the object is shown rather than the
+<em>declared</em> one.
 
      <br><dt><var>value</var><dd>If values were requested, this is the value.
 
@@ -409,7 +425,7 @@ Otherwise this result is not present.
      <dl>
 <dt>&lsquo;<samp><span class="samp">displayhint</span></samp>&rsquo;<dd>A dynamic varobj can supply a display hint to the front end.  The
 value comes directly from the Python pretty-printer object's
-<code>display_hint</code> method.  See <a href="Pretty-Printing.html#Pretty-Printing">Pretty Printing</a>.
+<code>display_hint</code> method.  See <a href="Pretty-Printing-API.html#Pretty-Printing-API">Pretty Printing API</a>.
 
      <br><dt>&lsquo;<samp><span class="samp">has_more</span></samp>&rsquo;<dd>This is an integer attribute which is nonzero if there are children
 remaining after the end of the selected range. 
@@ -428,7 +444,7 @@ remaining after the end of the selected range.
 </pre>
 <h4 class="subheading">The <code>-var-info-type</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dinfo_002dtype-1837"></a>
+<p><a name="index-g_t_002dvar_002dinfo_002dtype-2267"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -442,7 +458,7 @@ returned as a string in the same format as it is output by the
 </pre>
    <h4 class="subheading">The <code>-var-info-expression</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dinfo_002dexpression-1838"></a>
+<p><a name="index-g_t_002dvar_002dinfo_002dexpression-2268"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -466,7 +482,7 @@ is of limited use.
 
 <h4 class="subheading">The <code>-var-info-path-expression</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dinfo_002dpath_002dexpression-1839"></a>
+<p><a name="index-g_t_002dvar_002dinfo_002dpath_002dexpression-2269"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -492,7 +508,7 @@ and will give an error when invoked on one.
 </pre>
    <h4 class="subheading">The <code>-var-show-attributes</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dshow_002dattributes-1840"></a>
+<p><a name="index-g_t_002dvar_002dshow_002dattributes-2270"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -506,7 +522,7 @@ and will give an error when invoked on one.
 
 <h4 class="subheading">The <code>-var-evaluate-expression</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002devaluate_002dexpression-1841"></a>
+<p><a name="index-g_t_002dvar_002devaluate_002dexpression-2271"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -527,7 +543,7 @@ before the value of a child variable can be evaluated.
 
 <h4 class="subheading">The <code>-var-assign</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dassign-1842"></a>
+<p><a name="index-g_t_002dvar_002dassign-2272"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -550,7 +566,7 @@ subsequent <code>-var-update</code> list.
 </pre>
 <h4 class="subheading">The <code>-var-update</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dupdate-1843"></a>
+<p><a name="index-g_t_002dvar_002dupdate-2273"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -611,6 +627,12 @@ be prepared for this possibility.  See <a href="GDB_002fMI-Development-and-Front
 changed, then this will be the string &lsquo;<samp><span class="samp">true</span></samp>&rsquo;; otherwise it will
 be &lsquo;<samp><span class="samp">false</span></samp>&rsquo;.
 
+     <p>When a varobj's type changes, its children are also likely to have
+become incorrect.  Therefore, the varobj's children are automatically
+deleted when this attribute is &lsquo;<samp><span class="samp">true</span></samp>&rsquo;.  Also, the varobj's update
+range, when set using the <code>-var-set-update-range</code> command, is
+unset.
+
      <br><dt>&lsquo;<samp><span class="samp">new_type</span></samp>&rsquo;<dd>If the varobj's type changed, then this field will be present and will
 hold the new type.
 
@@ -655,7 +677,7 @@ be listed in this attribute.
 </pre>
 <h4 class="subheading">The <code>-var-set-frozen</code> Command</h4>
 
-<p><a name="index-g_t_002dvar_002dset_002dfrozen-1844"></a><a name="g_t_002dvar_002dset_002dfrozen"></a>
+<p><a name="index-g_t_002dvar_002dset_002dfrozen-2274"></a><a name="g_t_002dvar_002dset_002dfrozen"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -682,7 +704,7 @@ Unfreezing a variable does not update it, only subsequent
 </pre>
 <h4 class="subheading">The <code>-var-set-update-range</code> command</h4>
 
-<p><a name="index-g_t_002dvar_002dset_002dupdate_002drange-1845"></a><a name="g_t_002dvar_002dset_002dupdate_002drange"></a>
+<p><a name="index-g_t_002dvar_002dset_002dupdate_002drange-2275"></a><a name="g_t_002dvar_002dset_002dupdate_002drange"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -704,7 +726,7 @@ children will be reported.  Otherwise, children starting at <var>from</var>
 </pre>
 <h4 class="subheading">The <code>-var-set-visualizer</code> command</h4>
 
-<p><a name="index-g_t_002dvar_002dset_002dvisualizer-1846"></a><a name="g_t_002dvar_002dset_002dvisualizer"></a>
+<p><a name="index-g_t_002dvar_002dset_002dvisualizer-2276"></a><a name="g_t_002dvar_002dset_002dvisualizer"></a>
 
 <h5 class="subsubheading">Synopsis</h5>
 
@@ -721,7 +743,7 @@ single argument.  <span class="sc">gdb</span> will call this object with the val
 the varobj <var>name</var> as an argument (this is done so that the same
 Python pretty-printing code can be used for both the CLI and MI). 
 When called, this object must return an object which conforms to the
-pretty-printing interface (see <a href="Pretty-Printing.html#Pretty-Printing">Pretty Printing</a>).
+pretty-printing interface (see <a href="Pretty-Printing-API.html#Pretty-Printing-API">Pretty Printing API</a>).
 
    <p>The pre-defined function <code>gdb.default_visualizer</code> may be used to
 select a visualizer by following the built-in process

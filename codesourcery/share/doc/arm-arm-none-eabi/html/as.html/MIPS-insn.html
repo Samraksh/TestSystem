@@ -12,8 +12,9 @@
 <!--
 This file documents the GNU Assembler "as".
 
-Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 2001, 2002,
-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+2000, 2001, 2002, 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation,
+Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
@@ -47,13 +48,36 @@ Up:&nbsp;<a rel="up" accesskey="u" href="MIPS_002dDependent.html#MIPS_002dDepend
 <hr>
 </div>
 
-<h4 class="subsection">9.23.7 Directive to mark data as an instruction</h4>
+<h4 class="subsection">9.27.8 Directive to mark data as an instruction</h4>
 
-<p><a name="index-g_t_0040code_007b_002einsn_007d-1263"></a>The <code>.insn</code> directive tells <code>as</code> that the following
-data is actually instructions.  This makes a difference in MIPS 16 mode:
-when loading the address of a label which precedes instructions,
-<code>as</code> automatically adds 1 to the value, so that jumping to
-the loaded address will do the right thing.
+<p><a name="index-g_t_0040code_007b_002einsn_007d-1408"></a>The <code>.insn</code> directive tells <code>as</code> that the following
+data is actually instructions.  This makes a difference in MIPS 16 and
+microMIPS modes: when loading the address of a label which precedes
+instructions, <code>as</code> automatically adds 1 to the value, so
+that jumping to the loaded address will do the right thing.
 
+   <p><a name="index-g_t_0040code_007b_002eglobal_007d-1409"></a>The <code>.global</code> and <code>.globl</code> directives supported by
+<code>as</code> will by default mark the symbol as pointing to a
+region of data not code.  This means that, for example, any
+instructions following such a symbol will not be disassembled by
+<code>objdump</code> as it will regard them as data.  To change this
+behaviour an optional section name can be placed after the symbol name
+in the <code>.global</code> directive.  If this section exists and is known
+to be a code section, then the symbol will be marked as poiting at
+code not data.  Ie the syntax for the directive is:
+
+   <p><code>.global </code><var>symbol</var><code>[ </code><var>section</var><code>][, </code><var>symbol</var><code>[ </code><var>section</var><code>]] ...</code>,
+
+   <p>Here is a short example:
+
+<pre class="example">             .global foo .text, bar, baz .data
+     foo:
+             nop
+     bar:
+             .word 0x0
+     baz:
+             .word 0x1
+     
+</pre>
    </body></html>
 

@@ -12,10 +12,11 @@
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -50,7 +51,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Breakpoints.html#Breakpoints">Breakpoin
 
 <h4 class="subsection">5.1.2 Setting Watchpoints</h4>
 
-<p><a name="index-setting-watchpoints-236"></a>You can use a watchpoint to stop execution whenever the value of an
+<p><a name="index-setting-watchpoints-248"></a>You can use a watchpoint to stop execution whenever the value of an
 expression changes, without having to predict a particular place where
 this may happen.  (This is sometimes called a <dfn>data breakpoint</dfn>.) 
 The expression may be as simple as the value of a single variable, or
@@ -78,7 +79,7 @@ pointed to by &lsquo;<samp><span class="samp">*global_ptr</span></samp>&rsquo; b
 <code>malloc</code> call), <span class="sc">gdb</span> may not stop until the next time
 the expression changes.
 
-   <p><a name="index-software-watchpoints-237"></a><a name="index-hardware-watchpoints-238"></a>Depending on your system, watchpoints may be implemented in software or
+   <p><a name="index-software-watchpoints-249"></a><a name="index-hardware-watchpoints-250"></a>Depending on your system, watchpoints may be implemented in software or
 hardware.  <span class="sc">gdb</span> does software watchpointing by single-stepping your
 program and testing the variable's value each time, which is hundreds of
 times slower than normal execution.  (But this may still be worth it, to
@@ -90,8 +91,8 @@ x86-based targets, <span class="sc">gdb</span> includes support for hardware
 watchpoints, which do not slow down the running of your program.
 
      
-<a name="index-watch-239"></a>
-<dl><dt><code>watch </code><var>expr</var> <span class="roman">[</span><code>thread </code><var>threadnum</var><span class="roman">]</span><dd>Set a watchpoint for an expression.  <span class="sc">gdb</span> will break when the
+<a name="index-watch-251"></a>
+<dl><dt><code>watch </code><span class="roman">[</span><code>-l</code><span class="roman">|</span><code>-location</code><span class="roman">]</span> <var>expr</var> <span class="roman">[</span><code>thread </code><var>threadnum</var><span class="roman">]</span> <span class="roman">[</span><code>mask </code><var>maskvalue</var><span class="roman">]</span><dd>Set a watchpoint for an expression.  <span class="sc">gdb</span> will break when the
 expression <var>expr</var> is written into by the program and its value
 changes.  The simplest (and the most popular) use of this command is
 to watch the value of a single variable:
@@ -99,22 +100,55 @@ to watch the value of a single variable:
      <pre class="smallexample">          (gdb) watch foo
 </pre>
      <p>If the command includes a <span class="roman">[</span><code>thread </code><var>threadnum</var><span class="roman">]</span>
-clause, <span class="sc">gdb</span> breaks only when the thread identified by
+argument, <span class="sc">gdb</span> breaks only when the thread identified by
 <var>threadnum</var> changes the value of <var>expr</var>.  If any other threads
 change the value of <var>expr</var>, <span class="sc">gdb</span> will not break.  Note
 that watchpoints restricted to a single thread in this way only work
 with Hardware Watchpoints.
 
-     <p><a name="index-rwatch-240"></a><br><dt><code>rwatch </code><var>expr</var> <span class="roman">[</span><code>thread </code><var>threadnum</var><span class="roman">]</span><dd>Set a watchpoint that will break when the value of <var>expr</var> is read
+     <p>Ordinarily a watchpoint respects the scope of variables in <var>expr</var>
+(see below).  The <code>-location</code> argument tells <span class="sc">gdb</span> to
+instead watch the memory referred to by <var>expr</var>.  In this case,
+<span class="sc">gdb</span> will evaluate <var>expr</var>, take the address of the result,
+and watch the memory at that address.  The type of the result is used
+to determine the size of the watched memory.  If the expression's
+result does not have an address, then <span class="sc">gdb</span> will print an
+error.
+
+     <p>The <span class="roman">[</span><code>mask </code><var>maskvalue</var><span class="roman">]</span> argument allows creation
+of masked watchpoints, if the current architecture supports this
+feature (e.g., PowerPC Embedded architecture, see <a href="PowerPC-Embedded.html#PowerPC-Embedded">PowerPC Embedded</a>.)  A <dfn>masked watchpoint</dfn> specifies a mask in addition
+to an address to watch.  The mask specifies that some bits of an address
+(the bits which are reset in the mask) should be ignored when matching
+the address accessed by the inferior against the watchpoint address. 
+Thus, a masked watchpoint watches many addresses simultaneously&mdash;those
+addresses whose unmasked bits are identical to the unmasked bits in the
+watchpoint address.  The <code>mask</code> argument implies <code>-location</code>. 
+Examples:
+
+     <pre class="smallexample">          (gdb) watch foo mask 0xffff00ff
+          (gdb) watch *0xdeadbeef mask 0xffffff00
+</pre>
+     <p><a name="index-rwatch-252"></a><br><dt><code>rwatch </code><span class="roman">[</span><code>-l</code><span class="roman">|</span><code>-location</code><span class="roman">]</span> <var>expr</var> <span class="roman">[</span><code>thread </code><var>threadnum</var><span class="roman">]</span> <span class="roman">[</span><code>mask </code><var>maskvalue</var><span class="roman">]</span><dd>Set a watchpoint that will break when the value of <var>expr</var> is read
 by the program.
 
-     <p><a name="index-awatch-241"></a><br><dt><code>awatch </code><var>expr</var> <span class="roman">[</span><code>thread </code><var>threadnum</var><span class="roman">]</span><dd>Set a watchpoint that will break when <var>expr</var> is either read from
+     <p><a name="index-awatch-253"></a><br><dt><code>awatch </code><span class="roman">[</span><code>-l</code><span class="roman">|</span><code>-location</code><span class="roman">]</span> <var>expr</var> <span class="roman">[</span><code>thread </code><var>threadnum</var><span class="roman">]</span> <span class="roman">[</span><code>mask </code><var>maskvalue</var><span class="roman">]</span><dd>Set a watchpoint that will break when <var>expr</var> is either read from
 or written into by the program.
 
-     <p><a name="index-info-watchpoints-_0040r_007b_005b_007d_0040var_007bn_007d_0040r_007b_005d_007d-242"></a><br><dt><code>info watchpoints</code><dd>This command prints a list of watchpoints, breakpoints, and catchpoints;
-it is the same as <code>info break</code> (see <a href="Set-Breaks.html#Set-Breaks">Set Breaks</a>). 
+     <p><a name="index-info-watchpoints-_0040r_007b_005b_007d_0040var_007bn_007d_0040dots_007b_007d_0040r_007b_005d_007d-254"></a><br><dt><code>info watchpoints </code><span class="roman">[</span><var>n</var><code>...</code><span class="roman">]</span><dd>This command prints a list of watchpoints, using the same format as
+<code>info break</code> (see <a href="Set-Breaks.html#Set-Breaks">Set Breaks</a>). 
 </dl>
 
+   <p>If you watch for a change in a numerically entered address you need to
+dereference it, as the address itself is just a constant number which will
+never change.  <span class="sc">gdb</span> refuses to create a watchpoint that watches
+a never-changing value:
+
+<pre class="smallexample">     (gdb) watch 0x600850
+     Cannot watch constant value 0x600850.
+     (gdb) watch *(int *) 0x600850
+     Watchpoint 1: *(int *) 6293584
+</pre>
    <p><span class="sc">gdb</span> sets a <dfn>hardware watchpoint</dfn> if possible.  Hardware
 watchpoints execute very quickly, and the debugger reports a change in
 value at the exact instruction where the change occurs.  If <span class="sc">gdb</span>
@@ -122,7 +156,7 @@ cannot set a hardware watchpoint, it sets a software watchpoint, which
 executes more slowly and reports the change in value at the next
 <em>statement</em>, not the instruction, after the change occurs.
 
-   <p><a name="index-use-only-software-watchpoints-243"></a>You can force <span class="sc">gdb</span> to use only software watchpoints with the
+   <p><a name="index-use-only-software-watchpoints-255"></a>You can force <span class="sc">gdb</span> to use only software watchpoints with the
 <kbd>set can-use-hw-watchpoints 0</kbd> command.  With this variable set to
 zero, <span class="sc">gdb</span> will never try to use hardware watchpoints, even if
 the underlying system supports them.  (Note that hardware-assisted
@@ -131,9 +165,9 @@ watchpoints that were set <em>before</em> setting
 mechanism of watching expression values.)
 
      <dl>
-<dt><code>set can-use-hw-watchpoints</code><dd><a name="index-set-can_002duse_002dhw_002dwatchpoints-244"></a>Set whether or not to use hardware watchpoints.
+<dt><code>set can-use-hw-watchpoints</code><dd><a name="index-set-can_002duse_002dhw_002dwatchpoints-256"></a>Set whether or not to use hardware watchpoints.
 
-     <br><dt><code>show can-use-hw-watchpoints</code><dd><a name="index-show-can_002duse_002dhw_002dwatchpoints-245"></a>Show the current mode of using hardware watchpoints. 
+     <br><dt><code>show can-use-hw-watchpoints</code><dd><a name="index-show-can_002duse_002dhw_002dwatchpoints-257"></a>Show the current mode of using hardware watchpoints. 
 </dl>
 
    <p>For remote targets, you can restrict the number of hardware
@@ -194,7 +228,7 @@ rerun the program, you will need to set all such watchpoints again.  One
 way of doing that would be to set a code breakpoint at the entry to the
 <code>main</code> function and when it breaks, set all the watchpoints.
 
-   <p><a name="index-watchpoints-and-threads-246"></a><a name="index-threads-and-watchpoints-247"></a>In multi-threaded programs, watchpoints will detect changes to the
+   <p><a name="index-watchpoints-and-threads-258"></a><a name="index-threads-and-watchpoints-259"></a>In multi-threaded programs, watchpoints will detect changes to the
 watched expression from every thread.
 
    <blockquote>

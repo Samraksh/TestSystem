@@ -11,10 +11,11 @@
 <!--
 Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,
 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+2011, 2012
 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Free Software'' and ``Free Software Needs
 Free Documentation'', with the Front-Cover Texts being ``A GNU Manual,''
@@ -48,7 +49,7 @@ Up:&nbsp;<a rel="up" accesskey="u" href="Source.html#Source">Source</a>
 
 <h3 class="section">9.1 Printing Source Lines</h3>
 
-<p><a name="index-list-422"></a><a name="index-l-_0040r_007b_0028_0040code_007blist_007d_0029_007d-423"></a>To print lines from a source file, use the <code>list</code> command
+<p><a name="index-list-463"></a><a name="index-l-_0040r_007b_0028_0040code_007blist_007d_0029_007d-464"></a>To print lines from a source file, use the <code>list</code> command
 (abbreviated <code>l</code>).  By default, ten lines are printed. 
 There are several ways to specify what part of the file you want to
 print; see <a href="Specify-Location.html#Specify-Location">Specify Location</a>, for the full list.
@@ -70,15 +71,15 @@ as part of displaying a stack frame (see <a href="Stack.html#Stack">Examining th
      <br><dt><code>list -</code><dd>Print lines just before the lines last printed. 
 </dl>
 
-   <p><a name="index-g_t_0040code_007blist_007d_002c-how-many-lines-to-display-424"></a>By default, <span class="sc">gdb</span> prints ten source lines with any of these forms of
+   <p><a name="index-g_t_0040code_007blist_007d_002c-how-many-lines-to-display-465"></a>By default, <span class="sc">gdb</span> prints ten source lines with any of these forms of
 the <code>list</code> command.  You can change this using <code>set listsize</code>:
 
      
-<a name="index-set-listsize-425"></a>
+<a name="index-set-listsize-466"></a>
 <dl><dt><code>set listsize </code><var>count</var><dd>Make the <code>list</code> command display <var>count</var> source lines (unless
 the <code>list</code> argument explicitly specifies some other number).
 
-     <p><a name="index-show-listsize-426"></a><br><dt><code>show listsize</code><dd>Display the number of lines that <code>list</code> prints. 
+     <p><a name="index-show-listsize-467"></a><br><dt><code>show listsize</code><dd>Display the number of lines that <code>list</code> prints. 
 </dl>
 
    <p>Repeating a <code>list</code> command with &lt;RET&gt; discards the argument,

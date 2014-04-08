@@ -52,7 +52,13 @@ typedef _off64_t _fpos64_t;
 #endif
 
 #ifndef __ssize_t_defined
-#if defined(__INT_MAX__) && __INT_MAX__ == 2147483647
+#if defined(__SIZEOF_INT__) && __SIZEOF_SIZE_T__ == __SIZEOF_INT__
+typedef int _ssize_t;
+#elif defined(__SIZEOF_LONG__) && __SIZEOF_SIZE_T__ == __SIZEOF_LONG__
+typedef long _ssize_t;
+#elif defined(__SIZEOF_LONG_LONG__) && __SIZEOF_SIZE_T__ == __SIZEOF_LONG_LONG__
+typedef long long _ssize_t;
+#elif defined(__INT_MAX__) && __INT_MAX__ == 2147483647
 typedef int _ssize_t;
 #else
 typedef long _ssize_t;

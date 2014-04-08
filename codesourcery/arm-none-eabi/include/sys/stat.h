@@ -32,6 +32,13 @@ struct	stat
   gid_t		st_gid;
   dev_t		st_rdev;
   off_t		st_size;
+#if defined(__rtems__)
+  struct timespec st_atim;
+  struct timespec st_mtim;
+  struct timespec st_ctim;
+  blksize_t     st_blksize;
+  blkcnt_t	st_blocks;
+#else
   /* SysV/sco doesn't have the rest... But Solaris, eabi does.  */
 #if defined(__svr4__) && !defined(__PPC__) && !defined(__sun__)
   time_t	st_atime;
@@ -48,7 +55,15 @@ struct	stat
   long		st_blocks;
   long	st_spare4[2];
 #endif
+#endif
 };
+
+#if defined(__rtems__)
+#define st_atime st_atim.tv_sec
+#define st_ctime st_ctim.tv_sec
+#define st_mtime st_mtim.tv_sec
+#endif
+
 #endif
 
 #define	_IFMT		0170000	/* type of file */
@@ -64,12 +79,13 @@ struct	stat
 
 #define	S_ISUID		0004000	/* set user id on execution */
 #define	S_ISGID		0002000	/* set group id on execution */
-#ifndef	_POSIX_SOURCE
 #define	S_ISVTX		0001000	/* save swapped text even after use */
+#ifndef	_POSIX_SOURCE
 #define	S_IREAD		0000400	/* read permission, owner */
 #define	S_IWRITE 	0000200	/* write permission, owner */
 #define	S_IEXEC		0000100	/* execute/search permission, owner */
 #define	S_ENFMT 	0002000	/* enforcement-mode locking */
+#endif	/* !_POSIX_SOURCE */
 
 #define	S_IFMT		_IFMT
 #define	S_IFDIR		_IFDIR
@@ -79,7 +95,6 @@ struct	stat
 #define	S_IFLNK		_IFLNK
 #define	S_IFSOCK	_IFSOCK
 #define	S_IFIFO		_IFIFO
-#endif	/* !_POSIX_SOURCE */
 
 #ifdef _WIN32
 /* The Windows header files define _S_ forms of these, so we do too
@@ -106,6 +121,12 @@ struct	stat
 #define		S_IROTH	0000004	/* read permission, other */
 #define		S_IWOTH	0000002	/* write permission, other */
 #define		S_IXOTH 0000001/* execute/search permission, other */
+
+#ifndef _POSIX_SOURCE
+#define ACCESSPERMS (S_IRWXU | S_IRWXG | S_IRWXO) /* 0777 */
+#define ALLPERMS (S_ISUID | S_ISGID | S_ISVTX | S_IRWXU | S_IRWXG | S_IRWXO) /* 07777 */
+#define DEFFILEMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) /* 0666 */
+#endif
 
 #define	S_ISBLK(m)	(((m)&_IFMT) == _IFBLK)
 #define	S_ISCHR(m)	(((m)&_IFMT) == _IFCHR)

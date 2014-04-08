@@ -1,8 +1,8 @@
 /* This file is part of the CodeSourcery Common Startup Code Sequence (CS3).
 
-   Copyright (c) 2007 - 2010 CodeSourcery, Inc.
- * Version:Sourcery G++ Lite 2010q1-188
- * BugURL:https://support.codesourcery.com/GNUToolchain/
+   Copyright (c) 2007 - 2011 CodeSourcery, Inc.
+ * Version:Sourcery CodeBench Lite 2013.05-23
+ * BugURL:https://sourcery.mentor.com/GNUToolchain/
 
    THIS FILE CONTAINS PROPRIETARY, CONFIDENTIAL, AND TRADE SECRET
    INFORMATION OF CODESOURCERY AND/OR ITS LICENSORS.
@@ -36,7 +36,7 @@ typedef unsigned char __cs3_byte_align8 __attribute ((aligned (8)));
 
 struct __cs3_region
 {
-  unsigned flags;       /* Flags for this region.  None defined yet.  */
+  unsigned long flags;       /* Flags for this region.  None defined yet.  */
   __cs3_byte_align8 *init;  /* Initial contents of this region.  */
   __cs3_byte_align8 *data;  /* Start address of region.  */
   size_t init_size;     /* Size of initial data.  */
@@ -80,8 +80,24 @@ extern void *__cs3_heap_limit;
 /* The default initial stack pointer.  This is normally defined by the
    linker script except in profiles where the stack pointer is
    initialized externally, e.g. by a simulator or boot monitor.
-   Refer to the documentation for the Assembly Initialization phase.  */
-extern unsigned char __cs3_stack[] __attribute ((aligned (8)));
+   Refer to the documentation for the Assembly Initialization Phase and Heap
+   and Stack Placement.  */
+extern unsigned char __cs3_stack[] __attribute ((aligned (16)));
+
+/* The macro CS3_STACK can be used for creating a custom stack.  Refer to the
+   documentation for Heap and Stack Placement.  */
+#define CS3_STACK(size) \
+  CS3_STACK_SYMBOL(__cs3_stack_block, (size), 16)
+/* Create a custom stack with name SYMBOL, aligned to ALIGNMENT bytes, sized by
+   SIZE bytes, but possibly shortened such that the initial stack pointer
+   (symbol __cs3_stack) that points to the block's last extent is aligned to
+   ALIGNMENT bytes, too.  */
+#define CS3_STACK_SYMBOL(symbol, size, alignment) \
+  static char __attribute__ ((aligned (alignment))) \
+    symbol[(size - ((size) % (alignment)))]; \
+  asm (".global __cs3_stack"); \
+  asm ("__cs3_stack = " #symbol " + (" #size ") - (" #alignment ")" \
+       " - ((" #size ") % (" #alignment "))")
 
 /* Regions.  Some may not be present on particular boards or profiles. */
 

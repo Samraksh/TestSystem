@@ -15,6 +15,9 @@
 #define __need_wint_t
 #include <stddef.h>
 
+#define __need___va_list
+#include <stdarg.h>
+
 /* For _mbstate_t definition. */
 #include <sys/_types.h>
 
@@ -39,6 +42,10 @@
 #endif
 
 _BEGIN_STD_C
+
+/* As required by POSIX.1-2008, declare tm as incomplete type.
+   The actual definition is in time.h. */
+struct tm;
 
 #ifndef _MBSTATE_T
 #define _MBSTATE_T
@@ -67,16 +74,21 @@ size_t	_EXFUN(_wcsnrtombs_r, (struct _reent *, char * , const wchar_t ** ,
 size_t	_EXFUN(wcsrtombs, (char * , const wchar_t ** , size_t, mbstate_t *));
 size_t	_EXFUN(_wcsrtombs_r, (struct _reent *, char * , const wchar_t ** , 
 			size_t, mbstate_t *));
+int	_EXFUN(wcscasecmp, (const wchar_t *, const wchar_t *));
 wchar_t	*_EXFUN(wcscat, (wchar_t * , const wchar_t *));
 wchar_t	*_EXFUN(wcschr, (const wchar_t *, wchar_t));
 int	_EXFUN(wcscmp, (const wchar_t *, const wchar_t *));
 int	_EXFUN(wcscoll, (const wchar_t *, const wchar_t *));
 wchar_t	*_EXFUN(wcscpy, (wchar_t * , const wchar_t *));
 wchar_t	*_EXFUN(wcpcpy, (wchar_t * , const wchar_t *));
+wchar_t	*_EXFUN(wcsdup, (const wchar_t *));
+wchar_t	*_EXFUN(_wcsdup_r, (struct _reent *, const wchar_t * ));
 size_t	_EXFUN(wcscspn, (const wchar_t *, const wchar_t *));
+size_t  _EXFUN(wcsftime, (wchar_t *, size_t, const wchar_t *, const struct tm *));
 size_t	_EXFUN(wcslcat, (wchar_t *, const wchar_t *, size_t));
 size_t	_EXFUN(wcslcpy, (wchar_t *, const wchar_t *, size_t));
 size_t	_EXFUN(wcslen, (const wchar_t *));
+int	_EXFUN(wcsncasecmp, (const wchar_t *, const wchar_t *, size_t));
 wchar_t	*_EXFUN(wcsncat, (wchar_t * , const wchar_t * , size_t));
 int	_EXFUN(wcsncmp, (const wchar_t *, const wchar_t *, size_t));
 wchar_t	*_EXFUN(wcsncpy, (wchar_t *  , const wchar_t * , size_t));
@@ -133,6 +145,42 @@ wint_t _EXFUN (_ungetwc_r, (struct _reent *, wint_t wc, __FILE *));
 
 __FILE *_EXFUN (open_wmemstream, (wchar_t **, size_t *));
 __FILE *_EXFUN (_open_wmemstream_r, (struct _reent *, wchar_t **, size_t *));
+
+#ifndef __VALIST
+#ifdef __GNUC__
+#define __VALIST __gnuc_va_list
+#else
+#define __VALIST char*
+#endif
+#endif
+
+int	_EXFUN(fwprintf, (__FILE *, const wchar_t *, ...));
+int	_EXFUN(swprintf, (wchar_t *, size_t, const wchar_t *, ...));
+int	_EXFUN(vfwprintf, (__FILE *, const wchar_t *, __VALIST));
+int	_EXFUN(vswprintf, (wchar_t *, size_t, const wchar_t *, __VALIST));
+int	_EXFUN(vwprintf, (const wchar_t *, __VALIST));
+int	_EXFUN(wprintf, (const wchar_t *, ...));
+
+int	_EXFUN(_fwprintf_r, (struct _reent *, __FILE *, const wchar_t *, ...));
+int	_EXFUN(_swprintf_r, (struct _reent *, wchar_t *, size_t, const wchar_t *, ...));
+int	_EXFUN(_vfwprintf_r, (struct _reent *, __FILE *, const wchar_t *, __VALIST));
+int	_EXFUN(_vswprintf_r, (struct _reent *, wchar_t *, size_t, const wchar_t *, __VALIST));
+int	_EXFUN(_vwprintf_r, (struct _reent *, const wchar_t *, __VALIST));
+int	_EXFUN(_wprintf_r, (struct _reent *, const wchar_t *, ...));
+
+int	_EXFUN(fwscanf, (__FILE *, const wchar_t *, ...));
+int	_EXFUN(swscanf, (const wchar_t *, const wchar_t *, ...));
+int	_EXFUN(vfwscanf, (__FILE *, const wchar_t *, __VALIST));
+int	_EXFUN(vswscanf, (const wchar_t *, const wchar_t *, __VALIST));
+int	_EXFUN(vwscanf, (const wchar_t *, __VALIST));
+int	_EXFUN(wscanf, (const wchar_t *, ...));
+
+int	_EXFUN(_fwscanf_r, (struct _reent *, __FILE *, const wchar_t *, ...));
+int	_EXFUN(_swscanf_r, (struct _reent *, const wchar_t *, const wchar_t *, ...));
+int	_EXFUN(_vfwscanf_r, (struct _reent *, __FILE *, const wchar_t *, __VALIST));
+int	_EXFUN(_vswscanf_r, (struct _reent *, const wchar_t *, const wchar_t *, __VALIST));
+int	_EXFUN(_vwscanf_r, (struct _reent *, const wchar_t *, __VALIST));
+int	_EXFUN(_wscanf_r, (struct _reent *, const wchar_t *, ...));
 
 #define getwc(fp)	fgetwc(fp)
 #define putwc(wc,fp)	fputwc((wc), (fp))

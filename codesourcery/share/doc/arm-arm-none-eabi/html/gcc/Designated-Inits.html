@@ -10,12 +10,12 @@
 <link rel="next" href="Cast-to-Union.html#Cast-to-Union" title="Cast to Union">
 <link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
 <!--
-Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
-2008 Free Software Foundation, Inc.
+Copyright (C) 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997,
+1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+2010 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.2 or
+under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with the
 Invariant Sections being ``Funding Free Software'', the Front-Cover
 Texts being (a) (see below), and with the Back-Cover Texts being (b)
@@ -55,16 +55,16 @@ Up:&nbsp;<a rel="up" accesskey="u" href="C-Extensions.html#C-Extensions">C Exten
 <hr>
 </div>
 
-<h3 class="section">5.24 Designated Initializers</h3>
+<h3 class="section">6.26 Designated Initializers</h3>
 
-<p><a name="index-initializers-with-labeled-elements-2180"></a><a name="index-labeled-elements-in-initializers-2181"></a><a name="index-case-labels-in-initializers-2182"></a><a name="index-designated-initializers-2183"></a>
-Standard C89 requires the elements of an initializer to appear in a fixed
+<p><a name="index-initializers-with-labeled-elements-2486"></a><a name="index-labeled-elements-in-initializers-2487"></a><a name="index-case-labels-in-initializers-2488"></a><a name="index-designated-initializers-2489"></a>
+Standard C90 requires the elements of an initializer to appear in a fixed
 order, the same as the order of the elements in the array or structure
 being initialized.
 
  <p>In ISO C99 you can give the elements in any order, specifying the array
 indices or structure field names they apply to, and GNU C allows this as
-an extension in C89 mode as well.  This extension is not
+an extension in C90 mode as well.  This extension is not
 implemented in GNU C++.
 
  <p>To specify an array index, write
@@ -114,7 +114,7 @@ given the following structure,
 
 <pre class="smallexample">     struct point p = { y: yvalue, x: xvalue };
 </pre>
- <p><a name="index-designators-2184"></a>The &lsquo;<samp><span class="samp">[</span><var>index</var><span class="samp">]</span></samp>&rsquo; or &lsquo;<samp><span class="samp">.</span><var>fieldname</var></samp>&rsquo; is known as a
+ <p><a name="index-designators-2490"></a>The &lsquo;<samp><span class="samp">[</span><var>index</var><span class="samp">]</span></samp>&rsquo; or &lsquo;<samp><span class="samp">.</span><var>fieldname</var></samp>&rsquo; is known as a
 <dfn>designator</dfn>.  You can also use a designator (or the obsolete colon
 syntax) when initializing a union, to specify which element of the union
 should be used.  For example,
@@ -147,7 +147,7 @@ For example:
        = { [' '] = 1, ['\t'] = 1, ['\h'] = 1,
            ['\f'] = 1, ['\n'] = 1, ['\r'] = 1 };
 </pre>
- <p><a name="index-designator-lists-2185"></a>You can also write a series of &lsquo;<samp><span class="samp">.</span><var>fieldname</var></samp>&rsquo; and
+ <p><a name="index-designator-lists-2491"></a>You can also write a series of &lsquo;<samp><span class="samp">.</span><var>fieldname</var></samp>&rsquo; and
 &lsquo;<samp><span class="samp">[</span><var>index</var><span class="samp">]</span></samp>&rsquo; designators before an &lsquo;<samp><span class="samp">=</span></samp>&rsquo; to specify a
 nested subobject to initialize; the list is taken relative to the
 subobject corresponding to the closest surrounding brace pair.  For

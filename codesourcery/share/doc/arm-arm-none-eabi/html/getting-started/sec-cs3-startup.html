@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>5.2. Program Startup and Termination</title><link rel="stylesheet" href="cs.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.74.0"><link rel="home" href="index.html" title="Sourcery G++ Lite"><link rel="up" href="chap-cs3.html" title="Chapter 5. CS3&#8482;: The CodeSourcery Common Startup Code Sequence"><link rel="prev" href="chap-cs3.html" title="Chapter 5. CS3&#8482;: The CodeSourcery Common Startup Code Sequence"><link rel="next" href="sec-cs3-memory-layout.html" title="5.3. Memory Layout"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">5.2. Program Startup and Termination</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="chap-cs3.html">Prev</a> </td><th width="60%" align="center">Chapter 5. CS3&#8482;: The CodeSourcery Common Startup Code Sequence</th><td width="20%" align="right"> <a accesskey="n" href="sec-cs3-memory-layout.html">Next</a></td></tr></table><hr></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="sec-cs3-startup"></a>5.2. Program Startup and Termination</h2></div></div></div><p>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>5.2. Program Startup and Termination</title><link rel="stylesheet" type="text/css" href="cs.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.0"><link rel="home" href="index.html" title="Sourcery CodeBench Lite"><link rel="up" href="chap-cs3.html" title="Chapter 5. CS3&#8482;: The CodeSourcery Common Startup Code Sequence"><link rel="prev" href="chap-cs3.html" title="Chapter 5. CS3&#8482;: The CodeSourcery Common Startup Code Sequence"><link rel="next" href="sec-cs3-memory-layout.html" title="5.3. Memory Layout"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">5.2. Program Startup and Termination</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="chap-cs3.html">Prev</a> </td><th width="60%" align="center">Chapter 5. CS3&#8482;: The CodeSourcery Common Startup Code Sequence</th><td width="20%" align="right"> <a accesskey="n" href="sec-cs3-memory-layout.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="sec-cs3-startup"></a>5.2. Program Startup and Termination</h2></div></div></div><p>
       This section documents CS3's model for target initialization
       prior to invoking the <code class="function">main</code> function of
       your program, and aspects of program termination that are
@@ -7,14 +7,14 @@
       application.
     </p><p>
       CS3 divides the startup sequence into three phases:
-      </p><div class="itemizedlist"><ul type="disc"><li><p>The <em class="firstterm">hard reset phase</em>
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>The <em class="firstterm">hard reset phase</em>
 	  (<code class="function">__cs3_reset</code>)
 	  includes actions such as initializing the memory controller and
 	  setting up the memory map.  
-          </p></li><li><p>The <em class="firstterm">assembly initialization phase</em>
+          </p></li><li class="listitem"><p>The <em class="firstterm">assembly initialization phase</em>
 	  (<code class="function">__cs3_start_asm</code>)
 	  prepares the stack to run C code,
-          and jumps to the C initialization function.</p></li><li><p>The <em class="firstterm">C initialization phase</em>
+          and jumps to the C initialization function.</p></li><li class="listitem"><p>The <em class="firstterm">C initialization phase</em>
 	  (<code class="function">__cs3_start_c</code>)
           is responsible for initializing the data areas,
 	  running constructors for statically-allocated objects,
@@ -34,7 +34,7 @@
       The assembly initialization phase is
       implemented by profile-specific code.
       The C initialization phase is implemented by generic code.
-    </p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id279054"></a>5.2.1. The Hard Reset Phase</h3></div></div></div><p>
+    </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm47941058226320"></a>5.2.1. The Hard Reset Phase</h3></div></div></div><p>
         This phase, which begins at <code class="function">__cs3_reset</code>,
 	is responsible for initializing board-specific
         registers, such as memory base registers and DRAM controllers,
@@ -58,15 +58,7 @@
 	application is typically non-empty only for ROM-based profiles.
 	For example, in a RAM-based profile, resetting
 	the memory controllers would overwrite the code being executed.
-      </p><p>
-        When using the Sourcery G++ Debug Sprite, the Sprite is responsible for
-        carrying out the hard reset actions before the program
-	is loaded onto the target.  This is performed
-	prior to execution of both RAM- and ROM-profile applications
-	from the debugger.  Thus, when debugging a ROM-profile application,
-	hard reset is actually performed twice &#8212; once by the Sprite,
-	and once by the application itself.
-      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="sec-cs3-assembly-initialization"></a>5.2.2. The Assembly Initialization Phase</h3></div></div></div><p>
+      </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec-cs3-assembly-initialization"></a>5.2.2. The Assembly Initialization Phase</h3></div></div></div><p>
 	This phase is responsible for initializing the stack pointer
 	and creating an initial stack frame.  
 	The symbol <code class="function">__cs3_start_asm</code>
@@ -106,6 +98,9 @@
 	The CodeSourcery linker scripts provide a default value for this
         symbol, which you may override by defining
         <code class="varname">__cs3_stack</code> yourself.
+
+        See <a class="xref" href="sec-cs3-memory-layout.html#sec-cs3-heap-stack" title="5.3.3. Heap and Stack Placement">Section 5.3.3, &#8220;Heap and Stack Placement&#8221;</a> for an example of a custom
+        stack.
       </p><p>
         The initial stack frame is created for the use of ordinary C
         and C++ calling conventions.  The stack should be initialized
@@ -125,21 +120,21 @@
         your own code by providing a definition
         for <code class="function">__cs3_start_asm</code>, either in an object
         file or a library.
-      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id279250"></a>5.2.3. The C Initialization Phase</h3></div></div></div><p>
+      </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm47941058203200"></a>5.2.3. The C Initialization Phase</h3></div></div></div><p>
         Finally, C code can be executed.  The C startup
         function is declared as follows:
 
         </p><pre class="programlisting">void __cs3_start_c (void) __attribute__ ((noreturn));</pre><p>
 
         This function performs the following steps:
-        </p><div class="itemizedlist"><ul type="disc"><li><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
               Initialize all <code class="literal">.data</code>-like sections by
               copying their contents.  For example, ROM-profile linker
 	      scripts use this mechanism to initialize writable data in RAM
 	      from the read-only data program image.
-            </p></li><li><p>
+            </p></li><li class="listitem"><p>
               Clear all <code class="literal">.bss</code>-like sections.
-            </p></li><li><p>
+            </p></li><li class="listitem"><p>
               Run constructors for statically-allocated objects,
               recorded using whatever conventions are usual for
               C++ on the target architecture.
@@ -149,9 +144,9 @@
               interrupts, initializing coprocessors, pointing control
               registers at interrupt vectors, and so on by defining
               constructors with appropriate priorities.
-            </p></li><li><p>
+            </p></li><li class="listitem"><p>
               Call <code class="function">main</code> as appropriate.
-            </p></li><li><p>
+            </p></li><li class="listitem"><p>
 	      Call <code class="function">exit</code>, if it is available.
 	    </p></li></ul></div><p>
       </p><p>
@@ -161,7 +156,7 @@
         function.  You may override this by providing
         a definition for <code class="function">__cs3_start_c</code>,
         either in an object file or in a library.
-      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id279355"></a>5.2.4. Arguments to <code class="function">main</code></h3></div></div></div><p>
+      </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm47941058190496"></a>5.2.4. Arguments to <code class="function">main</code></h3></div></div></div><p>
 	The CodeSourcery-provided definition of
 	<code class="function">__cs3_start_c</code> can pass command-line arguments
 	to <code class="function">main</code> using the normal C
@@ -193,7 +188,7 @@ static void __cs3_init_args (void) {
 	<code class="function">__cs3_start_c</code> function invokes 
 	<code class="function">main</code> with zero as the <code class="varname">argc</code>
 	argument and a null pointer as <code class="varname">argv</code>.
-      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id279462"></a>5.2.5. Program Termination</h3></div></div></div><p>
+      </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="idm47941058177760"></a>5.2.5. Program Termination</h3></div></div></div><p>
         A program running on an embedded system is usually designed
         never to exit &#8212; it runs until the system is powered down.
         The C and C++ standards leave it unspecified

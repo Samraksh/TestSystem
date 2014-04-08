@@ -12,8 +12,9 @@
 <!--
 This file documents the GNU Assembler "as".
 
-Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 2001, 2002,
-2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+2000, 2001, 2002, 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation,
+Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
@@ -48,9 +49,9 @@ Up:&nbsp;<a rel="up" accesskey="u" href="i386_002dDependent.html#i386_002dDepend
 <hr>
 </div>
 
-<h4 class="subsection">9.13.9 Handling of Jump Instructions</h4>
+<h4 class="subsection">9.15.9 Handling of Jump Instructions</h4>
 
-<p><a name="index-jump-optimization_002c-i386-940"></a><a name="index-i386-jump-optimization-941"></a><a name="index-jump-optimization_002c-x86_002d64-942"></a><a name="index-x86_002d64-jump-optimization-943"></a>Jump instructions are always optimized to use the smallest possible
+<p><a name="index-jump-optimization_002c-i386-1016"></a><a name="index-i386-jump-optimization-1017"></a><a name="index-jump-optimization_002c-x86_002d64-1018"></a><a name="index-x86_002d64-jump-optimization-1019"></a>Jump instructions are always optimized to use the smallest possible
 displacements.  This is accomplished by using byte (8-bit) displacement
 jumps whenever the target is sufficiently close.  If a byte displacement
 is insufficient a long displacement is used.  We do not support

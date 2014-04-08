@@ -1,9 +1,10 @@
 /* Linker script for ARM M-profile Simulator
  *
- * Version: Sourcery G++ Lite 2010q1-188
- * Support: https://support.codesourcery.com/GNUToolchain/
+ * Version: Sourcery CodeBench Lite 2013.05-23
+ * Support: https://sourcery.mentor.com/GNUToolchain/
  *
- * Copyright (c) 2007, 2008, 2009, 2010 CodeSourcery, Inc.
+ * Copyright (c) 2007-2010 CodeSourcery, Inc.
+ * Copyright (c) 2010-2013 Mentor Graphics, Inc.
  *
  * The authors hereby grant permission to use, copy, modify, distribute,
  * and license this software and its documentation for any purpose, provided
@@ -48,8 +49,8 @@ SECTIONS
   {
     CREATE_OBJECT_SYMBOLS
     __cs3_region_start_ram = .;
+    _ftext = .;
     *(.cs3.region-head.ram)
-    ASSERT (. == __cs3_region_start_ram, ".cs3.region-head.ram not permitted");
     __cs3_interrupt_vector = __cs3_interrupt_vector_micro;
     *(.cs3.interrupt_vector)
     /* Make sure we pulled in an interrupt vector.  */
@@ -71,10 +72,11 @@ SECTIONS
   .eh_frame_hdr : ALIGN (4)
   {
     KEEP (*(.eh_frame_hdr))
+    *(.eh_frame_entry .eh_frame_entry.*)
   } >ram
   .eh_frame : ALIGN (4)
   {
-    KEEP (*(.eh_frame))
+    KEEP (*(.eh_frame)) *(.eh_frame.*)
   } >ram
   /* .ARM.exidx is sorted, so has to go in its own output section.  */
   PROVIDE_HIDDEN (__exidx_start = .);
@@ -134,6 +136,10 @@ SECTIONS
     _etext = .;
   } >ram
 
+  ASSERT (!(__cs3_region_init_ram & 7), "__cs3_region_init_ram not aligned")
+  ASSERT (!(__cs3_region_start_ram & 7), "__cs3_region_start_ram not aligned")
+  ASSERT (!(__cs3_region_init_size_ram & 7), "__cs3_region_init_size_ram not aligned")
+  ASSERT (!(__cs3_region_zero_size_ram & 7), "__cs3_region_zero_size_ram not aligned")
   .data : ALIGN (8)
   {
     KEEP(*(.jcr))
@@ -142,15 +148,17 @@ SECTIONS
     *(.data .data.* .gnu.linkonce.d.*)
     . = ALIGN (8);
     *(.ram)
+    . = ALIGN (8);
     _edata = .;
   } >ram
-  .bss :
+  .bss : ALIGN (8)
   {
     *(.shbss)
     *(.bss .bss.* .gnu.linkonce.b.*)
     *(COMMON)
     . = ALIGN (8);
     *(.ram.b .bss.ram)
+    . = ALIGN (8);
     _end = .;
     __end = .;
   } >ram
@@ -195,4 +203,4 @@ SECTIONS
   .ARM.attributes 0 : { KEEP (*(.ARM.attributes)) }
   /DISCARD/ : { *(.note.GNU-stack) }
 }
-/* checksum: 9ff26c1962b3961453d86 */
+/* checksum: 453a0724459571f4a542d3b3 */

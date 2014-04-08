@@ -1,13 +1,15 @@
-This is gprof.info, produced by makeinfo version 4.13 from /scratch/julian/2010q1-release-eabi-lite/obj/binutils-src-2010q1-188-arm-none-eabi-i686-pc-linux-gnu/gprof/gprof.texi.
+This is gprof.info, produced by makeinfo version 4.13 from
+/scratch/jbrown/2013.05-arm-eabi-release/obj/binutils-src-2013.05-23-arm-none-eabi-i686-pc-linux-gnu/gprof/gprof.texi.
 
+INFO-DIR-SECTION Software development
 START-INFO-DIR-ENTRY
 * gprof: (gprof).                Profiling your program's execution
 END-INFO-DIR-ENTRY
 
    This file documents the gprof profiler of the GNU system.
 
-   Copyright (C) 1988, 92, 97, 98, 99, 2000, 2001, 2003, 2007, 2008,
-2009 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1992, 1997, 1998, 1999, 2000, 2001, 2003, 2007,
+2008, 2009 Free Software Foundation, Inc.
 
    Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -27,8 +29,8 @@ to determine which parts of a program are taking most of the execution
 time.  We assume that you know how to write, compile, and execute
 programs.  GNU `gprof' was written by Jay Fenlason.
 
-   This manual is for `gprof' (Sourcery G++ Lite 2010q1-188) version
-2.19.51.
+   This manual is for `gprof' (Sourcery CodeBench Lite 2013.05-23)
+version 2.23.52.
 
    This document is distributed under the terms of the GNU Free
 Documentation License version 1.3.  A copy of the license is included
@@ -604,8 +606,7 @@ File: gprof.info,  Node: Deprecated Options,  Next: Symspecs,  Prev: Miscellaneo
 4.4 Deprecated Options
 ======================
 
-     These options have been replaced with newer versions that use
-     symspecs.
+These options have been replaced with newer versions that use symspecs.
 
 `-e FUNCTION_NAME'
      The `-e FUNCTION' option tells `gprof' to not print information
@@ -1391,7 +1392,12 @@ twice.
 
    By contrast, the number-of-calls and basic-block figures are derived
 by counting, not sampling.  They are completely accurate and will not
-vary from run to run if your program is deterministic.
+vary from run to run if your program is deterministic and single
+threaded.  In multi-threaded applications, or single threaded
+applications that link with multi-threaded libraries, the counts are
+only deterministic if the counting function is thread-safe.  (Note:
+beware that the mcount counting function in glibc is _not_
+thread-safe).  *Note Implementation of Profiling: Implementation.
 
    The "sampling period" that is printed at the beginning of the flat
 profile says how often samples are taken.  The rule of thumb is that a
@@ -2436,35 +2442,35 @@ permit their use in free software.
 
 
 Tag Table:
-Node: Top839
-Node: Introduction2181
-Node: Compiling4673
-Node: Executing8729
-Node: Invoking11517
-Node: Output Options12932
-Node: Analysis Options20021
-Node: Miscellaneous Options23719
-Node: Deprecated Options24974
-Node: Symspecs27053
-Node: Output28879
-Node: Flat Profile29919
-Node: Call Graph34872
-Node: Primary38104
-Node: Callers40692
-Node: Subroutines42809
-Node: Cycles44650
-Node: Line-by-line51427
-Node: Annotated Source55500
-Node: Inaccuracy58499
-Node: Sampling Error58757
-Node: Assumptions61327
-Node: How do I?62797
-Node: Incompatibilities64351
-Node: Details65845
-Node: Implementation66238
-Node: File Format72135
-Node: Internals76425
-Node: Debugging84920
-Node: GNU Free Documentation License86521
+Node: Top885
+Node: Introduction2233
+Node: Compiling4725
+Node: Executing8781
+Node: Invoking11569
+Node: Output Options12984
+Node: Analysis Options20073
+Node: Miscellaneous Options23771
+Node: Deprecated Options25026
+Node: Symspecs27095
+Node: Output28921
+Node: Flat Profile29961
+Node: Call Graph34914
+Node: Primary38146
+Node: Callers40734
+Node: Subroutines42851
+Node: Cycles44692
+Node: Line-by-line51469
+Node: Annotated Source55542
+Node: Inaccuracy58541
+Node: Sampling Error58799
+Node: Assumptions61703
+Node: How do I?63173
+Node: Incompatibilities64727
+Node: Details66221
+Node: Implementation66614
+Node: File Format72511
+Node: Internals76801
+Node: Debugging85296
+Node: GNU Free Documentation License86897
 
 End Tag Table
