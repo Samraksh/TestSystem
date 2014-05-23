@@ -109,7 +109,7 @@ namespace TestRig
                         line = reader.ReadLine();
                     }
 
-                    System.Diagnostics.Debug.WriteLine("bitMask: " + bitMask.ToString());
+                    System.Diagnostics.Debug.WriteLine("bitMask: " + bitMask.ToString("X2"));
                 }
                 if (bitMask == 0x00)
                     return false;
@@ -244,13 +244,12 @@ namespace TestRig
             {
                 int i;
                 byte levels;
-                int maskSDA = 0x1;
-                int maskSCL = 0x2;
+                int maskSDA = 0x80;
+                int maskSCL = 0x40;
                 //string writeStr;
                 //byte[] asciiBytes;
 
-                System.Diagnostics.Debug.WriteLine("Logic: Read {0} bytes, starting with 0x{1:X}", data.Length, (ushort)data[0]);
-
+                System.Diagnostics.Debug.WriteLine("Logic: Read {0} bytes, starting with 0x{1:X}", data.Length, (ushort)data[0]);                
                 if (analyzeI2C == true)
                 {
                     int change = 0;

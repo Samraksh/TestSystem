@@ -17,7 +17,7 @@ namespace TestRig
                     line = sr.ReadLine();
                     while (line != null)
                     {
-                        if (currentTest.testType == "C#")
+                        if (currentTest.testType.Contains("C#") == true)
                         {
                             if (line.Contains("=") == true)
                             {

@@ -35,8 +35,9 @@ namespace TestRig
         private int sessionTestPass;
         private int currentOpenOCDInstance;
         private int currentOpenCOMInstance;
-        private int maxCOMInstances = 8;
+        private int maxCOMInstances = 1;
         private bool debugDoNotBuild = false;
+        private bool debugDoNotProgram = false;
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
@@ -191,50 +192,7 @@ namespace TestRig
         }
 
         public string DebugFunction(){
-
-            /*openOCD = new OpenOCD(mainHandle, currentTest);
-            if (openOCD == null) return "OpenOCD failed to load";
-            gdb = new GDB(mainHandle);
-            if (gdb == null) return "GDB failed to load";
-            telnet = new TelnetBoard(mainHandle);
-            if (telnet == null) return "Telnet failed to load";
-
-            if (telnet.Start() == false) return "Telnet failed to start";
-            if (telnet.Clear() == false) return "Telnet failed to clear FLASH";                    
-
-                        
-                    //if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
-                        
-
-
-                //if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";
-                   
-                    
-            if (gdb.Continue() == false) return "GDB failed to start processor";
-
-            if (msbuild != null) msbuild.Kill();
-            if (git != null) git.Kill();
-            if (telnet != null) telnet.Kill();
-            ifor (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
-        {
-            if (COM[indexCOM].active == true)
-                        COM[indexCOM].Kill();
-        } 
-            if (fTest != null) fTest.Kill();            
-            if (gdb != null) gdb.Kill();
-            if (openOCD != null) openOCD.Kill();
-            if (fastboot != null) fastboot.Kill();
-            */
-            Process psShell = new Process();
-            psShell.StartInfo.FileName = "powershell.exe";
-            psShell.StartInfo.Arguments = " -executionpolicy unrestricted \"\"" + @"D:\Test\test.ps1";
-            psShell.StartInfo.WorkingDirectory = @"D:\Test\";
-            psShell.StartInfo.UseShellExecute = false;
-            psShell.Start();
-
-            psShell.WaitForExit(10000);
-            if (psShell.HasExited == false)
-                psShell.Kill();
+            
             return null;
         }
 
@@ -305,7 +263,7 @@ namespace TestRig
 
                 if (debugDoNotBuild == false)
                 {
-                    if (currentTest.testType == "C#")
+                    if (currentTest.testType.Contains("C#") == true)
                     {
                         if (currentTest.testUsePrecompiledBinary == String.Empty)
                         {
@@ -360,7 +318,7 @@ namespace TestRig
                 // Grabbing data for sample time length                
                 ReadParameters readVars;
 
-                if (currentTest.testType == "C#")
+                if (currentTest.testType.Contains("C#") == true)
                     readVars = new ReadParameters(workingDirectory + @"\" + "Parameters.cs", currentTest);
                 else
                     readVars = new ReadParameters(workingDirectory + @"\" + "Parameters.h", currentTest);
@@ -429,7 +387,7 @@ namespace TestRig
                         if (fastboot == null) return "Fastboot failed to load";
                         if (fastboot.enterFastbootMode() == false) return "Failed to enter Fastboot mode";
 
-                        if (currentTest.testType == "C#")
+                        if (currentTest.testType.Contains("C#") == true)
                         {
                             //string fnameOS = "D:/Test/pad_test/f1.bin";
                             string inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".bin";
@@ -508,32 +466,32 @@ namespace TestRig
                         if (telnet == null) return "Telnet failed to load";
 
                         if (telnet.Start() == false) return "Telnet failed to start";
-                        if (telnet.Clear() == false) return "Telnet failed to clear FLASH";
+                        if (!debugDoNotProgram) if (telnet.Clear() == false) return "Telnet failed to clear FLASH";
 
-                        if (currentTest.testType == "C#")
+                        if (currentTest.testType.Contains("C#") == true)
                         {
                             if (currentTest.testUsePrecompiledBinary != String.Empty)
                             {
                                 currentTest.testState = "Loading MF AXF";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                                if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled MF AXF file: " + currentTest.testUsePrecompiledBinary;
+                                if (!debugDoNotProgram) if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled MF AXF file: " + currentTest.testUsePrecompiledBinary;
                             }
                             else
                             {
                                 currentTest.testState = "Loading TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
-                                if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                                 currentTest.testState = "Loading TinyCLR";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyCLR";
-                                if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                             }
 
                             currentTest.testState = "Loading managed code";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
 
-                            if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";
+                            if (!debugDoNotProgram) if (telnet.Load(workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19") == false) return "Telnet failed to load";
                         }
                         else
                         {
@@ -541,41 +499,46 @@ namespace TestRig
                             {
                                 currentTest.testState = "Loading test AXF";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                                if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled AXF file: " + currentTest.testUsePrecompiledBinary;
+                                if (!debugDoNotProgram) if (gdb.Load(workingDirectory + @"\" + currentTest.testUsePrecompiledBinary) == false) return "GDB failed to load precompiled AXF file: " + currentTest.testUsePrecompiledBinary;
                             }
                             else
                             {
                                 currentTest.testState = "Loading native code";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyCLR";
-                                if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
                             }
                         }
 
                         currentTest.testState = "Starting processor";
-                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                        if (currentTest.testUseCOM == true)
-                        {
-                            for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
-                            {
-                                if (COM[currentOpenCOMInstance].Connect(currentTest, testReceipt, currentOpenCOMInstance) == false) return "COM " + indexDevice.ToString() + " failed to open";
-                            }
-                        }
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);                        
                         if (gdb.Continue() == false) return "GDB failed to start processor";
                         telnet.Kill();
                         gdb.Kill();
-                        openOCD.Kill();                        
+                        openOCD.Kill();
+                        // waiting for debugger messages to stop which will cause us to stop hearing data from the COM port
+                        /*Thread.Sleep(5000);
+                        if ((currentTest.testUseCOM == true) && (indexDevice == 0))
+                        {
+                            if (COM[currentOpenCOMInstance].Connect(currentTest, testReceipt, currentOpenCOMInstance) == false) return "COM " + indexDevice.ToString() + " failed to open";
+                        }*/
                         currentOpenOCDInstance++;
                     }
                 }
                 #endregion
 
                 #region Getting ready to run test
+                // waiting for debugger messages to stop which will cause us to stop hearing data from the COM port
+                Thread.Sleep(8000);
+                if (currentTest.testUseCOM == true)
+                {
+                    if (COM[0].Connect(currentTest, testReceipt, 0) == false) return "COM 0 failed to open";
+                }
                 /*if (currentTest.testUseCOM == true)
                 {
                     for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
                     {
-                        if (COM[currentOpenCOMInstance].Connect(currentTest, testReceipt, currentOpenCOMInstance) == false) return "COM " + indexDevice.ToString() + " failed to open";
+                        if (COM[indexDevice].Connect(currentTest, testReceipt, indexDevice) == false) return "COM " + indexDevice.ToString() + " failed to open";
                     }
                 }*/
                 if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
@@ -591,13 +554,13 @@ namespace TestRig
                     if (logicTest == null) return "Logic Analyzer failed to load";
                     if ((currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
                     {
-                        testDataName = "testData.txt";
+                        testDataName = @"testTemp\testData.txt";
                     }
                     else
                     {
-                        testDataName = "testData.csv";
+                        testDataName = @"testTemp\testData.csv";
                     }
-                    if (logicTest.startMeasure(workingDirectory + @"\testTemp\" + testDataName, currentTest.testSampleTimeMs, currentTest.testUseLogic) == false) return "Logic Analyzer failed to start measuring";
+                    if (logicTest.startMeasure(workingDirectory + "\\" + testDataName, currentTest.testSampleTimeMs, currentTest.testUseLogic) == false) return "Logic Analyzer failed to start measuring";
                 }
 
                 // starting to measure time of test 
@@ -636,9 +599,11 @@ namespace TestRig
                             COM[indexCOM].Kill();
                     }
                     Thread.Sleep(6000);
-                    for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
+                    //for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
+                    // for now we only have one COM port open
+                    for (indexDevice = 0; indexDevice < 1; indexDevice++)
                     {
-                        if (COM[currentOpenCOMInstance].Connect(currentTest, testReceipt, currentOpenCOMInstance) == false) return "COM " + indexDevice.ToString() + " failed to open";
+                        if (COM[indexDevice].Connect(currentTest, testReceipt, indexDevice) == false) return "COM " + indexDevice.ToString() + " failed to open";
                     }
 
                     fTest = new FileTest(mainHandle, currentTest);
@@ -789,6 +754,10 @@ namespace TestRig
                             System.Diagnostics.Debug.WriteLine("Script sleeping for " + waitTimeMs.ToString() + " ms.");
                             Thread.Sleep(waitTimeMs);
                         }
+                        else if (line.StartsWith("test_file"))
+                        {
+                            testDataName = parsedLine[1].Trim();
+                        }
                         else if (line.StartsWith("test_result"))
                         {
                             if ((parsedLine[1].Contains("file")) && (parsedLine[2].Contains("compare")))
@@ -796,7 +765,7 @@ namespace TestRig
                                 string fileName1 = parsedLine[3].Trim();
                                 string fileName2 = parsedLine[4].Trim();
                                 testReceipt.testPass = fTest.Compare(workingDirectory + @"\" + fileName1, workingDirectory + @"\" + fileName2);
-                                testReceipt.testComplete = true;                                
+                                testReceipt.testComplete = true;
                             }
                             else if (parsedLine[1].Contains("results"))
                             {
@@ -908,7 +877,8 @@ namespace TestRig
                 currentTest.testState = "Analyzing test";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                 System.Diagnostics.Debug.WriteLine("**************** Analyzing test ************");
-                Thread.Sleep(50);
+                // waiting for any test files to be created
+                Thread.Sleep(1000);
 
                 testStopTime = DateTime.Now;
                 duration = testStopTime - testStartTime;
@@ -920,14 +890,12 @@ namespace TestRig
                 {
                     matlab = new Matlab(mainHandle, testReceipt);
                     if (matlab == null) return "Matlab failed to load";
-                    if (matlab.matlabRunScript(workingDirectory, @"testTemp\" + testDataName, currentTest) == false) return "Matlab failed to run script";
+                    if (matlab.matlabRunScript(workingDirectory, testDataName, currentTest) == false) return "Matlab failed to run script";
                 }
                 else if (currentTest.testAnalysis.Equals("exe") == true)
                 {
                     TestAnalysisExecutableInfo = new ProcessStartInfo();
-                    TestAnalysisExecutableProcess = new Process();
-
-                    System.Diagnostics.Debug.WriteLine("Starting to run analysis executable: " + currentTest.testAnalysisScriptName);
+                    TestAnalysisExecutableProcess = new Process();                    
 
                     TestAnalysisExecutableInfo.CreateNoWindow = true;
                     TestAnalysisExecutableInfo.RedirectStandardInput = false;
@@ -935,8 +903,11 @@ namespace TestRig
 
                     TestAnalysisExecutableProcess.StartInfo = TestAnalysisExecutableInfo;
                     TestAnalysisExecutableInfo.FileName = workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim();
+                    TestAnalysisExecutableInfo.WorkingDirectory = workingDirectory;
 
-                    TestAnalysisExecutableInfo.Arguments = workingDirectory + @"\testTemp\" + testDataName + " " + workingDirectory + @"\testTemp\" + currentTest.testResultsFileName;
+                    TestAnalysisExecutableInfo.Arguments = workingDirectory + "\\" + testDataName + " " + workingDirectory + currentTest.testResultsFileName;
+
+                    System.Diagnostics.Debug.WriteLine("Starting to run analysis executable: " + currentTest.testAnalysisScriptName.Trim() + " " + workingDirectory + "\\" + testDataName + " " + workingDirectory + "\\" + currentTest.testResultsFileName);
                     TestAnalysisExecutableProcess.Start();
                     TestAnalysisExecutableProcess.WaitForExit(analysisTimeout);
                     if (TestAnalysisExecutableProcess.HasExited == false)

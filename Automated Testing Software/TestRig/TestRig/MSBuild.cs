@@ -21,8 +21,8 @@ namespace TestRig
         private string expectedPassResponse = String.Empty, expectedFailResponse = String.Empty;
         public StreamWriter input = null;
 
-        private string codesourceryVersion = "4.7.3";
-        //private string codesourceryVersion = "4.4.1";
+        //private string codesourceryVersion = "4.7.3";
+        private string codesourceryVersion = "4.4.1";
         private StringWriter stdOutput = new StringWriter();
         public StringWriter Output { get { return stdOutput; } }
         private StringWriter stdError = new StringWriter();

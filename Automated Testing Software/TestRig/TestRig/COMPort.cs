@@ -24,6 +24,13 @@ namespace TestRig
         private static System.IO.StreamWriter receiveFile;
         private static string textCOMPort;
         public bool active;
+        private static bool gotResponseR = false;
+        private static bool gotResponseA = false;
+        private static bool gotResponse1 = false;
+        private static bool gotResponse2 = false;
+        private static bool gotResponse3 = false;
+        private static bool gotResponse4 = false;
+        private static bool gotResponse5 = false;
 
         public COMPort(MainWindow passedHandle)
         {
@@ -33,7 +40,14 @@ namespace TestRig
 
         public bool Connect(TestDescription currentTest, TestReceipt results, int COMNum)
         {                        
-            switch (COMNum)
+            gotResponseR = false;
+            gotResponseA = false;
+            gotResponse1 = false;
+            gotResponse2 = false;
+            gotResponse3 = false;
+            gotResponse4 = false;
+            gotResponse5 = false;
+                        switch (COMNum)
             {
                 case (0):
                     textCOMPort = mainHandle.textCOMPortPrimary;
@@ -278,37 +292,48 @@ namespace TestRig
                             testResults.testPass = true;
                         else
                             testResults.testPass = false;
+                        gotResponseR = true;
                     }
                     else if (rxString.Contains("accuracy"))
                     {
                         index = rxString.IndexOf('=') + 1;
                         testResults.testAccuracy = double.Parse(rxString.Substring(index, rxString.Length - index));
+                        gotResponseA = true;
                     }
                     else if (rxString.Contains("resultParameter1"))
                     {
                         index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter1 = rxString.Substring(index, rxString.Length - index);
+                        gotResponse1 = true;
                     }
                     else if (rxString.Contains("resultParameter2"))
                     {
                         index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter2 = rxString.Substring(index, rxString.Length - index);
+                        gotResponse2 = true;
                     }
                     else if (rxString.Contains("resultParameter3"))
                     {
                         index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter3 = rxString.Substring(index, rxString.Length - index);
+                        gotResponse3 = true;
                     }
                     else if (rxString.Contains("resultParameter4"))
                     {
                         index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter4 = rxString.Substring(index, rxString.Length - index);
+                        gotResponse4 = true;
                     }
                     else if (rxString.Contains("resultParameter5"))
                     {
                         index = rxString.IndexOf('=') + 1;
-                        testResults.testReturnParameter5 = rxString.Substring(index, rxString.Length - index);
+                        testResults.testReturnParameter5 = rxString.Substring(index, rxString.Length - index);                           
+                        gotResponse5 = true;
+                    }
+                    if ((gotResponseR == true) && (gotResponseA == true) && (gotResponse1 == true) && (gotResponse2 == true) && (gotResponse3 == true) && (gotResponse4 == true) && (gotResponse5 == true))
+                    {
                         testResults.testComplete = true;
+                        System.Diagnostics.Debug.WriteLine("Got all test results.");
                     }
                 }
             }
