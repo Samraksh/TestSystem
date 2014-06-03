@@ -167,10 +167,10 @@ namespace TestRig
             }
             if (mLogic16 != null)
             {
-                //System.Diagnostics.Debug.WriteLine("calling 16 ReadStart()");
-                MainWindow.showMessageBox("16 bit logic analyzer not supported yet.");
+                System.Diagnostics.Debug.WriteLine("calling 16 ReadStart()");
+                //MainWindow.showMessageBox("16 bit logic analyzer not supported yet.");
                 mLogic16.ReadStart();
-                return false;
+                //return false;
             }
 
             return true;
@@ -225,10 +225,35 @@ namespace TestRig
 
         void devices_Logic16OnConnect(ulong device_id, MLogic16 logic_16)
         {
+            bool sampleRateSupported = false;
             mLogic16 = logic_16;
+            List<uint> sample_rates = new List<uint>();
+            sample_rates = mLogic16.GetSupportedSampleRates();
+            for (int i = 0; i < sample_rates.Count; ++i)
+            {
+                if (mSampleRateHz == sample_rates[i])
+                    sampleRateSupported = true;
+            }
+            if (sampleRateSupported == true)
+            {
+                mLogic16.SampleRateHz = mSampleRateHz;
+                System.Diagnostics.Debug.WriteLine("Logic16: setting sample rate to: " + mSampleRateHz.ToString());
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Error, unsupported sample rate: " + mSampleRateHz.ToString());
+                MainWindow.showMessageBox("Error, unsupported sample rate: " + mSampleRateHz.ToString());
+                for (int i = 0; i < sample_rates.Count; ++i)
+                {
+                    if (mSampleRateHz == sample_rates[i])
+                        sampleRateSupported = true;
+                    System.Diagnostics.Debug.WriteLine("Logic: supported sample rate: " + sample_rates[i].ToString());
+                }
+            }
             mLogic16.OnReadData += new MLogic16.OnReadDataDelegate(mLogic16_OnReadData);
             mLogic16.OnError += new MLogic16.OnErrorDelegate(mLogic_OnError);
             mLogic16.SampleRateHz = mSampleRateHz;
+            System.Diagnostics.Debug.WriteLine("Logic16OnConnect complete");
         }
 
         void devices_OnDisconnect(ulong device_id)
@@ -390,10 +415,163 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("Logic Analyzer is attempting to write to a closed file");
             }
         }
+
+
         void mLogic16_OnReadData(ulong device_id, byte[] data)
         {
+            try
+            {
+                int i;
+                byte levels;
+                int maskSDA = 0x80;
+                int maskSCL = 0x40;
+                //string writeStr;
+                //byte[] asciiBytes;
 
+                System.Diagnostics.Debug.WriteLine("Logic16: Read {0} bytes, starting with 0x{1:X}", data.Length, (ushort)data[0]);
+
+                if (analyzeI2C == true)
+                {
+                    int change = 0;
+                    for (i = 0; i < data.Length; i++)
+                    {
+                        levels = data[i];
+                        changeLevels = (byte)(lastLevels ^ levels);
+                        if ((changeLevels & maskSDA) != 0)
+                        {
+                            // SDA changed since last report
+                            change++;
+                            if ((levels & maskSCL) != 0)
+                            {
+                                if (ignoreGlitch == true)
+                                {
+                                    ignoreGlitch = false;
+                                }
+                                else
+                                {
+                                    // SDA changed while SCL is HIGH, START or STOP
+                                    if (i2cState == I2C_STATE_READING)
+                                    {
+                                        // SDA changed from LOW to HIGH, STOP condition
+                                        //System.Diagnostics.Debug.Write("SDA changed from LOW to HIGH, STOP condition\r\n");
+                                        i2cState = I2C_STATE_IDLE;
+                                        file.Write("]\r\n");
+                                        System.Diagnostics.Debug.Write("]\r\n");
+
+                                    }
+                                    else
+                                    {
+                                        // SDA changed from HIGH to LOW, START condition
+                                        //System.Diagnostics.Debug.Write("SDA changed from HIGH to LOW, START condition\r\n");
+                                        i2cState = I2C_STATE_READING;
+                                        file.Write("[");
+                                        System.Diagnostics.Debug.Write("[");
+
+                                        currentBitPos = 7; // I2C protocol is big-endian
+                                        currentByte = 0;
+                                    }
+                                }
+                            }
+                        }
+                        if ((changeLevels & maskSCL) != 0)
+                        {
+                            if ((ignoreGlitch == false) && (i2cState != I2C_STATE_IDLE))
+                            {
+                                // SCL changed since last report
+                                change++;
+                                if ((levels & maskSCL) != 0)
+                                {
+                                    // SCL is HIGH, start of pulsed bit read or acknowledge
+                                    if (currentBitPos < 8)
+                                    {
+                                        // 0-7 = data bit
+                                        if ((levels & maskSDA) != 0)
+                                        {
+                                            // SDA is HIGH, bit=1 or ACK
+                                            //System.Diagnostics.Debug.Write("1");
+                                            currentByte |= (byte)(1 << currentBitPos);
+                                        }
+                                        else
+                                        {
+                                            // SDA is LOW, bit=0 or NACK
+                                            //System.Diagnostics.Debug.Write("0");
+                                        }
+                                        //if (currentBitPos == 0 && i2cState == I2C_STATE_PREBYTE)
+                                        //{
+                                        //    i2cState = I2C_STATE_POSTBYTE;
+                                        //}
+                                        currentBitPos--; // will wrap around to 255 for 9th (ack/nack) bit
+                                    }
+                                    else
+                                    {
+                                        // 255 = ack/nack bit
+                                        if ((levels & maskSDA) != 0)
+                                        {
+                                            // SDA is HIGH, bit=1 or NACK
+                                            //System.Diagnostics.Debug.Write("N");
+                                        }
+                                        else
+                                        {
+                                            // SDA is LOW, bit=0 or ACK
+                                            //System.Diagnostics.Debug.Write("A\r\n" + currentByte.ToString("X") + "\r\n");  
+                                            file.Write(currentByte.ToString("X2") + " ");
+                                            System.Diagnostics.Debug.Write(currentByte.ToString("X2") + " ");
+                                        }
+
+                                        /*if (i2cState == I2C_STATE_READING)
+                                        {
+                                            //printf("%02X%c ", currentByte, currentAck ? '-' : '+');
+                                            System.Diagnostics.Debug.Write(currentByte.ToString());
+                                            packetData[packetBytePos] = currentByte;
+                                            packetAck[packetBytePos] = currentAck;
+                                            packetBytePos++;
+                                            //i2cState = I2C_STATE_PREBYTE;
+                                        }*/
+
+                                        currentBitPos = 7;
+                                        currentByte = 0;
+                                    }
+                                }
+                            }
+                        }
+                        lastLevels = levels;
+                    }
+                }
+                else
+                {
+                    for (i = 0; i < data.Length; i++)
+                    {
+                        if ((sampleNumber == 0) || ((data[i] & bitMask) != previousSample))
+                        {
+                            previousSample = (byte)(data[i] & bitMask);
+                            file.Write(sampleNumber.ToString());
+                            if ((bitMask & 0x80) != 0) file.Write("," + ((char)(((data[i] & 0x80) >> 7) + '0')).ToString());
+                            if ((bitMask & 0x40) != 0) file.Write("," + ((char)(((data[i] & 0x40) >> 6) + '0')).ToString());
+                            if ((bitMask & 0x20) != 0) file.Write("," + ((char)(((data[i] & 0x20) >> 5) + '0')).ToString());
+                            if ((bitMask & 0x10) != 0) file.Write("," + ((char)(((data[i] & 0x10) >> 4) + '0')).ToString());
+                            if ((bitMask & 0x08) != 0) file.Write("," + ((char)(((data[i] & 0x08) >> 3) + '0')).ToString());
+                            if ((bitMask & 0x04) != 0) file.Write("," + ((char)(((data[i] & 0x04) >> 2) + '0')).ToString());
+                            if ((bitMask & 0x02) != 0) file.Write("," + ((char)(((data[i] & 0x02) >> 1) + '0')).ToString());
+                            if ((bitMask & 0x01) != 0) file.Write("," + ((char)(((data[i] & 0x01)) + '0')).ToString());
+                            file.WriteLine(String.Empty);
+                            //writeStr = sampleNumber.ToString() + "," + ((char)((data[i] & 0x01) + '0')).ToString();
+                            //asciiBytes = Encoding.ASCII.GetBytes(writeStr);
+                            //accessor.WriteArray(accessorOffset, asciiBytes, 0, asciiBytes.Length);
+                            //accessorOffset += asciiBytes.Length;
+                            //accessor.Write(accessorOffset++, '\n');
+                        }
+
+                        sampleNumber++;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                System.Diagnostics.Debug.WriteLine("Logic Analyzer is attempting to write to a closed file");
+            }
         }
+
+
 
         void mLogic_OnWriteData(ulong device_id, byte[] data)
         {
