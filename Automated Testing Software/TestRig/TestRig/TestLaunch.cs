@@ -175,9 +175,18 @@ namespace TestRig
                             testReceipt.WriteFile(TRPath);
                             sessionTestTotal++;
                             if (testReceipt.testPass == true)
+                            {
                                 sessionTestPass++;
+                                System.Diagnostics.Debug.WriteLine("*********************** PASS ****************************");
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine("*********************** FAIL ****************************");
+                            }
                             if (testReceipt.testComplete == true)
-                                sessionTestComplete++;
+                            {
+                                sessionTestComplete++;                                
+                            }
                         }
 
                         // The test is over so we will pull it from the "Test Status" tab display
@@ -192,7 +201,7 @@ namespace TestRig
         }
 
         public string DebugFunction(){
-            
+
             return null;
         }
 

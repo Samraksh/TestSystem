@@ -29,6 +29,8 @@ namespace TestRig
         private bool analyzeI2C;
         private byte lastLevels;
         private byte changeLevels;
+        private ushort lastLevels16;
+        private ushort changeLevels16;
         private const int I2C_STATE_IDLE = 0;
         private const int I2C_STATE_READING = 1;
         private const int I2C_STATE_POSTBYTE = 2;
@@ -49,13 +51,15 @@ namespace TestRig
             devices.BeginConnect();
             
             lastLevels = 0;
+            lastLevels16 = 0;
             changeLevels = 0;
+            changeLevels16 = 0;
             analyzeI2C = false;
 
             setBitMask(projectName);
 
-            // wait for device to be found; sleep for 2 second
-            Thread.Sleep(2000);
+            // wait for device to be found; sleep for 6 second
+            Thread.Sleep(6000);
         }
 
         private bool setBitMask(string hkpFile)
@@ -132,7 +136,9 @@ namespace TestRig
 
             ignoreGlitch = true;
             lastLevels = 0;
+            lastLevels16 = 0;
             changeLevels = 0;
+            changeLevels16 = 0;
             analyzeI2C = false;
 
             return true;
@@ -417,18 +423,25 @@ namespace TestRig
         }
 
 
-        void mLogic16_OnReadData(ulong device_id, byte[] data)
+        void mLogic16_OnReadData(ulong device_id, byte[] dataBytes)
         {
             try
             {
                 int i;
-                byte levels;
+                ushort levels;
                 int maskSDA = 0x80;
                 int maskSCL = 0x40;
                 //string writeStr;
                 //byte[] asciiBytes;
 
-                System.Diagnostics.Debug.WriteLine("Logic16: Read {0} bytes, starting with 0x{1:X}", data.Length, (ushort)data[0]);
+                // the 16-bit logic analyzer sends its data in 16-bit words. in the byte stream "dataBytes" these words are separated into two bytes
+                // Here we are taking the byte stream and creating the 16-bit words of logic data
+                ushort[] data = new ushort[dataBytes.Length / 2];
+                for (int k = 0; k < (dataBytes.Length / 2); k++)
+                    data[k] = (ushort)((dataBytes[(k * 2)+1]<<8) + dataBytes[k*2]);
+
+                    System.Diagnostics.Debug.WriteLine("Logic16: Read {0} bytes, starting with 0x{1:X}", data.Length, data[0]);
+                //System.Diagnostics.Debug.WriteLine(data[0].ToString() + " " + data[1].ToString() + " " + data[2].ToString() + " " + data[3].ToString());
 
                 if (analyzeI2C == true)
                 {
@@ -436,8 +449,8 @@ namespace TestRig
                     for (i = 0; i < data.Length; i++)
                     {
                         levels = data[i];
-                        changeLevels = (byte)(lastLevels ^ levels);
-                        if ((changeLevels & maskSDA) != 0)
+                        changeLevels16 = (byte)(lastLevels16 ^ levels);
+                        if ((changeLevels16 & maskSDA) != 0)
                         {
                             // SDA changed since last report
                             change++;
@@ -473,7 +486,7 @@ namespace TestRig
                                 }
                             }
                         }
-                        if ((changeLevels & maskSCL) != 0)
+                        if ((changeLevels16 & maskSCL) != 0)
                         {
                             if ((ignoreGlitch == false) && (i2cState != I2C_STATE_IDLE))
                             {
@@ -518,15 +531,7 @@ namespace TestRig
                                             System.Diagnostics.Debug.Write(currentByte.ToString("X2") + " ");
                                         }
 
-                                        /*if (i2cState == I2C_STATE_READING)
-                                        {
-                                            //printf("%02X%c ", currentByte, currentAck ? '-' : '+');
-                                            System.Diagnostics.Debug.Write(currentByte.ToString());
-                                            packetData[packetBytePos] = currentByte;
-                                            packetAck[packetBytePos] = currentAck;
-                                            packetBytePos++;
-                                            //i2cState = I2C_STATE_PREBYTE;
-                                        }*/
+
 
                                         currentBitPos = 7;
                                         currentByte = 0;
@@ -534,7 +539,7 @@ namespace TestRig
                                 }
                             }
                         }
-                        lastLevels = levels;
+                        lastLevels16 = levels;
                     }
                 }
                 else

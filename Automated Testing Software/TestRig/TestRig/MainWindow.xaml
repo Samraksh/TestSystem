@@ -59,7 +59,7 @@
                         </DataGrid.RowStyle>
                     </DataGrid>
                     <Button Content="Upload Tests" Height="23" Margin="581,0,0,112" Name="Upload" VerticalAlignment="Bottom" Click="Upload_Click" Width="83" Grid.Column="1" />
-                    <Button Content="Debug" Height="23" Margin="373,0,216,0" Name="buttonDebug" VerticalAlignment="Bottom" Width="75" Click="buttonDebug_Click" Visibility="Hidden" IsEnabled="True" Grid.Column="1" />
+                    <Button Content="Debug" Height="23" Margin="589,0,0,6" Name="buttonDebug" VerticalAlignment="Bottom" Width="75" Click="buttonDebug_Click" Visibility="Hidden" IsEnabled="True" Grid.Column="1" />
                     <ComboBox Height="23" Margin="144,543,0,0" Name="cbRigSelect" SelectedIndex="0" VerticalAlignment="Top" Width="164" HorizontalAlignment="Left" Grid.Column="1">
                         <ComboBoxItem Content="localRig" />
                         <ComboBoxItem Content="DublinRig" IsEnabled="False" />
