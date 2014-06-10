@@ -286,13 +286,19 @@ namespace TestRig
                     break;
             }
             ChangeDirectories(path);
-            if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+
+            // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
+            if (currentTest.testSolutionType == "TinyBooter")
             {
-                System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                return false;
+                if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                {
+                    System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                    return false;
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
             }
-            else
-                System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
+
             if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");

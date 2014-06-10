@@ -157,7 +157,7 @@ namespace TestRig
                         accumReceiveString = String.Concat(accumReceiveString, inData);
 
                         string strippedReceive = String.Empty;
-                        while ((accumReceiveString.Contains("\n")) || (accumReceiveString.Contains("\r")))
+                        while ((accumReceiveString.Contains("\n")))
                         {
                             strippedReceive = accumReceiveString.Substring(0, accumReceiveString.IndexOf('\n') + 1);
                             accumReceiveString = accumReceiveString.Remove(0, accumReceiveString.IndexOf('\n') + 1);
@@ -286,6 +286,12 @@ namespace TestRig
                 if (rxString != String.Empty)
                 {
                     System.Diagnostics.Debug.WriteLine("COM processing (" + textCOMPort + "): " + rxString.ToString());
+                    if (rxString.Contains("Exception") || rxString.Contains("exception"))
+                    {
+                        testResults.testPass = false;
+                        testResults.testComplete = true;
+                        testResults.testReturnParameter1 = "Exception thrown";
+                    }
                     if (rxString.Contains("result =") || rxString.Contains("result="))
                     {
                         if (rxString.Contains("PASS"))

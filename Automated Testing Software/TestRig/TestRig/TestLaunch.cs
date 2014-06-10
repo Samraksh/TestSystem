@@ -512,6 +512,10 @@ namespace TestRig
                             }
                             else
                             {
+                                currentTest.testState = "Loading TinyBooter";
+                                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                                currentTest.testSolutionType = "TinyBooter";
+                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                                 currentTest.testState = "Loading native code";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyCLR";
