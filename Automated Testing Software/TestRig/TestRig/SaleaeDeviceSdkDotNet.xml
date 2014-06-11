@@ -22,6 +22,12 @@
         <member name="M:SaleaeDeviceSdkDotNet.MLogic16.GetSupportedSampleRates">
             <summary>Returns a list of available sample rates.</summary>
         </member>
+        <member name="M:SaleaeDeviceSdkDotNet.MLogic16.FadeLed">
+            <summary>Starts the LED fade pattern</summary>
+        </member>
+        <member name="M:SaleaeDeviceSdkDotNet.MLogic16.SetLed(System.Byte)">
+            <summary>Sets the brightness of the LED</summary>
+        </member>
         <member name="P:SaleaeDeviceSdkDotNet.MLogic16.Use5Volts">
             <summary>Gets or sets which I/O voltage standard to use. false = 1.8V to 3.6V. true = 3.6V to 5.0V</summary>
         </member>
