@@ -205,7 +205,60 @@ namespace TestRig
             return null;
         }
 
+        public bool CopyDllsFiles(string MFPath)
+        {
+            // copying Samraksh_eMote files
+            try
+            {
+                System.Diagnostics.Debug.WriteLine("Copying Samraksh_eMote dll files to the output directory");
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote\le", "Samraksh_eMote.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote.dll"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote\le", "Samraksh_eMote.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote.pdb"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote\le", "Samraksh_eMote.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote.pdbx"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote\le", "Samraksh_eMote.pe"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote.pe"), true);
 
+                System.Diagnostics.Debug.WriteLine("Copying Samraksh_eMote_Adapt dll files to the output directory");
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Adapt\le", "Samraksh_eMote_Adapt.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_Adapt.dll"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Adapt\le", "Samraksh_eMote_Adapt.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_Adapt.pdb"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Adapt\le", "Samraksh_eMote_Adapt.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_Adapt.pdbx"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Adapt\le", "Samraksh_eMote_Adapt.pe"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_Adapt.pe"), true);
+
+                System.Diagnostics.Debug.WriteLine("Copying Samraksh_eMote_DotNow dll files to the output directory");
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotNow\le", "Samraksh_eMote_DotNow.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_DotNow.dll"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotNow\le", "Samraksh_eMote_DotNow.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_DotNow.pdb"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotNow\le", "Samraksh_eMote_DotNow.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_DotNow.pdbx"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotNow\le", "Samraksh_eMote_DotNow.pe"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_DotNow.pe"), true);
+
+                System.Diagnostics.Debug.WriteLine("Copying Samraksh_eMote_DSP dll files to the output directory");
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DSP\le", "Samraksh_eMote_DSP.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_DSP.dll"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DSP\le", "Samraksh_eMote_DSP.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_DSP.pdb"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DSP\le", "Samraksh_eMote_DSP.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_DSP.pdbx"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DSP\le", "Samraksh_eMote_DSP.pe"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_DSP.pe"), true);
+
+                System.Diagnostics.Debug.WriteLine("Copying Samraksh_eMote_Kiwi dll files to the output directory");
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Kiwi\le", "Samraksh_eMote_Kiwi.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_Kiwi.dll"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Kiwi\le", "Samraksh_eMote_Kiwi.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_Kiwi.pdb"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Kiwi\le", "Samraksh_eMote_Kiwi.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_Kiwi.pdbx"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Kiwi\le", "Samraksh_eMote_Kiwi.pe"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_Kiwi.pe"), true);
+
+                System.Diagnostics.Debug.WriteLine("Copying Samraksh_eMote_Net dll files to the output directory");
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Net\le", "Samraksh_eMote_Net.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_Net.dll"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Net\le", "Samraksh_eMote_Net.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_Net.pdb"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Net\le", "Samraksh_eMote_Net.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_Net.pdbx"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_Net\le", "Samraksh_eMote_Net.pe"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_Net.pe"), true);
+
+                System.Diagnostics.Debug.WriteLine("Copying Samraksh_eMote_RealTime dll files to the output directory");
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_RealTime\le", "Samraksh_eMote_RealTime.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_RealTime.dll"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_RealTime\le", "Samraksh_eMote_RealTime.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_RealTime.pdb"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_RealTime\le", "Samraksh_eMote_RealTime.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_RealTime.pdbx"), true);
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_RealTime\le", "Samraksh_eMote_RealTime.pe"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_RealTime.pe"), true);
+            }
+            catch (IOException copyError)
+            {
+                System.Diagnostics.Debug.WriteLine("CopyDllsFiles exception thrown: " + copyError.ToString());
+                return false;
+            }
+            return true;
+        }
 
         private string ExecuteTest(TestDescription currentTest)
         {
@@ -241,10 +294,7 @@ namespace TestRig
                 #region Retrieving code
                 currentTest.testState = "Retrieving code";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                
-                git = new Git(mainHandle);
-                if (git == null) return "Git failed to load";
-
+                                
                 // Checkout code from GitHub if needed
                 if (currentTest.testGitOption.Equals("Use local code"))
                 {
@@ -253,16 +303,22 @@ namespace TestRig
                 }
                 else if (currentTest.testGitOption.Equals("Use archive code"))
                 {
+                    git = new Git(mainHandle);
+                    if (git == null) return "Git failed to load";
                     System.Diagnostics.Debug.WriteLine("Checking out archived code.");
-                    if (git.CloneCode() == false) return "Git failed to Clone";
+                    if (git.CloneCode() == false) return "Git failed to Clone";                    
+                    git.Kill(); 
                 }
                 else if (currentTest.testGitOption.Equals("Use archive branch code"))
                 {
+                    git = new Git(mainHandle);
+                    if (git == null) return "Git failed to load";
                     System.Diagnostics.Debug.WriteLine("Checking out branch <" + currentTest.testGitBranch + "> of archived code.");
                     if (git.CloneCodeBranch(currentTest.testGitBranch) == false) return "Git failed to clone branch: " + currentTest.testGitBranch;
+                    git.Kill(); 
                 }
-                
-                git.Kill();    
+                // Dlls might have changed
+                if (CopyDllsFiles(MFPath) == false) return "DLL copy error";
                 #endregion
                 
                 #region Building code

@@ -97,7 +97,8 @@
                     <Label Content="GCC Version:" Height="28" HorizontalAlignment="Left" Margin="5,566,0,0" Name="label3" VerticalAlignment="Top" />
                     <ComboBox Height="23" HorizontalAlignment="Left" Margin="118,569,0,0" Name="cbGCCVersion" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbGCCVersion_SelectionChanged" Grid.ColumnSpan="2">
                         <ComboBoxItem Content="GCC4.2" />
-                        <ComboBoxItem Content="GCC4.4" />
+                        <ComboBoxItem Content="GCC4.4.1" />
+                        <ComboBoxItem Content="GCC4.7.3" />
                     </ComboBox>
                     <Label Content="Git Setting:" Height="28" HorizontalAlignment="Left" Margin="73,565,0,0" Name="label10" VerticalAlignment="Top" Grid.Column="1" />
                     <ComboBox Height="23" HorizontalAlignment="Left" Margin="144,518,0,0" Name="cbMFSelected" SelectedIndex="0" VerticalAlignment="Top" Width="164" SelectionChanged="cbMFSelected_SelectionChanged" Grid.Column="1">

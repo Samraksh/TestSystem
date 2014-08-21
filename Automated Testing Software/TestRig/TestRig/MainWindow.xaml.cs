@@ -63,7 +63,7 @@ namespace TestRig
         public static string textSolution;
         public static string textMemoryType;
         public static string textSolutionType;
-        public static string textGCCVersion;
+        public string textGCCVersion;
         public static string textMFSelected;
         public static string textJTAGHarness;
         public static string textPowerAutomateSelected;
@@ -1023,8 +1023,11 @@ namespace TestRig
                 case 1:
                     textGCCVersion = "GCC4.4";
                     break;
+                case 2:
+                    textGCCVersion = "GCC4.7";
+                    break;
                 default:
-                    textGCCVersion = "GCC4.2";
+                    textGCCVersion = "GCC4.7";
                     break;
             }
         }

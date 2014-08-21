@@ -21,8 +21,6 @@ namespace TestRig
         private string expectedPassResponse = String.Empty, expectedFailResponse = String.Empty;
         public StreamWriter input = null;
 
-        //private string codesourceryVersion = "4.7.3";
-        private string codesourceryVersion = "4.4.1";
         private StringWriter stdOutput = new StringWriter();
         public StringWriter Output { get { return stdOutput; } }
         private StringWriter stdError = new StringWriter();
@@ -35,6 +33,7 @@ namespace TestRig
 
         private string MFPath;
         private string usingMFVersion;
+        private string codesourceryVersion;
 
         private string applicationStartAddress;
         private string preprocessorString;
@@ -75,6 +74,20 @@ namespace TestRig
                     break;
                 default:
                     MFPath = mainHandle.textMFPath_4_3;
+                    break;
+            }
+            switch (passedHandle.textGCCVersion)
+            {
+                case "GCC4.2":
+                    codesourceryVersion = "4.2";
+                    break;
+                case "GCC4.4":
+                    codesourceryVersion = "4.4.1";
+                    break;
+                case "GCC4.7":
+                    codesourceryVersion = "4.7.3";
+                    break;
+                default:
                     break;
             }
 
