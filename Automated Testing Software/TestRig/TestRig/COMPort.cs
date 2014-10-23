@@ -298,42 +298,49 @@ namespace TestRig
                             testResults.testPass = true;
                         else
                             testResults.testPass = false;
+                        System.Diagnostics.Debug.WriteLine("matched test result");
                         gotResponseR = true;
                     }
                     else if (rxString.Contains("accuracy"))
                     {
                         index = rxString.IndexOf('=') + 1;
                         testResults.testAccuracy = double.Parse(rxString.Substring(index, rxString.Length - index));
+                        System.Diagnostics.Debug.WriteLine("matched accuracy");
                         gotResponseA = true;
                     }
                     else if (rxString.Contains("resultParameter1"))
                     {
                         index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter1 = rxString.Substring(index, rxString.Length - index);
+                        System.Diagnostics.Debug.WriteLine("matched resultParameter1");
                         gotResponse1 = true;
                     }
                     else if (rxString.Contains("resultParameter2"))
                     {
                         index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter2 = rxString.Substring(index, rxString.Length - index);
+                        System.Diagnostics.Debug.WriteLine("matched resultParameter2");
                         gotResponse2 = true;
                     }
                     else if (rxString.Contains("resultParameter3"))
                     {
                         index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter3 = rxString.Substring(index, rxString.Length - index);
+                        System.Diagnostics.Debug.WriteLine("matched resultParameter3");
                         gotResponse3 = true;
                     }
                     else if (rxString.Contains("resultParameter4"))
                     {
                         index = rxString.IndexOf('=') + 1;
                         testResults.testReturnParameter4 = rxString.Substring(index, rxString.Length - index);
+                        System.Diagnostics.Debug.WriteLine("matched resultParameter4");
                         gotResponse4 = true;
                     }
                     else if (rxString.Contains("resultParameter5"))
                     {
                         index = rxString.IndexOf('=') + 1;
-                        testResults.testReturnParameter5 = rxString.Substring(index, rxString.Length - index);                           
+                        testResults.testReturnParameter5 = rxString.Substring(index, rxString.Length - index);
+                        System.Diagnostics.Debug.WriteLine("matched resultParameter5");
                         gotResponse5 = true;
                     }
                     if ((gotResponseR == true) && (gotResponseA == true) && (gotResponse1 == true) && (gotResponse2 == true) && (gotResponse3 == true) && (gotResponse4 == true) && (gotResponse5 == true))

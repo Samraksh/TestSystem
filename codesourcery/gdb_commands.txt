@@ -4,7 +4,7 @@ monitor reset halt
 monitor stm32f1x mass_erase 0
 monitor stm32f1x mass_erase 1
 monitor reset halt
-file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
+file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.7\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
 load
 monitor flash write_image D:\\Work\\TestSuite\\Empty\\C#\\bin\\Release\\Empty_Conv.s19
 end
@@ -15,7 +15,7 @@ monitor reset halt
 monitor stm32f1x mass_erase 0
 monitor stm32f1x mass_erase 1
 monitor reset halt
-file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
+file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.7\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
 load
 monitor flash write_image D:\\Work\\TestSuite\\COM\\bin\\Release\\COM_Conv.s19
 end
@@ -26,7 +26,9 @@ monitor reset halt
 monitor stm32f1x mass_erase 0
 monitor stm32f1x mass_erase 1
 monitor reset halt
-file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\Timer.axf 
+file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.7\\le\\FLASH\\debug\\EmoteDotNow\\bin\\TinyBooter.axf
+load
+file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.7\\le\\FLASH\\debug\\EmoteDotNow\\bin\\GPIO.axf 
 load
 end
 
@@ -36,7 +38,7 @@ monitor reset halt
 monitor stm32f1x mass_erase 0
 monitor stm32f1x mass_erase 1
 monitor reset halt
-file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinybooter.axf 
+file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.7\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinybooter.axf 
 load
 end
 
@@ -46,7 +48,7 @@ monitor reset halt
 monitor stm32f1x mass_erase 0
 monitor stm32f1x mass_erase 1
 monitor reset halt
-file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
+file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.7\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
 load
 end
 
@@ -69,8 +71,44 @@ load
 end
 
 define program_release_clr
-set remotetimeout 10000
+
 monitor reset halt
 file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\Samraksh\\Executables\\Release\\\CLRandBooter\\Emote_TinyCLR_MF4.3_1.0.2.axf 
 load
+end
+
+define program_clk
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Test\\MCO-8MHz.elf
+load
+end
+
+define program_ADC
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.7\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\ADC\\Src\\C#\\ADC_Callback\\bin\\Release\\ADC_Callback_Conv.s19
+end
+
+define program_RT
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.7\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\RealTimeTimer\\Src\\C#\\Level_0A\\bin\\Release\\RealTimeTimer_Conv.s19
+end
+
+define tar
+target remote localhost:3333
 end
