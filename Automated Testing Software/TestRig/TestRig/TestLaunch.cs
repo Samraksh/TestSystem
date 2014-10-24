@@ -597,8 +597,12 @@ namespace TestRig
                 #endregion
 
                 #region Getting ready to run test
-                // waiting for debugger messages to stop which will cause us to stop hearing data from the COM port
-                Thread.Sleep(8000);
+                if (currentTest.testType.Contains("C#") == true)
+                {
+                    // There are five seconds of debug messages with C# but not native which will cause us to stop hearing data from the COM port
+                    System.Diagnostics.Debug.WriteLine("Waiting 5 seconds for DUT to startup and flush serial buffer");
+                    Thread.Sleep(8000);
+                }
                 if (currentTest.testUseCOM == true)
                 {
                     if (COM[0].Connect(currentTest, testReceipt, 0) == false) return "COM 0 failed to open";
@@ -658,8 +662,12 @@ namespace TestRig
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);                
                 if (currentTest.testUseScript == true)
                 {
-                    System.Diagnostics.Debug.WriteLine("Waiting 5 seconds for DUT to startup and flush serial buffer");
-                    Thread.Sleep(5000);
+                    /*if (currentTest.testType.Contains("C#") == true)
+                    {
+                        // There are five seconds of debug messages with C# but not native
+                        System.Diagnostics.Debug.WriteLine("Waiting 5 seconds for DUT to startup and flush serial buffer");
+                        Thread.Sleep(5000);
+                    }*/
 
                     // if there is a COM port already open we will close it now so we can start a new COM port with possibly different settings
                     for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
