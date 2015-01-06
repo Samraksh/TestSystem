@@ -29,7 +29,7 @@
     <Setting Name="MFPathSelection" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="COMPortPrimary" Type="System.Int32" Scope="User">
+    <Setting Name="COM1PortPrimary" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="OCDInterfacePrimary" Type="System.String" Scope="User">
@@ -58,6 +58,9 @@
     </Setting>
     <Setting Name="PowerCycleAutomated" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="COM2Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

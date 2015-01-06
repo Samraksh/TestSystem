@@ -134,12 +134,12 @@ namespace TestRig.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int COMPortPrimary {
+        public int COM1PortPrimary {
             get {
-                return ((int)(this["COMPortPrimary"]));
+                return ((int)(this["COM1PortPrimary"]));
             }
             set {
-                this["COMPortPrimary"] = value;
+                this["COM1PortPrimary"] = value;
             }
         }
         
@@ -248,6 +248,18 @@ namespace TestRig.Properties {
             }
             set {
                 this["PowerCycleAutomated"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int COM2Port {
+            get {
+                return ((int)(this["COM2Port"]));
+            }
+            set {
+                this["COM2Port"] = value;
             }
         }
     }

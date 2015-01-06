@@ -82,6 +82,8 @@ namespace TestRig
                 line2 = second.ReadLine();
             }
 
+            first.Close();
+            second.Close();
             return filesEqual;            
         }
 

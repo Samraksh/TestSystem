@@ -67,10 +67,12 @@ namespace TestRig
         public static string textMFSelected;
         public static string textJTAGHarness;
         public static string textPowerAutomateSelected;
-        public string textCOMPortPrimary;
+        public string textCOM1PortPrimary;
         public string textCOMPortSecondary1;
-        public int COMPortSelectionPrimary;
+        public string textCOM2Port;
+        public int COM1PortSelectionPrimary;
         public int COMPortSelectionSecondary1;
+        public int COM2PortSelection;
         public static TestDescription[] availableTests;
         private static Tasks _tasks;
         private static int testNum;
@@ -738,7 +740,8 @@ namespace TestRig
                 tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
                 tbBuildSourceryPath.Text = Properties.Settings.Default.CSPath.ToString();
 
-                cbCOMPort.SelectedIndex = Properties.Settings.Default.COMPortPrimary;
+                cbCOM1Port.SelectedIndex = Properties.Settings.Default.COM1PortPrimary;
+                cbCOM2Port.SelectedIndex = Properties.Settings.Default.COM2Port;
 
                 cbMFVersionPath.SelectedIndex = Properties.Settings.Default.MFPathSelection;    
                 textMFPath_4_0 = Properties.Settings.Default.MFPath_4_0.ToString();
@@ -756,21 +759,27 @@ namespace TestRig
                 cbSolutionType.SelectedIndex = Properties.Settings.Default.STSelection;
                 cbGCCVersion.SelectedIndex = Properties.Settings.Default.GVSelection;
 
-                COMPortSelectionPrimary = Properties.Settings.Default.COMPortPrimary;
+                COM1PortSelectionPrimary = Properties.Settings.Default.COM1PortPrimary;
                 COMPortSelectionSecondary1 = Properties.Settings.Default.COMPortSecondary1;
+                COM2PortSelection = Properties.Settings.Default.COM2Port;
                 cbMFSelected.SelectedIndex = Properties.Settings.Default.MFSelection;
                 if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
                 {                    
-                    cbCOMPort.SelectedIndex = COMPortSelectionPrimary;                    
+                    cbCOM1Port.SelectedIndex = COM1PortSelectionPrimary;                    
                 }
                 else
                 {
-                    cbCOMPort.SelectedIndex = COMPortSelectionSecondary1;                    
+                    cbCOM1Port.SelectedIndex = COMPortSelectionSecondary1;                    
                 }
-                textCOMPortPrimary = ((ComboBoxItem)cbCOMPort.Items[COMPortSelectionPrimary]).Content.ToString();
-                textCOMPortPrimary = textCOMPortPrimary.Remove(3, 1);
-                textCOMPortSecondary1 = ((ComboBoxItem)cbCOMPort.Items[COMPortSelectionSecondary1]).Content.ToString();
+                cbCOM2Port.SelectedIndex = COM2PortSelection;
+
+                textCOM1PortPrimary = ((ComboBoxItem)cbCOM1Port.Items[COM1PortSelectionPrimary]).Content.ToString();
+                textCOM1PortPrimary = textCOM1PortPrimary.Remove(3, 1);
+                textCOMPortSecondary1 = ((ComboBoxItem)cbCOM1Port.Items[COMPortSelectionSecondary1]).Content.ToString();
                 textCOMPortSecondary1 = textCOMPortSecondary1.Remove(3, 1);
+                COM2PortSelection = cbCOM2Port.SelectedIndex;
+                textCOM2Port = ((ComboBoxItem)cbCOM2Port.SelectedItem).Content.ToString();
+                textCOM2Port = textCOM2Port.Remove(3, 1);
 
                 cbPowerAutomate.IsChecked = Properties.Settings.Default.PowerCycleAutomated;
                 if (cbPowerAutomate.IsChecked == true)
@@ -799,8 +808,9 @@ namespace TestRig
                 Properties.Settings.Default["MFPath_4_0"] = textMFPath_4_0;
                 Properties.Settings.Default["MFPath_4_3"] = textMFPath_4_3;
                 Properties.Settings.Default["MFPathSelection"] = cbMFVersionPath.SelectedIndex;
-                Properties.Settings.Default["COMPortPrimary"] = COMPortSelectionPrimary;
+                Properties.Settings.Default["COM1PortPrimary"] = COM1PortSelectionPrimary;
                 Properties.Settings.Default["COMPortSecondary1"] = COMPortSelectionSecondary1;
+                Properties.Settings.Default["COM2Port"] = COM2PortSelection;
                 Properties.Settings.Default["GitPath"] = tbGitPath.Text;
                 Properties.Settings.Default["TSPath"] = tbTestSourcePath.Text;
                 Properties.Settings.Default["TRPath"] = tbTestReceiptPath.Text;
@@ -1058,17 +1068,31 @@ namespace TestRig
             }
             if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
             {
-                COMPortSelectionPrimary = cbCOMPort.SelectedIndex;
-                textCOMPortPrimary = ((ComboBoxItem)cbCOMPort.SelectedItem).Content.ToString();
-                textCOMPortPrimary = textCOMPortPrimary.Remove(3, 1);
+                COM1PortSelectionPrimary = cbCOM1Port.SelectedIndex;
+                textCOM1PortPrimary = ((ComboBoxItem)cbCOM1Port.SelectedItem).Content.ToString();
+                textCOM1PortPrimary = textCOM1PortPrimary.Remove(3, 1);
             }
             else
             {
-                COMPortSelectionSecondary1 = cbCOMPort.SelectedIndex;
-                textCOMPortSecondary1 = ((ComboBoxItem)cbCOMPort.SelectedItem).Content.ToString();
+                COMPortSelectionSecondary1 = cbCOM1Port.SelectedIndex;
+                textCOMPortSecondary1 = ((ComboBoxItem)cbCOM1Port.SelectedItem).Content.ToString();
                 textCOMPortSecondary1 = textCOMPortSecondary1.Remove(3, 1);
             }            
         }
+
+        private void cbCOM2Port_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (settingsInitialized == false)
+            {
+                // buttons have not yet been defined by InitializeComponent
+                return;
+            }
+
+            COM2PortSelection = cbCOM2Port.SelectedIndex;
+            textCOM2Port = ((ComboBoxItem)cbCOM2Port.SelectedItem).Content.ToString();
+            textCOM2Port = textCOM2Port.Remove(3, 1);
+                    
+        }   
 
         private void cbPowerAutomate_Unchecked(object sender, RoutedEventArgs e)
         {
@@ -1090,12 +1114,12 @@ namespace TestRig
             if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
             {
                 tbOCDInterface.Text = textOCDInterfacePrimary;
-                cbCOMPort.SelectedIndex = COMPortSelectionPrimary;
+                cbCOM1Port.SelectedIndex = COM1PortSelectionPrimary;
             }
             else
             {
                 tbOCDInterface.Text = textOCDInterfaceSecondary1;
-                cbCOMPort.SelectedIndex = COMPortSelectionSecondary1;     
+                cbCOM1Port.SelectedIndex = COMPortSelectionSecondary1;     
             }
 
             checkPaths();
@@ -1130,6 +1154,6 @@ namespace TestRig
                 }
                 activateTests(activateTestsOptions.parseTestFile);
             }
-        }       
+        }            
     }
 }
