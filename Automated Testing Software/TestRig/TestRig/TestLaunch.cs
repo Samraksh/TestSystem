@@ -38,6 +38,7 @@ namespace TestRig
         private int maxCOMInstances = 1;
         private bool debugDoNotBuild = false;
         private bool debugDoNotProgram = false;
+        private string workingDirectory = null;
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
@@ -84,6 +85,24 @@ namespace TestRig
             LaunchThread.Name = "Launch Test Thread";            
         }
 
+        private void CleanUp()
+        {
+            if (msbuild != null) msbuild.Kill();
+            if (git != null) git.Kill();
+            if (telnet != null) telnet.Kill();
+            for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
+            {
+                if (COM[indexCOM].active == true)
+                    COM[indexCOM].Kill();
+            }
+            if (fTest != null) fTest.Kill();
+            if (gdb != null) gdb.Kill();
+            if (openOCD.active == true) openOCD.Kill();
+            if (fastboot != null) fastboot.Kill();
+            if (matlab != null) matlab.Kill();
+            if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
+        }
+
         public void KillLaunchThread()
         {
             // used when the program is quiting
@@ -93,19 +112,7 @@ namespace TestRig
             System.Diagnostics.Debug.WriteLine("Killing launch test thread.");
             if (LaunchThread != null)
             {
-                if (telnet != null) telnet.Kill();
-                if (gdb != null) gdb.Kill();
-                if (git != null) git.Kill();
-                for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
-                {
-                    if (COM[indexCOM].active == true)
-                        COM[indexCOM].Kill();
-                }                              
-                if (fTest != null) fTest.Kill();
-                if (openOCD.active == true) openOCD.Kill();                               
-                if (matlab != null) matlab.Kill();
-                if (msbuild != null) msbuild.Kill();
-                if (fastboot != null) fastboot.Kill();
+                CleanUp();
 
                 if (LaunchThread.IsAlive) LaunchThread.Abort();
                 LaunchThread.Join(100);
@@ -148,20 +155,8 @@ namespace TestRig
 
                         if (returnReason != "Test completed")
                         {
-                            // test failed, killing anything not already torn down here
-                            if (msbuild != null) msbuild.Kill();
-                            if (git != null) git.Kill();
-                            if (telnet != null) telnet.Kill();
-                            for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
-                            {
-                                if (COM[indexCOM].active == true)
-                                    COM[indexCOM].Kill();
-                            } 
-                            if (fTest != null) fTest.Kill();                            
-                            if (gdb != null) gdb.Kill();
-                            if (openOCD.active == true) openOCD.Kill();
-                            if (fastboot != null) fastboot.Kill();
-                            
+                            // test failed, cleaning up
+                            CleanUp();
                             System.Diagnostics.Debug.WriteLine("Test FAILED because of:" + returnReason);
                         }
 
@@ -264,7 +259,6 @@ namespace TestRig
         {
             try
             {                
-                string workingDirectory = mainHandle.textTestSourcePath + @"\" + currentTest.testPath;
                 string projectName = currentTest.buildProj;
                 int index = projectName.LastIndexOf('.');
                 string strippedName = projectName.Substring(0, index);
@@ -277,6 +271,7 @@ namespace TestRig
                 DateTime testStartTime = DateTime.Now;
                 int indexDevice;
                 int numberOfCodeLoads = 1;
+                workingDirectory = mainHandle.textTestSourcePath + @"\" + currentTest.testPath;
 
                 switch (currentTest.testMFVersionNum)
                 {
@@ -1086,19 +1081,7 @@ namespace TestRig
             }
             catch (Exception ex)
             {
-                if (telnet != null) telnet.Kill();
-                if (gdb != null) gdb.Kill();
-                if (git != null) git.Kill();
-                for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
-                {
-                    if (COM[indexCOM].active == true)
-                        COM[indexCOM].Kill();
-                } 
-                if (fTest != null) fTest.Kill();
-                if (openOCD.active == true) openOCD.Kill();
-                if (matlab != null) matlab.Kill();
-                if (msbuild != null) msbuild.Kill();
-                if (fastboot != null) fastboot.Kill();
+                CleanUp();
                 System.Diagnostics.Debug.WriteLine("ExecuteTest FAIL: " + ex.Message);
                 return "Exception failure: " + ex.Message;
             }
