@@ -12,7 +12,8 @@ using System.Windows.Controls;
 namespace TestRig
 {
     class COMPort
-    {        
+    {
+        
         public static SerialPort serialPort;
         public MainWindow mainHandle;
         public static TestReceipt testResults;
@@ -46,19 +47,16 @@ namespace TestRig
             gotResponse3 = false;
             gotResponse4 = false;
             gotResponse5 = false;
-            switch (COMNum)
+                        switch (COMNum)
             {
                 case (0):
-                    textCOMPort = mainHandle.textCOM1PortPrimary;
+                    textCOMPort = mainHandle.textCOMPortPrimary;
                     break;
                 case (1):
                     textCOMPort = mainHandle.textCOMPortSecondary1;
                     break;
-                case (2):
-                    textCOMPort = mainHandle.textCOM2Port;
-                    break;
                 default:
-                    textCOMPort = mainHandle.textCOM1PortPrimary;
+                    textCOMPort = mainHandle.textCOMPortPrimary;
                     break;
             }
 
@@ -80,6 +78,7 @@ namespace TestRig
                 }
                 System.Diagnostics.Debug.WriteLine("Opening COM port: " + textCOMPort);
                 serialPort.Open();
+
                 string[] COMParameters = currentTest.testCOMParameters.Split(',');
                 serialPort.BaudRate = int.Parse(COMParameters[0]);
                 switch (COMParameters[1])
@@ -118,9 +117,7 @@ namespace TestRig
                 }
                 serialPort.Handshake = Handshake.None;
 
-                //serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPortHandler);
-
-                
+                //serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPortHandler);                
 
                 // starting thread to receive data over TCP/IP
                 // Test config files received will be parsed and queued

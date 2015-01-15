@@ -38,7 +38,6 @@ namespace TestRig
         private int maxCOMInstances = 1;
         private bool debugDoNotBuild = false;
         private bool debugDoNotProgram = false;
-        private static int COM2_PORT = 2;
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
@@ -704,27 +703,15 @@ namespace TestRig
                         {
                             System.Diagnostics.Debug.WriteLine("Script comment: " + line);
                         }
-                        else if (line.StartsWith("COM2"))
-                        {
-                            if (parsedLine[1].Contains("initialize"))
-                            {
-                                for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
-                                {
-                                    if (COM[indexCOM].active == true)
-                                        COM[indexCOM].Kill();
-                                }
-                                if (COM[0].Connect(currentTest, testReceipt, COM2_PORT) == false) return "COM2 failed to open";
-                            }
-                        }
                         else if (line.StartsWith("execute"))
-                        {
+                        {                            
                             try
                             {
                                 runTime = int.Parse(parsedLine[2].Trim());
                                 // see what is to be exectued (exe, dll, other)
                                 if (parsedLine[1].EndsWith(".exe"))
                                 {
-                                    TestExecutableInfo.FileName = parsedLine[1].Trim();
+                                    TestExecutableInfo.FileName = parsedLine[1].Trim();                                    
 
                                     TestExecutableProcess.Start();
                                     TestExecutableProcess.WaitForExit(runTime);
@@ -788,7 +775,7 @@ namespace TestRig
                             {
                                 string fileName = parsedLine[2].Trim();
                                 if (fTest.SaveToFile(parsedLine[1].Trim(), workingDirectory + @"\" + fileName) == false) return "Specified test file: " + workingDirectory + @"\" + fileName + " could not be opened.";
-                            }
+                            }                            
                         }
                         else if (line.StartsWith("COM_send"))
                         {
@@ -813,7 +800,7 @@ namespace TestRig
                                     randomNumber = random.Next(lowerBound, upperBound);
                                     COM[currentOpenCOMInstance].Send(randomNumber.ToString() + "\r\n");
                                     // we have to throttle sending data for now or the eMote COM receive breaks
-                                    Thread.Sleep(10);
+									Thread.Sleep(10);
                                 }
                             }
                             else if (parsedLine[1].Contains("file"))

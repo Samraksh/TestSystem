@@ -168,7 +168,7 @@
                             <TextBox Height="23" HorizontalAlignment="Left" Margin="135,17,0,0" Name="tbTestReceiptPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="500" TextChanged="tbTestReceiptPath_TextChanged" />
                         </Grid>
                     </GroupBox>
-                    <ComboBox Height="23" HorizontalAlignment="Right" Margin="0,480,735,0" Name="cbCOM1Port" VerticalAlignment="Top" Width="88" SelectedIndex="0" SelectionChanged="cbCOMPort_SelectionChanged">
+                    <ComboBox Height="23" HorizontalAlignment="Right" Margin="0,480,526,0" Name="cbCOMPort" VerticalAlignment="Top" Width="88" SelectedIndex="0" SelectionChanged="cbCOMPort_SelectionChanged">
                         <ComboBoxItem Content="COM 1" />
                         <ComboBoxItem Content="COM 2" />
                         <ComboBoxItem Content="COM 3" />
@@ -229,74 +229,12 @@
                         <ComboBoxItem Content="COM 58" />
                         <ComboBoxItem Content="COM 59" />
                     </ComboBox>
-                    <Label Content="COM1 Port:" Height="28" HorizontalAlignment="Left" Margin="6,478,0,0" Name="label12" VerticalAlignment="Top" />
+                    <Label Content="COM Port:" Height="28" HorizontalAlignment="Left" Margin="6,478,0,0" Name="label12" VerticalAlignment="Top" />
                     <CheckBox Content="Automate power cycle during code loading" Height="16" HorizontalAlignment="Left" Margin="12,512,0,0" Name="cbPowerAutomate" VerticalAlignment="Top" Width="259" Unchecked="cbPowerAutomate_Unchecked" Checked="cbPowerAutomate_Checked" />
                     <ComboBox Height="23" HorizontalAlignment="Left" Margin="566,595,0,0" Name="cbInterface" VerticalAlignment="Top" Width="87" SelectionChanged="cbInterface_SelectionChanged">
                         <ComboBoxItem Content="Primary" IsSelected="True" />
                         <ComboBoxItem Content="Support 1" IsSelected="False" />
                     </ComboBox>
-                    <ComboBox Height="23" HorizontalAlignment="Right" Margin="0,480,501,0" Name="cbCOM2Port" SelectedIndex="0" VerticalAlignment="Top" Width="88" SelectionChanged="cbCOM2Port_SelectionChanged">
-                        <ComboBoxItem Content="COM 1" />
-                        <ComboBoxItem Content="COM 2" />
-                        <ComboBoxItem Content="COM 3" />
-                        <ComboBoxItem Content="COM 4" />
-                        <ComboBoxItem Content="COM 5" />
-                        <ComboBoxItem Content="COM 6" />
-                        <ComboBoxItem Content="COM 7" />
-                        <ComboBoxItem Content="COM 8" />
-                        <ComboBoxItem Content="COM 9" />
-                        <ComboBoxItem Content="COM 10" />
-                        <ComboBoxItem Content="COM 11" />
-                        <ComboBoxItem Content="COM 12" />
-                        <ComboBoxItem Content="COM 13" />
-                        <ComboBoxItem Content="COM 14" />
-                        <ComboBoxItem Content="COM 15" />
-                        <ComboBoxItem Content="COM 16" />
-                        <ComboBoxItem Content="COM 17" />
-                        <ComboBoxItem Content="COM 18" />
-                        <ComboBoxItem Content="COM 19" />
-                        <ComboBoxItem Content="COM 20" />
-                        <ComboBoxItem Content="COM 21" />
-                        <ComboBoxItem Content="COM 22" />
-                        <ComboBoxItem Content="COM 23" />
-                        <ComboBoxItem Content="COM 24" />
-                        <ComboBoxItem Content="COM 25" />
-                        <ComboBoxItem Content="COM 26" />
-                        <ComboBoxItem Content="COM 27" />
-                        <ComboBoxItem Content="COM 28" />
-                        <ComboBoxItem Content="COM 29" />
-                        <ComboBoxItem Content="COM 30" />
-                        <ComboBoxItem Content="COM 31" />
-                        <ComboBoxItem Content="COM 32" />
-                        <ComboBoxItem Content="COM 33" />
-                        <ComboBoxItem Content="COM 34" />
-                        <ComboBoxItem Content="COM 35" />
-                        <ComboBoxItem Content="COM 36" />
-                        <ComboBoxItem Content="COM 37" />
-                        <ComboBoxItem Content="COM 38" />
-                        <ComboBoxItem Content="COM 39" />
-                        <ComboBoxItem Content="COM 40" />
-                        <ComboBoxItem Content="COM 41" />
-                        <ComboBoxItem Content="COM 42" />
-                        <ComboBoxItem Content="COM 43" />
-                        <ComboBoxItem Content="COM 44" />
-                        <ComboBoxItem Content="COM 45" />
-                        <ComboBoxItem Content="COM 46" />
-                        <ComboBoxItem Content="COM 47" />
-                        <ComboBoxItem Content="COM 48" />
-                        <ComboBoxItem Content="COM 49" />
-                        <ComboBoxItem Content="COM 50" />
-                        <ComboBoxItem Content="COM 51" />
-                        <ComboBoxItem Content="COM 52" />
-                        <ComboBoxItem Content="COM 53" />
-                        <ComboBoxItem Content="COM 54" />
-                        <ComboBoxItem Content="COM 55" />
-                        <ComboBoxItem Content="COM 56" />
-                        <ComboBoxItem Content="COM 57" />
-                        <ComboBoxItem Content="COM 58" />
-                        <ComboBoxItem Content="COM 59" />
-                    </ComboBox>
-                    <Label Content="COM2 Port:" Height="28" HorizontalAlignment="Left" Margin="243,478,0,0" Name="label13" VerticalAlignment="Top" />
                 </Grid>
             </TabItem>            
         </TabControl>
