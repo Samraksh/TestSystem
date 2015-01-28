@@ -940,6 +940,10 @@ namespace TestRig
 
         private void cbHardware_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (settingsInitialized == false) {
+                // cbMemory has not yet been defined by InitializeComponent
+                return;
+            }
             switch (cbHardware.SelectedIndex)
             {
                 case 0:
@@ -1056,6 +1060,7 @@ namespace TestRig
                 // buttons have not yet been defined by InitializeComponent
                 return;
             }
+            gbSelectedInterface.Header = ((ComboBoxItem)cbInterface.SelectedItem).Content.ToString();
             if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
             {
                 COMPortSelectionPrimary = cbCOMPort.SelectedIndex;
