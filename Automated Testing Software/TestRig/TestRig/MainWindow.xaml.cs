@@ -134,12 +134,12 @@ namespace TestRig
                 activateTests(activateTestsOptions.parseTestFile);
 
                 string[] arguments = Environment.GetCommandLineArgs();
-                System.Diagnostics.Debug.WriteLine("Command line: " + arguments[1]);
-                if (arguments[1] != String.Empty)
+                System.Diagnostics.Debug.WriteLine("Command line: " + string.Join(" ", arguments.Select(v => v.ToString())));
+                if (arguments.Length > 1 && arguments[1] != String.Empty)
                 {
                     commandLineMode = true;
                     uploadOneBatch(arguments[1]);
-                }                
+                }
             }
             catch (Exception ex)
             {
