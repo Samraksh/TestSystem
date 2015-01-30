@@ -143,26 +143,62 @@ namespace TestRig
             ChangeDirectories(MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType);
 
             // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
-            if (currentTest.testSolutionType == "TinyBooter" || currentTest.testSolution == "SOC_ADAPT")
+            if (currentTest.testSolutionType == "TinyBooter")
             {
-                if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                if (mainHandle.textCodeTypeSelected.Contains("Release"))
                 {
-                    System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
+                }
+                else
+                {
+                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
+                }
+
+                
+
+                if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+                {
+                    System.Diagnostics.Debug.WriteLine("MSBuild failed to build TinyBooter.");
                     return false;
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-            }
-
-            //if (RunCommand(@"msbuild /t:build /p:configuration=Release /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
-            if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
-            {
-                System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
-                return false;
+                    System.Diagnostics.Debug.WriteLine("MSBuild project built TinyBooter.");
             }
             else
-                System.Diagnostics.Debug.WriteLine("MSBuild project built.");
-
+            {
+                if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                {
+                    if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + ",flavor=release " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)                    
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild Release failed to build.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild Release project built.");
+                }
+                else
+                {
+                    if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild Debug failed to build.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild Debug project built.");
+                }
+            }
             System.Diagnostics.Debug.WriteLine("Searching scatterfile");
             // discovering applicationStartAddress value
             bool applicationStartAddressFound = false;
@@ -303,23 +339,47 @@ namespace TestRig
             // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
             if (currentTest.testSolutionType == "TinyBooter")
             {
-                if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
+                if (mainHandle.textCodeTypeSelected.Contains("Release"))
                 {
-                    System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
+                }
+                else
+                {
+                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
+                }
+            }
+            if (mainHandle.textCodeTypeSelected.Contains("Release"))
+            {
+                if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + ",flavor=release  /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 1500000) != CommandStatus.Done)
+                {
+                    System.Diagnostics.Debug.WriteLine("Debug MSBuild failed to build.");
                     return false;
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
+                    System.Diagnostics.Debug.WriteLine("Debug MSBuild project built.");
             }
-
-            if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 1500000) != CommandStatus.Done)
-            {
-                System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
-                return false;
-            } 
             else
-                System.Diagnostics.Debug.WriteLine("MSBuild project built.");
-
+            {
+                if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 1500000) != CommandStatus.Done)
+                {
+                    System.Diagnostics.Debug.WriteLine("Release MSBuild failed to build.");
+                    return false;
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("Release MSBuild project built.");
+            }
             return true;
         }
 

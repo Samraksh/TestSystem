@@ -12,6 +12,7 @@ namespace TestRig
         private Engine engine;
         public MainWindow mainHandle;
         public TestReceipt testResults;
+        private bool engineOpened = false;
 
         public Matlab(MainWindow passedHandle, TestReceipt results)
         {
@@ -19,6 +20,7 @@ namespace TestRig
             testResults = results;
 
             engine = Engine.Open();
+            engineOpened = true;
             if (engine.NativeObject == null)
                 System.Diagnostics.Debug.WriteLine("Null Reference Exception: Failed to Initialize Engine");
 
@@ -86,7 +88,9 @@ namespace TestRig
         {
             try
             {
-                engine.Close();
+                if (engineOpened == true)
+                    engine.Close();
+                engineOpened = false;
             }
             catch (Exception ex)
             {

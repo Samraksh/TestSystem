@@ -157,11 +157,11 @@ namespace TestRig
 
                         if (returnReason != "Test completed")
                         {
-                            // test failed, cleaning up
-                            CleanUp();
+                            // test failed, cleaning up                            
                             System.Diagnostics.Debug.WriteLine("Test FAILED because of:" + returnReason);
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.printErrorDelegate, returnReason);
                         }
+                        CleanUp();
 
                         testReceipt.testResult = returnReason;
 
@@ -412,7 +412,15 @@ namespace TestRig
                     if(currentTest.testJTAGHarness.Equals("Lauterbach")) {
                         System.Diagnostics.Debug.WriteLine("Executing ADAPT JTAG test for:  " + currentTest.testName);
 
-                        string fnameOS = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".axf";
+                        string fnameOS;
+                        if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                        {
+                            fnameOS = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".axf";
+                        }
+                        else
+                        {
+                            fnameOS = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".axf";
+                        }
                         // Lauterbach can use s19.
                         string fnameMSIL = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
 
@@ -454,7 +462,15 @@ namespace TestRig
                         if (currentTest.testType.Contains("C#") == true)
                         {
                             //string fnameOS = "D:/Test/pad_test/f1.bin";
-                            string inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".bin";
+                            string inFile1Name;
+                            if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                            {
+                                inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".bin";
+                            }
+                            else
+                            {
+                                inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".bin";
+                            }
                             //string fnameMSIL = "D:/Test/pad_test/f2.bin";
                             //string fnameMSIL = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
                             // Adapt uses .dat file instead of converted s19
@@ -467,7 +483,15 @@ namespace TestRig
                         }
                         else
                         {
-                            string fileName = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + strippedName + @".bin"; 
+                            string fileName;
+                            if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                            {
+                                fileName = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin\" + strippedName + @".bin";
+                            }
+                            else
+                            {
+                                fileName = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + strippedName + @".bin";
+                            }
                             currentTest.testState = "Loading via fastboot to Adapt";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                             currentTest.testState = "Loading via fastboot to Adapt";
@@ -545,11 +569,18 @@ namespace TestRig
                                 currentTest.testState = "Loading TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
-                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";                                
                                 currentTest.testState = "Loading TinyCLR";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyCLR";
-                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                                {
+                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                }
+                                else
+                                {
+                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                }
                             }
 
                             currentTest.testState = "Loading managed code";
@@ -570,11 +601,18 @@ namespace TestRig
                                 currentTest.testState = "Loading TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
-                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";                                
                                 currentTest.testState = "Loading native code";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyCLR";
-                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                                if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                                {
+                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                                }
+                                else
+                                {
+                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                                }
                             }
                         }
 
@@ -1075,7 +1113,7 @@ namespace TestRig
 
                 // delete raw data file
                 Thread.Sleep(50);
-                Directory.Delete(workingDirectory + @"\" + "testTemp", true);
+                //Directory.Delete(workingDirectory + @"\" + "testTemp", true);
                 #endregion
 
                 currentTest.testState = "Test Complete";

@@ -73,6 +73,7 @@ namespace TestRig
         public static string textSolutionType;
         public string textGCCVersion;
         public static string textMFSelected;
+        public string textCodeTypeSelected;
         public static string textJTAGHarness;
         public static string textPowerAutomateSelected;
         public string textCOMPortPrimary;
@@ -265,7 +266,8 @@ namespace TestRig
         }
 
         public void StopTestTimerMethod() {
-            testTimer.Stop();
+            if (testTimer != null)
+                testTimer.Stop();
         }
 
         public void PrintErrorMethod(string message)
@@ -1103,11 +1105,28 @@ namespace TestRig
                 case 1:
                     textMFSelected = "4.3";
                     break;
+                case 2:
+                    textMFSelected = "4.3";
+                    break;
                 default:
                     textMFSelected = "4.3";
                     break;
             }
-            
+            switch (cbMFSelected.SelectedIndex)
+            {
+                case 0:
+                    textCodeTypeSelected = "Debug";
+                    break;
+                case 1:
+                    textCodeTypeSelected = "Debug";
+                    break;
+                case 2:
+                    textCodeTypeSelected = "Release";
+                    break;
+                default:
+                    textCodeTypeSelected = "Debug";
+                    break;
+            }
         }
 
         private void cbCOMPort_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1117,7 +1136,6 @@ namespace TestRig
                 // buttons have not yet been defined by InitializeComponent
                 return;
             }
-            gbSelectedInterface.Header = ((ComboBoxItem)cbInterface.SelectedItem).Content.ToString();
             if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
             {
                 COMPortSelectionPrimary = cbCOMPort.SelectedIndex;
