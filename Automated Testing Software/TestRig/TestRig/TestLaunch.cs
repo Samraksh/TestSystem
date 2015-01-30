@@ -142,11 +142,13 @@ namespace TestRig
                     {
                         testReceipt = new TestReceipt(currentTest);
                         DateTime startTime = DateTime.Now;
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.startTestTimerDelegate);
 
                         string returnReason = ExecuteTest(currentTest);
                         //string returnReason="";   // for debugging
                         //Thread.Sleep(5000);       // for debugging
 
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.stopTestTimerDelegate);
                         DateTime stopTime = DateTime.Now;
                         TimeSpan duration = stopTime - startTime;
                         testReceipt.testDuration = duration;
@@ -158,6 +160,7 @@ namespace TestRig
                             // test failed, cleaning up
                             CleanUp();
                             System.Diagnostics.Debug.WriteLine("Test FAILED because of:" + returnReason);
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.printErrorDelegate, returnReason);
                         }
 
                         testReceipt.testResult = returnReason;
@@ -190,6 +193,7 @@ namespace TestRig
                 }
                 catch (Exception ex)
                 {
+                    mainHandle.Dispatcher.BeginInvoke(mainHandle.stopTestTimerDelegate);
                     System.Diagnostics.Debug.WriteLine("Launch Thread FAIL: " + ex.Message);
                 }
             }

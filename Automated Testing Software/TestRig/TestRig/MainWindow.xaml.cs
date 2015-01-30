@@ -20,6 +20,8 @@ using System.Xml;
 using System.Net;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Windows.Threading;
+
 
 namespace TestRig
 {
@@ -43,9 +45,15 @@ namespace TestRig
         public delegate void AddTestItem(TestDescription test);
         public delegate void RemoveTestItem();
         public delegate void DisplayUpdate();
+        public delegate void StartTestTimer();
+        public delegate void StopTestTimer();
+        public delegate void PrintError(string message);
         public AddTestItem addDelegate;
         public RemoveTestItem removeDelegate;
         public DisplayUpdate updateDelegate;
+        public PrintError printErrorDelegate;
+        public StartTestTimer startTestTimerDelegate;
+        public StopTestTimer stopTestTimerDelegate;
         public string textBuildSourceryPath;
         public string textMFPath_4_0;
         public string textMFPath_4_3;
@@ -77,9 +85,14 @@ namespace TestRig
         private bool settingsInitialized = false;
         private int batchCall;
         private bool commandLineMode = false;
+        private DispatcherTimer testTimer;
+        private DateTime dateTestTimerBegin;
 
         public MainWindow()
         {
+#if DEBUG
+            System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
+#endif
             InitializeComponent();
 
             readSettings();
@@ -99,6 +112,9 @@ namespace TestRig
             addDelegate = new AddTestItem(AddTestItemMethod);
             removeDelegate = new RemoveTestItem(RemoveTestItemMethod);
             updateDelegate = new DisplayUpdate(DisplayUpdateMethod);
+            startTestTimerDelegate = new StartTestTimer(StartTestTimerMethod);
+            stopTestTimerDelegate = new StopTestTimer(StopTestTimerMethod);
+            printErrorDelegate = new PrintError(PrintErrorMethod);
 
             // sometimes openOCD is running so we will check and warn here.
             bool openOCDRunning = false;
@@ -205,10 +221,58 @@ namespace TestRig
             }
         }
 
+        private void OnTestTick(object source, EventArgs e) {
+            if (listViewStatus.Items.Count <= 0)
+                testTimer.Stop();
+
+            DateTime now = DateTime.Now;
+            TimeSpan ts = now.Subtract(dateTestTimerBegin);
+            lblTestTimer.Content = ts.ToString(@"mm\:ss");
+        }
+
+        public void AutoSizeColumns()
+        {
+            GridView gv = listViewStatus.View as GridView;
+            if (gv != null)
+            {
+                foreach (var c in gv.Columns)
+                {
+                    if (double.IsNaN(c.Width))
+                    {
+                        c.Width = c.ActualWidth;
+                    }
+                    c.Width = double.NaN;
+                }
+            }
+        }
+
         public void DisplayUpdateMethod()
         {
             listViewStatus.Items.Refresh();
+            listViewStatus.Items.Refresh();// lblStatusBar.Text = testStatus;//(listViewStatus.Items[0]);
+            AutoSizeColumns();
+            lblStatusBar.Content = ((TestDescription)listViewStatus.Items[0]).testName + " | " + ((TestDescription)listViewStatus.Items[0]).testState;
             this.InvalidateVisual();
+        }
+
+        public void StartTestTimerMethod()
+        {
+            testTimer = new DispatcherTimer();
+            testTimer.Interval = TimeSpan.FromSeconds(1);
+            testTimer.Tick += new EventHandler(OnTestTick);
+            testTimer.Start();
+            dateTestTimerBegin = DateTime.Now;
+        }
+
+        public void StopTestTimerMethod() {
+            testTimer.Stop();
+        }
+
+        public void PrintErrorMethod(string message)
+        {
+            string outError = "[" + DateTime.Now.ToString("HH:mm:ss") + "] ERROR: " + message;
+            Console.WriteLine(outError);
+            lblStatusBarError.Content = outError;
         }
 
         private void tbTestSourcePath_TextChanged(object sender, TextChangedEventArgs e)
@@ -1130,4 +1194,5 @@ namespace TestRig
             }
         }       
     }
+
 }
