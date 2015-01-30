@@ -940,23 +940,17 @@ namespace TestRig
 
         private void cbHardware_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (settingsInitialized == false) {
-                // cbMemory has not yet been defined by InitializeComponent
-                return;
-            }
             switch (cbHardware.SelectedIndex)
             {
                 case 0:
                     textHardware = "Emote v1";
                     textSolution = "STM32F10x";
                     textJTAGHarness = "Olimex";
-                    cbMemory.SelectedIndex = cbMemory.Items.IndexOf(cbMemory.FindName("FLASH"));
                     break;
                 case 1:
                     textHardware = "Emote.Now";
                     textSolution = "EmoteDotNow";
                     textJTAGHarness = "Olimex";
-                    cbMemory.SelectedIndex = cbMemory.Items.IndexOf(cbMemory.FindName("FLASH"));
                     break;
                 case 2:
                     textHardware = "Soc8200";
@@ -967,17 +961,16 @@ namespace TestRig
                     textHardware = "Adapt";
                     textSolution = "SOC_ADAPT";
                     textJTAGHarness = "fastboot";
-                    cbMemory.SelectedIndex = cbMemory.Items.IndexOf(cbMemory.FindName("RAM"));
                     break;
                 case 4:
                     textHardware = "Adapt";
                     textSolution = "SOC_ADAPT";
                     textJTAGHarness = "Lauterbach";
-                    cbMemory.SelectedIndex = cbMemory.Items.IndexOf(cbMemory.FindName("RAM"));
                     break;
                 default:
                     textHardware = "Emote v1";
                     textSolution = "STM32F10x";
+                    textJTAGHarness = "Olimex";
                     break;
             }
         }

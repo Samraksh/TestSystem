@@ -9,7 +9,7 @@ namespace TestRig
     class PwrUSBWrapper
     {
         // Main Functions
-        [DllImport("PwrUSBDll.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("PwrUSBDll.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
         public static extern int InitPowerUSB(out int mode, StringBuilder firmwareVersion);
 
         [DllImport("PwrUSBDll.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -33,7 +33,7 @@ namespace TestRig
         [DllImport("PwrUSBDll.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ReadDefaultPortStatePowerUSB(out int state1, out int state2, out int state3);
 
-        [DllImport("PwrUSBDll.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("PwrUSBDll.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
         public static extern int GetFirmwareVersionPowerUSB(StringBuilder firmwareVersion);
 
 
