@@ -30,6 +30,7 @@ namespace TestRig
         public string testJTAGHarness { get; set; }
         public string testPowerAutomateSelected { get; set; }
         public string testSupporting { get; set; }
+        public string testBuild { get; set; }
 
         // the following are set by the test parameter file
         public int testTimeout { get; set; }
@@ -45,7 +46,8 @@ namespace TestRig
         public string testAnalysis { get; set; }
         public string testAnalysisScriptName { get; set; }
         public bool testUseResultsFile { get; set; }
-        public string testResultsFileName { get; set; }    
+        public string testResultsFileName { get; set; }
+        public int testDelay { get; set; }    
 
         public TestDescription()
         {
@@ -73,6 +75,8 @@ namespace TestRig
             testUseCOM = false;
             testForceCOM = String.Empty;
             testCOMParameters = String.Empty;
+            testBuild = String.Empty;
+            testDelay = 0;
         }
 
         public TestDescription(TestDescription copy)
@@ -113,6 +117,8 @@ namespace TestRig
             this.testUseCOM = copy.testUseCOM;
             this.testForceCOM = copy.testForceCOM;
             this.testCOMParameters = copy.testCOMParameters;
+            this.testBuild = copy.testBuild;
+            this.testDelay = copy.testDelay;
         }
 
         public override string ToString()
@@ -137,6 +143,7 @@ namespace TestRig
             returnString += "\t<TestSupporting>\r\n\t" + testSupporting + "\r\n\t</TestSupporting>\r\n";
 			returnString += "\t<TestJTAGHarness>\r\n\t" + testJTAGHarness + "\r\n\t</TestJTAGHarness>\r\n";
             returnString += "\t<TestPowerAutomateSelected>\r\n\t" + testPowerAutomateSelected + "\r\n\t</TestPowerAutomateSelected>\r\n";
+            returnString += "\t<TestBuild>\r\n\t" + testBuild + "\r\n\t</TestBuild>\r\n";
             returnString += "\t<TestTimeout>\r\n\t" + testTimeout.ToString() + "\r\n\t</TestTimeout>\r\n";
             returnString += "\t<TestUseLogic>\r\n\t" + testUseLogic + "\r\n\t</TestUseLogic>\r\n";
             returnString += "\t<TestSampleTimeMs>\r\n\t" + testSampleTimeMs.ToString() + "\r\n\t</TestSampleTimeMs>\r\n";
@@ -150,7 +157,8 @@ namespace TestRig
             returnString += "\t<TestResultsFileName>\r\n\t" + testResultsFileName + "\r\n\t</TestResultsFileName>\r\n";
             returnString += "\t<TestUseCOM>\r\n\t" + testUseCOM.ToString() + "\r\n\t</TestUseCOM>\r\n";
             returnString += "\t<TestForceCOM>\r\n\t" + testForceCOM + "\r\n\t</TestForceCOM>\r\n";
-            returnString += "\t<TestCOMParameters>\r\n\t" + testCOMParameters + "\r\n\t</TestCOMParameters>\r\n";
+            returnString += "\t<TestCOMParameters>\r\n\t" + testCOMParameters + "\r\n\t</TestCOMParameters>\r\n";            
+            returnString += "\t<TestDelay>\r\n\t" + testDelay + "\r\n\t</TestDelay>\r\n";
             returnString += "</Test>\r\n";
 
             return returnString;

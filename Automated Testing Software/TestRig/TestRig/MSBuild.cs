@@ -145,7 +145,7 @@ namespace TestRig
             // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
             if (currentTest.testSolutionType == "TinyBooter")
             {
-                if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                if (mainHandle.textCodeBuildSelected.Contains("Release"))
                 {
                     if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
                     {
@@ -178,7 +178,7 @@ namespace TestRig
             }
             else
             {
-                if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                if (mainHandle.textCodeBuildSelected.Contains("Release"))
                 {
                     if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + ",flavor=release " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)                    
                     {
@@ -339,7 +339,7 @@ namespace TestRig
             // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
             if (currentTest.testSolutionType == "TinyBooter")
             {
-                if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                if (mainHandle.textCodeBuildSelected.Contains("Release"))
                 {
                     if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
                     {
@@ -360,7 +360,7 @@ namespace TestRig
                         System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
                 }
             }
-            if (mainHandle.textCodeTypeSelected.Contains("Release"))
+            if (mainHandle.textCodeBuildSelected.Contains("Release"))
             {
                 if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + ",flavor=release  /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 1500000) != CommandStatus.Done)
                 {

@@ -182,6 +182,8 @@ namespace TestRig
                 readTest.testJTAGHarness = String.Empty;
             if (reader.ReadToFollowing("TestPowerAutomateSelected") == true)
                 readTest.testPowerAutomateSelected = strip(reader.ReadElementContentAsString());
+            if (reader.ReadToFollowing("TestBuild") == true)
+                readTest.testBuild = strip(reader.ReadElementContentAsString());
 
             readTest.testReadComplete = true;
             return readTest;

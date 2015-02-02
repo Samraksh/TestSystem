@@ -413,7 +413,7 @@ namespace TestRig
                         System.Diagnostics.Debug.WriteLine("Executing ADAPT JTAG test for:  " + currentTest.testName);
 
                         string fnameOS;
-                        if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                        if (mainHandle.textCodeBuildSelected.Contains("Release"))
                         {
                             fnameOS = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".axf";
                         }
@@ -463,7 +463,7 @@ namespace TestRig
                         {
                             //string fnameOS = "D:/Test/pad_test/f1.bin";
                             string inFile1Name;
-                            if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                            if (mainHandle.textCodeBuildSelected.Contains("Release"))
                             {
                                 inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".bin";
                             }
@@ -484,7 +484,7 @@ namespace TestRig
                         else
                         {
                             string fileName;
-                            if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                            if (mainHandle.textCodeBuildSelected.Contains("Release"))
                             {
                                 fileName = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin\" + strippedName + @".bin";
                             }
@@ -573,7 +573,7 @@ namespace TestRig
                                 currentTest.testState = "Loading TinyCLR";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyCLR";
-                                if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                                if (mainHandle.textCodeBuildSelected.Contains("Release"))
                                 {
                                     if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                                 }
@@ -605,7 +605,7 @@ namespace TestRig
                                 currentTest.testState = "Loading native code";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyCLR";
-                                if (mainHandle.textCodeTypeSelected.Contains("Release"))
+                                if (mainHandle.textCodeBuildSelected.Contains("Release"))
                                 {
                                     if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
                                 }
@@ -634,6 +634,11 @@ namespace TestRig
                 #endregion
 
                 #region Getting ready to run test
+                if (currentTest.testDelay != 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("Delaying test by " + currentTest.testDelay.ToString() + " ms");
+                    Thread.Sleep(currentTest.testDelay);
+                }
                 if (currentTest.testType.Contains("C#") == true)
                 {
                     // There are five seconds of debug messages with C# but not native which will cause us to stop hearing data from the COM port
@@ -735,6 +740,7 @@ namespace TestRig
                     while (line != null)
                     {
                         System.Diagnostics.Debug.WriteLine("Running script line: " + line);
+                        line = line.Trim();
                         parsedLine = line.Split(' ');
                         if (line.StartsWith("#"))
                         {

@@ -73,7 +73,7 @@ namespace TestRig
         public static string textSolutionType;
         public string textGCCVersion;
         public static string textMFSelected;
-        public string textCodeTypeSelected;
+        public string textCodeBuildSelected;
         public static string textJTAGHarness;
         public static string textPowerAutomateSelected;
         public string textCOMPortPrimary;
@@ -495,6 +495,8 @@ namespace TestRig
                             readTest.testJTAGHarness = textJTAGHarness;
                         if (readTest.testPowerAutomateSelected == String.Empty)
                             readTest.testPowerAutomateSelected = textPowerAutomateSelected;
+                        if (readTest.testBuild == String.Empty)
+                            readTest.testBuild = textCodeBuildSelected;
                         writer.Write(readTest.ToString());
                     }
                 }
@@ -580,6 +582,8 @@ namespace TestRig
                 tempTask.testJTAGHarness = textJTAGHarness;
             if (tempTask.testPowerAutomateSelected == String.Empty)
                 tempTask.testPowerAutomateSelected = textPowerAutomateSelected;
+            if (tempTask.testBuild == String.Empty)
+                tempTask.testBuild = textCodeBuildSelected;
             if (tempTask.testSupporting != String.Empty)
             {
                 // queueing up support files
@@ -1115,16 +1119,16 @@ namespace TestRig
             switch (cbMFSelected.SelectedIndex)
             {
                 case 0:
-                    textCodeTypeSelected = "Debug";
+                    textCodeBuildSelected = "Debug";
                     break;
                 case 1:
-                    textCodeTypeSelected = "Debug";
+                    textCodeBuildSelected = "Debug";
                     break;
                 case 2:
-                    textCodeTypeSelected = "Release";
+                    textCodeBuildSelected = "Release";
                     break;
                 default:
-                    textCodeTypeSelected = "Debug";
+                    textCodeBuildSelected = "Debug";
                     break;
             }
         }
