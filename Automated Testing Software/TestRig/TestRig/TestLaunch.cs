@@ -39,6 +39,8 @@ namespace TestRig
         private bool debugDoNotBuild = false;
         private bool debugDoNotProgram = false;
         private string workingDirectory = null;
+        private bool cleanBuildNeeded = true;
+        private bool debugAlwaysCleanBuild = false;
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
@@ -302,6 +304,7 @@ namespace TestRig
                 }
                 else if (currentTest.testGitOption.Equals("Use archive code"))
                 {
+                    cleanBuildNeeded = true;
                     git = new Git(mainHandle);
                     if (git == null) return "Git failed to load";
                     System.Diagnostics.Debug.WriteLine("Checking out archived code.");
@@ -310,6 +313,7 @@ namespace TestRig
                 }
                 else if (currentTest.testGitOption.Equals("Use archive branch code"))
                 {
+                    cleanBuildNeeded = true;
                     git = new Git(mainHandle);
                     if (git == null) return "Git failed to load";
                     System.Diagnostics.Debug.WriteLine("Checking out branch <" + currentTest.testGitBranch + "> of archived code.");
@@ -321,6 +325,8 @@ namespace TestRig
                 #endregion
                 
                 #region Building code
+                if (debugAlwaysCleanBuild) cleanBuildNeeded = true;
+
                 System.Diagnostics.Debug.WriteLine("Building code");
                 msbuild = new MSBuild(mainHandle, currentTest.testMFVersionNum);
                 if (msbuild == null) return "MSBuild failed to load";
@@ -340,16 +346,16 @@ namespace TestRig
                                 currentTest.testState = "Building TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
-                                if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
+                                if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build TinyBooter";
                             }
                             currentTest.testState = "Building TinyCLR";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                             currentTest.testSolutionType = "TinyCLR";
-                            if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyCLR";
+                            if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build TinyCLR";
                         }
                         currentTest.testState = "Building managed code";
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                        if (msbuild.BuildManagedProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build managed project";
+                        if (msbuild.BuildManagedProject(workingDirectory, currentTest.buildProj, currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build managed project";
                     }
                     else
                     {
@@ -364,16 +370,16 @@ namespace TestRig
                                 currentTest.testState = "Building TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
-                                if (msbuild.BuildTinyCLR(currentTest) == false) return "MSBuild failed to build TinyBooter";
+                                if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build TinyBooter";
                             }
                             currentTest.testState = "Building native code";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                             currentTest.testSolutionType = "TinyCLR";
-                            if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build native project";
+                            if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build native project";
                         }
                     }
                 }
-
+                cleanBuildNeeded = false;
                 msbuild.Kill();
                 #endregion       
                 

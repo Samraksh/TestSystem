@@ -116,7 +116,7 @@ namespace TestRig
             return true;
         }
 
-        public bool BuildTinyCLR(TestDescription currentTest)
+        public bool BuildTinyCLR(TestDescription currentTest, bool cleanBuildNeeded)
         {
             StreamReader sr;
             String line;
@@ -145,28 +145,30 @@ namespace TestRig
             // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
             if (currentTest.testSolutionType == "TinyBooter")
             {
-                if (mainHandle.textCodeBuildSelected.Contains("Release"))
+                if (cleanBuildNeeded)
                 {
-                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                    if (mainHandle.textCodeBuildSelected.Contains("Release"))
                     {
-                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                        return false;
+                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                        {
+                            System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                            return false;
+                        }
+                        else
+                            System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
                     }
                     else
-                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-                }
-                else
-                {
-                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
                     {
-                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                        return false;
+                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                        {
+                            System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                            return false;
+                        }
+                        else
+                            System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
                     }
-                    else
-                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-                }
+                }                
 
-                
 
                 if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
                 {
@@ -296,7 +298,7 @@ namespace TestRig
         }
 
 
-        public bool BuildNativeProject(string path, string project, TestDescription currentTest)
+        public bool BuildNativeProject(string path, string project, TestDescription currentTest, bool cleanBuildNeeded)
         {
             switch (currentTest.testSolution)
             {
@@ -339,25 +341,28 @@ namespace TestRig
             // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
             if (currentTest.testSolutionType == "TinyBooter")
             {
-                if (mainHandle.textCodeBuildSelected.Contains("Release"))
+                if (cleanBuildNeeded)
                 {
-                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
+                    if (mainHandle.textCodeBuildSelected.Contains("Release"))
                     {
-                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                        return false;
+                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
+                        {
+                            System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                            return false;
+                        }
+                        else
+                            System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
                     }
                     else
-                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-                }
-                else
-                {
-                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
                     {
-                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                        return false;
+                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
+                        {
+                            System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                            return false;
+                        }
+                        else
+                            System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
                     }
-                    else
-                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
                 }
             }
             if (mainHandle.textCodeBuildSelected.Contains("Release"))
@@ -383,7 +388,7 @@ namespace TestRig
             return true;
         }
 
-        public bool BuildManagedProject(string path, string project, TestDescription currentTest)
+        public bool BuildManagedProject(string path, string project, TestDescription currentTest, bool cleanBuildNeeded)
         {
             switch (currentTest.testSolution)
             {
@@ -427,13 +432,16 @@ namespace TestRig
                     break;
             }
             ChangeDirectories(path);
-            if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+            if (cleanBuildNeeded)
             {
-                System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                return false;
+                if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                {
+                    System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                    return false;
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
             }
-            else
-                System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
             // msbuild /t:build /p:memory=" + currentTest.testMemoryType + @" (default) (/p:memory=RAM)
             if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
             {

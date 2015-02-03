@@ -303,7 +303,14 @@ namespace TestRig
                     else if (rxString.Contains("accuracy"))
                     {
                         index = rxString.IndexOf('=') + 1;
-                        testResults.testAccuracy = double.Parse(rxString.Substring(index, rxString.Length - index));
+                        try
+                        {
+                            testResults.testAccuracy = double.Parse(rxString.Substring(index, rxString.Length - index));
+                        }
+                        catch (Exception ex)
+                        {
+                            testResults.testAccuracy = 0;
+                        }
                         System.Diagnostics.Debug.WriteLine("matched accuracy");
                         gotResponseA = true;
                     }
