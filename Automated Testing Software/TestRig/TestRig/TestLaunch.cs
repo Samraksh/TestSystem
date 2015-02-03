@@ -159,7 +159,7 @@ namespace TestRig
                         {
                             // test failed, cleaning up                            
                             System.Diagnostics.Debug.WriteLine("Test FAILED because of:" + returnReason);
-                            mainHandle.Dispatcher.BeginInvoke(mainHandle.printErrorDelegate, returnReason);
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.printErrorDelegate, currentTest.testName + " " + returnReason);
                         }
                         CleanUp();
 

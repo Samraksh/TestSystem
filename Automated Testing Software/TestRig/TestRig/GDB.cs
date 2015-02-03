@@ -112,8 +112,10 @@ namespace TestRig
             try
             {
                 RunCommand("quit");
+                if (GDBProcess != null) {
+                    GDBProcess.Kill();
+                }
                 System.Diagnostics.Debug.WriteLine("GDBProcess killed.");
-                GDBProcess.Kill();
                 GDBProcess = null;
             }
             catch (Exception ex)

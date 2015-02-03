@@ -82,7 +82,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <TextBox Background="#FFF0F0F0" Height="23" HorizontalAlignment="Left" Margin="0,10,0,0" Name="tbNameFilter" Text="" VerticalAlignment="Top" Width="120" TextChanged="tbFilter_TextChanged" Grid.Column="0"/>
-                            <TextBox Background="#FFF0F0F0" Height="23" HorizontalAlignment="Left" Margin="5,10,0,0" Name="tbTypeFilter" Text="" VerticalAlignment="Top" Width="95" TextChanged="tbFilter_TextChanged" Grid.Column="1"/>
+                            <TextBox Background="#FFF0F0F0" Height="23" HorizontalAlignment="Left" Margin="5,10,0,0" Name="tbTypeFilter" Text=".NOW" VerticalAlignment="Top" Width="95" TextChanged="tbFilter_TextChanged" Grid.Column="1"/>
                             <TextBox Background="#FFF0F0F0" Height="23" HorizontalAlignment="Left" Margin="5,10,0,0" Name="tbPathFilter" Text="" VerticalAlignment="Top" Width="245" TextChanged="tbFilter_TextChanged" Grid.Column="2"/>
                             <TextBox Background="#FFF0F0F0" Height="23" HorizontalAlignment="Left" Margin="5,10,35,0" Name="tbDescFilter" Text="" VerticalAlignment="Top" Width="245" TextChanged="tbFilter_TextChanged" Grid.Column="3"/>
                         </Grid>
@@ -96,11 +96,11 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <CheckBox Content="All" HorizontalAlignment="Right" Margin="10,0,0,0" Name="selectTests" VerticalAlignment="Center" Checked="selectTests_Checked" Unchecked="selectTests_Checked" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"/>
-                        <Button Content="Create Batch" Height="23" Margin="0,0,0,0" Name="btnBatch" VerticalAlignment="Center" Width="83" Click="btnBatch_Click" Grid.Row="0" Grid.Column="1"/>
-                        <Button Content="Upload Tests" Height="22" Margin="8,0,8,6" Name="Upload" VerticalAlignment="Bottom" Click="Upload_Click" Width="83" Grid.Row="1" Grid.Column="1" />
+                        <CheckBox Content="All" HorizontalAlignment="Right" Margin="10,0,0,0" Name="selectTests" VerticalAlignment="Center" Checked="selectTests_Checked" Unchecked="selectTests_Checked" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" ToolTip="choose all tests that match filters"/>
+                        <Button Content="Create Batch" Height="23" Margin="0,0,0,0" Name="btnBatch" VerticalAlignment="Center" Width="83" Click="btnBatch_Click" Grid.Row="0" Grid.Column="1" ToolTip="Create Batch script to execute tests from Windows Command Prompt"/>
+                        <Button Content="Upload Tests" Height="22" Margin="8,0,8,6" Name="Upload" VerticalAlignment="Bottom" Click="Upload_Click" Width="83" Grid.Row="1" Grid.Column="1" ToolTip="Upload Tests to testing server queue" />
                     </Grid>
-                    <GroupBox Header="Options" HorizontalAlignment="Stretch" VerticalAlignment="Top" Name="gbTestOptions" Grid.Row="2" Grid.ColumnSpan="2">
+                    <GroupBox Header="Options" HorizontalAlignment="Stretch" VerticalAlignment="Top" Name="gbTestOptions" Grid.Row="2" Grid.ColumnSpan="2" ToolTip="Options for flavor of eMote software.">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -117,7 +117,7 @@
                             <Label Content="Hardware Solution:" HorizontalAlignment="Left" Margin="10,10,0,0" Name="label1" VerticalAlignment="Top" Grid.Row="0" Grid.Column="0"/>
                             <ComboBox Height="23" HorizontalAlignment="Left" Margin="10,10,0,0" Name="cbHardware" SelectedIndex="0" VerticalAlignment="Top" Width="189" SelectionChanged="cbHardware_SelectionChanged" Grid.Row="0" Grid.Column="1">
                                 <ComboBoxItem Content="Emote v1 - JTAG" />
-                                <ComboBoxItem Content="Emote.Now - JTAG" />
+                                <ComboBoxItem Content="Emote.Now - JTAG" IsSelected="True" />
                                 <ComboBoxItem Content="Soc8200 - JTAG" />
                                 <ComboBoxItem Content="Adapt - fastboot" IsEnabled="True" />
                                 <ComboBoxItem Content="Adapt - JTAG"/>
@@ -132,13 +132,13 @@
                             <ComboBox Height="23" HorizontalAlignment="Left" Margin="10,0,0,0" Name="cbGCCVersion" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbGCCVersion_SelectionChanged"  Grid.Row="2" Grid.Column="1" >
                                 <ComboBoxItem Content="GCC4.2" />
                                 <ComboBoxItem Content="GCC4.4.1" />
-                                <ComboBoxItem Content="GCC4.7.3" />
+                                <ComboBoxItem Content="GCC4.7.3" IsSelected="True" />
                             </ComboBox>
 
                             <Label Content="MF Version:" Height="28" HorizontalAlignment="Left" Margin="10,10,0,0" Name="label11" VerticalAlignment="Top" Grid.Row="0" Grid.Column="2" />
                             <ComboBox Height="23" HorizontalAlignment="Left" Margin="10,10,0,0" Name="cbMFSelected" SelectedIndex="0" VerticalAlignment="Top" Width="164" SelectionChanged="cbMFSelected_SelectionChanged" Grid.Row="0" Grid.Column="3">
                                 <ComboBoxItem Content="4.0 - Debug" />
-                                <ComboBoxItem Content="4.3 - Debug" IsEnabled="True" />
+                                <ComboBoxItem Content="4.3 - Debug" IsEnabled="True" IsSelected="True" />
                                 <ComboBoxItem Content="4.3 - Release" />
                             </ComboBox>
                             <Label Content="Location:" Height="28" HorizontalAlignment="Left" Margin="10,0,0,0" Name="lblLocation" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" />
@@ -202,7 +202,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <ComboBox Height="23" HorizontalAlignment="Left" Margin="10,10,0,0" Name="cbInterface" VerticalAlignment="Top" Width="87" SelectionChanged="cbInterface_SelectionChanged" Grid.Row="0">
+                            <ComboBox Height="23" HorizontalAlignment="Left" Margin="10,10,0,0" Name="cbInterface" VerticalAlignment="Top" Width="87" SelectionChanged="cbInterface_SelectionChanged" Grid.Row="0" ToolTip="Primary device instrumented for analysis (required)">
                                 <ComboBoxItem Content="Primary" IsSelected="True" />
                                 <ComboBoxItem Content="Support 1" IsSelected="False" />
                             </ComboBox>
@@ -219,7 +219,7 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <Label Content="USB-Serial COM Port" Height="23" HorizontalAlignment="Right" Name="label12" VerticalAlignment="Top" Width="123" Margin="0,10,0,0" Grid.ColumnSpan="2" />
+                                    <Label Content="USB-USART Standard COM Port" Height="23" HorizontalAlignment="Right" Name="label12" VerticalAlignment="Top" Width="Auto" Margin="0,10,0,0" Grid.ColumnSpan="2" ToolTip="See Device Manager -&gt; Ports -&gt; Silicon Labs Dual CP210x USB to UART Bridge: Standard COM Port" />
                                     <ComboBox Height="23" HorizontalAlignment="Left" Margin="0,10,0,0" Name="cbCOMPort" VerticalAlignment="Top" Width="86" SelectedIndex="0" SelectionChanged="cbCOMPort_SelectionChanged" Grid.Column="2"  Grid.Row="0">
                                         <ComboBoxItem Content="COM 1" />
                                         <ComboBoxItem Content="COM 2" />
@@ -327,7 +327,7 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Content="OpenOCD" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,10,0,0"/>
+                                        <Label Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Content="OpenOCD" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,10,0,0" ToolTip="OCD for eMote (not ADAPT)"/>
                                         <Separator Grid.Column="1" Grid.Row="0" Grid.RowSpan="1" VerticalAlignment="Center" Margin="0,10,0,0"  Width="69" RenderTransformOrigin="0.5,0.5">
                                             <Separator.RenderTransform>
                                                 <TransformGroup>
@@ -343,9 +343,9 @@
                                     <Label Content="Exe" Margin="0,10,0,0" Name="lblOCDExe" Width="54" Grid.Row="1" Grid.Column="1"/>
                                     <Label Content="Interface" Name="lblOCDInterface" Width="62" Grid.Row="2" Grid.Column="1" Margin="8,0,0,0" />
                                     <Label Content="Target" Height="23" Name="lblOCDTarget" Width="54" Grid.Row="3" Grid.Column="1" />
-                                    <TextBox Height="23" HorizontalAlignment="Stretch" Margin="0,10,10,0" Name="tbOCDExe" Text="" VerticalAlignment="Center" TextChanged="tbOCDExe_TextChanged" Grid.Row="1" Grid.Column="2"/>
-                                    <TextBox Height="23" HorizontalAlignment="Stretch" Margin="0,0,10,0" Name="tbOCDInterface" Text="" VerticalAlignment="Center" TextChanged="tbOCDInterface_TextChanged" Grid.Row="2" Grid.Column="2" />
-                                    <TextBox Height="23" HorizontalAlignment="Stretch" Margin="0,0,10,0" Name="tbOCDTarget" Text="" VerticalAlignment="Center" TextChanged="tbOCDTarget_TextChanged" Grid.Row="3" Grid.Column="2" />
+                                    <TextBox Height="23" HorizontalAlignment="Stretch" Margin="0,10,10,0" Name="tbOCDExe" Text="" VerticalAlignment="Center" TextChanged="tbOCDExe_TextChanged" Grid.Row="1" Grid.Column="2" ToolTip="OpenOCD server executable"/>
+                                    <TextBox Height="23" HorizontalAlignment="Stretch" Margin="0,0,10,0" Name="tbOCDInterface" Text="" VerticalAlignment="Center" TextChanged="tbOCDInterface_TextChanged" Grid.Row="2" Grid.Column="2" ToolTip="JTAG model; remember to install Olimex drivers!" />
+                                    <TextBox Height="23" HorizontalAlignment="Stretch" Margin="0,0,10,0" Name="tbOCDTarget" Text="" VerticalAlignment="Center" TextChanged="tbOCDTarget_TextChanged" Grid.Row="3" Grid.Column="2" ToolTip="Microcontroller config; should match Test Selection -&gt; Hardware Solution" />
                                 </Grid>
                             </GroupBox>
 
@@ -362,10 +362,10 @@
                                 <RowDefinition />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <Label Content="CodeSourcery Path" Height="Auto" HorizontalAlignment="Left" Margin="10,10,0,0" Name="lblBuildSourceryPath" VerticalAlignment="Top" Grid.ColumnSpan="2" />
-                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="tbBuildSourceryPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="tbBuildSourceryPath_TextChanged" Grid.Column="1" Grid.ColumnSpan="2" />
+                            <Label Content="CodeSourcery Path" Height="Auto" HorizontalAlignment="Left" Margin="10,10,0,0" Name="lblBuildSourceryPath" VerticalAlignment="Top" Grid.ColumnSpan="2" ToolTip="parent folder of compiler." />
+                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="tbBuildSourceryPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="tbBuildSourceryPath_TextChanged" Grid.Column="1" Grid.ColumnSpan="2" ToolTip="Compiler path should match Test Selection -&gt; Compiler Version" />
                             <Label Content="MF Installation Path" HorizontalAlignment="Left" Margin="10,10,0,0" Name="lblMFPath" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"/>
-                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,0,0" Name="tbMFPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="tbMFPath_TextChanged" Grid.Column="1" Grid.Row="1" />
+                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,0,0" Name="tbMFPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="tbMFPath_TextChanged" Grid.Column="1" Grid.Row="1" ToolTip="Porting Kit folder (MF repository)" />
                             <ComboBox Height="23" HorizontalAlignment="Right" Margin="10,10,10,10" Name="cbMFVersionPath" VerticalAlignment="Top" Width="Auto" SelectionChanged="cbMFVersionPath_SelectionChanged" Grid.Column="2" Grid.Row="1">
                                 <ComboBoxItem Content="MF 4.0" />
                                 <ComboBoxItem Content="MF 4.3" IsSelected="True" />
@@ -384,24 +384,24 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Label Content="Git Path" HorizontalAlignment="Left" Margin="10,10,0,0" Name="lblGitPath" VerticalAlignment="Top" Grid.Column="0" Grid.Row="0" />
-                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="tbGitPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="tbGitPath_TextChanged" Grid.Column="1" Grid.Row="0" />
+                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="tbGitPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="tbGitPath_TextChanged" Grid.Column="1" Grid.Row="0" ToolTip="Git version control system executable" />
                             <Label Content="Test Source Path" HorizontalAlignment="Left" Margin="10,10,0,0" Name="lblTestSourcePath" VerticalAlignment="Top" Width="Auto" Grid.Column="0" Grid.Row="1"/>
-                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="tbTestSourcePath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="tbTestSourcePath_TextChanged" Grid.Column="1" Grid.Row="1" />
+                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="tbTestSourcePath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="tbTestSourcePath_TextChanged" Grid.Column="1" Grid.Row="1" ToolTip="TestSuite repository path" />
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="Test Receipt" HorizontalAlignment="Stretch" Margin="10,10,10,10" Name="groupBox5" VerticalAlignment="Top" Grid.Row="3" >
+                    <GroupBox Header="Output" HorizontalAlignment="Stretch" Margin="10,10,10,10" Name="groupBox5" VerticalAlignment="Top" Grid.Row="3" >
                         <Grid >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Label Content="Test Receipt Path" Height="Auto" HorizontalAlignment="Left" Margin="10,10,10,10" Name="label2" VerticalAlignment="Top" Width="Auto" Grid.Column="0" />
-                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="tbTestReceiptPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Column="1" TextChanged="tbTestReceiptPath_TextChanged" />
+                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="tbTestReceiptPath" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Column="1" TextChanged="tbTestReceiptPath_TextChanged" ToolTip="output location of high-level XML summaries" />
                         </Grid>
                     </GroupBox>
 
-                    <CheckBox Content="Automate power cycle during code loading" Height="23" HorizontalAlignment="Left" Margin="10,10,10,10" Name="cbPowerAutomate" VerticalAlignment="Center" Unchecked="cbPowerAutomate_Unchecked" Checked="cbPowerAutomate_Checked" Grid.Row="4" />
+                    <CheckBox Content="Automate power cycle during code loading" Height="23" HorizontalAlignment="Left" Margin="10,10,10,10" Name="cbPowerAutomate" VerticalAlignment="Center" Unchecked="cbPowerAutomate_Unchecked" Checked="cbPowerAutomate_Checked" Grid.Row="4" ToolTip="support accessory external USB hub with power control" />
 
 
                 </Grid>

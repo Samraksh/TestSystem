@@ -157,6 +157,9 @@ namespace TestRig
                     commandLineMode = true;
                     uploadOneBatch(arguments[1]);
                 }
+                string strloaded = "Found " + testNum + " tests";
+                lblStatusBar.Content = strloaded;
+                System.Diagnostics.Debug.WriteLine(strloaded);
             }
             catch (Exception ex)
             {
@@ -268,6 +271,13 @@ namespace TestRig
         public void StopTestTimerMethod() {
             if (testTimer != null)
                 testTimer.Stop();
+        }
+
+        public void ClearStatusBar()
+        {
+            lblStatusBar.Content = "";
+            lblTestTimer.Content = "";
+            lblStatusBarError.Content = "";
         }
 
         public void PrintErrorMethod(string message)
