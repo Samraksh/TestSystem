@@ -17,6 +17,8 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.IO;
 using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using System.Net;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
@@ -81,8 +83,11 @@ namespace TestRig
         public int COMPortSelectionPrimary;
         public int COMPortSelectionSecondary1;
         public static TestDescription[] availableTests;
+        public static TestResults[] availableTestResults;
         private static Tasks _tasks;
+        private static TestResultss _results;
         private static int testNum;
+        private static int resultNum;
         private bool settingsInitialized = false;
         private int batchCall;
         private bool commandLineMode = false;
@@ -146,9 +151,12 @@ namespace TestRig
 
                 // Get a reference to the tasks collection.
                 _tasks = (Tasks)this.Resources["tasks"];
+                _results = (TestResultss)this.Resources["results"];
 
                 // read Test XML file to discover which tests are available to test
                 activateTests(activateTestsOptions.parseTestFile);
+
+                activateResults();
 
                 string[] arguments = Environment.GetCommandLineArgs();
                 System.Diagnostics.Debug.WriteLine("Command line: " + string.Join(" ", arguments.Select(v => v.ToString())));
@@ -254,7 +262,7 @@ namespace TestRig
         {
             listViewStatus.Items.Refresh();
             listViewStatus.Items.Refresh();// lblStatusBar.Text = testStatus;//(listViewStatus.Items[0]);
-            AutoSizeColumns();
+            //AutoSizeColumns();
             lblStatusBar.Content = ((TestDescription)listViewStatus.Items[0]).testName + " | " + ((TestDescription)listViewStatus.Items[0]).testState;
             this.InvalidateVisual();
         }
@@ -322,6 +330,43 @@ namespace TestRig
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("Activate XML reading ended with exception: " + ex.Message);
+            }
+        }
+
+        private void activateResults()
+        {
+            try
+            {
+                if (_results == null)
+                    return;
+                _results.Clear();
+                resultNum = 1;
+                availableTestResults = new TestResults[1000];
+                System.IO.DirectoryInfo xmlReceiptPath = new System.IO.DirectoryInfo(tbTestReceiptPath.Text);
+                WalkDirectoryForResults(xmlReceiptPath);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("ActivateResults XML reading ended with exception: " + ex.Message);
+            }
+        }
+
+        private static void WalkDirectoryForResults(System.IO.DirectoryInfo root) {
+            System.IO.FileInfo[] files = null;
+            try {
+                files = root.GetFiles("*_receipt.xml");
+            }
+            catch (UnauthorizedAccessException e) {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+            catch (System.IO.DirectoryNotFoundException e) {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+
+            if (files != null) {
+                foreach (System.IO.FileInfo fi in files) {
+                    AddResult(fi);
+                }
             }
         }
 
@@ -421,6 +466,22 @@ namespace TestRig
             }
         }
 
+        private static void AddResult(System.IO.FileInfo fi)
+        {
+            try {
+                XmlSerializer serializer = new XmlSerializer(typeof(TestResults));
+                Stream reader = new FileStream(fi.FullName, FileMode.Open);
+                TestResults result = (TestResults)serializer.Deserialize(reader);
+
+            availableTestResults[resultNum - 1] = result;
+            _results.Add(result);
+            resultNum++;
+            }
+            catch (Exception e) {
+                Console.WriteLine(e.Message + " " + fi.FullName);
+            }
+        }
+
         private static void AddTests(System.IO.FileInfo fi){
             StreamReader testReader = new StreamReader(fi.FullName);
             try
@@ -432,7 +493,7 @@ namespace TestRig
                 // Create an XmlReader
                 using (XmlReader reader = XmlReader.Create(testReader))
                 {
-                    System.Diagnostics.Debug.WriteLine("Starting to read available test XML test file.");
+                    System.Diagnostics.Debug.WriteLine("AddTests: Starting to read available test XML test file.");
                     while (reader != null)
                     {
                         // read in each defined test within the configuration file and activate the appropriate checkbox
@@ -473,7 +534,7 @@ namespace TestRig
                 // Create an XmlReader
                 using (XmlReader reader = XmlReader.Create(testReader))
                 {
-                    System.Diagnostics.Debug.WriteLine("Starting to read available test XML test file.");
+                    System.Diagnostics.Debug.WriteLine("QueueSupportTest: Starting to read available test XML test file.");
                     while (reader != null)
                     {
                         // read in each defined test within the configuration file and activate the appropriate checkbox
@@ -682,7 +743,19 @@ namespace TestRig
 
         private void tbTestReceiptPath_TextChanged(object sender, TextChangedEventArgs e)
         {
-            textTestReceiptPath = tbTestReceiptPath.Text;
+            if (Directory.Exists(tbTestSourcePath.Text) == true) {
+                // if test source path changed then we will automatically enable/diable test options
+                activateResults();
+
+                // this string is used because other threads are not allowed to access the text box directly
+                textTestReceiptPath = tbTestReceiptPath.Text;
+            }
+            else {
+                if (_results == null)
+                    return;
+                _results.Clear();
+                resultNum = 1;
+            }
         }
 
         private void tbOCDInterface_TextChanged(object sender, TextChangedEventArgs e)
@@ -1002,6 +1075,18 @@ namespace TestRig
 
         private void testDataGrid_AutoGeneratedColumns(object sender, EventArgs e)
         {
+            testDataGrid.Columns[0].Visibility = Visibility.Hidden;
+            testDataGrid.Columns[1].Width = 125;
+            testDataGrid.Columns[2].Width = 100;
+            testDataGrid.Columns[3].Width = 250;
+            testDataGrid.Columns[4].Width = 345;
+            testDataGrid.Columns[1].IsReadOnly = true;
+            testDataGrid.Columns[2].IsReadOnly = true;
+            testDataGrid.Columns[3].IsReadOnly = true;
+            testDataGrid.Columns[4].IsReadOnly = true;
+        }
+
+        private void resultDataGrid_AutoGeneratedColumns(object sender, EventArgs e) {
             testDataGrid.Columns[0].Visibility = Visibility.Hidden;
             testDataGrid.Columns[1].Width = 125;
             testDataGrid.Columns[2].Width = 100;
