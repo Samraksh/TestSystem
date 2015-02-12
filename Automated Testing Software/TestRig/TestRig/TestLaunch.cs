@@ -426,7 +426,7 @@ namespace TestRig
                     UpdateNativeProjectFile(MFPath, currentTest, workingDirectory, mainHandle.textTestSourcePath);   
                 }
                 #endregion
-                return "just mod proj files";
+
                 #region Building code
                 if (debugAlwaysCleanBuild) cleanBuildNeeded = true;
 
