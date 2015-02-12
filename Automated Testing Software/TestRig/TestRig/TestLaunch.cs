@@ -261,6 +261,99 @@ namespace TestRig
             return true;
         }
 
+        public bool CopyNativeFiles(string MFPath, TestDescription currentTest, string workingDirectory, string testSuitePath)
+        {
+            if (currentTest.testSolution.Equals("SOC_ADAPT"))
+            {
+                // Adapt scatterfile copy
+                try
+                {
+                    File.Copy(Path.Combine(testSuitePath, @"Template\Template\Adapt_scatterfile_tools_gcc.xml"), Path.Combine(workingDirectory, "scatterfile_tools_gcc.xml"), true);
+                }
+                catch (IOException copyError)
+                {
+                    System.Diagnostics.Debug.WriteLine("CopyNativeFiles scatterfile exception thrown: " + copyError.ToString());
+                    return false;
+                }
+            }
+            else
+            {
+                // .NOW scatterfile copy
+                try
+                {
+                    File.Copy(Path.Combine(testSuitePath, @"Template\Template\.NOW_scatterfile_tools_gcc.xml"), Path.Combine(workingDirectory, "scatterfile_tools_gcc.xml"), true);
+                }
+                catch (IOException copyError)
+                {
+                    System.Diagnostics.Debug.WriteLine("CopyNativeFiles scatterfile exception thrown: " + copyError.ToString());
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public bool UpdateNativeProjectFile(string MFPath, TestDescription currentTest, string workingDirectory, string testSuitePath)
+        {           
+            try
+            {
+                StreamReader readerProj = new StreamReader(MFPath + @"\Solutions\" + currentTest.testSolution + @"\TinyCLR\TinyCLR.proj");
+
+                // searching for the first "Import Project" string and ignoring everything before it.
+                string readStringProj = readerProj.ReadLine();
+                while (readStringProj.Contains("#TestSystem") == false)
+                {
+                    readStringProj = readerProj.ReadLine();
+                }
+                if (readStringProj == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Failed to find solution project file search string: #TestSystem");
+                    return false;
+                }
+                // copying test's native project to a temporary file. New project file will be the old native project file up to first "Import Project" and the TinyCLR.proj file from the first "Import Project" on
+                File.Copy(workingDirectory + @"\" + currentTest.buildProj, workingDirectory + @"\temp.proj", true);
+
+                // copying old native test project header to new native test project file up to the first Import Project
+                StreamReader readerTempProj = new StreamReader(workingDirectory + @"\temp.proj");
+                StreamWriter writerProj = new StreamWriter(workingDirectory + @"\" + currentTest.buildProj);
+                string readStringTempProj = readerTempProj.ReadLine();
+                while (readStringTempProj.Contains("#TestSystem") == false)
+                {
+                    writerProj.WriteLine(readStringTempProj);
+                    readStringTempProj = readerTempProj.ReadLine();                    
+                }
+
+                if (readStringTempProj == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Failed to find test project file search string: Import Project");
+                    readerProj.Close();
+                    readerTempProj.Close();
+                    writerProj.Close();
+                    File.Copy(workingDirectory + @"\temp.proj", workingDirectory + @"\" + currentTest.buildProj, true);
+                    File.Delete(workingDirectory + @"\temp.proj");
+                    return false;
+                }
+
+                // copying the rest of TinyCLR.proj to new native test project file
+                while (readStringProj != null)
+                {
+                    writerProj.WriteLine(readStringProj);
+                    readStringProj = readerProj.ReadLine();
+                }
+                readerProj.Close();
+                readerTempProj.Close();
+                writerProj.Close();
+                File.Delete(workingDirectory + @"\temp.proj");
+            }
+            catch (IOException copyError)
+            {
+                System.Diagnostics.Debug.WriteLine("UpdateNativeProjectFile exception thrown: " + copyError.ToString());
+                File.Copy(workingDirectory + @"\temp.proj", workingDirectory + @"\" + currentTest.buildProj, true);
+                File.Delete(workingDirectory + @"\temp.proj");
+                return false;
+            }
+            return true;
+        }
+
         private string ExecuteTest(TestDescription currentTest)
         {
             try
@@ -320,10 +413,20 @@ namespace TestRig
                     if (git.CloneCodeBranch(currentTest.testGitBranch) == false) return "Git failed to clone branch: " + currentTest.testGitBranch;
                     git.Kill(); 
                 }
+                #endregion
+
+                #region Copying needed files for build
                 // Dlls might have changed
                 if (CopyDllsFiles(MFPath) == false) return "DLL copy error";
+
+                // if this is a Native project we copy over the appropriate project file information and scatterfile
+                if ((currentTest.testType.Contains("Native") == true) || (currentTest.testType.Contains("native") == true))
+                {
+                    CopyNativeFiles(MFPath, currentTest, workingDirectory, mainHandle.textTestSourcePath);
+                    UpdateNativeProjectFile(MFPath, currentTest, workingDirectory, mainHandle.textTestSourcePath);   
+                }
                 #endregion
-                
+                return "just mod proj files";
                 #region Building code
                 if (debugAlwaysCleanBuild) cleanBuildNeeded = true;
 
