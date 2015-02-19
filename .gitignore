@@ -10,3 +10,9 @@ server/SamServer.dll
 Automated Testing Software/TestRig/TestRig/bin/*
 Automated Testing Software/TestRig/TestRig/obj/*
 !*.gitkeep
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
