@@ -250,11 +250,14 @@
                         </GroupBox>
                         <Button Content="Archive Selected Results" IsEnabled="False" Grid.Column="1" Width="Auto" HorizontalAlignment="Right"/>
                     </Grid>
-                    <!-- TODO: Need System.Windows.Controls.DataVisualization.Charting -->
-                    <!--
-                    <charting:Chart x:Name="plotResults" Width="Stretch">
-                    </charting:Chart>
-                    -->
+                    <Grid Grid.Row="2">
+                        <Label Content="Warning: This view is not implemented. The Results data view and list does not automatically refresh (yet).  Newly completed tests appear only after restarting the application." />
+                        <!-- TODO: Need System.Windows.Controls.DataVisualization.Charting -->
+                        <!--
+                        <charting:Chart x:Name="plotResults" Width="Stretch">
+                        </charting:Chart>
+                        -->
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Log" Name="tabLog">
