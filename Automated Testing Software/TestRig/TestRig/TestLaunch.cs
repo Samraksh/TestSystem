@@ -751,8 +751,8 @@ namespace TestRig
                 if (currentTest.testType.Contains("C#") == true)
                 {
                     // There are five seconds of debug messages with C# but not native which will cause us to stop hearing data from the COM port
-                    System.Diagnostics.Debug.WriteLine("Waiting 5 seconds for DUT to startup and flush serial buffer");
-                    Thread.Sleep(8000);
+                    System.Diagnostics.Debug.WriteLine("Waiting 2 seconds for DUT to startup and flush serial buffer");
+                    Thread.Sleep(2000);
                 }
                 if (currentTest.testUseCOM == true)
                 {
