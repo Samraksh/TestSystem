@@ -298,7 +298,7 @@ namespace TestRig
         }
 
 
-        public bool BuildNativeProject(string path, string project, TestDescription currentTest, bool cleanBuildNeeded)
+        public bool BuildNativeProject(string path, string project, TestDescription currentTest)
         {
             switch (currentTest.testSolution)
             {
@@ -340,30 +340,27 @@ namespace TestRig
 
             // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
             if (currentTest.testSolutionType == "TinyBooter")
-            {
-                if (cleanBuildNeeded)
+            {                
+                if (mainHandle.textCodeBuildSelected.Contains("Release"))
                 {
-                    if (mainHandle.textCodeBuildSelected.Contains("Release"))
+                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
                     {
-                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
-                        {
-                            System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                            return false;
-                        }
-                        else
-                            System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                        return false;
                     }
                     else
-                    {
-                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
-                        {
-                            System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                            return false;
-                        }
-                        else
-                            System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-                    }
+                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
                 }
+                else
+                {
+                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
+                }                
             }
             if (mainHandle.textCodeBuildSelected.Contains("Release"))
             {

@@ -478,7 +478,7 @@ namespace TestRig
                             currentTest.testState = "Building native code";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                             currentTest.testSolutionType = "TinyCLR";
-                            if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build native project";
+                            if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build native project";
                         }
                     }
                 }
