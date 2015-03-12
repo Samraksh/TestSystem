@@ -124,18 +124,27 @@ namespace TestRig
 
             // sometimes openOCD is running so we will check and warn here.
             bool openOCDRunning = false;
+            bool logicRunning = false;
             foreach (Process clsProcess in Process.GetProcesses())
             {
                 if (clsProcess.ProcessName.Contains("openoc"))
                     openOCDRunning = true;
+                if (clsProcess.ProcessName.Contains("Logic"))
+                    logicRunning = true;
             }
 
-            if (openOCDRunning == false)
-                Initialize();
-            else
-            {
+            if (openOCDRunning == true){
                 MessageBox.Show("OpenOCD is already running.\r\nStop the OpenOCD process and try again.");
                 Environment.Exit(0);
+            }
+            else if (logicRunning == true)
+            {
+                MessageBox.Show("Logic analyzer is already running.\r\nStop the analyzer process and try again.");
+                Environment.Exit(0);
+            }
+            else
+            {
+                Initialize();
             }            
         }
 
@@ -704,6 +713,7 @@ namespace TestRig
 
         private void Upload_Click(object sender, RoutedEventArgs e)
         {
+            ClearStatusBar();
             // clearing variable keeping track of batch calls (in case of endless loop)
             batchCall = 0;
 
