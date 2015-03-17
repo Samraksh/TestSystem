@@ -952,7 +952,7 @@ namespace TestRig
                                     randomNumber = random.Next(lowerBound, upperBound);
                                     COM[currentOpenCOMInstance].Send(randomNumber.ToString() + "\r\n");
                                     // we have to throttle sending data for now or the eMote COM receive breaks
-									Thread.Sleep(10);
+									//Thread.Sleep(10);
                                 }
                             }
                             else if (parsedLine[1].Contains("file"))

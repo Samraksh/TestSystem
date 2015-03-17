@@ -134,18 +134,17 @@ namespace TestRig
             }
 
             if (openOCDRunning == true){
-                MessageBox.Show("OpenOCD is already running.\r\nStop the OpenOCD process and try again.");
-                Environment.Exit(0);
+                MessageBox.Show("OpenOCD is already running.\r\nThe test system will not be able to program.");
+                //Environment.Exit(0);
             }
             else if (logicRunning == true)
             {
-                MessageBox.Show("Logic analyzer is already running.\r\nStop the analyzer process and try again.");
-                Environment.Exit(0);
+                MessageBox.Show("Logic analyzer is already running.\r\nTests will fail unless analyzer program is closed.");
+                //Environment.Exit(0);
             }
-            else
-            {
-                Initialize();
-            }            
+          
+            Initialize();
+                      
         }
 
         public void Initialize()
