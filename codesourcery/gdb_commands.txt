@@ -212,6 +212,17 @@ load
 monitor flash write_image D:\\Work\\TestSuite\\Timer\\Src\\C#\\user_timer_one\\bin\\Release\\VT_one_Conv.s19
 end
 
+define program_userTimerR
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.7\\le\\FLASH\\release\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Timer\\Src\\C#\\user_timer_one\\bin\\Release\\VT_one_Conv.s19
+end
+
 define program_radioR
 set remotetimeout 10000
 monitor reset halt
