@@ -167,16 +167,28 @@ namespace TestRig
                         else
                             System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
                     }
-                }                
+                }
 
-
-                if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+                if (mainHandle.textCodeBuildSelected.Contains("Release"))
                 {
-                    System.Diagnostics.Debug.WriteLine("MSBuild failed to build TinyBooter.");
-                    return false;
+                    if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + ",flavor=release " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to build release TinyBooter.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild project built release TinyBooter.");
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine("MSBuild project built TinyBooter.");
+                {
+                    if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to build debug TinyBooter.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild project built debug TinyBooter.");
+                }
             }
             else
             {
