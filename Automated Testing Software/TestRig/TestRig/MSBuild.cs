@@ -192,6 +192,29 @@ namespace TestRig
             }
             else
             {
+                if (cleanBuildNeeded)
+                {
+                    if (mainHandle.textCodeBuildSelected.Contains("Release"))
+                    {
+                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                        {
+                            System.Diagnostics.Debug.WriteLine("release build failed to clean.");
+                            return false;
+                        }
+                        else
+                            System.Diagnostics.Debug.WriteLine("release build project cleaned.");
+                    }
+                    else
+                    {
+                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                        {
+                            System.Diagnostics.Debug.WriteLine("release build failed to clean.");
+                            return false;
+                        }
+                        else
+                            System.Diagnostics.Debug.WriteLine("release build project cleaned.");
+                    }
+                }
                 if (mainHandle.textCodeBuildSelected.Contains("Release"))
                 {
                     if (RunCommand(@"msbuild /t:build /p:memory=" + currentTest.testMemoryType + ",flavor=release " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)                    

@@ -493,12 +493,21 @@ namespace TestRig
                                 currentTest.testState = "Building TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
-                                if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build TinyBooter";
+                                if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) {return "MSBuild failed to build TinyBooter";}
+                                if (File.Exists(workingDirectory + @"\TinyBooter.axf")) { File.Delete(workingDirectory + @"\TinyBooter.axf"); }
+                                File.Move(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\TinyBooter.axf");
                             }
                             currentTest.testState = "Building TinyCLR";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                             currentTest.testSolutionType = "TinyCLR";
                             if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build TinyCLR";
+                            try
+                            {
+                                File.Move(workingDirectory + @"\TinyBooter.axf", MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\TinyBooter.axf");
+                            }
+                            catch (Exception ex)
+                            {
+                            }
                         }
                         currentTest.testState = "Building managed code";
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
