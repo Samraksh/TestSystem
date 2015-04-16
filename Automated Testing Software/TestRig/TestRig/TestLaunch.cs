@@ -40,7 +40,7 @@ namespace TestRig
         private bool debugDoNotProgram = false;
         private string workingDirectory = null;
         private bool cleanBuildNeeded = true;
-        private bool debugAlwaysCleanBuild = false;
+        private bool debugAlwaysCleanBuild = true;
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
