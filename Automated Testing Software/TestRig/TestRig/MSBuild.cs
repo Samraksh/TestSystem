@@ -373,30 +373,27 @@ namespace TestRig
             }
             ChangeDirectories(path);
 
-            // we only clean TinyBooter, not TinyCLR (it would clean TinyBooter also)
-            if (currentTest.testSolutionType == "TinyBooter")
-            {                
-                if (mainHandle.textCodeBuildSelected.Contains("Release"))
+            if (mainHandle.textCodeBuildSelected.Contains("Release"))
+            {
+                if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release  /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 1500000) != CommandStatus.Done)
                 {
-                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
-                    {
-                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                        return false;
-                    }
-                    else
-                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
+                    System.Diagnostics.Debug.WriteLine("native release build failed to clean.");
+                    return false;
                 }
                 else
-                {
-                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 200000) != CommandStatus.Done)
-                    {
-                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                        return false;
-                    }
-                    else
-                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
-                }                
+                    System.Diagnostics.Debug.WriteLine("native release build project cleaned.");
             }
+            else
+            {
+                if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 1500000) != CommandStatus.Done)
+                {
+                    System.Diagnostics.Debug.WriteLine("native build failed to clean.");
+                    return false;
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("native build project cleaned.");
+            }
+            
             if (mainHandle.textCodeBuildSelected.Contains("Release"))
             {
                 if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + ",flavor=release  /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 1500000) != CommandStatus.Done)

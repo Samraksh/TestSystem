@@ -209,7 +209,7 @@ monitor stm32f1x mass_erase 1
 monitor reset halt
 file D:\\Work\\DotNet-MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.7\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
 load
-monitor flash write_image D:\\Work\\TestSuite\\Timer\\Src\\C#\\user_timer_one\\bin\\Release\\VT_one_Conv.s19
+monitor flash write_image D:\\Work\\TestSuite\\Timer\\Src\\C#\\user_timer_one\\bin\\Release\\user_timer_one_Conv.s19
 end
 
 define program_userTimerR
