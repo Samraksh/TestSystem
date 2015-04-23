@@ -584,14 +584,9 @@ namespace TestRig
                         System.Diagnostics.Debug.WriteLine("Executing ADAPT JTAG test for:  " + currentTest.testName);
 
                         string fnameOS;
-                        if (mainHandle.textCodeBuildSelected.Contains("Release"))
-                        {
-                            fnameOS = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".axf";
-                        }
-                        else
-                        {
-                            fnameOS = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".axf";
-                        }
+                        
+                        fnameOS = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".axf";
+                        
                         // Lauterbach can use s19.
                         string fnameMSIL = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
 
@@ -634,14 +629,9 @@ namespace TestRig
                         {
                             //string fnameOS = "D:/Test/pad_test/f1.bin";
                             string inFile1Name;
-                            if (mainHandle.textCodeBuildSelected.Contains("Release"))
-                            {
-                                inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".bin";
-                            }
-                            else
-                            {
-                                inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".bin";
-                            }
+                            
+                            inFile1Name = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + @".bin";
+                            
                             //string fnameMSIL = "D:/Test/pad_test/f2.bin";
                             //string fnameMSIL = workingDirectory + @"\" + buildOutput + strippedName + "_Conv.s19";
                             // Adapt uses .dat file instead of converted s19
@@ -655,14 +645,9 @@ namespace TestRig
                         else
                         {
                             string fileName;
-                            if (mainHandle.textCodeBuildSelected.Contains("Release"))
-                            {
-                                fileName = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\release\" + currentTest.testSolution + @"\bin\" + strippedName + @".bin";
-                            }
-                            else
-                            {
-                                fileName = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\debug\" + currentTest.testSolution + @"\bin\" + strippedName + @".bin";
-                            }
+                            
+                            fileName = MFPath + @"\" + @"BuildOutput\ARM\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + strippedName + @".bin";
+                            
                             currentTest.testState = "Loading via fastboot to Adapt";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                             currentTest.testState = "Loading via fastboot to Adapt";
