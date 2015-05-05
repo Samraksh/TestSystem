@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Management;
 using System.Diagnostics;
 using System.Threading;
 using System.Linq;
@@ -51,7 +52,7 @@ namespace TestRig
             MSBuildInfo.UseShellExecute = false;
             MSBuildInfo.RedirectStandardOutput = true;
             MSBuildInfo.RedirectStandardError = true;
-            MSBuildInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            sMSBuildInfo.WindowStyle = ProcessWindowStyle.Hidden;
             MSBuildInfo.FileName = @"cmd.exe";
 
             MSBuildProcess.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
@@ -505,12 +506,35 @@ namespace TestRig
             try
             {
                 System.Diagnostics.Debug.WriteLine("MSBuildProcess killed.");
-                MSBuildProcess.Kill();
-                MSBuildProcess = null;
+                KillProcessAndChildren(MSBuildProcess.Id);
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuildProcess already killed. Can't kill again: " + ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Kill a process, and all of its children, grandchildren, etc.
+        /// </summary>
+        /// <param name="pid">Process ID.</param>
+        private static void KillProcessAndChildren(int pid)
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher
+              ("Select * From Win32_Process Where ParentProcessID=" + pid);
+            ManagementObjectCollection moc = searcher.Get();
+            foreach (ManagementObject mo in moc)
+            {
+                KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
+            }
+            try
+            {
+                Process proc = Process.GetProcessById(pid);
+                proc.Kill();
+            }
+            catch (ArgumentException)
+            {
+                // Process already exited.
             }
         }
 
