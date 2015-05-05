@@ -166,8 +166,7 @@ namespace TestRig
             try
             {
                 System.Diagnostics.Debug.WriteLine("GitProcess killed.");
-                GitProcess.Kill();
-                GitProcess = null;
+                Utility.KillProcessAndChildren(GitProcess.Id);
             }
             catch (Exception ex)
             {

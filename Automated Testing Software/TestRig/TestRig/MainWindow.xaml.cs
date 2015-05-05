@@ -1331,7 +1331,6 @@ namespace TestRig
         private void btnAbortTests_Click(object sender, RoutedEventArgs e)
         {
             testLaunch.AbortTests();
-            ClearStatusBar();
         }       
     }
 

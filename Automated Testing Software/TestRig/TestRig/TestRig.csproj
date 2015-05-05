@@ -158,6 +158,7 @@
     <Compile Include="TestLaunch.cs" />
     <Compile Include="TestReceipt.cs" />
     <Compile Include="TestResults.cs" />
+    <Compile Include="Utility.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

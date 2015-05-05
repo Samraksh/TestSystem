@@ -82,9 +82,19 @@ namespace TestRig
             sessionResult = new StreamWriter(mainHandle.textTestReceiptPath + @"\" + fullFileName);
 
             // starting thread to launch any locally queued up tests
+            RestartLaunchThread();
+        }
+
+        private void RestartLaunchThread()
+        {
+            if (LaunchThread != null)
+            {
+                LaunchThread.Abort();
+            }
+            
             LaunchThread = new Thread(new ThreadStart(LaunchThreadFunction));
             LaunchThread.Start();
-            LaunchThread.Name = "Launch Test Thread";            
+            LaunchThread.Name = "Launch Test Thread";   
         }
 
         private void CleanUp()
@@ -109,8 +119,8 @@ namespace TestRig
         {
             testCollectionLaunch.Clear();
             CleanUp();
+            RestartLaunchThread();
             mainHandle.Dispatcher.BeginInvoke(mainHandle.clearDelegate);
-            if (LaunchThread.IsAlive) LaunchThread.Abort();  
         }
 
         public void KillLaunchThread()
@@ -200,12 +210,6 @@ namespace TestRig
                         // The test is over so we will pull it from the "Test Status" tab display
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.removeDelegate);
                     }                
-                }
-                catch (ThreadAbortException e)
-                {
-                    System.Diagnostics.Debug.WriteLine("Thread abort request caught");
-                    CleanUp();
-                    Thread.ResetAbort();
                 }
                 catch (Exception ex)
                 {
