@@ -52,7 +52,7 @@ namespace TestRig
             MSBuildInfo.UseShellExecute = false;
             MSBuildInfo.RedirectStandardOutput = true;
             MSBuildInfo.RedirectStandardError = true;
-            sMSBuildInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            MSBuildInfo.WindowStyle = ProcessWindowStyle.Hidden;
             MSBuildInfo.FileName = @"cmd.exe";
 
             MSBuildProcess.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
