@@ -105,6 +105,14 @@ namespace TestRig
             if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
         }
 
+        public void AbortTests()
+        {
+            testCollectionLaunch.Clear();
+            CleanUp();
+            mainHandle.Dispatcher.BeginInvoke(mainHandle.clearDelegate);
+            if (LaunchThread.IsAlive) LaunchThread.Abort();  
+        }
+
         public void KillLaunchThread()
         {
             // used when the program is quiting
@@ -192,6 +200,12 @@ namespace TestRig
                         // The test is over so we will pull it from the "Test Status" tab display
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.removeDelegate);
                     }                
+                }
+                catch (ThreadAbortException e)
+                {
+                    System.Diagnostics.Debug.WriteLine("Thread abort request caught");
+                    CleanUp();
+                    Thread.ResetAbort();
                 }
                 catch (Exception ex)
                 {
@@ -475,6 +489,11 @@ namespace TestRig
                 if (debugAlwaysCleanBuild) cleanBuildNeeded = true;
 
                 System.Diagnostics.Debug.WriteLine("Building code");
+                if (msbuild != null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Found existing msbuild process, killing it.");
+                    msbuild.Kill();
+                }
                 msbuild = new MSBuild(mainHandle, currentTest.testMFVersionNum);
                 if (msbuild == null) return "MSBuild failed to load";
 
@@ -546,6 +565,7 @@ namespace TestRig
                 }
                 cleanBuildNeeded = false;
                 msbuild.Kill();
+                msbuild = null;
                 #endregion       
                 
                 #region Reading parameters

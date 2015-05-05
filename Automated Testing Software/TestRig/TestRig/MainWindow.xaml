@@ -188,7 +188,7 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button x:Name="btnAbortTests" Content="Abort Tests" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100"/>
+                    <Button x:Name="btnAbortTests" Content="Abort Tests" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="btnAbortTests_Click" Width="100"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Results" Name="tabReview">

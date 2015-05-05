@@ -46,12 +46,14 @@ namespace TestRig
         static Mutex testCollectionMutex;
         public delegate void AddTestItem(TestDescription test);
         public delegate void RemoveTestItem();
+        public delegate void ClearTestItems();
         public delegate void DisplayUpdate();
         public delegate void StartTestTimer();
         public delegate void StopTestTimer();
         public delegate void PrintError(string message);
         public AddTestItem addDelegate;
         public RemoveTestItem removeDelegate;
+        public ClearTestItems clearDelegate;
         public DisplayUpdate updateDelegate;
         public PrintError printErrorDelegate;
         public StartTestTimer startTestTimerDelegate;
@@ -117,6 +119,7 @@ namespace TestRig
             // these delegates are used by other threads to update _displayTestCollection
             addDelegate = new AddTestItem(AddTestItemMethod);
             removeDelegate = new RemoveTestItem(RemoveTestItemMethod);
+            clearDelegate = new ClearTestItems(ClearTestItemsMethod);
             updateDelegate = new DisplayUpdate(DisplayUpdateMethod);
             startTestTimerDelegate = new StartTestTimer(StartTestTimerMethod);
             stopTestTimerDelegate = new StopTestTimer(StopTestTimerMethod);
@@ -239,6 +242,11 @@ namespace TestRig
                 closingTasks();
                 Environment.Exit(0);
             }
+        }
+
+        public void ClearTestItemsMethod()
+        {
+            _displayTestCollection.Clear();
         }
 
         private void OnTestTick(object source, EventArgs e) {
@@ -1318,6 +1326,12 @@ namespace TestRig
                 }
                 activateTests(activateTestsOptions.parseTestFile);
             }
+        }
+
+        private void btnAbortTests_Click(object sender, RoutedEventArgs e)
+        {
+            testLaunch.AbortTests();
+            ClearStatusBar();
         }       
     }
 
