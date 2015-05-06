@@ -50,12 +50,14 @@ namespace TestRig
         public delegate void StartTestTimer();
         public delegate void StopTestTimer();
         public delegate void PrintError(string message);
+        public delegate void AddTestResult(TestReceipt testReceipt);
         public AddTestItem addDelegate;
         public RemoveTestItem removeDelegate;
         public DisplayUpdate updateDelegate;
         public PrintError printErrorDelegate;
         public StartTestTimer startTestTimerDelegate;
         public StopTestTimer stopTestTimerDelegate;
+        public AddTestResult addTestResultDelegate;
         public string textBuildSourceryPath;
         public string textMFPath_4_0;
         public string textMFPath_4_3;
@@ -121,6 +123,7 @@ namespace TestRig
             startTestTimerDelegate = new StartTestTimer(StartTestTimerMethod);
             stopTestTimerDelegate = new StopTestTimer(StopTestTimerMethod);
             printErrorDelegate = new PrintError(PrintErrorMethod);
+            addTestResultDelegate = new AddTestResult(AddResult);
 
             // sometimes openOCD is running so we will check and warn here.
             bool openOCDRunning = false;
@@ -487,6 +490,19 @@ namespace TestRig
             }
             catch (Exception e) {
                 Console.WriteLine(e.Message + " " + fi.FullName);
+            }
+        }
+
+        private static void AddResult(TestReceipt rt)
+        {
+            using (Stream reader = new MemoryStream(Encoding.UTF8.GetBytes(rt.ToString())))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(TestResults));
+                TestResults result = (TestResults)serializer.Deserialize(reader);
+
+                availableTestResults[resultNum - 1] = result;
+                _results.Add(result);
+                resultNum++;
             }
         }
 
