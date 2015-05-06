@@ -23,6 +23,7 @@ using System.Net;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Threading;
+using System.Globalization;
 
 
 namespace TestRig
@@ -1349,5 +1350,22 @@ namespace TestRig
             testLaunch.AbortTests();
         }       
     }
+    class TestPassToColorConverter : IValueConverter
+    {
 
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            System.Diagnostics.Debug.WriteLine(value);
+            if (value is string && (string)value != "True")
+            {
+                return Brushes.Red;
+            }
+            return Brushes.Black;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
