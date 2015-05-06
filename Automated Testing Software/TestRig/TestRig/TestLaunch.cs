@@ -208,6 +208,7 @@ namespace TestRig
                         }
 
                         // The test is over so we will pull it from the "Test Status" tab display
+                        mainHandle.Dispatcher.BeginInvoke(mainHandle.addTestResultDelegate, testReceipt);
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.removeDelegate);
                     }                
                 }
