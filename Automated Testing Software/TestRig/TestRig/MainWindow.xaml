@@ -26,7 +26,7 @@
         <local:TestResultss x:Key="results" />
         <CollectionViewSource x:Key="cvsResults" Source = "{StaticResource results}" Filter = "CollectionViewSource_Filter" >
             <CollectionViewSource.SortDescriptions >
-                <scm:SortDescription PropertyName= "Name" />
+                <scm:SortDescription PropertyName= "TestDateTime" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
         <Style x:Key="collapsedHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
@@ -212,8 +212,7 @@
                         </DataGrid.GroupStyle>
                         <DataGrid.RowStyle>
                             <Style TargetType = "DataGridRow" >
-                                <Setter Property = "Foreground" Value = "Black" />
-                                <Setter Property = "Background" Value = "White" />
+                                <Setter Property="Background" Value="White"/>
                             </Style>
                         </DataGrid.RowStyle>
                     </DataGrid>
