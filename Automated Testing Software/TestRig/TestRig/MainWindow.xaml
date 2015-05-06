@@ -10,6 +10,7 @@
         </Style>
         <local:CompleteConverter x:Key = "completeConverter" />
         <local:Tasks x:Key = "tasks" />
+        <local:TestPassToColorConverter x:Key="TestPassToColorConverter" />
         <CollectionViewSource x:Key = "cvsTasks" Source = "{StaticResource tasks}" Filter = "CollectionViewSource_Filter" >
             <CollectionViewSource.SortDescriptions >
                 <!-- Requires 'xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"' declaration. -->
@@ -214,6 +215,7 @@
                         </DataGrid.GroupStyle>
                         <DataGrid.RowStyle>
                             <Style TargetType = "DataGridRow" >
+                                <Setter Property = "Foreground" Value="{Binding Path=TestPass, Converter={StaticResource TestPassToColorConverter}}" />
                                 <Setter Property="Background" Value="White"/>
                             </Style>
                         </DataGrid.RowStyle>
@@ -253,7 +255,6 @@
                         <Button Content="Archive Selected Results" IsEnabled="False" Grid.Column="1" Width="Auto" HorizontalAlignment="Right"/>
                     </Grid>
                     <Grid Grid.Row="2">
-                        <Label Content="Warning: This view is not implemented. The Results data view and list does not automatically refresh (yet).  Newly completed tests appear only after restarting the application." />
                         <!-- TODO: Need System.Windows.Controls.DataVisualization.Charting -->
                         <!--
                         <charting:Chart x:Name="plotResults" Width="Stretch">
