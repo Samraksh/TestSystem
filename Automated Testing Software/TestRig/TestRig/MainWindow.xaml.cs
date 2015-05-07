@@ -1329,7 +1329,10 @@ namespace TestRig
         {
             TestResults t = e.Item as TestResults;
             if (t != null)
-                if ((t.TestResult.Contains(tbResultsFilter.Text) == true))
+                if (t.TestResult.Contains(tbResultsFilter.Text) == true ||
+                    t.TestDescription[0].Description.Contains(tbResultsFilter.Text) == true ||
+                    t.TestDescription[0].TestPath.Contains(tbResultsFilter.Text) == true
+                    )
                     e.Accepted = true;
                 else
                     e.Accepted = false;
