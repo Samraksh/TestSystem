@@ -25,7 +25,7 @@
             </CollectionViewSource.GroupDescriptions>
         </CollectionViewSource>
         <local:TestResultss x:Key="results" />
-        <CollectionViewSource x:Key="cvsResults" Source = "{StaticResource results}" Filter = "CollectionViewSource_Filter" >
+        <CollectionViewSource x:Key="cvsResults" Source = "{StaticResource results}" Filter = "CollectionViewResults_Filter" >
             <CollectionViewSource.SortDescriptions >
                 <scm:SortDescription PropertyName= "TestDateTime" />
             </CollectionViewSource.SortDescriptions>
@@ -227,7 +227,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <GroupBox Header="Filter" Grid.Column="0">
-                            <TextBox x:Name="tbResultsFilter"></TextBox>
+                            <TextBox x:Name="tbResultsFilter" TextChanged="tbResultsFilter_TextChanged"></TextBox>
                         </GroupBox>
                     </Grid>
                     <Grid Grid.Row="2">

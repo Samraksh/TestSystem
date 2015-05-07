@@ -1349,6 +1349,24 @@ namespace TestRig
         {
             testLaunch.AbortTests();
         }       
+        }
+
+        private void CollectionViewResults_Filter(object sender, FilterEventArgs e)
+        {
+            TestResults t = e.Item as TestResults;
+            if (t != null)
+                if ((t.TestResult.Contains(tbResultsFilter.Text) == true))
+                    e.Accepted = true;
+                else
+                    e.Accepted = false;
+
+        }
+
+        private void tbResultsFilter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CollectionViewSource.GetDefaultView(resultDataGrid.ItemsSource).Refresh();
+        }
+    
     }
     class TestPassToColorConverter : IValueConverter
     {
