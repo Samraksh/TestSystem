@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:TestRig"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-        Title="Samraksh Testing System" Height="702" MinHeight ="670" Width="957" MinWidth="921" Closing="OnClosing" Icon="/TestRig;component/weblogo.ico" Background="#FFD4D0C8">
+        Title="Samraksh Testing System" Height="731" MinHeight ="731" Width="958" MinWidth="921" Closing="OnClosing" Icon="/TestRig;component/weblogo.ico" Background="#FFD4D0C8">
     <Window.Resources>
         <Style TargetType="{x:Type DataGridCell}">
             <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown" />
@@ -272,13 +272,14 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
 
-                    <GroupBox Header="Hardware Interface" Height="Auto" HorizontalAlignment="Stretch" Margin="10,10,10,10" Name="groupBox1" VerticalAlignment="Stretch" Grid.Row="0">
+                    <GroupBox Header="Hardware Interface" Height="Auto" HorizontalAlignment="Stretch" Margin="10,5" Name="groupBox1" VerticalAlignment="Stretch" Grid.Row="0">
                         <Grid Height="Auto">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -288,7 +289,7 @@
                                 <ComboBoxItem Content="Primary" IsSelected="True" />
                                 <ComboBoxItem Content="Support 1" IsSelected="False" />
                             </ComboBox>
-                            <GroupBox Header="Primary" Grid.Row="1" Margin="10,10,10,10" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="gbSelectedInterface">
+                            <GroupBox Header="Primary" Grid.Row="1" Margin="10,5" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="gbSelectedInterface">
                                 <Grid Height="Auto" Margin="0,0,10,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="127"/>
@@ -433,7 +434,7 @@
 
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Build Environment" Height="Auto" HorizontalAlignment="Stretch" Margin="10,10,10,10" Name="gbBuildEnvironment" VerticalAlignment="Top" Grid.Row="1">
+                    <GroupBox Header="Build Environment" Height="Auto" HorizontalAlignment="Stretch" Margin="10,5" Name="gbBuildEnvironment" VerticalAlignment="Top" Grid.Row="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -455,7 +456,7 @@
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="Test Tool Paths" Height="97" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="groupBox3" VerticalAlignment="Top" Grid.Row="2">
+                    <GroupBox Header="Test Tool Paths" Height="97" HorizontalAlignment="Stretch" Margin="10,5" Name="groupBox3" VerticalAlignment="Top" Grid.Row="2">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -472,7 +473,7 @@
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="Output" HorizontalAlignment="Stretch" Margin="10,10,10,10" Name="groupBox5" VerticalAlignment="Top" Grid.Row="3" >
+                    <GroupBox Header="Output" HorizontalAlignment="Stretch" Margin="10,5" Name="groupBox5" VerticalAlignment="Top" Grid.Row="3" >
                         <Grid >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -483,8 +484,17 @@
                         </Grid>
                     </GroupBox>
 
-                    <CheckBox Content="Automate power cycle during code loading" Height="23" HorizontalAlignment="Left" Margin="10,10,10,10" Name="cbPowerAutomate" VerticalAlignment="Center" Unchecked="cbPowerAutomate_Unchecked" Checked="cbPowerAutomate_Checked" Grid.Row="4" ToolTip="support accessory external USB hub with power control" />
-
+                    <CheckBox Content="Automate power cycle during code loading" Height="23" HorizontalAlignment="Left" Margin="10,5" Name="cbPowerAutomate" VerticalAlignment="Center" Unchecked="cbPowerAutomate_Unchecked" Checked="cbPowerAutomate_Checked" Grid.Row="4" ToolTip="support accessory external USB hub with power control" />
+                    <GroupBox Header="Email Notification" HorizontalAlignment="Stretch" Margin="10,0,10,5" Name="groupBox6" VerticalAlignment="Top" Grid.Row="5" >
+                        <Grid >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label Content="Recipients" Height="Auto" HorizontalAlignment="Left" Margin="10,10,10,10" VerticalAlignment="Top" Width="Auto" Grid.Column="0" />
+                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="tbNotifyReceipts" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Column="1" ToolTip="receipts of the email notifications" />
+                        </Grid>
+                    </GroupBox>
 
                 </Grid>
             </TabItem>
