@@ -253,7 +253,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("smtpout.secureserver.net")]
         public string NotifyHost {
             get {
                 return ((string)(this["NotifyHost"]));
@@ -265,7 +265,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("testrig-noreply@samraksh.com")]
         public string NotifySender {
             get {
                 return ((string)(this["NotifySender"]));
@@ -277,7 +277,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("N2!Erbxs")]
         public string NotifyPassword {
             get {
                 return ((string)(this["NotifyPassword"]));
@@ -296,6 +296,18 @@ namespace TestRig.Properties {
             }
             set {
                 this["NotifyReceipts"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("testrig-noreply@samraksh.com")]
+        public string NotifyUser {
+            get {
+                return ((string)(this["NotifyUser"]));
+            }
+            set {
+                this["NotifyUser"] = value;
             }
         }
     }
