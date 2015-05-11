@@ -60,16 +60,19 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="NotifyHost" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">smtpout.secureserver.net</Value>
     </Setting>
     <Setting Name="NotifySender" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">testrig-noreply@samraksh.com</Value>
     </Setting>
     <Setting Name="NotifyPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">N2!Erbxs</Value>
     </Setting>
     <Setting Name="NotifyReceipts" Type="System.String" Scope="User">
       <Value Profile="(Default)">tony.zhu@samraksh.com</Value>
+    </Setting>
+    <Setting Name="NotifyUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)">testrig-noreply@samraksh.com</Value>
     </Setting>
   </Settings>
 </SettingsFile>
