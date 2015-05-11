@@ -59,5 +59,17 @@
     <Setting Name="PowerCycleAutomated" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="NotifyHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="NotifySender" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="NotifyPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="NotifyReceipts" Type="System.String" Scope="User">
+      <Value Profile="(Default)">tony.zhu@samraksh.com</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
