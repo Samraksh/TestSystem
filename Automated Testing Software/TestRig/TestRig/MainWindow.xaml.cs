@@ -940,6 +940,8 @@ namespace TestRig
                 else
                     textPowerAutomateSelected = false.ToString();
 
+                tbNotifyReceipts.Text = Properties.Settings.Default.NotifyReceipts;
+
                 settingsInitialized = true;
             }
             catch (Exception ex)
@@ -972,6 +974,7 @@ namespace TestRig
                 Properties.Settings.Default["GVSelection"] = cbGCCVersion.SelectedIndex;
                 Properties.Settings.Default["MFSelection"] = cbMFSelected.SelectedIndex;
                 Properties.Settings.Default["PowerCycleAutomated"] = cbPowerAutomate.IsChecked;
+                Properties.Settings.Default["NotifyReceipts"] = tbNotifyReceipts.Text;
                 
                 Properties.Settings.Default.Save();
             }
