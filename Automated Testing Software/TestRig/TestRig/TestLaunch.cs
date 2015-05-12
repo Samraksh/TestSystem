@@ -30,6 +30,7 @@ namespace TestRig
         private TestReceipt testReceipt;
         public Fastboot fastboot;
         private StreamWriter sessionResult;
+        private Notifier notifier;
         private int sessionTestTotal;
         private int sessionTestComplete;
         private int sessionTestPass;
@@ -80,6 +81,14 @@ namespace TestRig
                 num++;
             }
             sessionResult = new StreamWriter(mainHandle.textTestReceiptPath + @"\" + fullFileName);
+
+            notifier = new Notifier(
+                Properties.Settings.Default.NotifyHost,
+                Properties.Settings.Default.NotifyUser,
+                Properties.Settings.Default.NotifyPassword,
+                Properties.Settings.Default.NotifySender,
+                mainHandle.tbNotifyReceipts.Text
+                );
 
             // starting thread to launch any locally queued up tests
             LaunchThread = new Thread(new ThreadStart(LaunchThreadFunction));
@@ -181,6 +190,7 @@ namespace TestRig
                             }
                             else
                             {
+                                notifier.SendReceipt(testReceipt);
                                 System.Diagnostics.Debug.WriteLine("*********************** FAIL ****************************");
                             }
                             if (testReceipt.testComplete == true)
