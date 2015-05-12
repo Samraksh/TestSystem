@@ -148,6 +148,7 @@
     <Compile Include="LogicAnalyzer.cs" />
     <Compile Include="Matlab.cs" />
     <Compile Include="MSBuild.cs" />
+    <Compile Include="Notifier.cs" />
     <Compile Include="OpenOCD.cs" />
     <Compile Include="PwrUSBWrapper.cs" />
     <Compile Include="ReadParameters.cs" />
