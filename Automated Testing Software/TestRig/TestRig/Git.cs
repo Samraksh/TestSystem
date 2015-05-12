@@ -161,6 +161,52 @@ namespace TestRig
             return true;
         }
 
+        public string HeadRev()
+        {
+            RunCommand(@"setlocal");
+            RunCommand(@"set git_install_root=" + mainHandle.textGitPath);
+            RunCommand(@"set PATH=%git_install_root%\bin;%git_install_root%\mingw\bin;%git_install_root%\cmd;%PATH%");
+            RunCommand(@"set PLINK_PROTOCOL=ssh");
+            RunCommand(@"set HOME=%USERPROFILE%");
+
+
+            if (RunCommand(@"dir " + archive.ToString(), "File Not Found", String.Empty, 500) != CommandStatus.Done)
+            {
+                ChangeDirectories(archive.ToString());
+                RunCommand(@"git log --pretty=short -n 1", "commit", "NULL", 5000);
+                string rev = matchedResponse.Split(' ')[1];
+                return rev;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string CurrentBranch()
+        {
+            RunCommand(@"setlocal");
+            RunCommand(@"set git_install_root=" + mainHandle.textGitPath);
+            RunCommand(@"set PATH=%git_install_root%\bin;%git_install_root%\mingw\bin;%git_install_root%\cmd;%PATH%");
+            RunCommand(@"set PLINK_PROTOCOL=ssh");
+            RunCommand(@"set HOME=%USERPROFILE%");
+
+
+            if (RunCommand(@"dir " + archive.ToString(), "File Not Found", String.Empty, 500) != CommandStatus.Done)
+            {
+                ChangeDirectories(archive.ToString());
+                RunCommand("git branch", "*", "NULL", 5000);
+
+                string branch = matchedResponse.Split(' ')[1];
+                return branch;
+            }
+            else
+            {
+                return null;
+            }
+            
+        }
+
         public void Kill()
         {
             try

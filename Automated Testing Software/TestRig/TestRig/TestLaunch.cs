@@ -433,7 +433,11 @@ namespace TestRig
                 #region Retrieving code
                 currentTest.testState = "Retrieving code";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                                
+                git = new Git(mainHandle);
+                string rev = git.HeadRev();
+                string branch = git.CurrentBranch();
+                currentTest.testGitRev = rev;
+                currentTest.testGitBranch = branch;
                 // Checkout code from GitHub if needed
                 if (currentTest.testGitOption.Equals("Use local code"))
                 {
@@ -443,21 +447,16 @@ namespace TestRig
                 else if (currentTest.testGitOption.Equals("Use archive code"))
                 {
                     cleanBuildNeeded = true;
-                    git = new Git(mainHandle);
-                    if (git == null) return "Git failed to load";
                     System.Diagnostics.Debug.WriteLine("Checking out archived code.");
                     if (git.CloneCode() == false) return "Git failed to Clone";                    
-                    git.Kill(); 
                 }
                 else if (currentTest.testGitOption.Equals("Use archive branch code"))
                 {
                     cleanBuildNeeded = true;
-                    git = new Git(mainHandle);
-                    if (git == null) return "Git failed to load";
                     System.Diagnostics.Debug.WriteLine("Checking out branch <" + currentTest.testGitBranch + "> of archived code.");
                     if (git.CloneCodeBranch(currentTest.testGitBranch) == false) return "Git failed to clone branch: " + currentTest.testGitBranch;
-                    git.Kill(); 
                 }
+                git.Kill();
                 #endregion
 
                 #region Copying needed files for build

@@ -20,6 +20,7 @@ namespace TestRig
         public string directoryName { get; set; }
         public string testMFVersionNum { get; set; }
         public string testGitOption { get; set; }
+        public string testGitRev { get; set; }
         public string testGitBranch { get; set; }
         public string testUsePrecompiledBinary { get; set; }
         public string testHardware { get; set; }
@@ -93,6 +94,7 @@ namespace TestRig
             this.directoryName = copy.directoryName;
             this.testMFVersionNum = copy.testMFVersionNum;
             this.testGitOption = copy.testGitOption;
+            this.testGitRev = copy.testGitRev;
             this.testGitBranch = copy.testGitBranch;
             this.testTimeout = copy.testTimeout;
             this.testUseLogic = copy.testUseLogic;
@@ -133,6 +135,7 @@ namespace TestRig
             returnString += "\t<TestLocation>\r\n\t" + testLocation + "\r\n\t</TestLocation>\r\n";
             returnString += "\t<TestMFVersionNum>\r\n\t" + testMFVersionNum + "\r\n\t</TestMFVersionNum>\r\n";
             returnString += "\t<TestGitOption>\r\n\t" + testGitOption + "\r\n\t</TestGitOption>\r\n";
+            returnString += "\t<TestGitRev>\r\n\t" + testGitRev + "\r\n\t</TestGitRev>\r\n";
             returnString += "\t<TestGitBranch>\r\n\t" + testGitBranch + "\r\n\t</TestGitBranch>\r\n";
             returnString += "\t<TestUsePrecompiledBinary>\r\n\t" + testUsePrecompiledBinary + "\r\n\t</TestUsePrecompiledBinary>\r\n";
             returnString += "\t<TestHardware>\r\n\t" + testHardware + "\r\n\t</TestHardware>\r\n";

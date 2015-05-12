@@ -236,6 +236,8 @@ namespace TestRig
 
         private string testGitOptionField;
 
+        private string testGitRevField;
+
         private string testGitBranchField;
 
         private string testUsePrecompiledBinaryField;
@@ -366,6 +368,20 @@ namespace TestRig
             }
             set {
                 this.testGitOptionField = XmlUtil.FixBadXmlChars(value);
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string TestGitRev
+        {
+            get
+            {
+                return this.testGitRevField;
+            }
+            set
+            {
+                this.testGitRevField = XmlUtil.FixBadXmlChars(value);
             }
         }
 
