@@ -206,6 +206,8 @@
                             <DataGridTextColumn Binding="{Binding TestDuration}" Header="Duration"/>
                             <DataGridTextColumn Binding="{Binding TestDescription/Description}" Header="Description"/>
                             <DataGridTextColumn Binding="{Binding TestDescription/TestPath}" Header="TestPath"/>
+                            <DataGridTextColumn Binding="{Binding TestDescription/TestGitRev}" Header="Git Rev"/>
+                            <DataGridTextColumn Binding="{Binding TestDescription/TestGitBranch}" Header="Git Branch"/>
                             <DataGridTextColumn Binding="{Binding TestResult}" Header="Result"/>
                             <DataGridTextColumn Binding="{Binding TestComplete}" Header="Complete"/>
                             <DataGridTextColumn Binding="{Binding TestPass}" Header="Pass"/>
