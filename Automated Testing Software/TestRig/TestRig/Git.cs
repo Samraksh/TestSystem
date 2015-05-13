@@ -175,7 +175,7 @@ namespace TestRig
                 ChangeDirectories(archive.ToString());
                 RunCommand(@"git log --pretty=short -n 1", "commit", "NULL", 5000);
                 string rev = matchedResponse.Split(' ')[1];
-                return rev;
+                return rev.Substring(0, 7);
             }
             else
             {
