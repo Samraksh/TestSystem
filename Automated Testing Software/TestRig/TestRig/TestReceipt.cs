@@ -64,7 +64,7 @@ namespace TestRig
             returnString += "\t<TestComplete>\r\n\t" + testComplete.ToString() + "\r\n\t</TestComplete>\r\n";
             returnString += "\t<TestResult>\r\n\t" + testResult + "\r\n\t</TestResult>\r\n";
             returnString += "\t<TestPass>\r\n\t" + testPass.ToString() + "\r\n\t</TestPass>\r\n";
-            returnString += "\t<TestDateTime>\r\n\t" + testDateTime.ToString() + "\r\n\t</TestDateTime>\r\n";
+            returnString += "\t<TestDateTime>\r\n\t" + String.Format("{0:yyyy'-'MM'-'dd HH':'mm':'ss}", testDateTime) + "\r\n\t</TestDateTime>\r\n";
             returnString += "\t<TestDuration>\r\n\t" + testDuration.ToString() + "\r\n\t</TestDuration>\r\n";
             returnString += "\t<TestAccuracy>\r\n\t" + testAccuracy.ToString() + "\r\n\t</TestAccuracy>\r\n";
             returnString += "\t<TestReturnParameter1>\r\n\t" + testReturnParameter1 + "\r\n\t</TestReturnParameter1>\r\n";
