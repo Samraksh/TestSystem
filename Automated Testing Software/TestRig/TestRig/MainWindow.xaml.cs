@@ -1350,7 +1350,6 @@ namespace TestRig
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            System.Diagnostics.Debug.WriteLine(value);
             if (value is string && (string)value != "True")
             {
                 return Brushes.Red;
