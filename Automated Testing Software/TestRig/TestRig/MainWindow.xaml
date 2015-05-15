@@ -509,9 +509,9 @@
                             </Grid.ColumnDefinitions>
 
                             <Label Content="Listen port" Grid.Row="0" Grid.Column="0" Margin="10,10,10,0" Height="26" VerticalAlignment="Top"/>
-                            <TextBox Text="" Grid.Row="0"  Grid.Column="1" Height="23" Margin="0,10,10,0"/>
+                            <TextBox x:Name="tbServerListenPort" Text="" Grid.Row="0"  Grid.Column="1" Height="23" Margin="0,10,10,0"/>
                             <Label Content="Server Key" Grid.Row="1" Grid.Column="0" Margin="10" VerticalAlignment="Top"/>
-                            <TextBox Text="" Grid.Row="1"  Grid.Column="1" Height="23" Margin="0,0,10,0"/>
+                            <TextBox x:Name="tbServerKey" Text="" Grid.Row="1"  Grid.Column="1" Height="23" Margin="0,0,10,0"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Client" Grid.Row="1" Margin="10">
@@ -526,11 +526,11 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Label Content="Server address" Grid.Row="0" Grid.Column="0" Margin="10" Height="26" VerticalAlignment="Top"/>
-                            <TextBox Text="" Grid.Row="0"  Grid.Column="1" Height="23" Margin="0,0,10,0"/>
-                            <Label Content="Listen port" Grid.Row="1" Grid.Column="0" Margin="10,0" Height="26" VerticalAlignment="Top"/>
-                            <TextBox Text="" Grid.Row="1"  Grid.Column="1" Height="23" Margin="0,0,10,0"/>
+                            <TextBox x:Name="tbServerAddress" Text="" Grid.Row="0"  Grid.Column="1" Height="23" Margin="0,0,10,0"/>
+                            <Label Content="Port" Grid.Row="1" Grid.Column="0" Margin="10,0" Height="26" VerticalAlignment="Top"/>
+                            <TextBox x:Name="tbServerPort" Text="" Grid.Row="1"  Grid.Column="1" Height="23" Margin="0,0,10,0"/>
                             <Label Content="Server Key" Grid.Row="2" Grid.Column="0" Margin="10,10,10,0" Height="26" VerticalAlignment="Top"/>
-                            <TextBox Text="" Grid.Row="2"  Grid.Column="1" Height="23" Margin="0,10,10,0"/>
+                            <TextBox x:Name="tbClientServerKey" Text="" Grid.Row="2"  Grid.Column="1" Height="23" Margin="0,10,10,0"/>
                         </Grid>
                     </GroupBox>
                 </Grid>

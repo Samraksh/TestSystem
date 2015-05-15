@@ -59,5 +59,20 @@
     <Setting Name="PowerCycleAutomated" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="ServerListenPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">32001</Value>
+    </Setting>
+    <Setting Name="ServerKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">00000</Value>
+    </Setting>
+    <Setting Name="ServerAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">127.0.0.1</Value>
+    </Setting>
+    <Setting Name="ServerPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">32001</Value>
+    </Setting>
+    <Setting Name="ClientServerKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">00000</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
