@@ -970,6 +970,12 @@ namespace TestRig
                 else
                     textPowerAutomateSelected = false.ToString();
 
+                tbServerListenPort.Text = Properties.Settings.Default.ServerListenPort.ToString();
+                tbServerKey.Text = Properties.Settings.Default.ServerKey;
+                tbServerAddress.Text = Properties.Settings.Default.ServerAddress;
+                tbServerPort.Text = Properties.Settings.Default.ServerPort.ToString();
+                tbClientServerKey.Text = Properties.Settings.Default.ClientServerKey;
+
                 tbNotifyReceipts.Text = Properties.Settings.Default.NotifyReceipts;
 
                 settingsInitialized = true;
@@ -1004,6 +1010,12 @@ namespace TestRig
                 Properties.Settings.Default["GVSelection"] = cbGCCVersion.SelectedIndex;
                 Properties.Settings.Default["MFSelection"] = cbMFSelected.SelectedIndex;
                 Properties.Settings.Default["PowerCycleAutomated"] = cbPowerAutomate.IsChecked;
+
+                Properties.Settings.Default["ServerListenPort"] = Convert.ToInt32(tbServerListenPort.Text);
+                Properties.Settings.Default["ServerKey"] = tbServerKey.Text;
+                Properties.Settings.Default["ServerAddress"] = tbServerAddress.Text;
+                Properties.Settings.Default["ServerPort"] = Convert.ToInt32(tbServerPort.Text);
+                Properties.Settings.Default["ClientServerKey"] = tbClientServerKey.Text;
                 Properties.Settings.Default["NotifyReceipts"] = tbNotifyReceipts.Text;
                 
                 Properties.Settings.Default.Save();
