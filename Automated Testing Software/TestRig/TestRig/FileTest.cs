@@ -131,7 +131,7 @@ namespace TestRig
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine("COM port kill.");                
+                System.Diagnostics.Debug.WriteLine("File Test kill.");                
 
                 if (saveToFile == true)
                 {
@@ -142,7 +142,7 @@ namespace TestRig
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("COM port already killed. Can't kill again: " + ex.ToString());
+                System.Diagnostics.Debug.WriteLine("File Test already killed. Can't kill again: " + ex.ToString());
             }
         }
 

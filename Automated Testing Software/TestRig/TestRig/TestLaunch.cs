@@ -82,9 +82,19 @@ namespace TestRig
             sessionResult = new StreamWriter(mainHandle.textTestReceiptPath + @"\" + fullFileName);
 
             // starting thread to launch any locally queued up tests
+            RestartLaunchThread();
+        }
+
+        private void RestartLaunchThread()
+        {
+            if (LaunchThread != null)
+            {
+                LaunchThread.Abort();
+            }
+            
             LaunchThread = new Thread(new ThreadStart(LaunchThreadFunction));
             LaunchThread.Start();
-            LaunchThread.Name = "Launch Test Thread";            
+            LaunchThread.Name = "Launch Test Thread";   
         }
 
         private void CleanUp()
@@ -103,6 +113,14 @@ namespace TestRig
             if (fastboot != null) fastboot.Kill();
             if (matlab != null) matlab.Kill();
             if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
+        }
+
+        public void AbortTests()
+        {
+            testCollectionLaunch.Clear();
+            CleanUp();
+            RestartLaunchThread();
+            mainHandle.Dispatcher.BeginInvoke(mainHandle.clearDelegate);
         }
 
         public void KillLaunchThread()
@@ -475,6 +493,11 @@ namespace TestRig
                 if (debugAlwaysCleanBuild) cleanBuildNeeded = true;
 
                 System.Diagnostics.Debug.WriteLine("Building code");
+                if (msbuild != null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Found existing msbuild process, killing it.");
+                    msbuild.Kill();
+                }
                 msbuild = new MSBuild(mainHandle, currentTest.testMFVersionNum);
                 if (msbuild == null) return "MSBuild failed to load";
 
@@ -546,6 +569,7 @@ namespace TestRig
                 }
                 cleanBuildNeeded = false;
                 msbuild.Kill();
+                msbuild = null;
                 #endregion       
                 
                 #region Reading parameters

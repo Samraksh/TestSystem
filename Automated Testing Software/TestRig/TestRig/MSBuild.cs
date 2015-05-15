@@ -505,8 +505,7 @@ namespace TestRig
             try
             {
                 System.Diagnostics.Debug.WriteLine("MSBuildProcess killed.");
-                MSBuildProcess.Kill();
-                MSBuildProcess = null;
+                Utility.KillProcessAndChildren(MSBuildProcess.Id);
             }
             catch (Exception ex)
             {
@@ -514,6 +513,7 @@ namespace TestRig
             }
         }
 
+        
         private void ProcessResponse(string response)
         {
             if ((expectedPassResponse != String.Empty) && (expectedPassResponse != null))

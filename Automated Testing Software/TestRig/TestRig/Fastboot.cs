@@ -274,8 +274,7 @@ namespace TestRig
             try
             {
                 System.Diagnostics.Debug.WriteLine("Fastboot process killed.");
-                FastbootProcess.Kill();
-                FastbootProcess = null;
+                Utility.KillProcessAndChildren(FastbootProcess.Id);
             }
             catch (Exception ex)
             {
