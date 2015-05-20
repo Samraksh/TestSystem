@@ -1329,9 +1329,9 @@ namespace TestRig
         {
             TestResults t = e.Item as TestResults;
             if (t != null)
-                if (t.TestResult.Contains(tbResultsFilter.Text) == true ||
-                    t.TestDescription[0].Description.Contains(tbResultsFilter.Text) == true ||
-                    t.TestDescription[0].TestPath.Contains(tbResultsFilter.Text) == true
+                if (t.TestResult.IndexOf(tbResultsFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    t.TestDescription[0].Description.IndexOf(tbResultsFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    t.TestDescription[0].TestPath.IndexOf(tbResultsFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0
                     )
                     e.Accepted = true;
                 else
