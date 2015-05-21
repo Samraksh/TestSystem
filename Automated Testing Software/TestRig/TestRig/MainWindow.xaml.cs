@@ -51,7 +51,7 @@ namespace TestRig
         public delegate void StartTestTimer();
         public delegate void StopTestTimer();
         public delegate void PrintError(string message);
-        public delegate void AddTestResult(TestReceipt testReceipt);
+        public delegate void AddTestResult(TestReceipt testReceipt, string filePath);
         public AddTestItem addDelegate;
         public RemoveTestItem removeDelegate;
         public DisplayUpdate updateDelegate;
@@ -89,6 +89,7 @@ namespace TestRig
         public static TestResults[] availableTestResults;
         private static Tasks _tasks;
         private static TestResultss _results;
+        private static Dictionary<TestResults, string> resultPathDict;
         private static int testNum;
         private static int resultNum;
         private bool settingsInitialized = false;
@@ -164,6 +165,7 @@ namespace TestRig
                 // Get a reference to the tasks collection.
                 _tasks = (Tasks)this.Resources["tasks"];
                 _results = (TestResultss)this.Resources["results"];
+                resultPathDict = new Dictionary<TestResults, string>();
 
                 // read Test XML file to discover which tests are available to test
                 activateTests(activateTestsOptions.parseTestFile);
@@ -487,6 +489,8 @@ namespace TestRig
 
             availableTestResults[resultNum - 1] = result;
             _results.Add(result);
+            System.Diagnostics.Debug.WriteLine(fi.FullName);
+            resultPathDict[result] = fi.FullName;
             resultNum++;
             }
             catch (Exception e) {
@@ -494,7 +498,7 @@ namespace TestRig
             }
         }
 
-        private static void AddResult(TestReceipt rt)
+        private static void AddResult(TestReceipt rt, string filePath)
         {
             using (Stream reader = new MemoryStream(Encoding.UTF8.GetBytes(rt.ToString())))
             {
@@ -503,6 +507,7 @@ namespace TestRig
 
                 availableTestResults[resultNum - 1] = result;
                 _results.Add(result);
+                resultPathDict[result] = filePath;
                 resultNum++;
             }
         }
@@ -1343,10 +1348,17 @@ namespace TestRig
         {
             CollectionViewSource.GetDefaultView(resultDataGrid.ItemsSource).Refresh();
         }
+
+        private void ResultRow_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            TestResults r = resultDataGrid.SelectedItem as TestResults;
+            string path = resultPathDict[r];
+            System.Diagnostics.Process.Start(path);
+        }
     
     }
-    class TestPassToColorConverter : IValueConverter
-    {
+    class TestPassToColorConverter : IValueConverter{
+    
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

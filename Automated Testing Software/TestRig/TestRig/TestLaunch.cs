@@ -172,7 +172,8 @@ namespace TestRig
                         // we won't write test receipts for support projects (contains the words "support project" but not the word "load")
                         if ((currentTest.testSupporting.Contains("load") == true) || (currentTest.testSupporting.Contains("support project") == false))
                         {
-                            testReceipt.WriteFile(TRPath);
+                            string fullFilePath = testReceipt.WriteFile(TRPath);
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.addTestResultDelegate, testReceipt, fullFilePath);
                             sessionTestTotal++;
                             if (testReceipt.testPass == true)
                             {
@@ -190,7 +191,7 @@ namespace TestRig
                         }
 
                         // The test is over so we will pull it from the "Test Status" tab display
-                        mainHandle.Dispatcher.BeginInvoke(mainHandle.addTestResultDelegate, testReceipt);
+                        
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.removeDelegate);
                     }                
                 }

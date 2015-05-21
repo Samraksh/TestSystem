@@ -79,7 +79,7 @@ namespace TestRig
             return returnString;
         }
 
-        public bool WriteFile(string path)
+        public string WriteFile(string path)
         {            
             DateTime fileTime = DateTime.Now;
             string fileName;
@@ -110,7 +110,7 @@ namespace TestRig
                 writer.WriteLine(this.ToString());
             }
 
-            return true;
+            return path + @"\" + fullFileName;
         }
     }
 }
