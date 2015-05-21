@@ -200,7 +200,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <DataGrid x:Name = "resultDataGrid" ItemsSource = "{Binding Source={StaticResource cvsResults}}"  CanUserAddRows = "False" Margin="0,0,0,0" AlternatingRowBackground="#FFFAFAFA" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" IsReadOnly="True" AutoGenerateColumns="False">
+                    <DataGrid x:Name = "resultDataGrid" ItemsSource = "{Binding Source={StaticResource cvsResults}}"  CanUserAddRows = "False" Margin="0,0,0,0" AlternatingRowBackground="#FFFAFAFA" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" IsReadOnly="True" AutoGenerateColumns="False" MouseDoubleClick="ResultRow_DoubleClick">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding TestDateTime}" Header="Time"/>
                             <DataGridTextColumn Binding="{Binding TestDuration}" Header="Duration"/>
