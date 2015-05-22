@@ -103,7 +103,10 @@ namespace TestRig
                 }
                 finally
                 {
-                    connectSocket.Close();
+                    if (connectSocket != null)
+                    {
+                        connectSocket.Close();
+                    }
                 }
             }
         }
