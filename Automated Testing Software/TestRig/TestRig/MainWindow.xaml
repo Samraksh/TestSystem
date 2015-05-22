@@ -497,9 +497,10 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Server" Grid.Row="0" Margin="10">
+                    <GroupBox Header="Test Server Settings" Grid.Row="0" Margin="10">
                         <Grid >
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition />
                             </Grid.RowDefinitions>
@@ -512,9 +513,10 @@
                             <TextBox x:Name="tbServerListenPort" Text="" Grid.Row="0"  Grid.Column="1" Height="23" Margin="0,10,10,0"/>
                             <Label Content="Server Key" Grid.Row="1" Grid.Column="0" Margin="10" VerticalAlignment="Top"/>
                             <TextBox x:Name="tbServerKey" Text="" Grid.Row="1"  Grid.Column="1" Height="23" Margin="0,0,10,0"/>
+                            <Label Content="Restart the app required to apply the server changes" Grid.Row="2" Grid.Column="1" Margin="0,0,10,0"/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="Client" Grid.Row="1" Margin="10">
+                    <GroupBox Header="Client Settings" Grid.Row="1" Margin="10">
                         <Grid >
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
