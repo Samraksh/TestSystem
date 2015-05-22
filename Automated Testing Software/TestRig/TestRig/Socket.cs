@@ -14,8 +14,8 @@ namespace TestRig
 {
     class ReceiveSocket
     {
-        private IPEndPoint ipEnd = new IPEndPoint(IPAddress.Any, 32001);    // IP address and port we are listening on
-        private Socket Rxsocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+        private Socket Rxsocket;
+        private string serverKey;
         private Thread ListenThread;
         public Socket connectSocket;
         public static Queue<TestDescription> testCollectionSocket;
@@ -24,7 +24,9 @@ namespace TestRig
 
         public ReceiveSocket(Queue<TestDescription> testCollection, Mutex collectionMutex, MainWindow passedHandle)
         {            
-            // currently listening for any incoming IP address on port 32001
+            IPEndPoint ipEnd = new IPEndPoint(IPAddress.Any, Convert.ToInt32(passedHandle.tbServerListenPort.Text));
+            serverKey = passedHandle.tbServerKey.Text;
+            Rxsocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
             Rxsocket.Bind(ipEnd);
             Rxsocket.Listen(1000);
 
@@ -69,7 +71,19 @@ namespace TestRig
 
                     System.Diagnostics.Debug.WriteLine("Receiving test config file from: " + connectSocket.RemoteEndPoint.ToString());
                     receivedBytesLen = connectSocket.Receive(clientData);
+                    string authStr = Encoding.UTF8.GetString(clientData, 0, receivedBytesLen);
+                    if (authStr.StartsWith("Auth:") && authStr.Split(':')[1] == serverKey)
+                    {
+                        connectSocket.Send(Encoding.UTF8.GetBytes("OK"));
+                    }
+                    else
+                    {
+                        byte[] failMessage = Encoding.UTF8.GetBytes("Client Not Authenticated");
+                        connectSocket.Send(failMessage);
+                        connectSocket.Close();
+                    }
                     BinaryWriter bWrite = new BinaryWriter(File.Open("receive.config", FileMode.Create));
+                    receivedBytesLen = connectSocket.Receive(clientData);
                     while (receivedBytesLen != 0)
                     {
                         bWrite.Write(clientData, 0, receivedBytesLen);
@@ -82,11 +96,14 @@ namespace TestRig
                     byte[] fileData = File.ReadAllBytes("receive.config");
                     readXML(fileData);
 
-                    connectSocket.Close();
                 }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine("Listen thread FAIL: " + ex.Message);
+                }
+                finally
+                {
+                    connectSocket.Close();
                 }
             }
         }
@@ -233,11 +250,21 @@ namespace TestRig
             {
                 // sending the generated test configuration file to the test machine
                 System.Diagnostics.Debug.WriteLine("Starting Program.");
-                IPAddress[] ipAddress = Dns.GetHostAddresses("127.0.0.1");
-                IPEndPoint ipEnd = new IPEndPoint(ipAddress[0], 32001);
+                IPAddress[] ipAddress = Dns.GetHostAddresses(mainHandle.tbServerAddress.Text);
+                IPEndPoint ipEnd = new IPEndPoint(ipAddress[0], Convert.ToInt32(mainHandle.tbServerPort.Text));
                 Socket clientSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
                 System.Diagnostics.Debug.WriteLine("Connecting.");
                 clientSock.Connect(ipEnd);
+                clientSock.Send(Encoding.UTF8.GetBytes("Auth:" + mainHandle.tbClientServerKey.Text));
+                byte[] replyBuff = new byte[256];
+                int replyLen = clientSock.Receive(replyBuff);
+                string replyMsg = Encoding.UTF8.GetString(replyBuff, 0, replyLen);
+                if (replyMsg != "OK")
+                {
+                    System.Diagnostics.Debug.WriteLine("Test config file sending FAIL." + replyMsg);
+                    MainWindow.showMessageBox("Connecting to " + ipEnd.ToString() + " failed because: " + replyMsg);
+                    return;
+                }
 
                 string filePath = "test.config";    //test config file path
                 byte[] fileData = File.ReadAllBytes(filePath);
@@ -250,7 +277,7 @@ namespace TestRig
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("Test config file sending FAIL." + ex.ToString());
-                MainWindow.showMessageBox("Failed to connect to machine at IP: " + ipEnd.ToString());
+                MainWindow.showMessageBox("Failed to connect to server");
             }
         }
     }
