@@ -253,17 +253,71 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("32001")]
-        public int ServerListenPort {
-            get {
-                return ((int)(this["ServerListenPort"]));
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("smtpout.secureserver.net")]
         public string NotifyHost {
             get {
                 return ((string)(this["NotifyHost"]));
+            }
+            set {
+                this["NotifyHost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("testrig-noreply@samraksh.com")]
+        public string NotifySender {
+            get {
+                return ((string)(this["NotifySender"]));
+            }
+            set {
+                this["NotifySender"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("N2!Erbxs")]
+        public string NotifyPassword {
+            get {
+                return ((string)(this["NotifyPassword"]));
+            }
+            set {
+                this["NotifyPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("tony.zhu@samraksh.com")]
+        public string NotifyReceipts {
+            get {
+                return ((string)(this["NotifyReceipts"]));
+            }
+            set {
+                this["NotifyReceipts"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("testrig-noreply@samraksh.com")]
+        public string NotifyUser {
+            get {
+                return ((string)(this["NotifyUser"]));
+            }
+            set {
+                this["NotifyUser"] = value;
+            }
+        }
+    
+
+	[global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("32001")]
+        public int ServerListenPort {
+            get {
+                return ((int)(this["ServerListenPort"]));
             }
             set {
                 this["ServerListenPort"] = value;
@@ -315,59 +369,6 @@ namespace TestRig.Properties {
             }
             set {
                 this["ClientServerKey"] = value;
-            }
-        }
-    }
-            set {
-                this["NotifyHost"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("testrig-noreply@samraksh.com")]
-        public string NotifySender {
-            get {
-                return ((string)(this["NotifySender"]));
-            }
-            set {
-                this["NotifySender"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("N2!Erbxs")]
-        public string NotifyPassword {
-            get {
-                return ((string)(this["NotifyPassword"]));
-            }
-            set {
-                this["NotifyPassword"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("tony.zhu@samraksh.com")]
-        public string NotifyReceipts {
-            get {
-                return ((string)(this["NotifyReceipts"]));
-            }
-            set {
-                this["NotifyReceipts"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("testrig-noreply@samraksh.com")]
-        public string NotifyUser {
-            get {
-                return ((string)(this["NotifyUser"]));
-            }
-            set {
-                this["NotifyUser"] = value;
             }
         }
     }
