@@ -1341,7 +1341,6 @@ namespace TestRig
         private void btnAbortTests_Click(object sender, RoutedEventArgs e)
         {
             testLaunch.AbortTests();
-        }       
         }
 
         private void CollectionViewResults_Filter(object sender, FilterEventArgs e)
