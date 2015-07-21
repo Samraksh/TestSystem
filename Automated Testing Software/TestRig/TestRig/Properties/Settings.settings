@@ -63,7 +63,7 @@
       <Value Profile="(Default)">32001</Value>
     </Setting>
     <Setting Name="ServerKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)">00000</Value>
+      <Value Profile="(Default)">45123</Value>
     </Setting>
     <Setting Name="ServerAddress" Type="System.String" Scope="User">
       <Value Profile="(Default)">127.0.0.1</Value>
@@ -72,7 +72,7 @@
       <Value Profile="(Default)">32001</Value>
     </Setting>
     <Setting Name="ClientServerKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)">00000</Value>
+      <Value Profile="(Default)">45123</Value>
     </Setting>
     <Setting Name="NotifyHost" Type="System.String" Scope="User">
       <Value Profile="(Default)">smtpout.secureserver.net</Value>
@@ -83,11 +83,14 @@
     <Setting Name="NotifyPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)">N2!Erbxs</Value>
     </Setting>
-    <Setting Name="NotifyReceipts" Type="System.String" Scope="User">
-      <Value Profile="(Default)">tony.zhu@samraksh.com</Value>
-    </Setting>
     <Setting Name="NotifyUser" Type="System.String" Scope="User">
       <Value Profile="(Default)">testrig-noreply@samraksh.com</Value>
+    </Setting>
+    <Setting Name="NotifyReceipts" Type="System.String" Scope="User">
+      <Value Profile="(Default)">your_name@samraksh.com</Value>
+    </Setting>
+    <Setting Name="EmailCB" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

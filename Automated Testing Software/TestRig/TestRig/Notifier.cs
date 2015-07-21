@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
+using System.IO;
 
 namespace TestRig
 {
@@ -53,6 +54,16 @@ namespace TestRig
             }
 
             SendMail(subject, r.ToString());
+        }
+
+        public void SendSummary(int sessionTestComplete, int sessionTestPass, int sessionTestTotal)
+        {
+            // Generate email
+            String subject = "[TestRig] session";
+            String emailResult = String.Empty;
+            emailResult += "Tests completed: " + sessionTestComplete.ToString() + " of  " + sessionTestTotal.ToString() + "\r\n";
+            emailResult += "Tests passed: " + sessionTestPass.ToString() + " of  " + sessionTestTotal.ToString() + "\r\n";
+            SendMail(subject, emailResult);
         }
     }
 }

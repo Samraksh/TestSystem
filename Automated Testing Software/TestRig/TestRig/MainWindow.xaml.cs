@@ -83,6 +83,7 @@ namespace TestRig
         public string textCodeBuildSelected;
         public static string textJTAGHarness;
         public static string textPowerAutomateSelected;
+        public string textEmailSessionSelected;
         public string textCOMPortPrimary;
         public string textCOMPortSecondary1;
         public int COMPortSelectionPrimary;
@@ -978,6 +979,12 @@ namespace TestRig
 
                 tbNotifyReceipts.Text = Properties.Settings.Default.NotifyReceipts;
 
+                cb_emailSessionResults.IsChecked = Properties.Settings.Default.EmailCB;
+                if (cb_emailSessionResults.IsChecked == true)
+                    textEmailSessionSelected = true.ToString();
+                else
+                    textEmailSessionSelected = false.ToString();                
+
                 settingsInitialized = true;
             }
             catch (Exception ex)
@@ -1017,6 +1024,7 @@ namespace TestRig
                 Properties.Settings.Default["ServerPort"] = Convert.ToInt32(tbServerPort.Text);
                 Properties.Settings.Default["ClientServerKey"] = tbClientServerKey.Text;
                 Properties.Settings.Default["NotifyReceipts"] = tbNotifyReceipts.Text;
+                Properties.Settings.Default["EmailCB"] = cb_emailSessionResults.IsChecked;                    
                 
                 Properties.Settings.Default.Save();
             }
@@ -1382,6 +1390,16 @@ namespace TestRig
             TestResults r = resultDataGrid.SelectedItem as TestResults;
             string path = resultPathDict[r];
             System.Diagnostics.Process.Start(path);
+        }
+
+        private void cb_emailSessionResults_Checked(object sender, RoutedEventArgs e)
+        {
+            textEmailSessionSelected = true.ToString();
+        }
+
+        private void cb_emailSessionResults_Unchecked(object sender, RoutedEventArgs e)
+        {
+            textEmailSessionSelected = false.ToString();
         }
     
     }

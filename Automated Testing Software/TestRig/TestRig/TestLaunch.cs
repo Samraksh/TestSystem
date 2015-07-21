@@ -42,6 +42,8 @@ namespace TestRig
         private string workingDirectory = null;
         private bool cleanBuildNeeded = true;
         private bool debugAlwaysCleanBuild = true;
+        private string sessionFileName = null;
+        private bool sessionStarted = false;
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
@@ -80,7 +82,8 @@ namespace TestRig
                 fullFileName = fileName + "_session" + num.ToString() + ".txt";
                 num++;
             }
-            sessionResult = new StreamWriter(mainHandle.textTestReceiptPath + @"\" + fullFileName);
+            sessionFileName = mainHandle.textTestReceiptPath + @"\" + fullFileName;
+            sessionResult = new StreamWriter(sessionFileName);
 
             notifier = new Notifier(
                 Properties.Settings.Default.NotifyHost,
@@ -169,6 +172,7 @@ namespace TestRig
                     // launching a test if there is one
                     if (currentTest != null)
                     {
+                        sessionStarted = true;
                         testReceipt = new TestReceipt(currentTest);
                         DateTime startTime = DateTime.Now;
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.startTestTimerDelegate);
@@ -209,19 +213,26 @@ namespace TestRig
                             }
                             else
                             {
-                                notifier.SendReceipt(testReceipt);
                                 System.Diagnostics.Debug.WriteLine("*********************** FAIL ****************************");
                             }
                             if (testReceipt.testComplete == true)
                             {
-                                sessionTestComplete++;                                
+                                sessionTestComplete++;
                             }
                         }
 
-                        // The test is over so we will pull it from the "Test Status" tab display
-                        
+                        // The test is over so we will pull it from the "Test Status" tab display                        
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.removeDelegate);
-                    }                
+                    }
+                    else if (sessionStarted == true)
+                    {
+                        sessionStarted = false;
+                        if (mainHandle.textEmailSessionSelected.Equals(true.ToString()))
+                        {
+                            // if user wants a notice when all tests have finished we email it here
+                            notifier.SendSummary(sessionTestComplete, sessionTestPass, sessionTestTotal);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -504,7 +504,8 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Label Content="Recipients" Height="Auto" HorizontalAlignment="Left" Margin="10,10,10,10" VerticalAlignment="Top" Width="Auto" Grid.Column="0" />
-                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,10,0" Name="tbNotifyReceipts" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Column="1" ToolTip="receipts of the email notifications" />
+                            <TextBox Height="23" HorizontalAlignment="Stretch" Margin="10,10,165,0" Name="tbNotifyReceipts" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Column="1" ToolTip="receipts of the email notifications" />
+                            <CheckBox Content="Email session results" Grid.Column="1" Height="16" HorizontalAlignment="Left" Margin="666,14,0,0" Name="cb_emailSessionResults" VerticalAlignment="Top" Width="130" Checked="cb_emailSessionResults_Checked" Unchecked="cb_emailSessionResults_Unchecked" />
                         </Grid>
                     </GroupBox>
 
