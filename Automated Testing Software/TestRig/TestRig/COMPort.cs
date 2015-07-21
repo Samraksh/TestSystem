@@ -287,9 +287,22 @@ namespace TestRig
                     System.Diagnostics.Debug.WriteLine("COM processing (" + textCOMPort + "): " + rxString.ToString());
                     if (rxString.Contains("Exception") || rxString.Contains("exception"))
                     {
-                        testResults.testPass = false;
-                        testResults.testComplete = true;
-                        testResults.testReturnParameter1 = "Exception thrown";
+                        if (rxString.Contains("DataStoreOutOfMemoryException") && (testResults.testDescription.buildProj.Equals("Level_6A.csproj") || testResults.testDescription.buildProj.Equals("Level_6B.csproj") || testResults.testDescription.buildProj.Equals("Level_6C.csproj")))
+                        {
+                            //do nothing
+                        }
+                        //Below can be done away with after this issue is fixed - (Exception message not being suppressed #220)
+                        else if ((rxString.Contains("DataStoreOutOfMemoryException") || rxString.Contains("Failure while creating data reference") || rxString.Contains("OOM exception thrown - test Level_0L successfully completed")) && testResults.testDescription.buildProj.Equals("Level_0L.csproj"))
+                        {
+                            testResults.testPass = true;
+                            testResults.testComplete = true;
+                        }
+                        else
+                        {
+                            testResults.testPass = false;
+                            testResults.testComplete = true;
+                            testResults.testReturnParameter1 = "Exception thrown";
+                        }
                     }
                     if (rxString.Contains("result =") || rxString.Contains("result="))
                     {
