@@ -42,7 +42,7 @@
       <Value Profile="(Default)">D:\Work\TestSystem\openocd-0.7.0\bin-x64\openocd-x64-0.7.0.exe</Value>
     </Setting>
     <Setting Name="CSPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\TestSystem\codesourcery</Value>
+      <Value Profile="(Default)">D:\Work\TestSystem</Value>
     </Setting>
     <Setting Name="GitPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Work\TestSystem\Automated Testing Software\GitBin</Value>

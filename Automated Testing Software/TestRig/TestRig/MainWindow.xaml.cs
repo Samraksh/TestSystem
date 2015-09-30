@@ -61,7 +61,7 @@ namespace TestRig
         public StartTestTimer startTestTimerDelegate;
         public StopTestTimer stopTestTimerDelegate;
         public AddTestResult addTestResultDelegate;
-        public string textBuildSourceryPath;
+        public string textCompilerPath;
         public string textMFPath_4_0;
         public string textMFPath_4_3;
         public string textTestSourcePath;
@@ -768,9 +768,9 @@ namespace TestRig
             rxSocket.uploadTests();
         }
 
-        private void tbBuildSourceryPath_TextChanged(object sender, TextChangedEventArgs e)
+        private void tbCompilerPath_TextChanged(object sender, TextChangedEventArgs e)
         {
-            textBuildSourceryPath = tbBuildSourceryPath.Text;
+            textCompilerPath = tbCompilerPath.Text;
         }
 
         private void tbMFPath_TextChanged(object sender, TextChangedEventArgs e)
@@ -874,9 +874,9 @@ namespace TestRig
                     return;
                 }
 
-                if (Directory.Exists(tbBuildSourceryPath.Text) == false)
+                if (Directory.Exists(tbCompilerPath.Text) == false)
                 {
-                    MessageBox.Show("Codesourcery path: " + tbBuildSourceryPath.Text + " does not exist.");
+                    MessageBox.Show("Compiler path: " + tbCompilerPath.Text + " does not exist.");
                     return;
                 }
 
@@ -929,7 +929,7 @@ namespace TestRig
                 else
                     tbOCDInterface.Text = textOCDInterfaceSecondary1;
                 tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
-                tbBuildSourceryPath.Text = Properties.Settings.Default.CSPath.ToString();
+                tbCompilerPath.Text = Properties.Settings.Default.CSPath.ToString();
 
                 cbCOMPort.SelectedIndex = Properties.Settings.Default.COMPortPrimary;
 
@@ -1002,7 +1002,7 @@ namespace TestRig
                 Properties.Settings.Default["OCDInterfaceSecondary1"] = textOCDInterfaceSecondary1;
                 Properties.Settings.Default["OCDTarget"] = tbOCDTarget.Text;
                 Properties.Settings.Default["OCDExe"] = tbOCDExe.Text;
-                Properties.Settings.Default["CSPath"] = tbBuildSourceryPath.Text;
+                Properties.Settings.Default["CSPath"] = tbCompilerPath.Text;
                 Properties.Settings.Default["MFPath_4_0"] = textMFPath_4_0;
                 Properties.Settings.Default["MFPath_4_3"] = textMFPath_4_3;
                 Properties.Settings.Default["MFPathSelection"] = cbMFVersionPath.SelectedIndex;
@@ -1230,16 +1230,13 @@ namespace TestRig
             switch (cbGCCVersion.SelectedIndex)
             {
                 case 0:
-                    textGCCVersion = "GCC4.2";
+                    textGCCVersion = "GCC4.7";
                     break;
                 case 1:
-                    textGCCVersion = "GCC4.4";
-                    break;
-                case 2:
-                    textGCCVersion = "GCC4.7";
+                    textGCCVersion = "GCC4.9";
                     break;
                 default:
-                    textGCCVersion = "GCC4.7";
+                    textGCCVersion = "GCC4.9";
                     break;
             }
         }

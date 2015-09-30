@@ -44,6 +44,7 @@ namespace TestRig
         private bool debugAlwaysCleanBuild = true;
         private string sessionFileName = null;
         private bool sessionStarted = false;
+        private bool testInitialTest = false;
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
@@ -469,6 +470,28 @@ namespace TestRig
                         MFPath = mainHandle.textMFPath_4_3;
                         break;
                 }
+
+                if (currentTest.testSolution.Equals("EmoteDotNow"))
+                {
+                    
+                    if (testInitialTest == false)
+                    {
+                        testInitialTest = true;
+                        // checking board connectivity
+                        if (openOCD.active == false) openOCD.Connect(mainHandle, currentOpenOCDInstance);
+                        if (openOCD.active == false) return "OpenOCD failed to load";
+                        gdb = new GDB(mainHandle);
+                        if ((gdb == null) || (gdb.gdbConnnected == false)) return "GDB failed to load";
+                        telnet = new TelnetBoard(mainHandle);
+                        if (telnet == null) return "Telnet failed to load";
+
+                        if (telnet.Start() == false) return "Telnet failed to start";
+                        if (!debugDoNotProgram) if (telnet.Clear() == false) return "Telnet failed to clear FLASH";
+                        if (telnet != null) telnet.Kill();
+                        if (gdb != null) gdb.Kill();
+                        if (openOCD.active == true) openOCD.Kill();
+                    }
+                }
                 
                 #region Retrieving code
                 currentTest.testState = "Retrieving code";
@@ -751,7 +774,7 @@ namespace TestRig
                         openOCD.Connect(mainHandle, currentOpenOCDInstance);
                         if (openOCD.active == false) return "OpenOCD failed to load";
                         gdb = new GDB(mainHandle);
-                        if (gdb == null) return "GDB failed to load";
+                        if ((gdb == null) || (gdb.gdbConnnected == false)) return "GDB failed to load";                        
                         telnet = new TelnetBoard(mainHandle);
                         if (telnet == null) return "Telnet failed to load";
 

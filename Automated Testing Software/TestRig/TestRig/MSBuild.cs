@@ -33,7 +33,8 @@ namespace TestRig
 
         private string MFPath;
         private string usingMFVersion;
-        private string codesourceryVersion;
+        private string compilerVersion;
+        private string compilerVersionPath;
 
         private string applicationStartAddress;
         private string preprocessorString;
@@ -78,14 +79,13 @@ namespace TestRig
             }
             switch (passedHandle.textGCCVersion)
             {
-                case "GCC4.2":
-                    codesourceryVersion = "4.2";
-                    break;
-                case "GCC4.4":
-                    codesourceryVersion = "4.4.1";
-                    break;
                 case "GCC4.7":
-                    codesourceryVersion = "4.7.3";
+                    compilerVersion = "4.7.3";
+                    compilerVersionPath = "GCC4.7.3";
+                    break;
+                case "GCC4.9":
+                    compilerVersion = "4.9.3";
+                    compilerVersionPath = "GCC4.9.3";
                     break;
                 default:
                     break;
@@ -122,21 +122,17 @@ namespace TestRig
             String line;
 
             ChangeDirectories(MFPath);
-            /*if (RunCommand(@"setenv_gcc.cmd " + mainHandle.textBuildSourceryPath, "setting vars", String.Empty, 1000) != CommandStatus.Done)
-            {
-                System.Diagnostics.Debug.WriteLine("MSBuild failed to setenv.");
-                return false;
-            }*/
+
             switch (usingMFVersion)
             {
                 case "4.0":
-                    RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textCompilerPath + @"\" + compilerVersionPath);
                     break;
                 case "4.3":
-                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + compilerVersion + " " + mainHandle.textCompilerPath + @"\" + compilerVersionPath);
                     break;
                 default:
-                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + compilerVersion + " " + mainHandle.textCompilerPath + @"\" + compilerVersionPath);
                     break;
             }
 
@@ -362,13 +358,13 @@ namespace TestRig
             switch (usingMFVersion)
             {
                 case "4.0":
-                    RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textCompilerPath + @"\" + compilerVersionPath);
                     break;
                 case "4.3":
-                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + compilerVersion + " " + mainHandle.textCompilerPath + @"\" + compilerVersionPath);
                     break;
                 default:
-                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + compilerVersion + " " + mainHandle.textCompilerPath + @"\" + compilerVersionPath);
                     break;
             }
             ChangeDirectories(path);
@@ -451,13 +447,13 @@ namespace TestRig
             switch (usingMFVersion)
             {
                 case "4.0":
-                    RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_base.cmd " + currentTest.testGCCVersion + " PORT " + mainHandle.textCompilerPath + @"\" + compilerVersionPath);
                     break;
                 case "4.3":
-                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + compilerVersion + " " + mainHandle.textCompilerPath + @"\" + compilerVersionPath);
                     break;
                 default:
-                    RunCommand(@"setenv_gcc.cmd " + codesourceryVersion + " " + mainHandle.textBuildSourceryPath);
+                    RunCommand(@"setenv_gcc.cmd " + compilerVersion + " " + mainHandle.textCompilerPath + @"\" + compilerVersionPath);
                     break;
             }
             ChangeDirectories(path);
@@ -494,7 +490,7 @@ namespace TestRig
             }
             else
                 System.Diagnostics.Debug.WriteLine("MSBuild project converted to S19 step 1.");
-            RunCommand(mainHandle.textBuildSourceryPath + @"\bin\arm-none-eabi-objcopy.exe " + buildOutput + strippedName + @".s19 " + buildOutput + strippedName + @"_Conv.s19");
+            RunCommand(mainHandle.textCompilerPath + @"\" + compilerVersionPath + @"\bin\arm-none-eabi-objcopy.exe " + buildOutput + strippedName + @".s19 " + buildOutput + strippedName + @"_Conv.s19");
             Thread.Sleep(2000);
 
             return true;

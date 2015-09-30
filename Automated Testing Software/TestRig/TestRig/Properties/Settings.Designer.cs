@@ -181,7 +181,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\codesourcery")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem")]
         public string CSPath {
             get {
                 return ((string)(this["CSPath"]));

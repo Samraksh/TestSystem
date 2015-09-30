@@ -20,6 +20,8 @@ namespace TestRig
         private string expectedPassResponse = String.Empty, expectedFailResponse = String.Empty;
         public StreamWriter input = null;
 
+        public bool gdbConnnected = false;
+
         private StringWriter stdOutput = new StringWriter();
         public StringWriter Output { get { return stdOutput; } }
         private StringWriter stdError = new StringWriter();
@@ -29,12 +31,25 @@ namespace TestRig
 
         private Process GDBProcess;
         public MainWindow mainHandle;
+        private string compilerVersionPath;
 
         public GDB(MainWindow passedHandle)
         {
             mainHandle = passedHandle;
             ProcessStartInfo GDBInfo = new ProcessStartInfo();
             GDBProcess = new Process();
+
+            switch (passedHandle.textGCCVersion)
+            {
+                case "GCC4.7":
+                    compilerVersionPath = "GCC4.7.3";
+                    break;
+                case "GCC4.9":
+                    compilerVersionPath = "GCC4.9.3";
+                    break;
+                default:
+                    break;
+            }
             
             System.Diagnostics.Debug.WriteLine("Starting GDB.");
 
@@ -44,7 +59,7 @@ namespace TestRig
             GDBInfo.RedirectStandardOutput = true;
             GDBInfo.RedirectStandardError = true;
             GDBInfo.Arguments = @"-quiet -fullname --interpreter=mi2";
-            GDBInfo.FileName = mainHandle.textBuildSourceryPath + @"\bin\arm-none-eabi-gdb.exe";
+            GDBInfo.FileName = mainHandle.textCompilerPath + @"\" + compilerVersionPath + @"\" + @"\bin\arm-none-eabi-gdb.exe";
 
             GDBProcess.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
             GDBProcess.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);
@@ -62,7 +77,12 @@ namespace TestRig
             if (RunCommand(@"monitor soft_reset_halt", "target halted due to breakpoint", "^error", 5000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to halt processor.");
-            }  
+                gdbConnnected = false;
+            }
+            else
+            {
+                gdbConnnected = true;
+            }            
         }
 
         public bool Load(string axfFile)
@@ -122,6 +142,7 @@ namespace TestRig
             {
                 System.Diagnostics.Debug.WriteLine("GDBProcess already killed. Can't kill again: " + ex.ToString());
             }
+            gdbConnnected = false;
         }
 
         private void ProcessResponse(string response)
