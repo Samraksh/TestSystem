@@ -53,6 +53,16 @@ file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC4.9\\le\\FLASH
 load
 end
 
+define program_booter_1_1
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\Samraksh\\Executables\\Release\\4.3.2.0\\CLRandBooter\\Emote_TinyBooter_v1.1.axf
+load
+end
+
 define program_clrD
 set remotetimeout 10000
 monitor reset halt
@@ -92,7 +102,10 @@ load
 end
 
 define program_release_clr
-
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
 monitor reset halt
 file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\Samraksh\\Executables\\Release\\\CLRandBooter\\Emote_TinyCLR_MF4.3_1.0.2.axf 
 load
@@ -265,4 +278,12 @@ monitor stm32f1x mass_erase 0
 monitor stm32f1x mass_erase 1
 monitor reset halt
 monitor flash write_image dump.bin 0x8000000 bin
+end
+
+define wR14
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+monitor flash write_image release14.bin 0x8000000 bin
 end
