@@ -459,22 +459,54 @@ namespace TestRig
             ChangeDirectories(path);
             if (cleanBuildNeeded)
             {
-                if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                if (mainHandle.textCodeBuildSelected.Contains("Release"))
                 {
-                    System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
-                    return false;
+                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=release " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
                 }
                 else
-                    System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
+                {
+                    if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + project, "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild project cleaned.");
+                }               
             }
-            // msbuild /t:build /p:memory=" + currentTest.testMemoryType + @" (default) (/p:memory=RAM)
-            if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+
+
+            if (cleanBuildNeeded)
             {
-                System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
-                return false;
+                if (mainHandle.textCodeBuildSelected.Contains("Release"))
+                {
+                    // msbuild /t:build /p:memory=" + currentTest.testMemoryType + @" (default) (/p:memory=RAM)
+                    if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + ",flavor=release /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild project built.");
+                }
+                else
+                {
+                    // msbuild /t:build /p:memory=" + currentTest.testMemoryType + @" (default) (/p:memory=RAM)
+                    if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " /p:DefineConstants=" + preprocessorString + " " + project, "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("MSBuild failed to build.");
+                        return false;
+                    }
+                    else
+                        System.Diagnostics.Debug.WriteLine("MSBuild project built.");
+                }
             }
-            else
-                System.Diagnostics.Debug.WriteLine("MSBuild project built.");
 
             // stripping the name of the project we are compiling to rename it to *.s19 and *_conv.s19 files
             string projectName = project;
