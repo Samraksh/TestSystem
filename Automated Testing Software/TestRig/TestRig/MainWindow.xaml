@@ -299,6 +299,7 @@
                             <ComboBox Height="23" HorizontalAlignment="Left" Margin="10,10,0,0" Name="cbInterface" VerticalAlignment="Top" Width="87" SelectionChanged="cbInterface_SelectionChanged" Grid.Row="0" ToolTip="Primary device instrumented for analysis (required)">
                                 <ComboBoxItem Content="Primary" IsSelected="True" />
                                 <ComboBoxItem Content="Support 1" IsSelected="False" />
+                                <ComboBoxItem Content="Support 2"/>
                             </ComboBox>
                             <GroupBox Header="Primary" Grid.Row="1" Margin="10,5" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="gbSelectedInterface">
                                 <Grid Height="Auto" Margin="0,0,10,10">

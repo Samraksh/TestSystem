@@ -92,5 +92,11 @@
     <Setting Name="EmailCB" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="OCDInterfaceSecondary2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\TestSystem\openocd-bin\interface\olimex-arm-usb-ocd-h2.cfg</Value>
+    </Setting>
+    <Setting Name="COMPortSecondary2" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

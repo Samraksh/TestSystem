@@ -55,6 +55,9 @@ namespace TestRig
                 case (1):
                     textCOMPort = mainHandle.textCOMPortSecondary1;
                     break;
+                case (2):
+                    textCOMPort = mainHandle.textCOMPortSecondary2;
+                    break;
                 default:
                     textCOMPort = mainHandle.textCOMPortPrimary;
                     break;

@@ -61,6 +61,9 @@ namespace TestRig
                 case (1):
                     openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfaceSecondary1 + " -f " + mainHandle.textOCDTarget;
                     break;
+                case (2):
+                    openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfaceSecondary2 + " -f " + mainHandle.textOCDTarget;
+                    break;
                 default:
                     openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfacePrimary + " -f " + mainHandle.textOCDTarget;
                     break;
