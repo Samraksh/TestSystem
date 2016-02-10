@@ -53,21 +53,8 @@ namespace TestRig
             openOCDInfo.RedirectStandardError = true;
             openOCDInfo.WorkingDirectory = Path.GetDirectoryName(mainHandle.textOCDExe);
 
-            switch (OCDNum)
-            {
-                case (0):
-                    openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfacePrimary + " -f " + mainHandle.textOCDTarget;
-                    break;
-                case (1):
-                    openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfaceSecondary1 + " -f " + mainHandle.textOCDTarget;
-                    break;
-                case (2):
-                    openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfaceSecondary2 + " -f " + mainHandle.textOCDTarget;
-                    break;
-                default:
-                    openOCDInfo.Arguments = @"-f " + mainHandle.textOCDInterfacePrimary + " -f " + mainHandle.textOCDTarget;
-                    break;
-            }
+            openOCDInfo.Arguments = @"-f " + mainHandle.interfaceJTAG.getInterfaceLocation(OCDNum) + " -f " + mainHandle.textOCDTarget;
+            
 
             openOCDInfo.FileName = mainHandle.textOCDExe;
 

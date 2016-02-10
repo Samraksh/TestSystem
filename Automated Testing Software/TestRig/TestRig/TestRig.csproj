@@ -145,6 +145,7 @@
     <Compile Include="FileTest.cs" />
     <Compile Include="GDB.cs" />
     <Compile Include="Git.cs" />
+    <Compile Include="JTAGInterface.cs" />
     <Compile Include="LogicAnalyzer.cs" />
     <Compile Include="Matlab.cs" />
     <Compile Include="MSBuild.cs" />

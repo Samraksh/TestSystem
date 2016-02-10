@@ -37,7 +37,7 @@ namespace TestRig
         private int currentOpenOCDInstance;
         private int currentOpenCOMInstance;
         private int maxCOMInstances = 1;
-        private bool debugDoNotBuild = false;
+        private bool debugDoNotBuild = true;
         private bool debugDoNotProgram = false;
         private string workingDirectory = null;
         private bool cleanBuildNeeded = true;
@@ -471,7 +471,7 @@ namespace TestRig
                         break;
                 }
 
-                if (currentTest.testSolution.Equals("EmoteDotNow"))
+                /*if (currentTest.testSolution.Equals("EmoteDotNow"))
                 {
                     
                     if (testInitialTest == false)
@@ -480,9 +480,9 @@ namespace TestRig
                         // checking board connectivity
                         if (openOCD.active == false) openOCD.Connect(mainHandle, currentOpenOCDInstance);
                         if (openOCD.active == false) return "OpenOCD failed to load";
-                        gdb = new GDB(mainHandle);
+                        gdb = new GDB(mainHandle, currentOpenOCDInstance);
                         if ((gdb == null) || (gdb.gdbConnnected == false)) return "GDB failed to load";
-                        telnet = new TelnetBoard(mainHandle);
+                        telnet = new TelnetBoard(mainHandle, currentOpenOCDInstance);
                         if (telnet == null) return "Telnet failed to load";
 
                         if (telnet.Start() == false) return "Telnet failed to start";
@@ -491,7 +491,7 @@ namespace TestRig
                         if (gdb != null) gdb.Kill();
                         if (openOCD.active == true) openOCD.Kill();
                     }
-                }
+                }*/
                 
                 #region Retrieving code
                 currentTest.testState = "Retrieving code";
@@ -747,7 +747,7 @@ namespace TestRig
                     }
                     else if (currentTest.testSupporting.StartsWith("load indentical"))
                     {                        
-                        // this project will get loaded to the primary and secondary devices (i.e. "load identical 3" will be loaded wo the primary and two secondary devices)
+                        // this project will get loaded to the primary and secondary devices (i.e. "load identical 3" will be loaded on the primary and two secondary devices)
                         string tempString = currentTest.testSupporting;
                         tempString = tempString.Trim();
                         tempString = currentTest.testSupporting.Remove(0, 16);
@@ -773,9 +773,9 @@ namespace TestRig
                         System.Diagnostics.Debug.WriteLine("Code load number " + indexDevice.ToString() + " instance: " + currentOpenOCDInstance.ToString());
                         openOCD.Connect(mainHandle, currentOpenOCDInstance);
                         if (openOCD.active == false) return "OpenOCD failed to load";
-                        gdb = new GDB(mainHandle);
-                        if ((gdb == null) || (gdb.gdbConnnected == false)) return "GDB failed to load";                        
-                        telnet = new TelnetBoard(mainHandle);
+                        gdb = new GDB(mainHandle, currentOpenOCDInstance);
+                        if ((gdb == null) || (gdb.gdbConnnected == false)) return "GDB failed to load";
+                        telnet = new TelnetBoard(mainHandle, currentOpenOCDInstance);
                         if (telnet == null) return "Telnet failed to load";
 
                         if (telnet.Start() == false) return "Telnet failed to start";

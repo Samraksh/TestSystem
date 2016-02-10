@@ -385,7 +385,7 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-bin\\interface\\olimex-arm-usb-ocd-h2.cfg")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-bin\\interface\\olimex-arm-usb-ocd-h.cfg")]
         public string OCDInterfaceSecondary2 {
             get {
                 return ((string)(this["OCDInterfaceSecondary2"]));

@@ -33,7 +33,7 @@ namespace TestRig
         public MainWindow mainHandle;
         private string compilerVersionPath;
 
-        public GDB(MainWindow passedHandle)
+        public GDB(MainWindow passedHandle, int OCDNum)
         {
             mainHandle = passedHandle;
             ProcessStartInfo GDBInfo = new ProcessStartInfo();
@@ -70,7 +70,7 @@ namespace TestRig
             GDBProcess.BeginOutputReadLine();
             GDBProcess.BeginErrorReadLine();
 
-            if (RunCommand(@"target remote localhost:3333", "Remote debugging using localhost:3333", "^error", 5000) != CommandStatus.Done)
+            if (RunCommand(@"target remote localhost:" + passedHandle.interfaceJTAG.getGDBPort(OCDNum), "Remote debugging using localhost:" + passedHandle.interfaceJTAG.getGDBPort(OCDNum), "^error", 5000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("GDB failed to connect to localhost.");                
             }

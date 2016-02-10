@@ -21,20 +21,23 @@ namespace TestRig
             Error
         }
 
-        private IPEndPoint ipEnd = new IPEndPoint(IPAddress.Any, 4444);    // IP address and port we are listening on
+        private IPEndPoint ipEnd;    // IP address and port we are listening on
         private Thread ListenThread;
         public Socket connectSocket;
         public MainWindow mainHandle;
         private CommandStatus commandResult;
         private string expectedResponse = String.Empty;
         private static string accumReceiveString;
+        private int telnetPort = 4444;
 
         private static AutoResetEvent ARE_result = new AutoResetEvent(false);
 
-        public TelnetBoard(MainWindow passedHandle)
+        public TelnetBoard(MainWindow passedHandle, int OCDNum)
         {
 
-            mainHandle = passedHandle;            
+            mainHandle = passedHandle;
+            telnetPort = int.Parse(passedHandle.interfaceJTAG.getTelnetPort(OCDNum));
+            ipEnd = new IPEndPoint(IPAddress.Any, telnetPort);
         }
 
         public bool Start()
@@ -42,9 +45,9 @@ namespace TestRig
             try
             {
                 IPAddress[] ipAddress = Dns.GetHostAddresses("127.0.0.1");
-                IPEndPoint ipEnd = new IPEndPoint(ipAddress[0], 4444);
+                IPEndPoint ipEnd = new IPEndPoint(ipAddress[0], telnetPort);
                 connectSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-                System.Diagnostics.Debug.WriteLine("Connecting to board through telnet.");
+                System.Diagnostics.Debug.WriteLine("Connecting to board through telnet port: " + telnetPort.ToString());
                 connectSocket.Connect(ipEnd);
                 accumReceiveString = String.Empty;
                 if (connectSocket != null)

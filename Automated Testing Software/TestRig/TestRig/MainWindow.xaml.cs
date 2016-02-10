@@ -66,9 +66,7 @@ namespace TestRig
         public string textMFPath_4_3;
         public string textTestSourcePath;
         public string textTestReceiptPath;
-        public string textOCDInterfacePrimary;
-        public string textOCDInterfaceSecondary1;
-        public string textOCDInterfaceSecondary2;
+        public JTAGInterface interfaceJTAG;
         public string textOCDTarget;
         public string textOCDExe;
         public string textGitPath;
@@ -111,6 +109,8 @@ namespace TestRig
 #endif
             InitializeComponent();
 
+            interfaceJTAG = new JTAGInterface(cbInterface.Items.Count);
+
             readSettings();
             checkPaths();
 
@@ -132,7 +132,7 @@ namespace TestRig
             startTestTimerDelegate = new StartTestTimer(StartTestTimerMethod);
             stopTestTimerDelegate = new StopTestTimer(StopTestTimerMethod);
             printErrorDelegate = new PrintError(PrintErrorMethod);
-            addTestResultDelegate = new AddTestResult(AddResult);
+            addTestResultDelegate = new AddTestResult(AddResult);            
 
             // sometimes openOCD is running so we will check and warn here.
             bool openOCDRunning = false;
@@ -747,6 +747,7 @@ namespace TestRig
         private void Upload_Click(object sender, RoutedEventArgs e)
         {
             ClearStatusBar();
+
             // clearing variable keeping track of batch calls (in case of endless loop)
             batchCall = 0;
 
@@ -768,7 +769,7 @@ namespace TestRig
                 writer.WriteLine("</TestSuite>");
             }
             // sending the generated test file to the test machine queue
-            rxSocket.uploadTests();
+            rxSocket.uploadTests();           
         }
 
         private void tbCompilerPath_TextChanged(object sender, TextChangedEventArgs e)
@@ -804,11 +805,11 @@ namespace TestRig
         private void tbOCDInterface_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
-                textOCDInterfacePrimary = tbOCDInterface.Text;
+                interfaceJTAG.setInterfaceLocation(0,tbOCDInterface.Text);                
             else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
-                textOCDInterfaceSecondary1 = tbOCDInterface.Text;
+                interfaceJTAG.setInterfaceLocation(1, tbOCDInterface.Text);                
             else
-                textOCDInterfaceSecondary2 = tbOCDInterface.Text;
+                interfaceJTAG.setInterfaceLocation(2, tbOCDInterface.Text);                
         }
 
         private void tbOCDTarget_TextChanged(object sender, TextChangedEventArgs e)
@@ -927,15 +928,11 @@ namespace TestRig
             {
                 // checking to make sure paths actually exist                
                 tbOCDExe.Text = Properties.Settings.Default.OCDExe.ToString();
-                textOCDInterfacePrimary = Properties.Settings.Default.OCDInterfacePrimary.ToString();
-                textOCDInterfaceSecondary1 = Properties.Settings.Default.OCDInterfaceSecondary1.ToString();
-                textOCDInterfaceSecondary2 = Properties.Settings.Default.OCDInterfaceSecondary2.ToString();
-                if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
-                    tbOCDInterface.Text = textOCDInterfacePrimary;
-                else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
-                    tbOCDInterface.Text = textOCDInterfaceSecondary1;
-                else
-                    tbOCDInterface.Text = textOCDInterfaceSecondary2;
+                interfaceJTAG.setInterfaceLocation(0, Properties.Settings.Default.OCDInterfacePrimary.ToString());
+                interfaceJTAG.setInterfaceLocation(1, Properties.Settings.Default.OCDInterfaceSecondary1.ToString());
+                interfaceJTAG.setInterfaceLocation(2, Properties.Settings.Default.OCDInterfaceSecondary2.ToString());
+                tbOCDInterface.Text = interfaceJTAG.getInterfaceLocation(cbInterface.SelectedIndex);
+                
                 tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
                 tbCompilerPath.Text = Properties.Settings.Default.CSPath.ToString();
 
@@ -1013,9 +1010,9 @@ namespace TestRig
             try
             {
                 // paths are saved to a settings file
-                Properties.Settings.Default["OCDInterfacePrimary"] = textOCDInterfacePrimary;
-                Properties.Settings.Default["OCDInterfaceSecondary1"] = textOCDInterfaceSecondary1;
-                Properties.Settings.Default["OCDInterfaceSecondary2"] = textOCDInterfaceSecondary2;
+                Properties.Settings.Default["OCDInterfacePrimary"] = interfaceJTAG.getInterfaceLocation(0);
+                Properties.Settings.Default["OCDInterfaceSecondary1"] = interfaceJTAG.getInterfaceLocation(1);
+                Properties.Settings.Default["OCDInterfaceSecondary2"] = interfaceJTAG.getInterfaceLocation(2);
                 Properties.Settings.Default["OCDTarget"] = tbOCDTarget.Text;
                 Properties.Settings.Default["OCDExe"] = tbOCDExe.Text;
                 Properties.Settings.Default["CSPath"] = tbCompilerPath.Text;
@@ -1338,17 +1335,17 @@ namespace TestRig
             }
             if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
             {
-                tbOCDInterface.Text = textOCDInterfacePrimary;
+                tbOCDInterface.Text = interfaceJTAG.getInterfaceLocation(0);
                 cbCOMPort.SelectedIndex = COMPortSelectionPrimary;
             }
             else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
             {
-                tbOCDInterface.Text = textOCDInterfaceSecondary1;
+                tbOCDInterface.Text = interfaceJTAG.getInterfaceLocation(1);
                 cbCOMPort.SelectedIndex = COMPortSelectionSecondary1;
             }
             else
             {
-                tbOCDInterface.Text = textOCDInterfaceSecondary2;
+                tbOCDInterface.Text = interfaceJTAG.getInterfaceLocation(2);
                 cbCOMPort.SelectedIndex = COMPortSelectionSecondary2;
             }
 
