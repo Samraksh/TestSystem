@@ -37,7 +37,7 @@ namespace TestRig
         private int currentOpenOCDInstance;
         private int currentOpenCOMInstance;
         private int maxCOMInstances = 1;
-        private bool debugDoNotBuild = true;
+        private bool debugDoNotBuild = false;
         private bool debugDoNotProgram = false;
         private string workingDirectory = null;
         private bool cleanBuildNeeded = true;
