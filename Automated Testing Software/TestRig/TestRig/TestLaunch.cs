@@ -45,6 +45,8 @@ namespace TestRig
         private string sessionFileName = null;
         private bool sessionStarted = false;
         private bool testInitialTest = false;
+        private bool testDefinedChanged = false;
+        private string MFPath;
 
         private void process_Exited(object sender, System.EventArgs e) {
             System.Threading.Thread.Sleep(10000);
@@ -126,6 +128,19 @@ namespace TestRig
             if (fastboot != null) fastboot.Kill();
             if (matlab != null) matlab.Kill();
             if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
+            if (testDefinedChanged == true)
+            {
+                try
+                {
+                    testDefinedChanged = false;
+                    File.Delete(Path.Combine(MFPath, @"Solutions\EmoteDotNow", "testDefines.h"));
+                    File.Move(Path.Combine(MFPath, @"Solutions\EmoteDotNow", "backuptestDefines.h"), Path.Combine(MFPath, @"Solutions\EmoteDotNow", "testDefines.h"));
+                }
+                catch
+                {
+                    System.Diagnostics.Debug.WriteLine("Failed to copy test define file.");
+                }
+            }
         }
 
         public void AbortTests()
@@ -248,7 +263,7 @@ namespace TestRig
             return null;
         }
 
-        public bool CopyDllsFiles(string MFPath)
+        public bool CopyDllsFiles()
         {
             // copying Samraksh_eMote files
             try
@@ -347,7 +362,7 @@ namespace TestRig
             return true;
         }
 
-        public bool CopyNativeFiles(string MFPath, TestDescription currentTest, string workingDirectory, string testSuitePath)
+        public bool CopyNativeFiles(TestDescription currentTest, string workingDirectory, string testSuitePath)
         {
             if (currentTest.testSolution.Equals("SOC_ADAPT"))
             {
@@ -378,7 +393,7 @@ namespace TestRig
             return true;
         }
 
-        public bool UpdateNativeProjectFile(string MFPath, TestDescription currentTest, string workingDirectory, string testSuitePath)
+        public bool UpdateNativeProjectFile(TestDescription currentTest, string workingDirectory, string testSuitePath)
         {           
             try
             {
@@ -446,8 +461,7 @@ namespace TestRig
             {                
                 string projectName = currentTest.buildProj;
                 int index = projectName.LastIndexOf('.');
-                string strippedName = projectName.Substring(0, index);
-                string MFPath;
+                string strippedName = projectName.Substring(0, index);                
                 string testDataName = String.Empty;
                 ProcessStartInfo TestExecutableInfo = new ProcessStartInfo();
                 ProcessStartInfo TestAnalysisExecutableInfo = new ProcessStartInfo();
@@ -524,16 +538,32 @@ namespace TestRig
 
                 #region Copying needed files for build
                 // Dlls might have changed
-                if (CopyDllsFiles(MFPath) == false) return "DLL copy error";
+                if (CopyDllsFiles() == false) return "DLL copy error";
+                
+                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote\le", "Samraksh_eMote.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote.dll"), true);
 
+                if (File.Exists(Path.Combine(workingDirectory, "testDefines.h")))
+                {
+                    try
+                    {
+                        System.Diagnostics.Debug.WriteLine("Custom defines exist for test...copying " + Path.Combine(workingDirectory, "testDefines.h").ToString() + " to " + Path.Combine(MFPath, @"Solutions\EmoteDotNow", "testDefines.h").ToString());
+                        File.Move(Path.Combine(MFPath, @"Solutions\EmoteDotNow", "testDefines.h"), Path.Combine(MFPath, @"Solutions\EmoteDotNow", "backuptestDefines.h"));
+                        File.Copy(Path.Combine(workingDirectory, "testDefines.h"), Path.Combine(MFPath, @"Solutions\EmoteDotNow", "testDefines.h"));
+                        testDefinedChanged = true;
+                    }
+                    catch
+                    {
+                        System.Diagnostics.Debug.WriteLine("Failed to copy test define file.");
+                    }
+                }
                 // if this is a Native project we copy over the appropriate project file information and scatterfile
                 if ((currentTest.testType.Contains("Native") == true) || (currentTest.testType.Contains("native") == true))
                 {
-                    CopyNativeFiles(MFPath, currentTest, workingDirectory, mainHandle.textTestSourcePath);
-                    UpdateNativeProjectFile(MFPath, currentTest, workingDirectory, mainHandle.textTestSourcePath);   
+                    CopyNativeFiles(currentTest, workingDirectory, mainHandle.textTestSourcePath);
+                    UpdateNativeProjectFile(currentTest, workingDirectory, mainHandle.textTestSourcePath);   
                 }
                 #endregion
-
+                
                 #region Building code
                 if (debugAlwaysCleanBuild) cleanBuildNeeded = true;
 
