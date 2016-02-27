@@ -47,7 +47,7 @@ namespace TestRig
             gotResponse3 = false;
             gotResponse4 = false;
             gotResponse5 = false;
-                        switch (COMNum)
+            switch (COMNum)
             {
                 case (0):
                     textCOMPort = mainHandle.textCOMPortPrimary;

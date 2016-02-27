@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define DEBUG_DISABLE_LOADING
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -415,6 +417,7 @@ namespace TestRig
 
         public bool BuildManagedProject(string path, string project, TestDescription currentTest, bool cleanBuildNeeded)
         {
+#if (!DEBUG_DISABLE_LOADING)
             switch (currentTest.testSolution)
             {
                 case "STM32F10x":
@@ -524,6 +527,7 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("MSBuild project converted to S19 step 1.");
             RunCommand(mainHandle.textCompilerPath + @"\" + compilerVersionPath + @"\bin\arm-none-eabi-objcopy.exe " + buildOutput + strippedName + @".s19 " + buildOutput + strippedName + @"_Conv.s19");
             Thread.Sleep(2000);
+#endif
 
             return true;
         }
