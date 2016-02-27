@@ -897,7 +897,6 @@ namespace TestRig
                                     openOCD.Connect(mainHandle, i);
                                     if (openOCD.active == false) 
                                         return "OpenOCD failed to load";
-                                    //Thread.Sleep(1000);
                                     gdb = new GDB(mainHandle, i);
                                     if ((gdb == null) || (gdb.gdbConnnected == false)) 
                                         return "GDB failed to load";
@@ -910,12 +909,9 @@ namespace TestRig
                                     if (gdb.Continue() == false) 
                                         return "GDB failed to start processor";
 
-                                    //if (i == 2)
-                                    //{
-                                        if (telnet != null) telnet.Kill();
-                                        if (gdb != null) gdb.Kill();
-                                        if (openOCD.active == true) openOCD.Kill();
-                                    //}
+                                    if (telnet != null) telnet.Kill();
+                                    if (gdb != null) gdb.Kill();
+                                    if (openOCD.active == true) openOCD.Kill();
                                 }
                             }
                             else
@@ -939,7 +935,8 @@ namespace TestRig
                 }
                 #endregion
 
-                /*if (string.Equals(currentTest.testName, "OMACTest(Receive-Fan_In)") || string.Equals(currentTest.testName, "OMACTest(Send-Fan_Out)"))
+                /* For future - in case an app needs to be started by sending a "GO" on the serial
+                if (string.Equals(currentTest.testName, "OMACTest(Receive-Fan_In)") || string.Equals(currentTest.testName, "OMACTest(Send-Fan_Out)"))
                 {
                     //MainWindow mw = new MainWindow();
                     //if (string.Equals(mw.textCOMPortPrimary, "COM160"))
@@ -957,379 +954,359 @@ namespace TestRig
                 }*/
 
                 #region Getting ready to run test
-                /*if (string.Equals(currentTest.testName, "OMACTest(Receive)") || string.Equals(currentTest.testName, "OMACTest(Send)"))
+                if (currentTest.testDelay != 0)
                 {
-                    //dont do anything
+                    System.Diagnostics.Debug.WriteLine("Delaying test by " + currentTest.testDelay.ToString() + " ms");
+                    Thread.Sleep(currentTest.testDelay);
                 }
-                else
-                {*/
-                    if (currentTest.testDelay != 0)
+                if (currentTest.testType.Contains("C#") == true)
+                {
+                    // There are five seconds of debug messages with C# but not native which will cause us to stop hearing data from the COM port
+                    System.Diagnostics.Debug.WriteLine("Waiting 2 seconds for DUT to startup and flush serial buffer");
+                    Thread.Sleep(2000);
+                }
+                if (currentTest.testUseCOM == true)
+                {
+                    if (COM[0].Connect(currentTest, testReceipt, 0) == false) return "COM 0 failed to open";
+                }
+                /*if (currentTest.testUseCOM == true)
+                {
+                    for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
                     {
-                        System.Diagnostics.Debug.WriteLine("Delaying test by " + currentTest.testDelay.ToString() + " ms");
-                        Thread.Sleep(currentTest.testDelay);
+                        if (COM[indexDevice].Connect(currentTest, testReceipt, indexDevice) == false) return "COM " + indexDevice.ToString() + " failed to open";
                     }
-                    if (currentTest.testType.Contains("C#") == true)
+                }*/
+                if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
+                Directory.CreateDirectory(workingDirectory + @"\" + "testTemp");
+                // if we try to do too much while the logic analyzer is running we get an error:
+                // Logic Reported an Error.  This probably means that Logic could not keep up at the given data rate, or was disconnected. You can re-start the capture automatically, if your application can tolerate gaps in the data.
+                if ((currentTest.testUseLogic.Equals("normal") == true) || (currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
+                {
+                    if (logicTest == null)
+                        logicTest = new LogicAnalyzer(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
+                    else
+                        logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
+                    if (logicTest == null) return "Logic Analyzer failed to load";
+                    if ((currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
                     {
-                        // There are five seconds of debug messages with C# but not native which will cause us to stop hearing data from the COM port
-                        System.Diagnostics.Debug.WriteLine("Waiting 2 seconds for DUT to startup and flush serial buffer");
-                        Thread.Sleep(2000);
+                        testDataName = @"testTemp\testData.txt";
                     }
-                    if (currentTest.testUseCOM == true)
+                    else
                     {
-                        if (COM[0].Connect(currentTest, testReceipt, 0) == false) return "COM 0 failed to open";
+                        testDataName = @"testTemp\testData.csv";
                     }
-                    /*if (currentTest.testUseCOM == true)
-                    {
-                        for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
-                        {
-                            if (COM[indexDevice].Connect(currentTest, testReceipt, indexDevice) == false) return "COM " + indexDevice.ToString() + " failed to open";
-                        }
-                    }*/
-                    if (Directory.Exists(workingDirectory + @"\" + "testTemp")) Directory.Delete(workingDirectory + @"\" + "testTemp", true);
-                    Directory.CreateDirectory(workingDirectory + @"\" + "testTemp");
-                    // if we try to do too much while the logic analyzer is running we get an error:
-                    // Logic Reported an Error.  This probably means that Logic could not keep up at the given data rate, or was disconnected. You can re-start the capture automatically, if your application can tolerate gaps in the data.
-                    if ((currentTest.testUseLogic.Equals("normal") == true) || (currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
-                    {
-                        if (logicTest == null)
-                            logicTest = new LogicAnalyzer(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
-                        else
-                            logicTest.Initialize(currentTest.testSampleFrequency, workingDirectory + @"\" + strippedName + ".hkp");
-                        if (logicTest == null) return "Logic Analyzer failed to load";
-                        if ((currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
-                        {
-                            testDataName = @"testTemp\testData.txt";
-                        }
-                        else
-                        {
-                            testDataName = @"testTemp\testData.csv";
-                        }
-                        if (logicTest.startMeasure(workingDirectory + "\\" + testDataName, currentTest.testSampleTimeMs, currentTest.testUseLogic) == false) return "Logic Analyzer failed to start measuring";
-                    }
+                    if (logicTest.startMeasure(workingDirectory + "\\" + testDataName, currentTest.testSampleTimeMs, currentTest.testUseLogic) == false) return "Logic Analyzer failed to start measuring";
+                }
 
-                    // starting to measure time of test 
-                    testStartTime = DateTime.Now;
+                // starting to measure time of test 
+                testStartTime = DateTime.Now;
 
-                    if (currentTest.testUseScript == true)
-                    {
-                        TestExecutableInfo = new ProcessStartInfo();
-                        TestExecutableProcess = new Process();
+                if (currentTest.testUseScript == true)
+                {
+                    TestExecutableInfo = new ProcessStartInfo();
+                    TestExecutableProcess = new Process();
 
-                        System.Diagnostics.Debug.WriteLine("Starting to run test command prompt: " + currentTest.testScriptName);
+                    System.Diagnostics.Debug.WriteLine("Starting to run test command prompt: " + currentTest.testScriptName);
 
-                        TestExecutableInfo.CreateNoWindow = true;
-                        TestExecutableInfo.RedirectStandardInput = false;
-                        TestExecutableInfo.UseShellExecute = false;
-                        //TestExecutableInfo.FileName = @"cmd.exe";
+                    TestExecutableInfo.CreateNoWindow = true;
+                    TestExecutableInfo.RedirectStandardInput = false;
+                    TestExecutableInfo.UseShellExecute = false;
+                    //TestExecutableInfo.FileName = @"cmd.exe";
 
-                        TestExecutableProcess.StartInfo = TestExecutableInfo;
-                        //TestExecutableProcess.Start();
-                        //input = TestExecutableProcess.StandardInput;
-                    }
-                //}
+                    TestExecutableProcess.StartInfo = TestExecutableInfo;
+                    //TestExecutableProcess.Start();
+                    //input = TestExecutableProcess.StandardInput;
+                }
                 #endregion
 
                 #region Running test
 
                 currentTest.testState = "Running test";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                /*if (string.Equals(currentTest.testName, "OMACTest(Receive)") || string.Equals(currentTest.testName, "OMACTest(Send)"))
+                
+                if (currentTest.testUseScript == true)
                 {
-                    //dont do anything
-                }
-                else
-                {*/
-                    if (currentTest.testUseScript == true)
+                    /*if (currentTest.testType.Contains("C#") == true)
                     {
-                        /*if (currentTest.testType.Contains("C#") == true)
-                        {
-                            // There are five seconds of debug messages with C# but not native
-                            System.Diagnostics.Debug.WriteLine("Waiting 5 seconds for DUT to startup and flush serial buffer");
-                            Thread.Sleep(5000);
-                        }*/
+                        // There are five seconds of debug messages with C# but not native
+                        System.Diagnostics.Debug.WriteLine("Waiting 5 seconds for DUT to startup and flush serial buffer");
+                        Thread.Sleep(5000);
+                    }*/
 
-                        // if there is a COM port already open we will close it now so we can start a new COM port with possibly different settings
-                        for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
+                    // if there is a COM port already open we will close it now so we can start a new COM port with possibly different settings
+                    for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
+                    {
+                        if (COM[indexCOM].active == true)
+                            COM[indexCOM].Kill();
+                    }
+                    Thread.Sleep(6000);
+                    //for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
+                    // for now we only have one COM port open
+                    for (indexDevice = 0; indexDevice < 1; indexDevice++)
+                    {
+                        if (COM[indexDevice].Connect(currentTest, testReceipt, indexDevice) == false) return "COM " + indexDevice.ToString() + " failed to open";
+                    }
+
+                    fTest = new FileTest(mainHandle, currentTest);
+                    if (fTest == null) return "FileTest failed to open";
+
+                    StreamReader script;
+                    String line;
+                    string[] parsedLine;
+                    int runTime = 0;
+
+                    if (File.Exists(workingDirectory + @"\" + currentTest.testScriptName) == false) return "Specified script: " + currentTest.testScriptName + " does not exist.";
+                    System.Diagnostics.Debug.WriteLine("Running test script: " + currentTest.testScriptName);
+                    script = new StreamReader(workingDirectory + @"\" + currentTest.testScriptName);
+                    line = script.ReadLine();
+                    while (line != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Running script line: " + line);
+                        line = line.Trim();
+                        parsedLine = line.Split(' ');
+                        if (line.StartsWith("#"))
                         {
-                            if (COM[indexCOM].active == true)
-                                COM[indexCOM].Kill();
+                            System.Diagnostics.Debug.WriteLine("Script comment: " + line);
                         }
-                        Thread.Sleep(6000);
-                        //for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
-                        // for now we only have one COM port open
-                        for (indexDevice = 0; indexDevice < 1; indexDevice++)
+                        else if (line.StartsWith("execute"))
                         {
-                            if (COM[indexDevice].Connect(currentTest, testReceipt, indexDevice) == false) return "COM " + indexDevice.ToString() + " failed to open";
-                        }
-
-                        fTest = new FileTest(mainHandle, currentTest);
-                        if (fTest == null) return "FileTest failed to open";
-
-                        StreamReader script;
-                        String line;
-                        string[] parsedLine;
-                        int runTime = 0;
-
-                        if (File.Exists(workingDirectory + @"\" + currentTest.testScriptName) == false) return "Specified script: " + currentTest.testScriptName + " does not exist.";
-                        System.Diagnostics.Debug.WriteLine("Running test script: " + currentTest.testScriptName);
-                        script = new StreamReader(workingDirectory + @"\" + currentTest.testScriptName);
-                        line = script.ReadLine();
-                        while (line != null)
-                        {
-                            System.Diagnostics.Debug.WriteLine("Running script line: " + line);
-                            line = line.Trim();
-                            parsedLine = line.Split(' ');
-                            if (line.StartsWith("#"))
+                            try
                             {
-                                System.Diagnostics.Debug.WriteLine("Script comment: " + line);
+                                runTime = int.Parse(parsedLine[2].Trim());
+                                // see what is to be exectued (exe, dll, other)
+                                if (parsedLine[1].EndsWith(".exe"))
+                                {
+                                    TestExecutableInfo.FileName = parsedLine[1].Trim();
+
+                                    TestExecutableProcess.Start();
+                                    TestExecutableProcess.WaitForExit(runTime);
+                                    if (TestExecutableProcess.HasExited == false)
+                                        TestExecutableProcess.Kill();
+                                }
+                                else if (parsedLine[1].EndsWith(".dll"))
+                                {
+                                }
+                                else if (parsedLine[1].EndsWith(".ps1"))
+                                {
+                                    PowerShell powerShell = PowerShell.Create();
+
+                                    powerShell.AddScript(File.ReadAllText(workingDirectory + @"\" + "Test.ps1"));
+                                    var results = powerShell.Invoke();
+                                }
                             }
-                            else if (line.StartsWith("execute"))
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine("failed to execute: " + parsedLine[1].Trim() + " running for (ms): " + runTime.ToString() + ": " + ex.Message);
+                                return "failed to execute: " + parsedLine[1].Trim() + " running for (ms): " + runTime.ToString();
+                            }
+                        }
+                        else if (line.StartsWith("file"))
+                        {
+                            if (parsedLine[1].Contains("random"))
+                            {
+                                Random random;
+                                int randomNumber;
+
+                                if (parsedLine[2].Contains("none"))
+                                    random = new Random();
+                                else
+                                    random = new Random(int.Parse(parsedLine[2].Trim()));
+
+                                int byteNum = int.Parse(parsedLine[3].Trim());
+                                int lowerBound = int.Parse(parsedLine[4].Trim());
+                                int upperBound = int.Parse(parsedLine[5].Trim());
+
+                                System.Diagnostics.Debug.WriteLine("Sending " + byteNum.ToString() + " random bytes (" + lowerBound.ToString() + "," + upperBound.ToString() + ") to COM port");
+
+                                for (int i = 0; i < byteNum; i++)
+                                {
+                                    randomNumber = random.Next(lowerBound, upperBound);
+                                    fTest.Save(randomNumber.ToString() + "\r\n");
+                                }
+                            }
+                            else if (parsedLine[1].Contains("file"))
+                            {
+                                string fileName = parsedLine[2].Trim();
+                                if (File.Exists(workingDirectory + @"\" + fileName) == false) return "Specified fTest file: " + fileName + " does not exist.";
+                                System.Diagnostics.Debug.WriteLine("Sending data file: " + workingDirectory + @"\" + fileName + " to COM port");
+                                fTest.SendFile(workingDirectory + @"\" + fileName);
+                            }
+                            else if (parsedLine[1].Contains("string"))
+                            {
+                                int location = line.IndexOf("string ");
+                                fTest.Save(line.Remove(0, location + 7));
+                            }
+                            else if (parsedLine[1].Contains("enable") || parsedLine[1].Contains("disable"))
+                            {
+                                string fileName = parsedLine[2].Trim();
+                                if (fTest.SaveToFile(parsedLine[1].Trim(), workingDirectory + @"\" + fileName) == false) return "Specified test file: " + workingDirectory + @"\" + fileName + " could not be opened.";
+                            }
+                        }
+                        else if (line.StartsWith("COM_send"))
+                        {
+                            if (parsedLine[1].Contains("random"))
+                            {
+                                Random random;
+                                int randomNumber;
+
+                                if (parsedLine[2].Contains("none"))
+                                    random = new Random();
+                                else
+                                    random = new Random(int.Parse(parsedLine[2].Trim()));
+
+                                int byteNum = int.Parse(parsedLine[3].Trim());
+                                int lowerBound = int.Parse(parsedLine[4].Trim());
+                                int upperBound = int.Parse(parsedLine[5].Trim());
+
+                                System.Diagnostics.Debug.WriteLine("Sending " + byteNum.ToString() + " random bytes (" + lowerBound.ToString() + "," + upperBound.ToString() + ") to COM port");
+
+                                for (int i = 0; i < byteNum; i++)
+                                {
+                                    randomNumber = random.Next(lowerBound, upperBound);
+                                    COM[currentOpenCOMInstance].Send(randomNumber.ToString() + "\r\n");
+                                    // we have to throttle sending data for now or the eMote COM receive breaks
+                                    //Thread.Sleep(10);
+                                }
+                            }
+                            else if (parsedLine[1].Contains("file"))
+                            {
+                                string fileName = parsedLine[2].Trim();
+                                if (File.Exists(workingDirectory + @"\" + fileName) == false) return "Specified COM_send file: " + fileName + " does not exist.";
+                                System.Diagnostics.Debug.WriteLine("Sending data file: " + workingDirectory + @"\" + fileName + " to COM port");
+                                COM[currentOpenCOMInstance].SendFile(workingDirectory + @"\" + fileName);
+                            }
+                            else if (parsedLine[1].Contains("string"))
+                            {
+                                int location = line.IndexOf("string ");
+                                COM[currentOpenCOMInstance].Send(line.Remove(0, location + 7));
+                            }
+                        }
+                        else if (line.StartsWith("COM_receive"))
+                        {
+                            if (parsedLine[1].Contains("file"))
+                            {
+                                string fileName = parsedLine[3].Trim();
+                                if (COM[currentOpenCOMInstance].SaveToFile(parsedLine[2].Trim(), workingDirectory + @"\" + fileName) == false) return "Specified COM_receive file: " + workingDirectory + @"\" + fileName + " could not be opened.";
+                            }
+                        }
+                        else if (line.StartsWith("sleep"))
+                        {
+                            int waitTimeMs = int.Parse(parsedLine[1].Trim());
+
+                            System.Diagnostics.Debug.WriteLine("Script sleeping for " + waitTimeMs.ToString() + " ms.");
+                            Thread.Sleep(waitTimeMs);
+                        }
+                        else if (line.StartsWith("test_file"))
+                        {
+                            testDataName = parsedLine[1].Trim();
+                        }
+                        else if (line.StartsWith("test_result"))
+                        {
+                            if ((parsedLine[1].Contains("file")) && (parsedLine[2].Contains("compare")))
+                            {
+                                string fileName1 = parsedLine[3].Trim();
+                                string fileName2 = parsedLine[4].Trim();
+                                testReceipt.testPass = fTest.Compare(workingDirectory + @"\" + fileName1, workingDirectory + @"\" + fileName2);
+                                testReceipt.testComplete = true;
+                            }
+                            else if (parsedLine[1].Contains("results"))
                             {
                                 try
                                 {
-                                    runTime = int.Parse(parsedLine[2].Trim());
-                                    // see what is to be exectued (exe, dll, other)
-                                    if (parsedLine[1].EndsWith(".exe"))
-                                    {
-                                        TestExecutableInfo.FileName = parsedLine[1].Trim();
+                                    StreamReader tResult = new StreamReader(workingDirectory + @"\" + parsedLine[2]);
+                                    string resultLine;
 
-                                        TestExecutableProcess.Start();
-                                        TestExecutableProcess.WaitForExit(runTime);
-                                        if (TestExecutableProcess.HasExited == false)
-                                            TestExecutableProcess.Kill();
-                                    }
-                                    else if (parsedLine[1].EndsWith(".dll"))
+                                    resultLine = tResult.ReadLine();
+                                    while (resultLine != null)
                                     {
-                                    }
-                                    else if (parsedLine[1].EndsWith(".ps1"))
-                                    {
-                                        PowerShell powerShell = PowerShell.Create();
-
-                                        powerShell.AddScript(File.ReadAllText(workingDirectory + @"\" + "Test.ps1"));
-                                        var results = powerShell.Invoke();
+                                        if (resultLine.Contains("result ="))
+                                        {
+                                            if (resultLine.Contains("PASS"))
+                                                testReceipt.testPass = true;
+                                            else
+                                                testReceipt.testPass = false;
+                                        }
+                                        else if (resultLine.Contains("accuracy"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testAccuracy = double.Parse(resultLine.Substring(index, resultLine.Length - index));
+                                        }
+                                        else if (resultLine.Contains("resultParameter1"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testReturnParameter1 = resultLine.Substring(index, resultLine.Length - index);
+                                        }
+                                        else if (resultLine.Contains("resultParameter2"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testReturnParameter2 = resultLine.Substring(index, resultLine.Length - index);
+                                        }
+                                        else if (resultLine.Contains("resultParameter3"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testReturnParameter3 = resultLine.Substring(index, resultLine.Length - index);
+                                        }
+                                        else if (resultLine.Contains("resultParameter4"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testReturnParameter4 = resultLine.Substring(index, resultLine.Length - index);
+                                        }
+                                        else if (resultLine.Contains("resultParameter5"))
+                                        {
+                                            index = resultLine.IndexOf('=') + 2;
+                                            testReceipt.testReturnParameter5 = resultLine.Substring(index, resultLine.Length - index);
+                                            testReceipt.testComplete = true;
+                                        }
+                                        resultLine = tResult.ReadLine();
                                     }
                                 }
                                 catch (Exception ex)
                                 {
-                                    System.Diagnostics.Debug.WriteLine("failed to execute: " + parsedLine[1].Trim() + " running for (ms): " + runTime.ToString() + ": " + ex.Message);
-                                    return "failed to execute: " + parsedLine[1].Trim() + " running for (ms): " + runTime.ToString();
+                                    System.Diagnostics.Debug.WriteLine("test results read FAIL: " + ex.Message);
+                                    return "Test result file read failure: " + ex.Message;
                                 }
                             }
-                            else if (line.StartsWith("file"))
-                            {
-                                if (parsedLine[1].Contains("random"))
-                                {
-                                    Random random;
-                                    int randomNumber;
-
-                                    if (parsedLine[2].Contains("none"))
-                                        random = new Random();
-                                    else
-                                        random = new Random(int.Parse(parsedLine[2].Trim()));
-
-                                    int byteNum = int.Parse(parsedLine[3].Trim());
-                                    int lowerBound = int.Parse(parsedLine[4].Trim());
-                                    int upperBound = int.Parse(parsedLine[5].Trim());
-
-                                    System.Diagnostics.Debug.WriteLine("Sending " + byteNum.ToString() + " random bytes (" + lowerBound.ToString() + "," + upperBound.ToString() + ") to COM port");
-
-                                    for (int i = 0; i < byteNum; i++)
-                                    {
-                                        randomNumber = random.Next(lowerBound, upperBound);
-                                        fTest.Save(randomNumber.ToString() + "\r\n");
-                                    }
-                                }
-                                else if (parsedLine[1].Contains("file"))
-                                {
-                                    string fileName = parsedLine[2].Trim();
-                                    if (File.Exists(workingDirectory + @"\" + fileName) == false) return "Specified fTest file: " + fileName + " does not exist.";
-                                    System.Diagnostics.Debug.WriteLine("Sending data file: " + workingDirectory + @"\" + fileName + " to COM port");
-                                    fTest.SendFile(workingDirectory + @"\" + fileName);
-                                }
-                                else if (parsedLine[1].Contains("string"))
-                                {
-                                    int location = line.IndexOf("string ");
-                                    fTest.Save(line.Remove(0, location + 7));
-                                }
-                                else if (parsedLine[1].Contains("enable") || parsedLine[1].Contains("disable"))
-                                {
-                                    string fileName = parsedLine[2].Trim();
-                                    if (fTest.SaveToFile(parsedLine[1].Trim(), workingDirectory + @"\" + fileName) == false) return "Specified test file: " + workingDirectory + @"\" + fileName + " could not be opened.";
-                                }
-                            }
-                            else if (line.StartsWith("COM_send"))
-                            {
-                                if (parsedLine[1].Contains("random"))
-                                {
-                                    Random random;
-                                    int randomNumber;
-
-                                    if (parsedLine[2].Contains("none"))
-                                        random = new Random();
-                                    else
-                                        random = new Random(int.Parse(parsedLine[2].Trim()));
-
-                                    int byteNum = int.Parse(parsedLine[3].Trim());
-                                    int lowerBound = int.Parse(parsedLine[4].Trim());
-                                    int upperBound = int.Parse(parsedLine[5].Trim());
-
-                                    System.Diagnostics.Debug.WriteLine("Sending " + byteNum.ToString() + " random bytes (" + lowerBound.ToString() + "," + upperBound.ToString() + ") to COM port");
-
-                                    for (int i = 0; i < byteNum; i++)
-                                    {
-                                        randomNumber = random.Next(lowerBound, upperBound);
-                                        COM[currentOpenCOMInstance].Send(randomNumber.ToString() + "\r\n");
-                                        // we have to throttle sending data for now or the eMote COM receive breaks
-                                        //Thread.Sleep(10);
-                                    }
-                                }
-                                else if (parsedLine[1].Contains("file"))
-                                {
-                                    string fileName = parsedLine[2].Trim();
-                                    if (File.Exists(workingDirectory + @"\" + fileName) == false) return "Specified COM_send file: " + fileName + " does not exist.";
-                                    System.Diagnostics.Debug.WriteLine("Sending data file: " + workingDirectory + @"\" + fileName + " to COM port");
-                                    COM[currentOpenCOMInstance].SendFile(workingDirectory + @"\" + fileName);
-                                }
-                                else if (parsedLine[1].Contains("string"))
-                                {
-                                    int location = line.IndexOf("string ");
-                                    COM[currentOpenCOMInstance].Send(line.Remove(0, location + 7));
-                                }
-                            }
-                            else if (line.StartsWith("COM_receive"))
-                            {
-                                if (parsedLine[1].Contains("file"))
-                                {
-                                    string fileName = parsedLine[3].Trim();
-                                    if (COM[currentOpenCOMInstance].SaveToFile(parsedLine[2].Trim(), workingDirectory + @"\" + fileName) == false) return "Specified COM_receive file: " + workingDirectory + @"\" + fileName + " could not be opened.";
-                                }
-                            }
-                            else if (line.StartsWith("sleep"))
-                            {
-                                int waitTimeMs = int.Parse(parsedLine[1].Trim());
-
-                                System.Diagnostics.Debug.WriteLine("Script sleeping for " + waitTimeMs.ToString() + " ms.");
-                                Thread.Sleep(waitTimeMs);
-                            }
-                            else if (line.StartsWith("test_file"))
-                            {
-                                testDataName = parsedLine[1].Trim();
-                            }
-                            else if (line.StartsWith("test_result"))
-                            {
-                                if ((parsedLine[1].Contains("file")) && (parsedLine[2].Contains("compare")))
-                                {
-                                    string fileName1 = parsedLine[3].Trim();
-                                    string fileName2 = parsedLine[4].Trim();
-                                    testReceipt.testPass = fTest.Compare(workingDirectory + @"\" + fileName1, workingDirectory + @"\" + fileName2);
-                                    testReceipt.testComplete = true;
-                                }
-                                else if (parsedLine[1].Contains("results"))
-                                {
-                                    try
-                                    {
-                                        StreamReader tResult = new StreamReader(workingDirectory + @"\" + parsedLine[2]);
-                                        string resultLine;
-
-                                        resultLine = tResult.ReadLine();
-                                        while (resultLine != null)
-                                        {
-                                            if (resultLine.Contains("result ="))
-                                            {
-                                                if (resultLine.Contains("PASS"))
-                                                    testReceipt.testPass = true;
-                                                else
-                                                    testReceipt.testPass = false;
-                                            }
-                                            else if (resultLine.Contains("accuracy"))
-                                            {
-                                                index = resultLine.IndexOf('=') + 2;
-                                                testReceipt.testAccuracy = double.Parse(resultLine.Substring(index, resultLine.Length - index));
-                                            }
-                                            else if (resultLine.Contains("resultParameter1"))
-                                            {
-                                                index = resultLine.IndexOf('=') + 2;
-                                                testReceipt.testReturnParameter1 = resultLine.Substring(index, resultLine.Length - index);
-                                            }
-                                            else if (resultLine.Contains("resultParameter2"))
-                                            {
-                                                index = resultLine.IndexOf('=') + 2;
-                                                testReceipt.testReturnParameter2 = resultLine.Substring(index, resultLine.Length - index);
-                                            }
-                                            else if (resultLine.Contains("resultParameter3"))
-                                            {
-                                                index = resultLine.IndexOf('=') + 2;
-                                                testReceipt.testReturnParameter3 = resultLine.Substring(index, resultLine.Length - index);
-                                            }
-                                            else if (resultLine.Contains("resultParameter4"))
-                                            {
-                                                index = resultLine.IndexOf('=') + 2;
-                                                testReceipt.testReturnParameter4 = resultLine.Substring(index, resultLine.Length - index);
-                                            }
-                                            else if (resultLine.Contains("resultParameter5"))
-                                            {
-                                                index = resultLine.IndexOf('=') + 2;
-                                                testReceipt.testReturnParameter5 = resultLine.Substring(index, resultLine.Length - index);
-                                                testReceipt.testComplete = true;
-                                            }
-                                            resultLine = tResult.ReadLine();
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine("test results read FAIL: " + ex.Message);
-                                        return "Test result file read failure: " + ex.Message;
-                                    }
-                                }
-                            }
-                            line = script.ReadLine();
                         }
-                        script.Close();
+                        line = script.ReadLine();
                     }
-                //}
+                    script.Close();
+                }
                 #endregion
 
                 #region Stop data capture if occurring
                 DateTime testStopTime = DateTime.Now;
                 TimeSpan duration = testStopTime - testStartTime;
-                /*if (string.Equals(currentTest.testName, "OMACTest(Receive)") || string.Equals(currentTest.testName, "OMACTest(Send)"))
+                if ((currentTest.testUseLogic.Equals("normal") == true) || (currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
                 {
-                    //dont do anything
-                }
-                else
-                {*/
-                    if ((currentTest.testUseLogic.Equals("normal") == true) || (currentTest.testUseLogic.Equals("I2C") == true) || (currentTest.testUseLogic.Equals("i2c") == true))
+                    if (logicTest == null) return "Logic Analyzer failed to load";
+                    // shutting down logic analyzer if we sampled long enough
+                    if ((int)duration.TotalMilliseconds < currentTest.testSampleTimeMs)
                     {
-                        if (logicTest == null) return "Logic Analyzer failed to load";
-                        // shutting down logic analyzer if we sampled long enough
-                        if ((int)duration.TotalMilliseconds < currentTest.testSampleTimeMs)
-                        {
-                            System.Diagnostics.Debug.WriteLine("Waiting for end of logic sampling to end (" + (currentTest.testSampleTimeMs - (int)duration.TotalMilliseconds).ToString() + ") ms");
-                            Thread.Sleep(currentTest.testSampleTimeMs - (int)duration.TotalMilliseconds);
-                        }
-                        if (logicTest.stopMeasure() == false) return "Logic Analyzer failed to stop measuring";
+                        System.Diagnostics.Debug.WriteLine("Waiting for end of logic sampling to end (" + (currentTest.testSampleTimeMs - (int)duration.TotalMilliseconds).ToString() + ") ms");
+                        Thread.Sleep(currentTest.testSampleTimeMs - (int)duration.TotalMilliseconds);
                     }
+                    if (logicTest.stopMeasure() == false) return "Logic Analyzer failed to stop measuring";
+                }
 
+                testStopTime = DateTime.Now;
+                duration = testStopTime - testStartTime;
+                int remainingCOMtimeMs = currentTest.testTimeout - (int)duration.TotalMilliseconds;
+                int tenthWaitTimeMs = remainingCOMtimeMs / 10;
+                if (string.Equals(currentTest.testName, "OMACTest(Receive)") || string.Equals(currentTest.testName, "OMACTest(Send)"))
+                {
+                    remainingCOMtimeMs = 0;
+                }
+
+                System.Diagnostics.Debug.WriteLine("Test timeout (" + (remainingCOMtimeMs).ToString() + ") ms");
+                while ((currentTest.testUseCOM == true) && (testReceipt.testComplete != true) && (remainingCOMtimeMs > 0))
+                {
+                    System.Diagnostics.Debug.WriteLine("Waiting for test to timeout (" + (remainingCOMtimeMs).ToString() + ") ms");
+                    // if we are using the COM port then we will wait for the test to complete before moving on
+                    Thread.Sleep(tenthWaitTimeMs);
                     testStopTime = DateTime.Now;
                     duration = testStopTime - testStartTime;
-                    int remainingCOMtimeMs = currentTest.testTimeout - (int)duration.TotalMilliseconds;
-                    int tenthWaitTimeMs = remainingCOMtimeMs / 10;
-                    if (string.Equals(currentTest.testName, "OMACTest(Receive)") || string.Equals(currentTest.testName, "OMACTest(Send)"))
-                    {
-                        remainingCOMtimeMs = 0;
-                    }
-
-                    System.Diagnostics.Debug.WriteLine("Test timeout (" + (remainingCOMtimeMs).ToString() + ") ms");
-                    while ((currentTest.testUseCOM == true) && (testReceipt.testComplete != true) && (remainingCOMtimeMs > 0))
-                    {
-                        System.Diagnostics.Debug.WriteLine("Waiting for test to timeout (" + (remainingCOMtimeMs).ToString() + ") ms");
-                        // if we are using the COM port then we will wait for the test to complete before moving on
-                        Thread.Sleep(tenthWaitTimeMs);
-                        testStopTime = DateTime.Now;
-                        duration = testStopTime - testStartTime;
-                        remainingCOMtimeMs = currentTest.testTimeout - (int)duration.TotalMilliseconds;
-                    }
-                //}
+                    remainingCOMtimeMs = currentTest.testTimeout - (int)duration.TotalMilliseconds;
+                }
                 #endregion
 
                 for (int indexCOM = 0; indexCOM < maxCOMInstances; indexCOM++)
@@ -1346,137 +1323,129 @@ namespace TestRig
 
                 currentTest.testState = "Analyzing test";
                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                /*if (string.Equals(currentTest.testName, "OMACTest(Receive)") || string.Equals(currentTest.testName, "OMACTest(Send)"))
+                System.Diagnostics.Debug.WriteLine("**************** Analyzing test ************");
+                // waiting for any test files to be created
+                Thread.Sleep(1000);
+
+                testStopTime = DateTime.Now;
+                duration = testStopTime - testStartTime;
+                int analysisTimeout = currentTest.testTimeout - (int)duration.TotalMilliseconds;
+                // if the timeout already occurred we should still run the analysis for at least 10 seconds.
+                if (analysisTimeout < 10000)
+                    analysisTimeout = 10000;
+                if ((currentTest.testAnalysis.Equals("matlab") == true) || (currentTest.testAnalysis.Equals("Matlab") == true))
                 {
-                    //dont do anything
+                    matlab = new Matlab(mainHandle, testReceipt);
+                    if (matlab == null) return "Matlab failed to load";
+                    if (matlab.matlabRunScript(workingDirectory, testDataName, currentTest) == false) return "Matlab failed to run script";
                 }
-                else
-                {*/
-                    System.Diagnostics.Debug.WriteLine("**************** Analyzing test ************");
-                    // waiting for any test files to be created
-                    Thread.Sleep(1000);
+                else if (currentTest.testAnalysis.Equals("exe") == true)
+                {
+                    TestAnalysisExecutableInfo = new ProcessStartInfo();
+                    TestAnalysisExecutableProcess = new Process();
 
-                    testStopTime = DateTime.Now;
-                    duration = testStopTime - testStartTime;
-                    int analysisTimeout = currentTest.testTimeout - (int)duration.TotalMilliseconds;
-                    // if the timeout already occurred we should still run the analysis for at least 10 seconds.
-                    if (analysisTimeout < 10000)
-                        analysisTimeout = 10000;
-                    if ((currentTest.testAnalysis.Equals("matlab") == true) || (currentTest.testAnalysis.Equals("Matlab") == true))
+                    TestAnalysisExecutableInfo.CreateNoWindow = true;
+                    TestAnalysisExecutableInfo.RedirectStandardInput = false;
+                    TestAnalysisExecutableInfo.UseShellExecute = false;
+
+                    TestAnalysisExecutableProcess.StartInfo = TestAnalysisExecutableInfo;
+                    TestAnalysisExecutableInfo.FileName = workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim();
+                    TestAnalysisExecutableInfo.WorkingDirectory = workingDirectory;
+
+                    TestAnalysisExecutableInfo.Arguments = workingDirectory + "\\" + testDataName + " " + workingDirectory + currentTest.testResultsFileName;
+
+                    System.Diagnostics.Debug.WriteLine("Starting to run analysis executable: " + currentTest.testAnalysisScriptName.Trim() + " " + workingDirectory + "\\" + testDataName + " " + workingDirectory + "\\" + currentTest.testResultsFileName);
+                    TestAnalysisExecutableProcess.Start();
+                    TestAnalysisExecutableProcess.WaitForExit(analysisTimeout);
+                    if (TestAnalysisExecutableProcess.HasExited == false)
+                        TestAnalysisExecutableProcess.Kill();
+                }
+                else if ((currentTest.testAnalysis.Equals("powershell") == true) || (currentTest.testAnalysis.Equals("Powershell") == true) || (currentTest.testAnalysis.Equals("PowerShell") == true))
+                {
+                    System.Diagnostics.Debug.WriteLine("Starting to run analysis powershell: " + workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim());
+                    Process psShell = new Process();
+                    psShell.StartInfo.FileName = "powershell.exe";
+                    psShell.StartInfo.Arguments = " -executionpolicy unrestricted \"\"" + workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim();
+                    psShell.StartInfo.WorkingDirectory = workingDirectory;
+                    psShell.StartInfo.UseShellExecute = false;
+                    psShell.Start();
+
+                    System.Diagnostics.Debug.Write("Waiting for powershell to finish execution...");
+                    psShell.WaitForExit(analysisTimeout);
+                    if (psShell.HasExited == false)
                     {
-                        matlab = new Matlab(mainHandle, testReceipt);
-                        if (matlab == null) return "Matlab failed to load";
-                        if (matlab.matlabRunScript(workingDirectory, testDataName, currentTest) == false) return "Matlab failed to run script";
+                        System.Diagnostics.Debug.WriteLine("failed to finish on time. Killing powershell.");
+                        psShell.Kill();
                     }
-                    else if (currentTest.testAnalysis.Equals("exe") == true)
+                    else
                     {
-                        TestAnalysisExecutableInfo = new ProcessStartInfo();
-                        TestAnalysisExecutableProcess = new Process();
-
-                        TestAnalysisExecutableInfo.CreateNoWindow = true;
-                        TestAnalysisExecutableInfo.RedirectStandardInput = false;
-                        TestAnalysisExecutableInfo.UseShellExecute = false;
-
-                        TestAnalysisExecutableProcess.StartInfo = TestAnalysisExecutableInfo;
-                        TestAnalysisExecutableInfo.FileName = workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim();
-                        TestAnalysisExecutableInfo.WorkingDirectory = workingDirectory;
-
-                        TestAnalysisExecutableInfo.Arguments = workingDirectory + "\\" + testDataName + " " + workingDirectory + currentTest.testResultsFileName;
-
-                        System.Diagnostics.Debug.WriteLine("Starting to run analysis executable: " + currentTest.testAnalysisScriptName.Trim() + " " + workingDirectory + "\\" + testDataName + " " + workingDirectory + "\\" + currentTest.testResultsFileName);
-                        TestAnalysisExecutableProcess.Start();
-                        TestAnalysisExecutableProcess.WaitForExit(analysisTimeout);
-                        if (TestAnalysisExecutableProcess.HasExited == false)
-                            TestAnalysisExecutableProcess.Kill();
+                        System.Diagnostics.Debug.WriteLine("finished.");
                     }
-                    else if ((currentTest.testAnalysis.Equals("powershell") == true) || (currentTest.testAnalysis.Equals("Powershell") == true) || (currentTest.testAnalysis.Equals("PowerShell") == true))
+                }
+
+                if (currentTest.testUseResultsFile == true)
+                {
+                    try
                     {
-                        System.Diagnostics.Debug.WriteLine("Starting to run analysis powershell: " + workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim());
-                        Process psShell = new Process();
-                        psShell.StartInfo.FileName = "powershell.exe";
-                        psShell.StartInfo.Arguments = " -executionpolicy unrestricted \"\"" + workingDirectory + @"\" + currentTest.testAnalysisScriptName.Trim();
-                        psShell.StartInfo.WorkingDirectory = workingDirectory;
-                        psShell.StartInfo.UseShellExecute = false;
-                        psShell.Start();
+                        StreamReader tResult = new StreamReader(workingDirectory + @"\" + currentTest.testResultsFileName);
+                        string resultLine;
 
-                        System.Diagnostics.Debug.Write("Waiting for powershell to finish execution...");
-                        psShell.WaitForExit(analysisTimeout);
-                        if (psShell.HasExited == false)
+                        resultLine = tResult.ReadLine();
+                        while (resultLine != null)
                         {
-                            System.Diagnostics.Debug.WriteLine("failed to finish on time. Killing powershell.");
-                            psShell.Kill();
-                        }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("finished.");
-                        }
-                    }
 
-                    if (currentTest.testUseResultsFile == true)
-                    {
-                        try
-                        {
-                            StreamReader tResult = new StreamReader(workingDirectory + @"\" + currentTest.testResultsFileName);
-                            string resultLine;
-
-                            resultLine = tResult.ReadLine();
-                            while (resultLine != null)
+                            if (resultLine.Contains("accuracy"))
                             {
-
-                                if (resultLine.Contains("accuracy"))
-                                {
-                                    index = resultLine.IndexOf('=') + 1;
-                                    testReceipt.testAccuracy = double.Parse(resultLine.Substring(index, resultLine.Length - index));
-                                }
-                                else if (resultLine.Contains("resultParameter1"))
-                                {
-                                    index = resultLine.IndexOf('=') + 1;
-                                    testReceipt.testReturnParameter1 = resultLine.Substring(index, resultLine.Length - index);
-                                }
-                                else if (resultLine.Contains("resultParameter2"))
-                                {
-                                    index = resultLine.IndexOf('=') + 1;
-                                    testReceipt.testReturnParameter2 = resultLine.Substring(index, resultLine.Length - index);
-                                }
-                                else if (resultLine.Contains("resultParameter3"))
-                                {
-                                    index = resultLine.IndexOf('=') + 1;
-                                    testReceipt.testReturnParameter3 = resultLine.Substring(index, resultLine.Length - index);
-                                }
-                                else if (resultLine.Contains("resultParameter4"))
-                                {
-                                    index = resultLine.IndexOf('=') + 1;
-                                    testReceipt.testReturnParameter4 = resultLine.Substring(index, resultLine.Length - index);
-                                }
-                                else if (resultLine.Contains("resultParameter5"))
-                                {
-                                    index = resultLine.IndexOf('=') + 1;
-                                    testReceipt.testReturnParameter5 = resultLine.Substring(index, resultLine.Length - index);
-                                    testReceipt.testComplete = true;
-                                }
-                                else if (resultLine.Contains("result"))
-                                {
-                                    if (resultLine.Contains("PASS"))
-                                        testReceipt.testPass = true;
-                                    else
-                                        testReceipt.testPass = false;
-                                }
-                                resultLine = tResult.ReadLine();
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testAccuracy = double.Parse(resultLine.Substring(index, resultLine.Length - index));
                             }
-                            tResult.Close();
+                            else if (resultLine.Contains("resultParameter1"))
+                            {
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testReturnParameter1 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter2"))
+                            {
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testReturnParameter2 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter3"))
+                            {
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testReturnParameter3 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter4"))
+                            {
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testReturnParameter4 = resultLine.Substring(index, resultLine.Length - index);
+                            }
+                            else if (resultLine.Contains("resultParameter5"))
+                            {
+                                index = resultLine.IndexOf('=') + 1;
+                                testReceipt.testReturnParameter5 = resultLine.Substring(index, resultLine.Length - index);
+                                testReceipt.testComplete = true;
+                            }
+                            else if (resultLine.Contains("result"))
+                            {
+                                if (resultLine.Contains("PASS"))
+                                    testReceipt.testPass = true;
+                                else
+                                    testReceipt.testPass = false;
+                            }
+                            resultLine = tResult.ReadLine();
                         }
-                        catch (Exception ex)
-                        {
-                            System.Diagnostics.Debug.WriteLine("test results read FAIL: " + ex.Message);
-                            return "Test result file read failure: " + ex.Message;
-                        }
+                        tResult.Close();
                     }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine("test results read FAIL: " + ex.Message);
+                        return "Test result file read failure: " + ex.Message;
+                    }
+                }
 
-
-                    // delete raw data file
-                    Thread.Sleep(50);
-                    //Directory.Delete(workingDirectory + @"\" + "testTemp", true);
-                //}
+                // delete raw data file
+                Thread.Sleep(50);
+                //Directory.Delete(workingDirectory + @"\" + "testTemp", true);
                 #endregion
 
                 currentTest.testState = "Test Complete";
