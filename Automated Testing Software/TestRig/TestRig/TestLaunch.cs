@@ -1,6 +1,4 @@
-﻿//#define DEBUG_DISABLE_LOADING
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -790,6 +788,9 @@ namespace TestRig
                         currentOpenOCDInstance = 0;
                         currentOpenCOMInstance = 0;
                         System.Diagnostics.Debug.WriteLine("Load identical project: " + numberOfCodeLoads.ToString() + " instance: " + currentOpenOCDInstance.ToString());
+
+                        // This is how many processors will be started after everything is loaded
+                        currentTest.testDevicesToStart = numberOfCodeLoads;
                     }
                     else
                     {
@@ -802,7 +803,6 @@ namespace TestRig
 
                     for (indexDevice = 0; indexDevice < numberOfCodeLoads; indexDevice++)
                     {
-#if (!DEBUG_DISABLE_LOADING)
                         System.Diagnostics.Debug.WriteLine("Code load number " + indexDevice.ToString() + " instance: " + currentOpenOCDInstance.ToString());
                         openOCD.Connect(mainHandle, currentOpenOCDInstance);
                         if (openOCD.active == false) return "OpenOCD failed to load";
@@ -827,7 +827,7 @@ namespace TestRig
                                 currentTest.testState = "Loading TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
-                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";                                
+                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                                 currentTest.testState = "Loading TinyCLR";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyCLR";
@@ -859,7 +859,7 @@ namespace TestRig
                                 currentTest.testState = "Loading TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
-                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";                                
+                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                                 currentTest.testState = "Loading native code";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyCLR";
@@ -873,65 +873,46 @@ namespace TestRig
                                 }
                             }
                         }
-#endif
+                        if (telnet != null) telnet.Kill();
+                        if (gdb != null) gdb.Kill();
+                        if (openOCD.active == true) openOCD.Kill();
+                    }
 
-                        if (string.Equals(currentTest.testName, "OMACTest(Receive)") || string.Equals(currentTest.testName, "OMACTest(Send)"))
+                    // support projects (i.e. testDevicesToStart == 0) will not be started at this time
+                    if (currentTest.testDevicesToStart == 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine("****** Support project: starting the processor will be delayed until primary project is loaded. ******");                        
+                    }
+                    else
+                    {
+                        // primary projects and all support projects are started at this time                            
+                        for (int i = 0; i < currentTest.testDevicesToStart; i++)
                         {
+                            System.Diagnostics.Debug.WriteLine("****** Starting processor " + i.ToString() + " processor ******");
+                            currentTest.testState = "Starting processor " + i.ToString() + " processor";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                            openOCD.Connect(mainHandle, i);
+                            if (openOCD.active == false)
+                                return "OpenOCD failed to load";
+                            gdb = new GDB(mainHandle, i);
+                            if ((gdb == null) || (gdb.gdbConnnected == false))
+                                return "GDB failed to load";
+                            telnet = new TelnetBoard(mainHandle, i);
+                            if (telnet == null)
+                                return "Telnet failed to load";
+
+                            currentTest.testState = "Starting processor";
+                            mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                            if (gdb.Continue() == false)
+                                return "GDB failed to start processor";
+
                             if (telnet != null) telnet.Kill();
                             if (gdb != null) gdb.Kill();
                             if (openOCD.active == true) openOCD.Kill();
-                        }
-                        else
-                        {
-                            if (string.Equals(currentTest.testName, "OMACTest(Receive-Fan_In)") || string.Equals(currentTest.testName, "OMACTest(Send-Fan_Out)"))
-                            {
-                                currentTest.testState = "Starting processor";
-                                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                                if (gdb.Continue() == false) return "GDB failed to start processor";
-                                telnet.Kill();
-                                gdb.Kill();
-                                openOCD.Kill();
-
-                                for (int i = 2; i > 0; i--)
-                                {
-                                    openOCD.Connect(mainHandle, i);
-                                    if (openOCD.active == false) 
-                                        return "OpenOCD failed to load";
-                                    gdb = new GDB(mainHandle, i);
-                                    if ((gdb == null) || (gdb.gdbConnnected == false)) 
-                                        return "GDB failed to load";
-                                    telnet = new TelnetBoard(mainHandle, i);
-                                    if (telnet == null) 
-                                        return "Telnet failed to load";
-
-                                    currentTest.testState = "Starting processor";
-                                    mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                                    if (gdb.Continue() == false) 
-                                        return "GDB failed to start processor";
-
-                                    if (telnet != null) telnet.Kill();
-                                    if (gdb != null) gdb.Kill();
-                                    if (openOCD.active == true) openOCD.Kill();
-                                }
-                            }
-                            else
-                            {
-                                currentTest.testState = "Starting processor";
-                                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                                if (gdb.Continue() == false) return "GDB failed to start processor";
-                                telnet.Kill();
-                                gdb.Kill();
-                                openOCD.Kill();
-                                // waiting for debugger messages to stop which will cause us to stop hearing data from the COM port
-                                /*Thread.Sleep(5000);
-                                if ((currentTest.testUseCOM == true) && (indexDevice == 0))
-                                {
-                                    if (COM[currentOpenCOMInstance].Connect(currentTest, testReceipt, currentOpenCOMInstance) == false) return "COM " + indexDevice.ToString() + " failed to open";
-                                }*/
-                            }
-                            currentOpenOCDInstance++;
-                        }
+                        }                        
+                        currentOpenOCDInstance++;
                     }
+                    
                 }
                 #endregion
 

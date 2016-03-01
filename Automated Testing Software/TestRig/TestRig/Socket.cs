@@ -204,6 +204,8 @@ namespace TestRig
                 readTest.testPowerAutomateSelected = strip(reader.ReadElementContentAsString());
             if (reader.ReadToFollowing("TestBuild") == true)
                 readTest.testBuild = strip(reader.ReadElementContentAsString());
+            if (reader.ReadToFollowing("testDevicesToStart") == true)
+                readTest.testDevicesToStart = int.Parse(strip(reader.ReadElementContentAsString()));
 
             readTest.testReadComplete = true;
             return readTest;

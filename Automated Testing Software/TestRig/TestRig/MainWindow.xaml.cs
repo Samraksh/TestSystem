@@ -610,6 +610,8 @@ namespace TestRig
                             readTest.testPowerAutomateSelected = textPowerAutomateSelected;
                         if (readTest.testBuild == String.Empty)
                             readTest.testBuild = textCodeBuildSelected;
+                        // support projects will not automatically run, they will be started by the primary project
+                        readTest.testDevicesToStart = 0;
                         writer.Write(readTest.ToString());
                     }
                 }
@@ -697,6 +699,8 @@ namespace TestRig
                 tempTask.testPowerAutomateSelected = textPowerAutomateSelected;
             if (tempTask.testBuild == String.Empty)
                 tempTask.testBuild = textCodeBuildSelected;
+            // after the project is loaded, the primary project will start itself (and support projects if there are any will be added to this number later)
+            tempTask.testDevicesToStart = 1;
             if (tempTask.testSupporting != String.Empty)
             {
                 // queueing up support files
@@ -713,6 +717,8 @@ namespace TestRig
                         System.Diagnostics.Debug.WriteLine("support project: " + queueProjects[k]);
                         QueueSupportTest(queueProjects[k], writer);
                     }
+                    // after all support projects are loaded, the primary project will start itself and all support projects
+                    tempTask.testDevicesToStart += projectNum;                    
                 }
             }
             writer.Write(tempTask.ToString());

@@ -75,7 +75,7 @@ namespace TestRig
                                     value = value.TrimEnd('\"');
                                     currentTest.testCOMParameters = value;
                                 }
-                                if (parameter.Equals("testDelay")) currentTest.testDelay = int.Parse(value);
+                                if (parameter.Equals("testDelay")) currentTest.testDelay = int.Parse(value);                                
                             }                    
                         }
                         else
