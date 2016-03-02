@@ -31,12 +31,7 @@ namespace TestRig
         public string testJTAGHarness { get; set; }
         public string testPowerAutomateSelected { get; set; }
         public string testSupporting { get; set; }
-        public string testBuild { get; set; }
-        // this parameter is not read in directly
-        // support projects will not be started right away so we set this value to 0 on support projects
-        // primary projects will start themselves and all support projects. This value will be set to the count of primary + support projects automatically
-        // so all devices can be started up easily at the same (nearly) time.
-        public int testDevicesToStart { get; set; } 
+        public string testBuild { get; set; }        
 
         // the following are set by the test parameter file
         public int testTimeout { get; set; }
@@ -54,6 +49,11 @@ namespace TestRig
         public bool testUseResultsFile { get; set; }
         public string testResultsFileName { get; set; }
         public int testDelay { get; set; }
+        // this parameter is not read in directly
+        // support projects will not be started right away so we set this value to 0 on support projects
+        // primary projects will start themselves and all support projects. This value will be set to the count of primary + support projects automatically
+        // so all devices can be started up easily at the same (nearly) time.
+        public int testDevicesToStart { get; set; } 
         
         public TestDescription()
         {
@@ -153,8 +153,7 @@ namespace TestRig
             returnString += "\t<TestSupporting>\r\n\t" + testSupporting + "\r\n\t</TestSupporting>\r\n";
 			returnString += "\t<TestJTAGHarness>\r\n\t" + testJTAGHarness + "\r\n\t</TestJTAGHarness>\r\n";
             returnString += "\t<TestPowerAutomateSelected>\r\n\t" + testPowerAutomateSelected + "\r\n\t</TestPowerAutomateSelected>\r\n";
-            returnString += "\t<TestBuild>\r\n\t" + testBuild + "\r\n\t</TestBuild>\r\n";
-            returnString += "\t<testDevicesToStart>\r\n\t" + testDevicesToStart.ToString() + "\r\n\t</testDevicesToStart>\r\n";
+            returnString += "\t<TestBuild>\r\n\t" + testBuild + "\r\n\t</TestBuild>\r\n";            
             returnString += "\t<TestTimeout>\r\n\t" + testTimeout.ToString() + "\r\n\t</TestTimeout>\r\n";
             returnString += "\t<TestUseLogic>\r\n\t" + testUseLogic + "\r\n\t</TestUseLogic>\r\n";
             returnString += "\t<TestSampleTimeMs>\r\n\t" + testSampleTimeMs.ToString() + "\r\n\t</TestSampleTimeMs>\r\n";
@@ -169,7 +168,8 @@ namespace TestRig
             returnString += "\t<TestUseCOM>\r\n\t" + testUseCOM.ToString() + "\r\n\t</TestUseCOM>\r\n";
             returnString += "\t<TestForceCOM>\r\n\t" + testForceCOM + "\r\n\t</TestForceCOM>\r\n";
             returnString += "\t<TestCOMParameters>\r\n\t" + testCOMParameters + "\r\n\t</TestCOMParameters>\r\n";            
-            returnString += "\t<TestDelay>\r\n\t" + testDelay + "\r\n\t</TestDelay>\r\n";            
+            returnString += "\t<TestDelay>\r\n\t" + testDelay + "\r\n\t</TestDelay>\r\n";
+            returnString += "\t<testDevicesToStart>\r\n\t" + testDevicesToStart.ToString() + "\r\n\t</testDevicesToStart>\r\n";
             returnString += "</Test>\r\n";
 
             return returnString;

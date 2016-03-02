@@ -204,8 +204,6 @@ namespace TestRig
                 readTest.testPowerAutomateSelected = strip(reader.ReadElementContentAsString());
             if (reader.ReadToFollowing("TestBuild") == true)
                 readTest.testBuild = strip(reader.ReadElementContentAsString());
-            if (reader.ReadToFollowing("testDevicesToStart") == true)
-                readTest.testDevicesToStart = int.Parse(strip(reader.ReadElementContentAsString()));
 
             readTest.testReadComplete = true;
             return readTest;
@@ -225,10 +223,49 @@ namespace TestRig
                     System.Diagnostics.Debug.WriteLine("Starting to parse received XML test file.");
                     while (reader != null)
                     {                        
-                        TestDescription readTest = readXMLTest(reader);
+                        TestDescription readTest = readXMLTest(reader);                        
 
                         if (readTest.testReadComplete == true)
                         {
+                            // parse out support project data to figure out how many projects need to be started after loading is complete
+                            // queueing up support files
+                            string tempString;
+                            if (readTest.testSupporting.StartsWith("load support projects"))
+                            {
+                                tempString = readTest.testSupporting.Remove(0, 21);
+                                int indexColon = tempString.IndexOf(':');
+                                tempString = tempString.Remove(0, indexColon + 1);
+                                tempString = tempString.Trim();
+                                string[] queueProjects = tempString.Split(' ');
+                                int projectNum = queueProjects.Length;
+
+                                // after all support projects are loaded, the primary project will start itself and all support projects
+                                readTest.testDevicesToStart = 1 + projectNum;
+                            }
+                            else if (readTest.testSupporting.StartsWith("support project"))
+                            {
+                                // support projects will not automatically run, they will be started by the primary project
+                                readTest.testDevicesToStart = 0;
+                            }
+                            else if (readTest.testSupporting.StartsWith("load indentical"))
+                            {
+                                // this project will get loaded to the primary and secondary devices (i.e. "load identical 3" will be loaded on the primary and two secondary devices)
+                                tempString = readTest.testSupporting;
+                                tempString = tempString.Trim();
+                                tempString = readTest.testSupporting.Remove(0, 16);
+                                tempString = tempString.Trim();
+                                int supportNum = int.Parse(tempString);
+
+                                // This is how many processors will be started after everything is loaded
+                                readTest.testDevicesToStart = supportNum;
+                            }
+                            else
+                            {
+                                // this project is only the primary project so that will be all that is started
+                                readTest.testDevicesToStart = 1;
+                            }
+                            System.Diagnostics.Debug.WriteLine(readTest.testDevicesToStart.ToString() + " devices will be started");
+
                             // waiting for mutex to be free
                             testCollectionMutex.WaitOne();
                             // queueing up test that was just parsed out in local machine test queue

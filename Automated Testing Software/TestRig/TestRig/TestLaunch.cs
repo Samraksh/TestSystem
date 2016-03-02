@@ -788,9 +788,6 @@ namespace TestRig
                         currentOpenOCDInstance = 0;
                         currentOpenCOMInstance = 0;
                         System.Diagnostics.Debug.WriteLine("Load identical project: " + numberOfCodeLoads.ToString() + " instance: " + currentOpenOCDInstance.ToString());
-
-                        // This is how many processors will be started after everything is loaded
-                        currentTest.testDevicesToStart = numberOfCodeLoads;
                     }
                     else
                     {
