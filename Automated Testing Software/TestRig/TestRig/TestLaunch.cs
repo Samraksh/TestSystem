@@ -873,6 +873,8 @@ namespace TestRig
                         if (telnet != null) telnet.Kill();
                         if (gdb != null) gdb.Kill();
                         if (openOCD.active == true) openOCD.Kill();
+
+                        currentOpenOCDInstance++;
                     }
 
                     // support projects (i.e. testDevicesToStart == 0) will not be started at this time
@@ -882,7 +884,7 @@ namespace TestRig
                     }
                     else
                     {
-                        // primary projects and all support projects are started at this time                            
+                        // primary projects and all support projects are started at this time 
                         for (int i = 0; i < currentTest.testDevicesToStart; i++)
                         {
                             System.Diagnostics.Debug.WriteLine("****** Starting processor " + i.ToString() + " processor ******");
@@ -907,7 +909,7 @@ namespace TestRig
                             if (gdb != null) gdb.Kill();
                             if (openOCD.active == true) openOCD.Kill();
                         }                        
-                        currentOpenOCDInstance++;
+                        //currentOpenOCDInstance++;
                     }
                     
                 }
