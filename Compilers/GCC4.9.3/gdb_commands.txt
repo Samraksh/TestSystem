@@ -287,3 +287,23 @@ monitor stm32f1x mass_erase 1
 monitor reset halt
 monitor flash write_image release14.bin 0x8000000 bin
 end
+
+define program_loader
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Debug\\FlashLoader\\nathan\\nathan.axf
+load
+end
+
+define program_serial
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Debug\\FlashLoader\\serialRelay\\nathan.axf
+load
+end
