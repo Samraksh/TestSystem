@@ -21,6 +21,7 @@ namespace TestRig
                         {
                             if (line.Contains("=") == true)
                             {
+                                line = line.TrimStart(' ');
                                 string[] parsedLine = line.Split(' ');
                                 string parameter = parsedLine[2].Trim();
                                 string value = parsedLine[4];
