@@ -24,11 +24,11 @@ namespace TestRig
         //private long accessorOffset;
         //private long accessorLength;
         private long sampleNumber;
-        private byte previousSample;
-        private byte bitMask;
+        private int previousSample;
+        private int bitMask;
         private bool analyzeI2C;
-        private byte lastLevels;
-        private byte changeLevels;
+        private int lastLevels;
+        private int changeLevels;
         private ushort lastLevels16;
         private ushort changeLevels16;
         private const int I2C_STATE_IDLE = 0;
@@ -107,6 +107,9 @@ namespace TestRig
                                     break;
                                 case 8:
                                     bitMask |= 0x80;
+                                    break;
+                                case 9:
+                                    bitMask |= 0x100;
                                     break;
                             }
                         }
@@ -548,8 +551,9 @@ namespace TestRig
                     {
                         if ((sampleNumber == 0) || ((data[i] & bitMask) != previousSample))
                         {
-                            previousSample = (byte)(data[i] & bitMask);
+                            previousSample = (int)(data[i] & bitMask);
                             file.Write(sampleNumber.ToString());
+                            if ((bitMask & 0x100) != 0) file.Write("," + ((char)(((data[i] & 0x100) >> 8) + '0')).ToString());
                             if ((bitMask & 0x80) != 0) file.Write("," + ((char)(((data[i] & 0x80) >> 7) + '0')).ToString());
                             if ((bitMask & 0x40) != 0) file.Write("," + ((char)(((data[i] & 0x40) >> 6) + '0')).ToString());
                             if ((bitMask & 0x20) != 0) file.Write("," + ((char)(((data[i] & 0x20) >> 5) + '0')).ToString());
