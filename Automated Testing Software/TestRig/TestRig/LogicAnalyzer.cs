@@ -111,6 +111,9 @@ namespace TestRig
                                 case 9:
                                     bitMask |= 0x100;
                                     break;
+                                case 10:
+                                    bitMask |= 0x200;
+                                    break;
                             }
                         }
                         line = reader.ReadLine();
@@ -553,6 +556,7 @@ namespace TestRig
                         {
                             previousSample = (int)(data[i] & bitMask);
                             file.Write(sampleNumber.ToString());
+                            if ((bitMask & 0x200) != 0) file.Write("," + ((char)(((data[i] & 0x200) >> 8) + '0')).ToString());
                             if ((bitMask & 0x100) != 0) file.Write("," + ((char)(((data[i] & 0x100) >> 8) + '0')).ToString());
                             if ((bitMask & 0x80) != 0) file.Write("," + ((char)(((data[i] & 0x80) >> 7) + '0')).ToString());
                             if ((bitMask & 0x40) != 0) file.Write("," + ((char)(((data[i] & 0x40) >> 6) + '0')).ToString());
