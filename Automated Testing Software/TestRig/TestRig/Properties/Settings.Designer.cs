@@ -406,5 +406,41 @@ namespace TestRig.Properties {
                 this["COMPortSecondary2"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1480")]
+        public string RadioIDPrimary {
+            get {
+                return ((string)(this["RadioIDPrimary"]));
+            }
+            set {
+                this["RadioIDPrimary"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7110")]
+        public string RadioIDSecondary1 {
+            get {
+                return ((string)(this["RadioIDSecondary1"]));
+            }
+            set {
+                this["RadioIDSecondary1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("14330")]
+        public string RadioIDSecondary2 {
+            get {
+                return ((string)(this["RadioIDSecondary2"]));
+            }
+            set {
+                this["RadioIDSecondary2"] = value;
+            }
+        }
     }
 }

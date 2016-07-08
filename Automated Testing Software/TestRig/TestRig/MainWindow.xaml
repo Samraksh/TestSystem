@@ -441,6 +441,8 @@
                                     <TextBox Height="23" HorizontalAlignment="Stretch" Margin="0,10,10,0" Name="tbOCDExe" Text="" VerticalAlignment="Center" TextChanged="tbOCDExe_TextChanged" Grid.Row="1" Grid.Column="2" ToolTip="OpenOCD server executable"/>
                                     <TextBox Height="23" HorizontalAlignment="Stretch" Margin="0,0,10,0" Name="tbOCDInterface" Text="" VerticalAlignment="Center" TextChanged="tbOCDInterface_TextChanged" Grid.Row="2" Grid.Column="2" ToolTip="JTAG model; remember to install Olimex drivers!" />
                                     <TextBox Height="23" HorizontalAlignment="Stretch" Margin="0,0,10,0" Name="tbOCDTarget" Text="" VerticalAlignment="Center" TextChanged="tbOCDTarget_TextChanged" Grid.Row="3" Grid.Column="2" ToolTip="Microcontroller config; should match Test Selection -&gt; Hardware Solution" />
+                                    <Label Content="Radio ID" Grid.Column="2" Height="28" HorizontalAlignment="Left" Margin="402,5,0,0" Name="label3" VerticalAlignment="Top" />
+                                    <TextBox Grid.Column="2" Height="23" HorizontalAlignment="Left" Margin="463,6,0,0" Name="tbRadioID" VerticalAlignment="Top" Width="120" TextChanged="tbRadioID_TextChanged" />
                                 </Grid>
                             </GroupBox>
 

@@ -86,6 +86,10 @@ namespace TestRig
         public string textCOMPortPrimary;
         public string textCOMPortSecondary1;
         public string textCOMPortSecondary2;
+        public string textRadioIDPrimary;
+        public string textRadioIDSecondary1;
+        public string textRadioIDSecondary2;
+        private int textChangeGlitchSelectionPosition = 0;
         public int COMPortSelectionPrimary;
         public int COMPortSelectionSecondary1;
         public int COMPortSelectionSecondary2;
@@ -806,11 +810,25 @@ namespace TestRig
         private void tbOCDInterface_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
-                interfaceJTAG.setInterfaceLocation(0,tbOCDInterface.Text);                
+                interfaceJTAG.setInterfaceLocation(0, tbOCDInterface.Text);
             else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
-                interfaceJTAG.setInterfaceLocation(1, tbOCDInterface.Text);                
+                interfaceJTAG.setInterfaceLocation(1, tbOCDInterface.Text);
             else
-                interfaceJTAG.setInterfaceLocation(2, tbOCDInterface.Text);                
+                interfaceJTAG.setInterfaceLocation(2, tbOCDInterface.Text);            
+        }
+
+        private void tbRadioID_TextChanged(object sender, TextChangedEventArgs e)
+        {            
+            // we only want this function called when the user types in the box, not when the interface selection is changed
+            if (textChangeGlitchSelectionPosition == 0)
+            {
+                if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
+                    textRadioIDPrimary = tbRadioID.Text;
+                else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
+                    textRadioIDSecondary1 = tbRadioID.Text;
+                else
+                    textRadioIDSecondary2 = tbRadioID.Text;
+            }
         }
 
         private void tbOCDTarget_TextChanged(object sender, TextChangedEventArgs e)
@@ -971,6 +989,22 @@ namespace TestRig
                 {
                     cbCOMPort.SelectedIndex = COMPortSelectionSecondary2;
                 }
+
+                textRadioIDPrimary = Properties.Settings.Default.RadioIDPrimary;
+                textRadioIDSecondary1 = Properties.Settings.Default.RadioIDSecondary1;
+                textRadioIDSecondary2 = Properties.Settings.Default.RadioIDSecondary2;
+                if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
+                {
+                    tbRadioID.Text = textRadioIDPrimary;         
+                }
+                else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
+                {
+                    tbRadioID.Text = textRadioIDSecondary1;
+                }
+                else
+                {
+                    tbRadioID.Text = textRadioIDSecondary2;
+                }
                 textCOMPortPrimary = ((ComboBoxItem)cbCOMPort.Items[COMPortSelectionPrimary]).Content.ToString();
                 textCOMPortPrimary = textCOMPortPrimary.Remove(3, 1);
                 textCOMPortSecondary1 = ((ComboBoxItem)cbCOMPort.Items[COMPortSelectionSecondary1]).Content.ToString();
@@ -1032,6 +1066,10 @@ namespace TestRig
                 Properties.Settings.Default["GVSelection"] = cbGCCVersion.SelectedIndex;
                 Properties.Settings.Default["MFSelection"] = cbMFSelected.SelectedIndex;
                 Properties.Settings.Default["PowerCycleAutomated"] = cbPowerAutomate.IsChecked;
+
+                Properties.Settings.Default["RadioIDPrimary"] = textRadioIDPrimary;
+                Properties.Settings.Default["RadioIDSecondary1"] = textRadioIDSecondary1;
+                Properties.Settings.Default["RadioIDSecondary2"] = textRadioIDSecondary2;
 
                 Properties.Settings.Default["ServerListenPort"] = Convert.ToInt32(tbServerListenPort.Text);
                 Properties.Settings.Default["ServerKey"] = tbServerKey.Text;
@@ -1329,15 +1367,18 @@ namespace TestRig
 
         private void cbInterface_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // when we change the interface, we call the text change function for tbRadioID
+            textChangeGlitchSelectionPosition = 1;
             if (settingsInitialized == false)
             {
                 // buttons have not yet been defined by InitializeComponent
+                textChangeGlitchSelectionPosition = 0;
                 return;
             }
             if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
             {
                 tbOCDInterface.Text = interfaceJTAG.getInterfaceLocation(0);
-                cbCOMPort.SelectedIndex = COMPortSelectionPrimary;
+                cbCOMPort.SelectedIndex = COMPortSelectionPrimary;                
             }
             else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
             {
@@ -1350,7 +1391,21 @@ namespace TestRig
                 cbCOMPort.SelectedIndex = COMPortSelectionSecondary2;
             }
 
+            if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
+            {
+                tbRadioID.Text = textRadioIDPrimary;
+            }
+            else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
+            {
+                tbRadioID.Text = textRadioIDSecondary1;
+            }
+            else
+            {
+                tbRadioID.Text = textRadioIDSecondary2;
+            }
+
             checkPaths();
+            textChangeGlitchSelectionPosition = 0;
         }
 
         private void btnBatch_Click(object sender, RoutedEventArgs e)
@@ -1424,6 +1479,8 @@ namespace TestRig
         {
             textEmailSessionSelected = false.ToString();
         }
+
+        
     
     }
     class TestPassToColorConverter : IValueConverter{

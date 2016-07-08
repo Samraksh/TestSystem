@@ -98,5 +98,14 @@
     <Setting Name="COMPortSecondary2" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="RadioIDPrimary" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1480</Value>
+    </Setting>
+    <Setting Name="RadioIDSecondary1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">7110</Value>
+    </Setting>
+    <Setting Name="RadioIDSecondary2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">14330</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
