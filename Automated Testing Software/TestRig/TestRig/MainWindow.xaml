@@ -141,6 +141,7 @@
                             <ComboBox Height="23" HorizontalAlignment="Left" Margin="10,0,0,0" Name="cbGCCVersion" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbGCCVersion_SelectionChanged"  Grid.Row="2" Grid.Column="1" >
                                 <ComboBoxItem Content="GCC4.7.3" IsSelected="True" />
                                 <ComboBoxItem Content="GCC4.9.3" />
+                                <ComboBoxItem Content="GCC5.4.1" />
                             </ComboBox>
 
                             <Label Content="MF Version:" Height="28" HorizontalAlignment="Left" Margin="10,10,0,0" Name="label11" VerticalAlignment="Top" Grid.Row="0" Grid.Column="2" />

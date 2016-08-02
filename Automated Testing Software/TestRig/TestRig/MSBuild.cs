@@ -87,6 +87,10 @@ namespace TestRig
                     compilerVersion = "4.9.3";
                     compilerVersionPath = "GCC4.9.3";
                     break;
+                case "GCC5.4":
+                    compilerVersion = "5.4.1";
+                    compilerVersionPath = "GCC5.4.1";
+                    break;
                 default:
                     break;
             }

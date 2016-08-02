@@ -1294,8 +1294,11 @@ namespace TestRig
                 case 1:
                     textGCCVersion = "GCC4.9";
                     break;
+                case 2:
+                    textGCCVersion = "GCC5.4";
+                    break;
                 default:
-                    textGCCVersion = "GCC4.9";
+                    textGCCVersion = "GCC5.4";
                     break;
             }
         }
