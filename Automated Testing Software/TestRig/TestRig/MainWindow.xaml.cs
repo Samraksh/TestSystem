@@ -823,11 +823,17 @@ namespace TestRig
             if (textChangeGlitchSelectionPosition == 0)
             {
                 if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
+                {
                     textRadioIDPrimary = tbRadioID.Text;
+                }
                 else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
+                {
                     textRadioIDSecondary1 = tbRadioID.Text;
+                }
                 else
+                {
                     textRadioIDSecondary2 = tbRadioID.Text;
+                }
             }
         }
 

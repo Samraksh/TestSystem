@@ -155,7 +155,7 @@ namespace TestRig
                     }
                     else
                     {
-                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=debug " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
                         {
                             System.Diagnostics.Debug.WriteLine("MSBuild failed to clean.");
                             return false;
@@ -177,7 +177,7 @@ namespace TestRig
                 }
                 else
                 {
-                    if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+                    if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + ",flavor=debug " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
                     {
                         System.Diagnostics.Debug.WriteLine("MSBuild failed to build debug TinyBooter.");
                         return false;
@@ -202,7 +202,7 @@ namespace TestRig
                     }
                     else
                     {
-                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
+                        if (RunCommand(@"msbuild /maxcpucount /t:clean /p:memory=" + currentTest.testMemoryType + ",flavor=debug " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 20000) != CommandStatus.Done)
                         {
                             System.Diagnostics.Debug.WriteLine("release build failed to clean.");
                             return false;
@@ -223,7 +223,7 @@ namespace TestRig
                 }
                 else
                 {
-                    if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + " " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
+                    if (RunCommand(@"msbuild /maxcpucount /t:build /p:memory=" + currentTest.testMemoryType + ",flavor=debug " + currentTest.testSolutionType + ".proj", "Build succeeded", "Build FAILED", 900000) != CommandStatus.Done)
                     {
                         System.Diagnostics.Debug.WriteLine("MSBuild Debug failed to build.");
                         return false;
