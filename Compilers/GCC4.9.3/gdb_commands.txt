@@ -309,6 +309,17 @@ load
 end
 
 
+define program_WLNRadar
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Debug\\WLNRadarTest\\1kHz-WWF2-radar-logger.axf
+load
+end
+
+
 define program_OMAC
 set remotetimeout 10000
 monitor reset halt

@@ -1241,6 +1241,11 @@ namespace TestRig
                     textSolution = "SOC_ADAPT";
                     textJTAGHarness = "Lauterbach";
                     break;
+                case 5:
+                    textHardware = "WLN";
+                    textSolution = "WLN";
+                    textJTAGHarness = "Olimex";
+                    break;
                 default:
                     textHardware = "Emote v1";
                     textSolution = "STM32F10x";
