@@ -377,7 +377,19 @@ namespace TestRig
                     return false;
                 }
             }
-            else
+            else if (currentTest.testSolution.Equals("WLN"))
+            {
+                // Adapt scatterfile copy
+                try
+                {
+                    File.Copy(Path.Combine(testSuitePath, @"Template\Template\WLN_scatterfile_tools_gcc.xml"), Path.Combine(workingDirectory, "scatterfile_tools_gcc.xml"), true);
+                }
+                catch (IOException copyError)
+                {
+                    System.Diagnostics.Debug.WriteLine("CopyNativeFiles scatterfile exception thrown: " + copyError.ToString());
+                    return false;
+                }
+            } else
             {
                 // .NOW scatterfile copy
                 try
@@ -417,6 +429,23 @@ namespace TestRig
                 StreamReader readerTempProj = new StreamReader(workingDirectory + @"\temp.proj");
                 StreamWriter writerProj = new StreamWriter(workingDirectory + @"\" + currentTest.buildProj);
                 string readStringTempProj = readerTempProj.ReadLine();
+
+                // copying the native project file to the temp native project file up to MFSettingsFile line
+                while (readStringTempProj.Contains("MFSettingsFile") == false)
+                {
+                    writerProj.WriteLine(readStringTempProj);
+                    readStringTempProj = readerTempProj.ReadLine();                    
+                }
+                if (currentTest.testSolution.Equals("WLN"))
+                {
+                    writerProj.WriteLine(@"    <MFSettingsFile>$(SPOCLIENT)\Solutions\WLN\WLN.settings</MFSettingsFile>");
+                }
+                else
+                {
+                    writerProj.WriteLine(@"    <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>");
+                }
+                readStringTempProj = readerTempProj.ReadLine(); 
+                // copying the native project file to the temp native project file up to #TestSystem line
                 while (readStringTempProj.Contains("#TestSystem") == false)
                 {
                     writerProj.WriteLine(readStringTempProj);
