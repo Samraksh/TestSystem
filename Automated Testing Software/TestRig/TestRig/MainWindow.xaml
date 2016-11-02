@@ -131,6 +131,7 @@
                                 <ComboBoxItem Content="Adapt - fastboot" IsEnabled="True" />
                                 <ComboBoxItem Content="Adapt - JTAG" IsEnabled="True"/>
                                 <ComboBoxItem Content="WLN" />
+                                <ComboBoxItem Content="SmartFusion2"/>
                             </ComboBox>
                             <Label Content="Memory Type:" HorizontalAlignment="Left" Margin="10,0,0,0" Name="label6" VerticalAlignment="Top" Grid.Row="1" Grid.Column="0"/>
                             <ComboBox Height="23" HorizontalAlignment="Left" Margin="10,0,0,0" Name="cbMemory" SelectedIndex="0" VerticalAlignment="Top" Width="188" SelectionChanged="cbMemory_SelectionChanged" Grid.Row="1" Grid.Column="1">

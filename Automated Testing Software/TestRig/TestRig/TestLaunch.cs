@@ -575,9 +575,9 @@ namespace TestRig
                 {
                     try
                     {
-                        System.Diagnostics.Debug.WriteLine("Custom defines exist for test...copying " + Path.Combine(workingDirectory, "testDefines.h").ToString() + " to " + Path.Combine(MFPath, @"Solutions\EmoteDotNow", "testDefines.h").ToString());
-                        File.Move(Path.Combine(MFPath, @"Solutions\EmoteDotNow", "testDefines.h"), Path.Combine(MFPath, @"Solutions\EmoteDotNow", "backuptestDefines.h"));
-                        File.Copy(Path.Combine(workingDirectory, "testDefines.h"), Path.Combine(MFPath, @"Solutions\EmoteDotNow", "testDefines.h"));
+                        System.Diagnostics.Debug.WriteLine("Custom defines exist for test...copying " + Path.Combine(workingDirectory, "testDefines.h").ToString() + " to " + Path.Combine(MFPath, @"\Solutions\" + currentTest.testSolution, "testDefines.h").ToString());
+                        File.Move(Path.Combine(MFPath, @"\Solutions\" + currentTest.testSolution, "testDefines.h"), Path.Combine(MFPath, @"\Solutions\" + currentTest.testSolution, "backuptestDefines.h"));
+                        File.Copy(Path.Combine(workingDirectory, "testDefines.h"), Path.Combine(MFPath, @"\Solutions\" + currentTest.testSolution, "testDefines.h"));
                         testDefinedChanged = true;
                     }
                     catch
