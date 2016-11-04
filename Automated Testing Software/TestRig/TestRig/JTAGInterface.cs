@@ -7,7 +7,8 @@ using System.IO;
 namespace TestRig
 {
     public class JTAGInterface
-    {        
+    {
+        private int interfaceCount = 4;
         public string[] textOCDInterface;
         public string[] textOCDInterfaceLocation;
         public string[] textOCDInterfaceGDBPort;
@@ -15,16 +16,15 @@ namespace TestRig
 
         public JTAGInterface(int numberInteraces)
         {
-            textOCDInterface = new string[3];
-            textOCDInterfaceLocation = new string[3];
-            textOCDInterfaceGDBPort = new string[3];
-            textOCDInterfaceTelnetPort = new string[3];
+            textOCDInterface = new string[interfaceCount];
+            textOCDInterfaceLocation = new string[interfaceCount];
+            textOCDInterfaceGDBPort = new string[interfaceCount];
+            textOCDInterfaceTelnetPort = new string[interfaceCount];
 
             textOCDInterface[0] = "Primary";
-            for (int i = 1; i < numberInteraces; i++)
-            {
-                textOCDInterface[i] = "Support " + i.ToString();
-            }
+            textOCDInterface[1] = "Support 1";
+            textOCDInterface[2] = "Support 2";
+            textOCDInterface[3] = "FlashPro4";            
 
             for (int i = 0; i < numberInteraces; i++)
             {

@@ -389,7 +389,21 @@ namespace TestRig
                     System.Diagnostics.Debug.WriteLine("CopyNativeFiles scatterfile exception thrown: " + copyError.ToString());
                     return false;
                 }
-            } else
+            }
+            else if (currentTest.testSolution.Equals("SmartFusion2"))
+            {
+                // Adapt scatterfile copy
+                try
+                {
+                    File.Copy(Path.Combine(testSuitePath, @"Template\Template\SmartFusion2_scatterfile_tools_gcc.xml"), Path.Combine(workingDirectory, "scatterfile_tools_gcc.xml"), true);
+                }
+                catch (IOException copyError)
+                {
+                    System.Diagnostics.Debug.WriteLine("CopyNativeFiles scatterfile exception thrown: " + copyError.ToString());
+                    return false;
+                }
+            }
+            else
             {
                 // .NOW scatterfile copy
                 try
@@ -439,6 +453,10 @@ namespace TestRig
                 if (currentTest.testSolution.Equals("WLN"))
                 {
                     writerProj.WriteLine(@"    <MFSettingsFile>$(SPOCLIENT)\Solutions\WLN\WLN.settings</MFSettingsFile>");
+                }
+                else if (currentTest.testSolution.Equals("SmartFusion2"))
+                {
+                    writerProj.WriteLine(@"    <MFSettingsFile>$(SPOCLIENT)\Solutions\SmartFusion2\SmartFusion2.settings</MFSettingsFile>");
                 }
                 else
                 {

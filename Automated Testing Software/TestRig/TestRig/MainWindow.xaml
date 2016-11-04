@@ -303,6 +303,7 @@
                                 <ComboBoxItem Content="Primary" IsSelected="True" />
                                 <ComboBoxItem Content="Support 1" IsSelected="False" />
                                 <ComboBoxItem Content="Support 2"/>
+                                <ComboBoxItem Content="FlashPro4" />
                             </ComboBox>
                             <GroupBox Header="Primary" Grid.Row="1" Margin="10,5" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="gbSelectedInterface">
                                 <Grid Height="Auto" Margin="0,0,10,10">

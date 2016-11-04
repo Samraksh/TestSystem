@@ -35,12 +35,6 @@
     <Setting Name="OCDInterfacePrimary" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Work\TestSystem\openocd-0.7.0\scripts\interface\olimex-arm-usb-tiny-h.cfg</Value>
     </Setting>
-    <Setting Name="OCDTarget" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\TestSystem\openocd-0.7.0\scripts\target\stm32xl.cfg</Value>
-    </Setting>
-    <Setting Name="OCDExe" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Work\TestSystem\openocd-0.7.0\bin-x64\openocd-x64-0.7.0.exe</Value>
-    </Setting>
     <Setting Name="CSPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\Work\TestSystem</Value>
     </Setting>
@@ -106,6 +100,30 @@
     </Setting>
     <Setting Name="RadioIDSecondary2" Type="System.String" Scope="User">
       <Value Profile="(Default)">14330</Value>
+    </Setting>
+    <Setting Name="OCDInterfaceFlashPro4" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Microsemi\SoftConsole_v4.0\openocd\share\openocd\scripts\interface\microsemi-flashpro.cfg</Value>
+    </Setting>
+    <Setting Name="COMPortFlashPro4" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="OCDTargetPrimary" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\TestSystem\openocd-bin\target\stm32xl.cfg</Value>
+    </Setting>
+    <Setting Name="OCDTargetSecondary1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\TestSystem\openocd-bin\target\stm32xl.cfg</Value>
+    </Setting>
+    <Setting Name="OCDTargetSecondary2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\TestSystem\openocd-bin\target\stm32xl.cfg</Value>
+    </Setting>
+    <Setting Name="OCDTargetFlashPro4" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Microsemi\SoftConsole_v4.0\openocd\share\openocd\scripts\target\microsemi-cortex-m3.cfg</Value>
+    </Setting>
+    <Setting Name="OCDExeDotNow" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\TestSystem\openocd-bin\openocd.exe</Value>
+    </Setting>
+    <Setting Name="OCDExeFlashPro4" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Microsemi\SoftConsole_v4.0\openocd\bin\openocd.exe</Value>
     </Setting>
   </Settings>
 </SettingsFile>

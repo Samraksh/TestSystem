@@ -340,3 +340,24 @@ file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH
 load
 monitor flash write_image D:\\Work\\TestSuite\\OMAC\\Src\\C#\\OMACFanIn\\bin\\Release\\OMACFanIn_Conv.s19
 end
+
+define programBlink
+file d:\\test\\blink.elf
+load
+end
+
+define programSf2Boot
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\SmartFusion2\\bin\\TinyBooter.axf 
+load
+end
+
+define programSf2D
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\SmartFusion2\\bin\\TinyBooter.axf 
+load
+end
+
+define programNowBoot
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\TinyBooter.axf 
+load
+end
+

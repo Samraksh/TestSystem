@@ -51,12 +51,26 @@ namespace TestRig
             openOCDInfo.RedirectStandardInput = true;
             openOCDInfo.UseShellExecute = false;
             openOCDInfo.RedirectStandardError = true;
-            openOCDInfo.WorkingDirectory = Path.GetDirectoryName(mainHandle.textOCDExe);
+            openOCDInfo.WorkingDirectory = Path.GetDirectoryName(mainHandle.textOCDExeCurrent);
 
-            openOCDInfo.Arguments = @"-f " + mainHandle.interfaceJTAG.getInterfaceLocation(OCDNum) + " -f " + mainHandle.textOCDTarget;
+            if (mainHandle.textJTAGHarness.Contains("Flashpro"))
+            {
+                // getInterfaceLocation  are set by mainwindow.xaml.cs readSettings()
+                openOCDInfo.Arguments = @"-f " + mainHandle.interfaceJTAG.getInterfaceLocation(3) + " -f " + mainHandle.textOCDTargetCurrent;
+            }
+            else if (mainHandle.textJTAGHarness.Contains("Lauterbach"))
+            {
+                // getInterfaceLocation  are set by mainwindow.xaml.cs readSettings()
+            }
+            else
+            {
+                // getInterfaceLocation  are set by mainwindow.xaml.cs readSettings()
+                //Olimex
+                openOCDInfo.Arguments = @"-f " + mainHandle.interfaceJTAG.getInterfaceLocation(OCDNum) + " -f " + mainHandle.textOCDTargetCurrent;
+            }
             
 
-            openOCDInfo.FileName = mainHandle.textOCDExe;
+            openOCDInfo.FileName = mainHandle.textOCDExeCurrent;
 
             OCDProcess.OutputDataReceived += new DataReceivedEventHandler(StandardOutputHandler);
             OCDProcess.ErrorDataReceived += new DataReceivedEventHandler(StandardErrorHandler);

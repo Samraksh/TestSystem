@@ -157,30 +157,6 @@ namespace TestRig.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-0.7.0\\scripts\\target\\stm32xl.cfg")]
-        public string OCDTarget {
-            get {
-                return ((string)(this["OCDTarget"]));
-            }
-            set {
-                this["OCDTarget"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-0.7.0\\bin-x64\\openocd-x64-0.7.0.exe")]
-        public string OCDExe {
-            get {
-                return ((string)(this["OCDExe"]));
-            }
-            set {
-                this["OCDExe"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem")]
         public string CSPath {
             get {
@@ -440,6 +416,104 @@ namespace TestRig.Properties {
             }
             set {
                 this["RadioIDSecondary2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Microsemi\\SoftConsole_v4.0\\openocd\\share\\openocd\\scripts\\interface\\microsemi-f" +
+            "lashpro.cfg")]
+        public string OCDInterfaceFlashPro4 {
+            get {
+                return ((string)(this["OCDInterfaceFlashPro4"]));
+            }
+            set {
+                this["OCDInterfaceFlashPro4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int COMPortFlashPro4 {
+            get {
+                return ((int)(this["COMPortFlashPro4"]));
+            }
+            set {
+                this["COMPortFlashPro4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-bin\\target\\stm32xl.cfg")]
+        public string OCDTargetPrimary {
+            get {
+                return ((string)(this["OCDTargetPrimary"]));
+            }
+            set {
+                this["OCDTargetPrimary"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-bin\\target\\stm32xl.cfg")]
+        public string OCDTargetSecondary1 {
+            get {
+                return ((string)(this["OCDTargetSecondary1"]));
+            }
+            set {
+                this["OCDTargetSecondary1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-bin\\target\\stm32xl.cfg")]
+        public string OCDTargetSecondary2 {
+            get {
+                return ((string)(this["OCDTargetSecondary2"]));
+            }
+            set {
+                this["OCDTargetSecondary2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Microsemi\\SoftConsole_v4.0\\openocd\\share\\openocd\\scripts\\target\\microsemi-cort" +
+            "ex-m3.cfg")]
+        public string OCDTargetFlashPro4 {
+            get {
+                return ((string)(this["OCDTargetFlashPro4"]));
+            }
+            set {
+                this["OCDTargetFlashPro4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Work\\TestSystem\\openocd-bin\\openocd.exe")]
+        public string OCDExeDotNow {
+            get {
+                return ((string)(this["OCDExeDotNow"]));
+            }
+            set {
+                this["OCDExeDotNow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Microsemi\\SoftConsole_v4.0\\openocd\\bin\\openocd.exe")]
+        public string OCDExeFlashPro4 {
+            get {
+                return ((string)(this["OCDExeFlashPro4"]));
+            }
+            set {
+                this["OCDExeFlashPro4"] = value;
             }
         }
     }

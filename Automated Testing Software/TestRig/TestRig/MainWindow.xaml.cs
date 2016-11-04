@@ -67,8 +67,16 @@ namespace TestRig
         public string textTestSourcePath;
         public string textTestReceiptPath;
         public JTAGInterface interfaceJTAG;
-        public string textOCDTarget;
-        public string textOCDExe;
+        public string textOCDTargetCurrent;
+        public string textOCDTargetPrimary;
+        public string textOCDTargetSecondary1;
+        public string textOCDTargetSecondary2;
+        public string textOCDTargetFlashPro4;
+        public string textOCDExeCurrent;
+        public string textOCDExePrimary;
+        public string textOCDExeSecondary1;
+        public string textOCDExeSecondary2;
+        public string textOCDExeFlashPro4;
         public string textGitPath;
         public static string textMFPathSelection;
         public static string textGitCodeLocation;
@@ -80,12 +88,13 @@ namespace TestRig
         public string textGCCVersion;
         public static string textMFSelected;
         public string textCodeBuildSelected;
-        public static string textJTAGHarness;
+        public string textJTAGHarness;
         public static string textPowerAutomateSelected;
         public string textEmailSessionSelected;
         public string textCOMPortPrimary;
         public string textCOMPortSecondary1;
         public string textCOMPortSecondary2;
+        public string textCOMPortFlashPro4;
         public string textRadioIDPrimary;
         public string textRadioIDSecondary1;
         public string textRadioIDSecondary2;
@@ -93,6 +102,7 @@ namespace TestRig
         public int COMPortSelectionPrimary;
         public int COMPortSelectionSecondary1;
         public int COMPortSelectionSecondary2;
+        public int COMPortSelectionFlashPro4;
         public static TestDescription[] availableTests;
         public static TestResults[] availableTestResults;
         private static Tasks _tasks;
@@ -813,8 +823,10 @@ namespace TestRig
                 interfaceJTAG.setInterfaceLocation(0, tbOCDInterface.Text);
             else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
                 interfaceJTAG.setInterfaceLocation(1, tbOCDInterface.Text);
+            else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 2"))
+                interfaceJTAG.setInterfaceLocation(2, tbOCDInterface.Text); 
             else
-                interfaceJTAG.setInterfaceLocation(2, tbOCDInterface.Text);            
+                interfaceJTAG.setInterfaceLocation(3, tbOCDInterface.Text); 
         }
 
         private void tbRadioID_TextChanged(object sender, TextChangedEventArgs e)
@@ -830,21 +842,66 @@ namespace TestRig
                 {
                     textRadioIDSecondary1 = tbRadioID.Text;
                 }
-                else
+                else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 2"))
                 {
                     textRadioIDSecondary2 = tbRadioID.Text;
+                }
+                else
+                {
+                     
                 }
             }
         }
 
         private void tbOCDTarget_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            textOCDTarget = tbOCDTarget.Text;
+        {            
+            // we only want this function called when the user types in the box, not when the interface selection is changed
+            if (textChangeGlitchSelectionPosition == 0)
+            {
+                if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
+                {
+                    textOCDTargetPrimary = tbOCDTarget.Text;
+                }
+                else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
+                {
+                    textOCDTargetSecondary1 = tbOCDTarget.Text;
+                }
+                else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 2"))
+                {
+                    textOCDTargetSecondary2 = tbOCDTarget.Text;
+                }
+                else
+                {
+                    textOCDTargetFlashPro4 = tbOCDTarget.Text;
+                }
+                textOCDTargetCurrent = tbOCDTarget.Text;
+            }
         }
 
         private void tbOCDExe_TextChanged(object sender, TextChangedEventArgs e)
         {
-            textOCDExe = tbOCDExe.Text;
+            
+            // we only want this function called when the user types in the box, not when the interface selection is changed
+            if (textChangeGlitchSelectionPosition == 0)
+            {
+                if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
+                {
+                    textOCDExePrimary = tbOCDExe.Text;
+                }
+                else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
+                {
+                    textOCDExeSecondary1 = tbOCDExe.Text;
+                }
+                else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 2"))
+                {
+                    textOCDExeSecondary2 = tbOCDExe.Text;
+                }
+                else
+                {
+                    textOCDExeFlashPro4 = tbOCDExe.Text;
+                }
+                textOCDExeCurrent = tbOCDExe.Text;
+            }
         }
 
         private void tbGitPath_TextChanged(object sender, TextChangedEventArgs e)
@@ -952,13 +1009,14 @@ namespace TestRig
             try
             {
                 // checking to make sure paths actually exist                
-                tbOCDExe.Text = Properties.Settings.Default.OCDExe.ToString();
+                
                 interfaceJTAG.setInterfaceLocation(0, Properties.Settings.Default.OCDInterfacePrimary.ToString());
                 interfaceJTAG.setInterfaceLocation(1, Properties.Settings.Default.OCDInterfaceSecondary1.ToString());
                 interfaceJTAG.setInterfaceLocation(2, Properties.Settings.Default.OCDInterfaceSecondary2.ToString());
+                interfaceJTAG.setInterfaceLocation(3, Properties.Settings.Default.OCDInterfaceFlashPro4.ToString());
                 tbOCDInterface.Text = interfaceJTAG.getInterfaceLocation(cbInterface.SelectedIndex);
                 
-                tbOCDTarget.Text = Properties.Settings.Default.OCDTarget.ToString();
+                
                 tbCompilerPath.Text = Properties.Settings.Default.CSPath.ToString();
 
                 cbCOMPort.SelectedIndex = Properties.Settings.Default.COMPortPrimary;
@@ -983,17 +1041,41 @@ namespace TestRig
                 COMPortSelectionSecondary1 = Properties.Settings.Default.COMPortSecondary1;
                 COMPortSelectionSecondary2 = Properties.Settings.Default.COMPortSecondary2;
                 cbMFSelected.SelectedIndex = Properties.Settings.Default.MFSelection;
+
+                textOCDExePrimary = Properties.Settings.Default.OCDExeDotNow.ToString();
+                textOCDExeSecondary1 = Properties.Settings.Default.OCDExeDotNow.ToString();
+                textOCDExeSecondary2 = Properties.Settings.Default.OCDExeDotNow.ToString();
+                textOCDExeFlashPro4 = Properties.Settings.Default.OCDExeFlashPro4.ToString();
+
+                textOCDTargetPrimary = Properties.Settings.Default.OCDTargetPrimary.ToString();
+                textOCDTargetSecondary1 = Properties.Settings.Default.OCDTargetSecondary1.ToString();
+                textOCDTargetSecondary2 = Properties.Settings.Default.OCDTargetSecondary2.ToString();
+                textOCDTargetFlashPro4 = Properties.Settings.Default.OCDTargetFlashPro4.ToString();
+                 
+
                 if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
                 {                    
-                    cbCOMPort.SelectedIndex = COMPortSelectionPrimary;                    
+                    cbCOMPort.SelectedIndex = COMPortSelectionPrimary;
+                    tbOCDExe.Text = textOCDExePrimary;
+                    tbOCDTarget.Text = textOCDTargetPrimary;
                 }
                 else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
                 {
-                    cbCOMPort.SelectedIndex = COMPortSelectionSecondary1;                    
+                    cbCOMPort.SelectedIndex = COMPortSelectionSecondary1;    
+                    tbOCDExe.Text = textOCDExeSecondary1;
+                    tbOCDTarget.Text = textOCDTargetSecondary1;
+                }
+                else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 2"))
+                {
+                    cbCOMPort.SelectedIndex = COMPortSelectionSecondary2;   
+                    tbOCDExe.Text = textOCDExeSecondary2;
+                    tbOCDTarget.Text = textOCDTargetSecondary2;
                 }
                 else
                 {
-                    cbCOMPort.SelectedIndex = COMPortSelectionSecondary2;
+                    cbCOMPort.SelectedIndex = COMPortSelectionFlashPro4;          
+                    tbOCDExe.Text = textOCDExeFlashPro4;
+                    tbOCDTarget.Text = textOCDExeFlashPro4;
                 }
 
                 textRadioIDPrimary = Properties.Settings.Default.RadioIDPrimary;
@@ -1007,9 +1089,13 @@ namespace TestRig
                 {
                     tbRadioID.Text = textRadioIDSecondary1;
                 }
-                else
+                else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 2"))
                 {
                     tbRadioID.Text = textRadioIDSecondary2;
+                }
+                else
+                {
+                    tbRadioID.Text = "";
                 }
                 textCOMPortPrimary = ((ComboBoxItem)cbCOMPort.Items[COMPortSelectionPrimary]).Content.ToString();
                 textCOMPortPrimary = textCOMPortPrimary.Remove(3, 1);
@@ -1017,6 +1103,8 @@ namespace TestRig
                 textCOMPortSecondary1 = textCOMPortSecondary1.Remove(3, 1);
                 textCOMPortSecondary2 = ((ComboBoxItem)cbCOMPort.Items[COMPortSelectionSecondary2]).Content.ToString();
                 textCOMPortSecondary2 = textCOMPortSecondary2.Remove(3, 1);
+                textCOMPortFlashPro4 = ((ComboBoxItem)cbCOMPort.Items[COMPortSelectionFlashPro4]).Content.ToString();
+                textCOMPortFlashPro4 = textCOMPortFlashPro4.Remove(3, 1);
 
                 cbPowerAutomate.IsChecked = Properties.Settings.Default.PowerCycleAutomated;
                 if (cbPowerAutomate.IsChecked == true)
@@ -1054,8 +1142,12 @@ namespace TestRig
                 Properties.Settings.Default["OCDInterfacePrimary"] = interfaceJTAG.getInterfaceLocation(0);
                 Properties.Settings.Default["OCDInterfaceSecondary1"] = interfaceJTAG.getInterfaceLocation(1);
                 Properties.Settings.Default["OCDInterfaceSecondary2"] = interfaceJTAG.getInterfaceLocation(2);
-                Properties.Settings.Default["OCDTarget"] = tbOCDTarget.Text;
-                Properties.Settings.Default["OCDExe"] = tbOCDExe.Text;
+                Properties.Settings.Default["OCDTargetPrimary"] = textOCDTargetPrimary;
+                Properties.Settings.Default["OCDTargetSecondary1"] = textOCDTargetSecondary1;
+                Properties.Settings.Default["OCDTargetSecondary2"] = textOCDTargetSecondary2;
+                Properties.Settings.Default["OCDTargetFlashPro4"] = textOCDTargetFlashPro4;
+                Properties.Settings.Default["OCDExeDotNow"] = textOCDExePrimary;
+                Properties.Settings.Default["OCDExeFlashPro4"] = textOCDExeFlashPro4;
                 Properties.Settings.Default["CSPath"] = tbCompilerPath.Text;
                 Properties.Settings.Default["MFPath_4_0"] = textMFPath_4_0;
                 Properties.Settings.Default["MFPath_4_3"] = textMFPath_4_3;
@@ -1246,6 +1338,11 @@ namespace TestRig
                     textSolution = "WLN";
                     textJTAGHarness = "Olimex";
                     break;
+                case 6:
+                    textHardware = "SmartFusion2";
+                    textSolution = "SmartFusion2";
+                    textJTAGHarness = "Flashpro";
+                    break;
                 default:
                     textHardware = "Emote v1";
                     textSolution = "STM32F10x";
@@ -1361,11 +1458,17 @@ namespace TestRig
                 textCOMPortSecondary1 = ((ComboBoxItem)cbCOMPort.SelectedItem).Content.ToString();
                 textCOMPortSecondary1 = textCOMPortSecondary1.Remove(3, 1);
             }
-            else
+            else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 2"))
             {
                 COMPortSelectionSecondary2 = cbCOMPort.SelectedIndex;
                 textCOMPortSecondary2 = ((ComboBoxItem)cbCOMPort.SelectedItem).Content.ToString();
                 textCOMPortSecondary2 = textCOMPortSecondary2.Remove(3, 1);
+            }
+            else
+            {
+                COMPortSelectionFlashPro4 = cbCOMPort.SelectedIndex;
+                textCOMPortFlashPro4 = ((ComboBoxItem)cbCOMPort.SelectedItem).Content.ToString();
+                textCOMPortFlashPro4 = textCOMPortFlashPro4.Remove(3, 1);
             }
         }
 
@@ -1392,17 +1495,30 @@ namespace TestRig
             if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
             {
                 tbOCDInterface.Text = interfaceJTAG.getInterfaceLocation(0);
-                cbCOMPort.SelectedIndex = COMPortSelectionPrimary;                
+                cbCOMPort.SelectedIndex = COMPortSelectionPrimary;
+                tbOCDExe.Text = textOCDExePrimary;
+                tbOCDTarget.Text = textOCDTargetPrimary;
             }
             else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 1"))
             {
                 tbOCDInterface.Text = interfaceJTAG.getInterfaceLocation(1);
                 cbCOMPort.SelectedIndex = COMPortSelectionSecondary1;
+                tbOCDExe.Text = textOCDExeSecondary1;
+                tbOCDTarget.Text = textOCDTargetSecondary1;
             }
-            else
+            else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 2"))
             {
                 tbOCDInterface.Text = interfaceJTAG.getInterfaceLocation(2);
                 cbCOMPort.SelectedIndex = COMPortSelectionSecondary2;
+                tbOCDExe.Text = textOCDExeSecondary2;
+                tbOCDTarget.Text = textOCDTargetSecondary2;
+            }
+            else
+            {
+                tbOCDInterface.Text = interfaceJTAG.getInterfaceLocation(3);
+                cbCOMPort.SelectedIndex = COMPortSelectionFlashPro4;
+                tbOCDExe.Text = textOCDExeFlashPro4;
+                tbOCDTarget.Text = textOCDTargetFlashPro4;
             }
 
             if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Primary"))
@@ -1413,9 +1529,13 @@ namespace TestRig
             {
                 tbRadioID.Text = textRadioIDSecondary1;
             }
-            else
+            else if (((ComboBoxItem)cbInterface.SelectedItem).Content.ToString().Equals("Support 2"))
             {
                 tbRadioID.Text = textRadioIDSecondary2;
+            }
+            else
+            {
+                tbRadioID.Text = "";
             }
 
             checkPaths();
