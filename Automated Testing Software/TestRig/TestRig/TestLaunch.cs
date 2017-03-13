@@ -633,6 +633,9 @@ namespace TestRig
                             {
                                 // TODO build littlekernel or retrieve it.
                             }
+                            else if (currentTest.testSolution.Equals("SmartFusion2"))
+                            {
+                            }
                             else
                             {
                                 currentTest.testState = "Building TinyBooter";

@@ -280,6 +280,14 @@ monitor reset halt
 monitor flash write_image dump.bin 0x8000000 bin
 end
 
+define R29_Hello
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+monitor flash write_image R29_hello_world.bin 0x8000000 bin
+end
+
 define wR14
 monitor reset halt
 monitor stm32f1x mass_erase 0
@@ -356,8 +364,22 @@ file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH
 load
 end
 
-define programNowBoot
+define sf2d
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\SmartFusion2\\bin\\tinyclr.axf 
+load
+end
+
+define programNowBootq
 file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\TinyBooter.axf 
 load
 end
 
+define programWLNLinkR
+file D:\\Work\\radar\\WLN_link_test\\WLN-40kbit-RX.axf
+load
+end
+
+define programWLNLinkT
+file D:\\Work\\radar\\WLN_link_test\\WLN-40kbit-TX.axf
+load
+end
