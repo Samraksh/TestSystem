@@ -280,6 +280,46 @@ monitor reset halt
 monitor flash write_image dump.bin 0x8000000 bin
 end
 
+define wbase
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+monitor flash write_image r68_base.bin 0x8000000 bin
+end
+
+define wrelay
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+monitor flash write_image r68_relay.bin 0x8000000 bin
+end
+
+define wfence
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+monitor flash write_image r68_fence.bin 0x8000000 bin
+end
+
+define wvectors
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+monitor flash write_image vectors.bin 0x8000000 bin
+end
+
+define wdsinit
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+monitor flash write_image dsinit.bin 0x8000000 bin
+end
+
 define R29_Hello
 monitor reset halt
 monitor stm32f1x mass_erase 0
@@ -375,11 +415,16 @@ load
 end
 
 define programWLNLinkR
-file D:\\Work\\radar\\WLN_link_test\\WLN-40kbit-RX.axf
+file D:\\Work\\WLN\\WLN_link_test\\WLN-40kbit-RX.axf
 load
 end
 
 define programWLNLinkT
-file D:\\Work\\radar\\WLN_link_test\\WLN-40kbit-TX.axf
+file D:\\Work\\WLN\\WLN_link_test\\WLN-40kbit-TX.axf
+load
+end
+
+define programWLNbackNoise
+file D:\\Work\\WLN\\radio_background_noise\\tinyclr-40kbit-rssi-scan.axf
 load
 end
