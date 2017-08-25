@@ -409,6 +409,35 @@ file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH
 load
 end
 
+define sf2r
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\SmartFusion2\\bin\\tinyclr.axf 
+load
+end
+
+define sf2_empty
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\SmartFusion2\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty_Conv.s19
+end
+
+define sf2d_empty
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\SmartFusion2\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty_Conv.s19
+end
+
+define sf2_crypto
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\SmartFusion2\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Cryptoki\\Cryptoki\\bin\\Release\\Cryptoki_Conv.s19
+end
+
+define sf2d_crypto
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\SmartFusion2\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Cryptoki\\Cryptoki\\bin\\Release\\Cryptoki_Conv.s19
+end
+
 define programNowBootq
 file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\TinyBooter.axf 
 load
@@ -426,5 +455,73 @@ end
 
 define programWLNbackNoise
 file D:\\Work\\WLN\\radio_background_noise\\tinyclr-40kbit-rssi-scan.axf
+load
+end
+
+define program_customer_build
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Users\\Chris\\.NOW_TinyBooter_v1.2.axf
+load
+file D:\\Users\\Chris\\.NOW_TinyCLR_v68.axf
+load
+end
+
+
+
+
+define program_empty
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty_Conv.s19
+end
+
+
+define program_max_empty
+set remotetimeout 10000
+monitor reset halt
+monitor max3263x mass_erase 0
+monitor max3263x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty_Conv.s19
+end
+
+define program_max_clr
+set remotetimeout 10000
+monitor reset halt
+monitor max3263x mass_erase 0
+monitor max3263x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\tinyclr.axf 
+load
+end
+
+define program_max_tb
+set remotetimeout 10000
+monitor reset halt
+monitor max3263x mass_erase 0
+monitor max3263x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\TinyBooter.axf 
+load
+end
+
+define program_max_test
+set remotetimeout 10000
+monitor reset halt
+monitor max3263x mass_erase 0
+monitor max3263x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\max3263x.elf
 load
 end

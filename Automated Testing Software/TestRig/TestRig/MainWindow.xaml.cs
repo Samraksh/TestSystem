@@ -1343,6 +1343,11 @@ namespace TestRig
                     textSolution = "SmartFusion2";
                     textJTAGHarness = "Flashpro";
                     break;
+                case 7:
+                    textHardware = "EmoteDotLaura";
+                    textSolution = "EmoteDotLaura";
+                    textJTAGHarness = "Olimex";
+                    break;
                 default:
                     textHardware = "Emote v1";
                     textSolution = "STM32F10x";

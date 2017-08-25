@@ -403,6 +403,19 @@ namespace TestRig
                     return false;
                 }
             }
+            else if (currentTest.testSolution.Equals("EmoteDotLaura"))
+            {
+                // Adapt scatterfile copy
+                try
+                {
+                    File.Copy(Path.Combine(testSuitePath, @"Template\Template\EmoteDotLaura_scatterfile_tools_gcc.xml"), Path.Combine(workingDirectory, "scatterfile_tools_gcc.xml"), true);
+                }
+                catch (IOException copyError)
+                {
+                    System.Diagnostics.Debug.WriteLine("CopyNativeFiles scatterfile exception thrown: " + copyError.ToString());
+                    return false;
+                }
+            }
             else
             {
                 // .NOW scatterfile copy
@@ -457,6 +470,10 @@ namespace TestRig
                 else if (currentTest.testSolution.Equals("SmartFusion2"))
                 {
                     writerProj.WriteLine(@"    <MFSettingsFile>$(SPOCLIENT)\Solutions\SmartFusion2\SmartFusion2.settings</MFSettingsFile>");
+                }
+                else if (currentTest.testSolution.Equals("EmoteDotLaura"))
+                {
+                    writerProj.WriteLine(@"    <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotLaura\EmoteDotLaura.settings</MFSettingsFile>");
                 }
                 else
                 {
@@ -668,6 +685,9 @@ namespace TestRig
                             if (currentTest.testSolution.Equals("SOC_ADAPT"))
                             {
                                 // TODO build littlekernel or retrieve it.
+                            }
+                            else if (currentTest.testSolution.Equals("SmartFusion2"))
+                            {
                             }
                             else
                             {
