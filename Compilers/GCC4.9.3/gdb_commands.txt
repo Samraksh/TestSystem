@@ -491,7 +491,7 @@ monitor reset halt
 monitor max3263x mass_erase 0
 monitor max3263x mass_erase 1
 monitor reset halt
-file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\tinyclr.axf 
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC6.3\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\tinyclr.axf 
 load
 monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty_Conv.s19
 end
@@ -502,7 +502,7 @@ monitor reset halt
 monitor max3263x mass_erase 0
 monitor max3263x mass_erase 1
 monitor reset halt
-file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\tinyclr.axf 
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC6.3\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\tinyclr.axf 
 load
 end
 
@@ -512,7 +512,7 @@ monitor reset halt
 monitor max3263x mass_erase 0
 monitor max3263x mass_erase 1
 monitor reset halt
-file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\TinyBooter.axf 
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC6.3\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\TinyBooter.axf 
 load
 end
 
@@ -522,6 +522,6 @@ monitor reset halt
 monitor max3263x mass_erase 0
 monitor max3263x mass_erase 1
 monitor reset halt
-file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\max3263x.elf
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC6.3\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\max3263x.elf
 load
 end

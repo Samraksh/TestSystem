@@ -78,50 +78,50 @@ build the <code>gdb</code> program.
 <small>GDB</small> in a single directory, whose name is usually composed by
 appending the version number to &lsquo;<samp>gdb</samp>&rsquo;.
 </p>
-<p>For example, the <small>GDB</small> version 7.12.1.20170215-git distribution is in the
-<samp>gdb-7.12.1.20170215-git</samp> directory.  That directory contains:
+<p>For example, the <small>GDB</small> version 7.12.1.20170417-git distribution is in the
+<samp>gdb-7.12.1.20170417-git</samp> directory.  That directory contains:
 </p>
 <dl compact="compact">
-<dt><code>gdb-7.12.1.20170215-git/configure <span class="roman">(and supporting files)</span></code></dt>
+<dt><code>gdb-7.12.1.20170417-git/configure <span class="roman">(and supporting files)</span></code></dt>
 <dd><p>script for configuring <small>GDB</small> and all its supporting libraries
 </p>
 </dd>
-<dt><code>gdb-7.12.1.20170215-git/gdb</code></dt>
+<dt><code>gdb-7.12.1.20170417-git/gdb</code></dt>
 <dd><p>the source specific to <small>GDB</small> itself
 </p>
 </dd>
-<dt><code>gdb-7.12.1.20170215-git/bfd</code></dt>
+<dt><code>gdb-7.12.1.20170417-git/bfd</code></dt>
 <dd><p>source for the Binary File Descriptor library
 </p>
 </dd>
-<dt><code>gdb-7.12.1.20170215-git/include</code></dt>
+<dt><code>gdb-7.12.1.20170417-git/include</code></dt>
 <dd><p><small>GNU</small> include files
 </p>
 </dd>
-<dt><code>gdb-7.12.1.20170215-git/libiberty</code></dt>
+<dt><code>gdb-7.12.1.20170417-git/libiberty</code></dt>
 <dd><p>source for the &lsquo;<samp>-liberty</samp>&rsquo; free software library
 </p>
 </dd>
-<dt><code>gdb-7.12.1.20170215-git/opcodes</code></dt>
+<dt><code>gdb-7.12.1.20170417-git/opcodes</code></dt>
 <dd><p>source for the library of opcode tables and disassemblers
 </p>
 </dd>
-<dt><code>gdb-7.12.1.20170215-git/readline</code></dt>
+<dt><code>gdb-7.12.1.20170417-git/readline</code></dt>
 <dd><p>source for the <small>GNU</small> command-line interface
 </p>
 </dd>
-<dt><code>gdb-7.12.1.20170215-git/glob</code></dt>
+<dt><code>gdb-7.12.1.20170417-git/glob</code></dt>
 <dd><p>source for the <small>GNU</small> filename pattern-matching subroutine
 </p>
 </dd>
-<dt><code>gdb-7.12.1.20170215-git/mmalloc</code></dt>
+<dt><code>gdb-7.12.1.20170417-git/mmalloc</code></dt>
 <dd><p>source for the <small>GNU</small> memory-mapped malloc package
 </p></dd>
 </dl>
 
 <p>The simplest way to configure and build <small>GDB</small> is to run <samp>configure</samp>
 from the <samp>gdb-<var>version-number</var></samp> source directory, which in
-this example is the <samp>gdb-7.12.1.20170215-git</samp> directory.
+this example is the <samp>gdb-7.12.1.20170417-git</samp> directory.
 </p>
 <p>First switch to the <samp>gdb-<var>version-number</var></samp> source directory
 if you are not already in it; then run <samp>configure</samp>.  Pass the
@@ -131,7 +131,7 @@ argument.
 <p>For example:
 </p>
 <div class="smallexample">
-<pre class="smallexample">cd gdb-7.12.1.20170215-git
+<pre class="smallexample">cd gdb-7.12.1.20170417-git
 ./configure <var>host</var>
 make
 </pre></div>
@@ -156,7 +156,7 @@ shell, you may need to run <code>sh</code> on it explicitly:
 
 <p>If you run <samp>configure</samp> from a directory that contains source
 directories for multiple libraries or programs, such as the
-<samp>gdb-7.12.1.20170215-git</samp> source directory for version 7.12.1.20170215-git,
+<samp>gdb-7.12.1.20170417-git</samp> source directory for version 7.12.1.20170417-git,
 <samp>configure</samp>
 creates configuration files for every directory level underneath (unless
 you tell it not to, with the &lsquo;<samp>--norecursion</samp>&rsquo; option).

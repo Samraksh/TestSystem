@@ -122,10 +122,11 @@ Texts being (a) (see below), and with the Back-Cover Texts being (b)
 <li><a name="stoc-Binary-Compatibility" href="#toc-Binary-Compatibility">9 Binary Compatibility</a></li>
 <li><a name="stoc-gcov_002d_002d_002da-Test-Coverage-Program" href="#toc-gcov_002d_002d_002da-Test-Coverage-Program">10 <code>gcov</code>&mdash;a Test Coverage Program</a></li>
 <li><a name="stoc-gcov_002dtool_002d_002d_002dan-Offline-Gcda-Profile-Processing-Tool" href="#toc-gcov_002dtool_002d_002d_002dan-Offline-Gcda-Profile-Processing-Tool">11 <code>gcov-tool</code>&mdash;an Offline Gcda Profile Processing Tool</a></li>
-<li><a name="stoc-Known-Causes-of-Trouble-with-GCC" href="#toc-Known-Causes-of-Trouble-with-GCC">12 Known Causes of Trouble with GCC</a></li>
-<li><a name="stoc-Reporting-Bugs" href="#toc-Reporting-Bugs">13 Reporting Bugs</a></li>
-<li><a name="stoc-How-To-Get-Help-with-GCC" href="#toc-How-To-Get-Help-with-GCC">14 How To Get Help with GCC</a></li>
-<li><a name="stoc-Contributing-to-GCC-Development" href="#toc-Contributing-to-GCC-Development">15 Contributing to GCC Development</a></li>
+<li><a name="stoc-gcov_002ddump_002d_002d_002dan-Offline-Gcda-and-Gcno-Profile-Dump-Tool" href="#toc-gcov_002ddump_002d_002d_002dan-Offline-Gcda-and-Gcno-Profile-Dump-Tool">12 <code>gcov-dump</code>&mdash;an Offline Gcda and Gcno Profile Dump Tool</a></li>
+<li><a name="stoc-Known-Causes-of-Trouble-with-GCC" href="#toc-Known-Causes-of-Trouble-with-GCC">13 Known Causes of Trouble with GCC</a></li>
+<li><a name="stoc-Reporting-Bugs" href="#toc-Reporting-Bugs">14 Reporting Bugs</a></li>
+<li><a name="stoc-How-To-Get-Help-with-GCC" href="#toc-How-To-Get-Help-with-GCC">15 How To Get Help with GCC</a></li>
+<li><a name="stoc-Contributing-to-GCC-Development" href="#toc-Contributing-to-GCC-Development">16 Contributing to GCC Development</a></li>
 <li><a name="stoc-Funding-Free-Software" href="#toc-Funding-Free-Software">Funding Free Software</a></li>
 <li><a name="stoc-The-GNU-Project-and-GNU_002fLinux" href="#toc-The-GNU-Project-and-GNU_002fLinux">The GNU Project and GNU/Linux</a></li>
 <li><a name="stoc-GNU-General-Public-License" href="#toc-GNU-General-Public-License">GNU General Public License</a></li>
@@ -575,31 +576,36 @@ Texts being (a) (see below), and with the Back-Cover Texts being (b)
     <li><a name="toc-Introduction-to-gcov_002dtool" href="Gcov_002dtool-Intro.html#Gcov_002dtool-Intro">11.1 Introduction to <code>gcov-tool</code></a></li>
     <li><a name="toc-Invoking-gcov_002dtool" href="Invoking-Gcov_002dtool.html#Invoking-Gcov_002dtool">11.2 Invoking <code>gcov-tool</code></a></li>
   </ul></li>
-  <li><a name="toc-Known-Causes-of-Trouble-with-GCC" href="Trouble.html#Trouble">12 Known Causes of Trouble with GCC</a>
+  <li><a name="toc-gcov_002ddump_002d_002d_002dan-Offline-Gcda-and-Gcno-Profile-Dump-Tool" href="Gcov_002ddump.html#Gcov_002ddump">12 <code>gcov-dump</code>&mdash;an Offline Gcda and Gcno Profile Dump Tool</a>
   <ul class="no-bullet">
-    <li><a name="toc-Actual-Bugs-We-Haven_0027t-Fixed-Yet" href="Actual-Bugs.html#Actual-Bugs">12.1 Actual Bugs We Haven&rsquo;t Fixed Yet</a></li>
-    <li><a name="toc-Interoperation-1" href="Interoperation.html#Interoperation">12.2 Interoperation</a></li>
-    <li><a name="toc-Incompatibilities-of-GCC" href="Incompatibilities.html#Incompatibilities">12.3 Incompatibilities of GCC</a></li>
-    <li><a name="toc-Fixed-Header-Files" href="Fixed-Headers.html#Fixed-Headers">12.4 Fixed Header Files</a></li>
-    <li><a name="toc-Standard-Libraries-1" href="Standard-Libraries.html#Standard-Libraries">12.5 Standard Libraries</a></li>
-    <li><a name="toc-Disappointments-and-Misunderstandings" href="Disappointments.html#Disappointments">12.6 Disappointments and Misunderstandings</a></li>
-    <li><a name="toc-Common-Misunderstandings-with-GNU-C_002b_002b" href="C_002b_002b-Misunderstandings.html#C_002b_002b-Misunderstandings">12.7 Common Misunderstandings with GNU C++</a>
+    <li><a name="toc-Introduction-to-gcov_002ddump" href="Gcov_002ddump-Intro.html#Gcov_002ddump-Intro">12.1 Introduction to <code>gcov-dump</code></a></li>
+    <li><a name="toc-Invoking-gcov_002ddump" href="Invoking-Gcov_002ddump.html#Invoking-Gcov_002ddump">12.2 Invoking <code>gcov-dump</code></a></li>
+  </ul></li>
+  <li><a name="toc-Known-Causes-of-Trouble-with-GCC" href="Trouble.html#Trouble">13 Known Causes of Trouble with GCC</a>
+  <ul class="no-bullet">
+    <li><a name="toc-Actual-Bugs-We-Haven_0027t-Fixed-Yet" href="Actual-Bugs.html#Actual-Bugs">13.1 Actual Bugs We Haven&rsquo;t Fixed Yet</a></li>
+    <li><a name="toc-Interoperation-1" href="Interoperation.html#Interoperation">13.2 Interoperation</a></li>
+    <li><a name="toc-Incompatibilities-of-GCC" href="Incompatibilities.html#Incompatibilities">13.3 Incompatibilities of GCC</a></li>
+    <li><a name="toc-Fixed-Header-Files" href="Fixed-Headers.html#Fixed-Headers">13.4 Fixed Header Files</a></li>
+    <li><a name="toc-Standard-Libraries-1" href="Standard-Libraries.html#Standard-Libraries">13.5 Standard Libraries</a></li>
+    <li><a name="toc-Disappointments-and-Misunderstandings" href="Disappointments.html#Disappointments">13.6 Disappointments and Misunderstandings</a></li>
+    <li><a name="toc-Common-Misunderstandings-with-GNU-C_002b_002b" href="C_002b_002b-Misunderstandings.html#C_002b_002b-Misunderstandings">13.7 Common Misunderstandings with GNU C++</a>
     <ul class="no-bullet">
-      <li><a name="toc-Declare-and-Define-Static-Members" href="Static-Definitions.html#Static-Definitions">12.7.1 Declare <em>and</em> Define Static Members</a></li>
-      <li><a name="toc-Name-Lookup_002c-Templates_002c-and-Accessing-Members-of-Base-Classes" href="Name-lookup.html#Name-lookup">12.7.2 Name Lookup, Templates, and Accessing Members of Base Classes</a></li>
-      <li><a name="toc-Temporaries-May-Vanish-Before-You-Expect" href="Temporaries.html#Temporaries">12.7.3 Temporaries May Vanish Before You Expect</a></li>
-      <li><a name="toc-Implicit-Copy_002dAssignment-for-Virtual-Bases" href="Copy-Assignment.html#Copy-Assignment">12.7.4 Implicit Copy-Assignment for Virtual Bases</a></li>
+      <li><a name="toc-Declare-and-Define-Static-Members" href="Static-Definitions.html#Static-Definitions">13.7.1 Declare <em>and</em> Define Static Members</a></li>
+      <li><a name="toc-Name-Lookup_002c-Templates_002c-and-Accessing-Members-of-Base-Classes" href="Name-lookup.html#Name-lookup">13.7.2 Name Lookup, Templates, and Accessing Members of Base Classes</a></li>
+      <li><a name="toc-Temporaries-May-Vanish-Before-You-Expect" href="Temporaries.html#Temporaries">13.7.3 Temporaries May Vanish Before You Expect</a></li>
+      <li><a name="toc-Implicit-Copy_002dAssignment-for-Virtual-Bases" href="Copy-Assignment.html#Copy-Assignment">13.7.4 Implicit Copy-Assignment for Virtual Bases</a></li>
     </ul></li>
-    <li><a name="toc-Certain-Changes-We-Don_0027t-Want-to-Make" href="Non_002dbugs.html#Non_002dbugs">12.8 Certain Changes We Don&rsquo;t Want to Make</a></li>
-    <li><a name="toc-Warning-Messages-and-Error-Messages" href="Warnings-and-Errors.html#Warnings-and-Errors">12.9 Warning Messages and Error Messages</a></li>
+    <li><a name="toc-Certain-Changes-We-Don_0027t-Want-to-Make" href="Non_002dbugs.html#Non_002dbugs">13.8 Certain Changes We Don&rsquo;t Want to Make</a></li>
+    <li><a name="toc-Warning-Messages-and-Error-Messages" href="Warnings-and-Errors.html#Warnings-and-Errors">13.9 Warning Messages and Error Messages</a></li>
   </ul></li>
-  <li><a name="toc-Reporting-Bugs" href="Bugs.html#Bugs">13 Reporting Bugs</a>
+  <li><a name="toc-Reporting-Bugs" href="Bugs.html#Bugs">14 Reporting Bugs</a>
   <ul class="no-bullet">
-    <li><a name="toc-Have-You-Found-a-Bug_003f" href="Bug-Criteria.html#Bug-Criteria">13.1 Have You Found a Bug?</a></li>
-    <li><a name="toc-How-and-Where-to-Report-Bugs" href="Bug-Reporting.html#Bug-Reporting">13.2 How and Where to Report Bugs</a></li>
+    <li><a name="toc-Have-You-Found-a-Bug_003f" href="Bug-Criteria.html#Bug-Criteria">14.1 Have You Found a Bug?</a></li>
+    <li><a name="toc-How-and-Where-to-Report-Bugs" href="Bug-Reporting.html#Bug-Reporting">14.2 How and Where to Report Bugs</a></li>
   </ul></li>
-  <li><a name="toc-How-To-Get-Help-with-GCC" href="Service.html#Service">14 How To Get Help with GCC</a></li>
-  <li><a name="toc-Contributing-to-GCC-Development" href="Contributing.html#Contributing">15 Contributing to GCC Development</a></li>
+  <li><a name="toc-How-To-Get-Help-with-GCC" href="Service.html#Service">15 How To Get Help with GCC</a></li>
+  <li><a name="toc-Contributing-to-GCC-Development" href="Contributing.html#Contributing">16 Contributing to GCC Development</a></li>
   <li><a name="toc-Funding-Free-Software" href="Funding.html#Funding">Funding Free Software</a></li>
   <li><a name="toc-The-GNU-Project-and-GNU_002fLinux" href="GNU-Project.html#GNU-Project">The GNU Project and GNU/Linux</a></li>
   <li><a name="toc-GNU-General-Public-License" href="Copying.html#Copying">GNU General Public License</a></li>
@@ -627,7 +633,7 @@ Next: <a href="G_002b_002b-and-GCC.html#G_002b_002b-and-GCC" accesskey="n" rel="
 <p>This manual documents how to use the GNU compilers,
 as well as their features and incompatibilities, and how to report
 bugs.  It corresponds to the compilers
-(GNU Tools for ARM Embedded Processors 6-2017-q1-update)
+(GNU Tools for ARM Embedded Processors 6-2017-q2-update)
 version 6.3.1.
 The internals of the GNU compilers, including how to port them to new
 targets and some information about how to write front ends for new
@@ -655,6 +661,8 @@ languages, are documented in a separate manual.  See <a href="http://gcc.gnu.org
 <tr><td align="left" valign="top">&bull; <a href="Gcov.html#Gcov">Gcov</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top"><code>gcov</code>&mdash;a test coverage program.
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="Gcov_002dtool.html#Gcov_002dtool">Gcov-tool</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top"><code>gcov-tool</code>&mdash;an offline gcda profile processing program.
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Gcov_002ddump.html#Gcov_002ddump">Gcov-dump</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top"><code>gcov-dump</code>&mdash;an offline gcda and gcno profile dump tool.
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="Trouble.html#Trouble">Trouble</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">If you have trouble using GCC.
 </td></tr>

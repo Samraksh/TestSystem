@@ -563,6 +563,12 @@ More documentation about multiarch can be found at
 <a href="https://wiki.debian.org/Multiarch">https://wiki.debian.org/Multiarch</a>.
 </p>
 </dd>
+<dt><code>--enable-sjlj-exceptions</code></dt>
+<dd><p>Force use of the <code>setjmp</code>/<code>longjmp</code>-based scheme for exceptions.
+&lsquo;<samp>configure</samp>&rsquo; ordinarily picks the correct value based on the platform.
+Only use this option if you are sure you need a different setting.
+</p>
+</dd>
 <dt><code>--enable-vtable-verify</code></dt>
 <dd><p>Specify whether to enable or disable the vtable verification feature.
 Enabling this feature causes libstdc++ to be built with its virtual calls
@@ -1955,12 +1961,6 @@ file to compile into a <samp>.class</samp> file.
 </dd>
 <dt><code>--with-libiconv-prefix=DIR</code></dt>
 <dd><p>Search for libiconv in <samp>DIR/include</samp> and <samp>DIR/lib</samp>.
-</p>
-</dd>
-<dt><code>--enable-sjlj-exceptions</code></dt>
-<dd><p>Force use of the <code>setjmp</code>/<code>longjmp</code>-based scheme for exceptions.
-&lsquo;<samp>configure</samp>&rsquo; ordinarily picks the correct value based on the platform.
-Only use this option if you are sure you need a different setting.
 </p>
 </dd>
 <dt><code>--with-system-zlib</code></dt>

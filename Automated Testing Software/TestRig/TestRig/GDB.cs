@@ -50,6 +50,9 @@ namespace TestRig
                 case "GCC5.4":
                     compilerVersionPath = "GCC5.4.1";
                     break;
+                case "GCC6.3":
+                    compilerVersionPath = "GCC6.3.1";
+                    break;
                 default:
                     break;
             }

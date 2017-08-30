@@ -145,6 +145,7 @@
                                 <ComboBoxItem Content="GCC4.7.3" IsSelected="True" />
                                 <ComboBoxItem Content="GCC4.9.3" />
                                 <ComboBoxItem Content="GCC5.4.1" />
+                                <ComboBoxItem Content="GCC6.3.1" />
                             </ComboBox>
 
                             <Label Content="MF Version:" Height="28" HorizontalAlignment="Left" Margin="10,10,0,0" Name="label11" VerticalAlignment="Top" Grid.Row="0" Grid.Column="2" />

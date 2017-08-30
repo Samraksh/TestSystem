@@ -28,7 +28,15 @@ $ cd $install_dir && tar xjf gcc-arm-none-eabi-*-yyyymmdd-mac.tar.bz2
 
 * Installing executables on Windows *
 Run the installer (gcc-arm-none-eabi-*-yyyymmdd-win32.exe) and follow the
-instructions.
+instructions. The installer can also be run on the command line. When run on
+the command-line, the following options can be set:
+  - /S Run in silent mode
+  - /P Adds the installation bin directory to the system PATH
+  - /R Adds an InstallFolder registry entry for the install.
+
+For example, to install the tools silently, amend users PATH and add registry
+entry:
+> gcc-arm-none-eabi-*-yyyymmdd-win32.exe /S /P /R
 
 The toolchain in windows zip package is a backup to windows installer for
 those who cannot run installer.  We need decompress the zip package

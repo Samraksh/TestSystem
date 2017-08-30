@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <!-- This file documents the GNU linker LD
-(GNU Tools for ARM Embedded Processors 6-2017-q1-update)
-version 2.27.90.
+(GNU Binutils)
+version 2.28.
 
 Copyright (C) 1991-2017 Free Software Foundation, Inc.
 
@@ -1105,14 +1105,12 @@ overflow at run-time.  Supported for x86_64.
 </p>
 </dd>
 <dt>&lsquo;<samp>call-nop=prefix-addr</samp>&rsquo;</dt>
-<dt>&lsquo;<samp>call-nop=prefix-nop</samp>&rsquo;</dt>
 <dt>&lsquo;<samp>call-nop=suffix-nop</samp>&rsquo;</dt>
 <dt>&lsquo;<samp>call-nop=prefix-<var>byte</var></samp>&rsquo;</dt>
 <dt>&lsquo;<samp>call-nop=suffix-<var>byte</var></samp>&rsquo;</dt>
 <dd><p>Specify the 1-byte <code>NOP</code> padding when transforming indirect call
 to a locally defined function, foo, via its GOT slot.
 <samp>call-nop=prefix-addr</samp> generates <code>0x67 call foo</code>.
-<samp>call-nop=prefix-nop</samp> generates <code>0x90 call foo</code>.
 <samp>call-nop=suffix-nop</samp> generates <code>call foo 0x90</code>.
 <samp>call-nop=prefix-<var>byte</var></samp> generates <code><var>byte</var> call foo</code>.
 <samp>call-nop=suffix-<var>byte</var></samp> generates <code>call foo <var>byte</var></code>.
