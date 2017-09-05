@@ -314,6 +314,19 @@ namespace TestRig
                 File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotNow\le", "Samraksh_eMote_DotNow.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Release\Client\pe\le", "Samraksh_eMote_DotNow.pdbx"), true);
                 File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotNow\le", "Samraksh_eMote_DotNow.pe"), Path.Combine(MFPath, @"BuildOutput\public\Release\Client\pe\le", "Samraksh_eMote_DotNow.pe"), true);
 
+                if (File.Exists(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotLaura\le", "Samraksh_eMote_DotLaura.dll")))
+                {
+                    System.Diagnostics.Debug.WriteLine("Copying Samraksh_eMote_DotLaura dll files to the output directory");
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotLaura\le", "Samraksh_eMote_DotLaura.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_DotLaura.dll"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotLaura\le", "Samraksh_eMote_DotLaura.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_DotLaura.pdb"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotLaura\le", "Samraksh_eMote_DotLaura.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_DotLaura.pdbx"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotLaura\le", "Samraksh_eMote_DotLaura.pe"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_DotLaura.pe"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotLaura\le", "Samraksh_eMote_DotLaura.dll"), Path.Combine(MFPath, @"BuildOutput\public\Release\Client\dll", "Samraksh_eMote_DotLaura.dll"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotLaura\le", "Samraksh_eMote_DotLaura.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Release\Client\dll", "Samraksh_eMote_DotLaura.pdb"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotLaura\le", "Samraksh_eMote_DotLaura.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Release\Client\pe\le", "Samraksh_eMote_DotLaura.pdbx"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotLaura\le", "Samraksh_eMote_DotLaura.pe"), Path.Combine(MFPath, @"BuildOutput\public\Release\Client\pe\le", "Samraksh_eMote_DotLaura.pe"), true);
+                }
+
                 System.Diagnostics.Debug.WriteLine("Copying Samraksh_eMote_DSP dll files to the output directory");
                 File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DSP\le", "Samraksh_eMote_DSP.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_DSP.dll"), true);
                 File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DSP\le", "Samraksh_eMote_DSP.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_DSP.pdb"), true);

@@ -293,6 +293,9 @@ namespace TestRig
                     case "SOC_ADAPT":
                         applicationStartAddress = "805E8000";
                         break;
+                    case "EmoteDotLaura":
+                        applicationStartAddress = "00162000";
+                        break;
                     default:
                         applicationStartAddress = "80A2000";
                         System.Diagnostics.Debug.WriteLine("WARNING: applicationStartAddress not found and no default is defined for project type " + currentTest.testSolution);
@@ -352,6 +355,9 @@ namespace TestRig
                     break;
                 case "SOC_ADAPT":
                     preprocessorString = "HARDWARE_ADAPT";
+                    break;
+                case "EmoteDotLaura":
+                    preprocessorString = "HARDWARE_DOTLAURA";
                     break;
                 default:
                     preprocessorString = "HARDWARE_UNKNOWN";
@@ -441,6 +447,9 @@ namespace TestRig
                     preprocessorString = "HARDWARE_ADAPT";
                     //applicationStartAddress = "805E8000";
                     break;
+                case "EmoteDotLaura":
+                    preprocessorString = "HARDWARE_DOTLAURA";
+                    break;
                 default:
                     preprocessorString = "HARDWARE_UNKNOWN";
                     //applicationStartAddress = "80A2000";
@@ -522,6 +531,28 @@ namespace TestRig
             string strippedName = projectName.Substring(0, index);
             //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
             string buildOutput = @"bin\Release\";            
+            switch (currentTest.testSolution)
+            {
+                case "STM32F10x":
+                    applicationStartAddress = "80A2000";
+                    break;
+                case "EmoteDotNow":
+                    applicationStartAddress = "80A7000";
+                    break;
+                case "SOC8200":
+                    applicationStartAddress = "80A2000";
+                    break;
+                case "SOC_ADAPT":
+                    applicationStartAddress = "805E8000";
+                    break;
+                case "EmoteDotLaura":
+                    applicationStartAddress = "00162000";
+                    break;
+                default:
+                    applicationStartAddress = "80A2000";
+                    System.Diagnostics.Debug.WriteLine("WARNING: applicationStartAddress not found and no default is defined for project type " + currentTest.testSolution);
+                    break;
+            }
             // convert to S19 record
             if (RunCommand(@"binToSrec.exe -b " + applicationStartAddress + " -i " + buildOutput + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 10000) != CommandStatus.Done)
             {
