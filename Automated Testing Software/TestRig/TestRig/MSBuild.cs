@@ -37,6 +37,7 @@ namespace TestRig
         private string compilerVersionPath;
 
         private string applicationStartAddress;
+        private bool applicationStartAddressFound = false;
         private string preprocessorString;
 
         public MSBuild(MainWindow passedHandle, string MFVersion)
@@ -242,7 +243,7 @@ namespace TestRig
             }
             System.Diagnostics.Debug.WriteLine("Searching scatterfile");
             // discovering applicationStartAddress value
-            bool applicationStartAddressFound = false;
+            applicationStartAddressFound = false;
             string FileName;
             if (currentTest.testSolutionType == "TinyBooter")
                 FileName = MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType + @"\" + "scatterfile_bootloader_gcc.xml";
@@ -530,28 +531,31 @@ namespace TestRig
             index = projectName.LastIndexOf('.');
             string strippedName = projectName.Substring(0, index);
             //string buildOutput = @"\BuildOutput\public\Debug\Client\dat\";
-            string buildOutput = @"bin\Release\";            
-            switch (currentTest.testSolution)
+            string buildOutput = @"bin\Release\";
+            if (applicationStartAddressFound == false)
             {
-                case "STM32F10x":
-                    applicationStartAddress = "80A2000";
-                    break;
-                case "EmoteDotNow":
-                    applicationStartAddress = "80A7000";
-                    break;
-                case "SOC8200":
-                    applicationStartAddress = "80A2000";
-                    break;
-                case "SOC_ADAPT":
-                    applicationStartAddress = "805E8000";
-                    break;
-                case "EmoteDotLaura":
-                    applicationStartAddress = "00162000";
-                    break;
-                default:
-                    applicationStartAddress = "80A2000";
-                    System.Diagnostics.Debug.WriteLine("WARNING: applicationStartAddress not found and no default is defined for project type " + currentTest.testSolution);
-                    break;
+                switch (currentTest.testSolution)
+                {
+                    case "STM32F10x":
+                        applicationStartAddress = "80A2000";
+                        break;
+                    case "EmoteDotNow":
+                        applicationStartAddress = "80A7000";
+                        break;
+                    case "SOC8200":
+                        applicationStartAddress = "80A2000";
+                        break;
+                    case "SOC_ADAPT":
+                        applicationStartAddress = "805E8000";
+                        break;
+                    case "EmoteDotLaura":
+                        applicationStartAddress = "00162000";
+                        break;
+                    default:
+                        applicationStartAddress = "80A2000";
+                        System.Diagnostics.Debug.WriteLine("WARNING: applicationStartAddress not found and no default is defined for project type " + currentTest.testSolution);
+                        break;
+                }
             }
             // convert to S19 record
             if (RunCommand(@"binToSrec.exe -b " + applicationStartAddress + " -i " + buildOutput + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 10000) != CommandStatus.Done)
