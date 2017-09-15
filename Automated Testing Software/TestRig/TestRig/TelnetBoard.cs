@@ -70,29 +70,38 @@ namespace TestRig
             }
         }
 
-        public bool Clear()
+        // sectorsToClear: 0-none, 1-1
+        public bool Clear(string testSolution)
         {
             try
             {
                 System.Diagnostics.Debug.WriteLine("Sending commands to board: ");
                 waitForMessages();
 
-                /*
-                if (RunCommand("stm32f1x mass_erase 0\r\n", "stm32x mass erase complete", 5000) != CommandStatus.Done)
+                if (testSolution == "EmoteDotLaura")
                 {
-                    System.Diagnostics.Debug.WriteLine("Telnet failed to stm32f1x mass_erase 0.");
-                    return false;
-                }*/
-                if (RunCommand("reset init\r\n", "target state: halted", 5000) != CommandStatus.Done)
-                {
-                    System.Diagnostics.Debug.WriteLine("Telnet failed to reset init.");
-                    return false;
+                    if (RunCommand("maxim mass_erase 0\r\n", "maxim mass erase complete", 5000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Telnet failed to stm32f1x mass_erase 0.");
+                        return false;
+                    }
                 }
-                if (RunCommand("stm32f1x mass_erase 1\r\n", "stm32x mass erase complete", 50000) != CommandStatus.Done)
+                else
                 {
-                    System.Diagnostics.Debug.WriteLine("Telnet failed to stm32f1x mass_erase 1.");
-                    return false;
-                }               
+
+                    if (RunCommand("reset init\r\n", "target state: halted", 5000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Telnet failed to reset init.");
+                        return false;
+                    }
+
+                    if (RunCommand("stm32f1x mass_erase 1\r\n", "stm32x mass erase complete", 50000) != CommandStatus.Done)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Telnet failed to stm32f1x mass_erase 1.");
+                        return false;
+                    }
+                }
+                
                 return true;
             }
             catch (Exception ex)

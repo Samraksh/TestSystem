@@ -892,7 +892,7 @@ namespace TestRig
                         if (telnet == null) return "Telnet failed to load";
 
                         if (telnet.Start() == false) return "Telnet failed to start";
-                        if (!debugDoNotProgram) if (telnet.Clear() == false) return "Telnet failed to clear FLASH";
+                        if (!debugDoNotProgram) if (telnet.Clear(currentTest.testSolution) == false) return "Telnet failed to clear FLASH";
 
                         if (currentTest.testType.Contains("C#") == true)
                         {
