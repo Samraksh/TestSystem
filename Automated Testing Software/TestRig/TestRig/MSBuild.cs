@@ -297,6 +297,9 @@ namespace TestRig
                     case "EmoteDotLaura":
                         applicationStartAddress = "00162000";
                         break;
+                    case "Austere":
+                        applicationStartAddress = "80A7000";
+                        break;
                     default:
                         applicationStartAddress = "80A2000";
                         System.Diagnostics.Debug.WriteLine("WARNING: applicationStartAddress not found and no default is defined for project type " + currentTest.testSolution);
@@ -359,6 +362,9 @@ namespace TestRig
                     break;
                 case "EmoteDotLaura":
                     preprocessorString = "HARDWARE_DOTLAURA";
+                    break;
+                case "Austere":
+                    preprocessorString = "HARDWARE_AUSTERE";
                     break;
                 default:
                     preprocessorString = "HARDWARE_UNKNOWN";
@@ -450,6 +456,10 @@ namespace TestRig
                     break;
                 case "EmoteDotLaura":
                     preprocessorString = "HARDWARE_DOTLAURA";
+                    break;
+                case "Austere":
+                    preprocessorString = "HARDWARE_AUSTERE";
+                    //applicationStartAddress = "80A7000";
                     break;
                 default:
                     preprocessorString = "HARDWARE_UNKNOWN";
@@ -551,12 +561,16 @@ namespace TestRig
                     case "EmoteDotLaura":
                         applicationStartAddress = "00162000";
                         break;
+                    case "Austere":
+                        applicationStartAddress = "80A7000";
+                        break;
                     default:
                         applicationStartAddress = "80A2000";
                         System.Diagnostics.Debug.WriteLine("WARNING: applicationStartAddress not found and no default is defined for project type " + currentTest.testSolution);
                         break;
                 }
             }
+            
             // convert to S19 record
             if (RunCommand(@"binToSrec.exe -b " + applicationStartAddress + " -i " + buildOutput + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 10000) != CommandStatus.Done)
             {

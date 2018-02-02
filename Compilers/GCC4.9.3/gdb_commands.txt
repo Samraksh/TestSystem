@@ -1,14 +1,3 @@
-define program_empty
-set remotetimeout 10000
-monitor reset halt
-monitor stm32f1x mass_erase 0
-monitor stm32f1x mass_erase 1
-monitor reset halt
-file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
-load
-monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty_Conv.s19
-end
-
 define program_i2c
 set remotetimeout 10000
 monitor reset halt
@@ -200,7 +189,7 @@ monitor stm32f1x mass_erase 1
 monitor reset halt
 file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
 load
-monitor flash write_image D:\\Work\\TestSuite\\csmaMACTest\\Src\\C#\\BasicPing\\bin\\Release\\BasicPing_Conv.s19
+monitor flash write_image D:\\Work\\TestSuite\\csmaMACTest\\Src\\C#\\BasicPing\\BasicPing\\bin\\Release\\BasicPing_Conv.s19
 end
 
 define program_pingR
@@ -211,7 +200,7 @@ monitor stm32f1x mass_erase 1
 monitor reset halt
 file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\tinyclr.axf 
 load
-monitor flash write_image D:\\Work\\TestSuite\\csmaMACTest\\Src\\C#\\BasicPing\\bin\\Release\\BasicPing_Conv.s19
+monitor flash write_image D:\\Work\\TestSuite\\csmaMACTest\\Src\\C#\\BasicPing\\BasicPing\\bin\\Release\\BasicPing_Conv.s19
 end
 
 define program_lcd
@@ -389,6 +378,41 @@ load
 monitor flash write_image D:\\Work\\TestSuite\\OMAC\\Src\\C#\\OMACFanIn\\bin\\Release\\OMACFanIn_Conv.s19
 end
 
+define program_OMAC_R
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\OMAC\\Src\\C#\\OMACFanIn\\bin\\Release\\OMACFanIn_Conv.s19
+end
+
+define program_OMAC_ping
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\TinyBooter.axf
+load
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\OMAC\\Src\\C#\\OMACFanIn\\CheckAutoAckSupport\\bin\\Release\\CheckAutoAckSupport_Conv.s19
+end
+
+define program_OMAC_WLN
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\WLN\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\OMAC\\Src\\C#\\OMACFanIn\\bin\\Release\\OMACFanIn_Conv.s19
+end
+
 define programBlink
 file d:\\test\\blink.elf
 load
@@ -485,6 +509,8 @@ monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty
 end
 
 
+
+
 define program_max_empty
 set remotetimeout 10000
 monitor reset halt
@@ -519,15 +545,6 @@ monitor reset halt
 monitor maxim mass_erase 0
 monitor reset halt
 file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC6.3\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\max3263x.elf
-load
-end
-
-define program_max_timer
-set remotetimeout 10000
-monitor reset halt
-monitor maxim mass_erase 0
-monitor reset halt
-file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC6.3\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\VirtualTimerTest.axf 
 load
 end
 
@@ -573,6 +590,16 @@ load
 monitor flash write_image D:\\Work\\TestSuite\\COM\\COM1_test\\COM1_test\\bin\\Release\\COM1_test_Conv.s19
 end
 
+define program_max_timer
+set remotetimeout 10000
+monitor reset halt
+monitor maxim mass_erase 0
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC6.3\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Timer\\Src\\C#\\user_timer_one\\bin\\Release\\user_timer_one_Conv.s19
+end
+
 define program_max_game
 set remotetimeout 10000
 monitor reset halt
@@ -580,5 +607,131 @@ monitor maxim mass_erase 0
 monitor reset halt
 file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC6.3\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\tinyclr.axf 
 load
-monitor flash write_image D:\\Work\\TestSuite\\Game\\bin\\Release\\Game_Conv.s19
+monitor flash write_image D:\\Work\\TestSuite\\Demo\\Game\\bin\\Release\\Game_Conv.s19
+end
+
+define program_max_fence
+set remotetimeout 10000
+monitor reset halt
+monitor maxim mass_erase 0
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC6.3\\le\\FLASH\\debug\\EmoteDotLaura\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Demo\\Fence\\bin\\Release\\Fence_Conv.s19
+end
+
+define program_fenceD
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Test\\Fence_Conv.s19
+end
+
+define program_fence
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\TinyBooter.axf 
+load
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Test\\Fence_Conv.s19
+end
+
+define program_base
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\TinyBooter.axf 
+load
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Test\\Base_Conv.s19
+end
+
+define program_relay
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\TinyBooter.axf 
+load
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Test\\Relay_Conv.s19
+end
+
+define program_spi
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\SPI.axf 
+load
+end
+
+define program_max_timerA
+set remotetimeout 10000
+monitor reset halt
+monitor maxim mass_erase 0
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC6.3\\le\\FLASH\\debug\\EmoteDotNow\\bin\\VirtualTimerTest.axf 
+load
+end
+
+define program_power_test
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Test\\nathan.axf
+load
+end
+
+define program_austere
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\TinyBooter.axf
+load
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Demo\\Austere\\bin\\Release\\Austere_Conv.s19
+end
+
+define program_austereR
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\TinyBooter.axf
+load
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Demo\\Austere\\bin\\Release\\Austere_Conv.s19
+end
+
+define program_austere_clr
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\MF\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Demo\\Austere\\bin\\Release\\Austere_Conv.s19
 end

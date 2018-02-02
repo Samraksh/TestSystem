@@ -429,6 +429,19 @@ namespace TestRig
                     return false;
                 }
             }
+            else if (currentTest.testSolution.Equals("Austere"))
+            {
+                // Adapt scatterfile copy
+                try
+                {
+                    File.Copy(Path.Combine(testSuitePath, @"Template\Template\.NOW_scatterfile_tools_gcc.xml"), Path.Combine(workingDirectory, "scatterfile_tools_gcc.xml"), true);
+                }
+                catch (IOException copyError)
+                {
+                    System.Diagnostics.Debug.WriteLine("CopyNativeFiles scatterfile exception thrown: " + copyError.ToString());
+                    return false;
+                }
+            }
             else
             {
                 // .NOW scatterfile copy
@@ -487,6 +500,10 @@ namespace TestRig
                 else if (currentTest.testSolution.Equals("EmoteDotLaura"))
                 {
                     writerProj.WriteLine(@"    <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotLaura\EmoteDotLaura.settings</MFSettingsFile>");
+                }
+                else if (currentTest.testSolution.Equals("Austere"))
+                {
+                    writerProj.WriteLine(@"    <MFSettingsFile>$(SPOCLIENT)\Solutions\Austere\Austere.settings</MFSettingsFile>");
                 }
                 else
                 {

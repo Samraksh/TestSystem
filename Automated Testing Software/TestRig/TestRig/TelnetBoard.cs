@@ -78,7 +78,7 @@ namespace TestRig
                 System.Diagnostics.Debug.WriteLine("Sending commands to board: ");
                 waitForMessages();
 
-                if (testSolution == "EmoteDotLaura")
+                if (testSolution == "Austere")
                 {
                     if (RunCommand("maxim mass_erase 0\r\n", "maxim mass erase complete", 5000) != CommandStatus.Done)
                     {
