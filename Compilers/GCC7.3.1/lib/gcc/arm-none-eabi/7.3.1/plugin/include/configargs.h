@@ -1,0 +1,7 @@
+/* Generated automatically. */
+static const char configuration_arguments[] = "/Host/Work/arm-none-eabi-gcc-7.3.1-1.1/gcc/configure --prefix=/Host/Work/arm-none-eabi-gcc-7.3.1-1.1/install/centos64/arm-none-eabi-gcc --libexecdir=/Host/Work/arm-none-eabi-gcc-7.3.1-1.1/install/centos64/arm-none-eabi-gcc/lib --infodir=/Host/Work/arm-none-eabi-gcc-7.3.1-1.1/install/centos64/arm-none-eabi-gcc/share/doc/info --mandir=/Host/Work/arm-none-eabi-gcc-7.3.1-1.1/install/centos64/arm-none-eabi-gcc/share/doc/man --htmldir=/Host/Work/arm-none-eabi-gcc-7.3.1-1.1/install/centos64/arm-none-eabi-gcc/share/doc/html --pdfdir=/Host/Work/arm-none-eabi-gcc-7.3.1-1.1/install/centos64/arm-none-eabi-gcc/share/doc/pdf --build=x86_64-unknown-linux-gnu --host=x86_64-unknown-linux-gnu --target=arm-none-eabi --with-pkgversion='GNU MCU Eclipse ARM Embedded GCC\\x2C 64-bit' --enable-languages=c,c++ --disable-mingw-wildcard --enable-plugins --disable-decimal-float --disable-libffi --disable-libgomp --disable-libmudflap --disable-libquadmath --disable-libssp --disable-libstdcxx-pch --disable-nls --disable-shared --disable-threads --disable-tls --with-gnu-as --with-gnu-ld --with-newlib --with-headers=yes --with-python-dir=share/gcc-arm-none-eabi --with-sysroot=/Host/Work/arm-none-eabi-gcc-7.3.1-1.1/install/centos64/arm-none-eabi-gcc/arm-none-eabi --with-multilib-list=rmprofile --disable-rpath --disable-build-format-warnings --with-system-zlib";
+static const char thread_model[] = "single";
+
+static const struct {
+  const char *name, *value;
+} configure_default_options[] = { { NULL, NULL} };

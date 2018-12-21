@@ -1,0 +1,3 @@
+
+*cc1:
+-I%:getenv(SC_INSTALL_DIR /CMSIS/V4.5/Include)
