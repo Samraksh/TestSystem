@@ -247,7 +247,9 @@ namespace TestRig
             string FileName;
             if (currentTest.testSolutionType == "TinyBooter")
                 FileName = MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType + @"\" + "scatterfile_bootloader_gcc.xml";
-            else
+            else if (currentTest.testSolution == "SmartFusion2")
+                FileName = MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType + @"\" + "scatterfile_emoteOS_gcc.xml";
+            else 
                 FileName = MFPath + @"\Solutions\" + currentTest.testSolution + @"\" + currentTest.testSolutionType +  @"\" + "scatterfile_tinyclr_gcc.xml";
             if (File.Exists(FileName) == true)
             {

@@ -327,6 +327,19 @@ namespace TestRig
                     File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DotLaura\le", "Samraksh_eMote_DotLaura.pe"), Path.Combine(MFPath, @"BuildOutput\public\Release\Client\pe\le", "Samraksh_eMote_DotLaura.pe"), true);
                 }
 
+                if (File.Exists(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_SF2\le", "Samraksh_eMote_SF2.dll")))
+                {
+                    System.Diagnostics.Debug.WriteLine("Copying Samraksh_eMote_SF2 dll files to the output directory");
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_SF2\le", "Samraksh_eMote_SF2.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_SF2.dll"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_SF2\le", "Samraksh_eMote_SF2.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_SF2.pdb"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_SF2\le", "Samraksh_eMote_SF2.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_SF2.pdbx"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_SF2\le", "Samraksh_eMote_SF2.pe"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\pe\le", "Samraksh_eMote_SF2.pe"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_SF2\le", "Samraksh_eMote_SF2.dll"), Path.Combine(MFPath, @"BuildOutput\public\Release\Client\dll", "Samraksh_eMote_SF2.dll"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_SF2\le", "Samraksh_eMote_SF2.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Release\Client\dll", "Samraksh_eMote_SF2.pdb"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_SF2\le", "Samraksh_eMote_SF2.pdbx"), Path.Combine(MFPath, @"BuildOutput\public\Release\Client\pe\le", "Samraksh_eMote_SF2.pdbx"), true);
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_SF2\le", "Samraksh_eMote_SF2.pe"), Path.Combine(MFPath, @"BuildOutput\public\Release\Client\pe\le", "Samraksh_eMote_SF2.pe"), true);
+                }
+
                 System.Diagnostics.Debug.WriteLine("Copying Samraksh_eMote_DSP dll files to the output directory");
                 File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DSP\le", "Samraksh_eMote_DSP.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_DSP.dll"), true);
                 File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote_DSP\le", "Samraksh_eMote_DSP.pdb"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote_DSP.pdb"), true);
@@ -682,6 +695,12 @@ namespace TestRig
                             }
                             else if (currentTest.testSolution.Equals("SmartFusion2"))
                             {
+                                currentTest.testState = "Building IBL";
+                                mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
+                                currentTest.testSolutionType = "IBL";
+                                //if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) { return "MSBuild failed to build IBL"; }
+                                //if (File.Exists(workingDirectory + @"\IBL.axf")) { File.Delete(workingDirectory + @"\IBL.axf"); }
+                                //File.Move(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\IBL.axf");
                             }
                             else
                             {
@@ -698,7 +717,14 @@ namespace TestRig
                             if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build TinyCLR";
                             try
                             {
-                                File.Move(workingDirectory + @"\TinyBooter.axf", MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\TinyBooter.axf");
+                                if (currentTest.testSolution.Equals("SmartFusion2"))
+                                {
+                                    File.Move(workingDirectory + @"\IBL.axf", MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\IBL.axf");
+                                }
+                                else
+                                {
+                                    File.Move(workingDirectory + @"\TinyBooter.axf", MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\TinyBooter.axf");
+                                }
                             }
                             catch (Exception ex)
                             {
