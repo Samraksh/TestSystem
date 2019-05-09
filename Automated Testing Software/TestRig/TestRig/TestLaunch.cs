@@ -42,6 +42,7 @@ namespace TestRig
         private string workingDirectory = null;
         private bool cleanBuildNeeded = true;
         private bool debugAlwaysCleanBuild = true;
+        private bool debugBuildTinyBooterOnly = true;
         private string sessionFileName = null;
         private bool sessionStarted = false;
         private bool testInitialTest = false;
@@ -447,6 +448,19 @@ namespace TestRig
                 // Adapt scatterfile copy
                 try
                 {
+                    File.Copy(Path.Combine(testSuitePath, @"Template\Template\H7_scatterfile_tools_gcc.xml"), Path.Combine(workingDirectory, "scatterfile_tools_gcc.xml"), true);
+                }
+                catch (IOException copyError)
+                {
+                    System.Diagnostics.Debug.WriteLine("CopyNativeFiles scatterfile exception thrown: " + copyError.ToString());
+                    return false;
+                }
+            }
+            else if (currentTest.testSolution.Equals("H7"))
+            {
+                // Adapt scatterfile copy
+                try
+                {
                     File.Copy(Path.Combine(testSuitePath, @"Template\Template\.NOW_scatterfile_tools_gcc.xml"), Path.Combine(workingDirectory, "scatterfile_tools_gcc.xml"), true);
                 }
                 catch (IOException copyError)
@@ -518,6 +532,10 @@ namespace TestRig
                 {
                     writerProj.WriteLine(@"    <MFSettingsFile>$(SPOCLIENT)\Solutions\Austere\Austere.settings</MFSettingsFile>");
                 }
+                else if (currentTest.testSolution.Equals("H7"))
+                {
+                    writerProj.WriteLine(@"    <MFSettingsFile>$(SPOCLIENT)\Solutions\STM32H743NUCLEO\STM32H743NUCLEO.settings</MFSettingsFile>");
+                }
                 else
                 {
                     writerProj.WriteLine(@"    <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>");
@@ -578,6 +596,7 @@ namespace TestRig
                 int indexDevice;
                 int numberOfCodeLoads = 1;
                 workingDirectory = mainHandle.textTestSourcePath + @"\" + currentTest.testPath;
+                string ThumbStr = "THUMB2";
 
                 switch (currentTest.testMFVersionNum)
                 {
@@ -591,6 +610,11 @@ namespace TestRig
                         MFPath = mainHandle.textMFPath_4_3;
                         break;
                 }
+
+                if (currentTest.testSolution.Equals("STM32H743NUCLEO"))
+                    ThumbStr = "THUMB2FP";
+                else
+                    ThumbStr = "THUMB2";
 
                 /*if (currentTest.testSolution.Equals("EmoteDotNow"))
                 {
@@ -645,9 +669,12 @@ namespace TestRig
 
                 #region Copying needed files for build
                 // Dlls might have changed
-                if (CopyDllsFiles() == false) return "DLL copy error";
-                
-                File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote\le", "Samraksh_eMote.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote.dll"), true);
+                if (!currentTest.testSolution.Equals("STM32H743NUCLEO"))
+                {
+                    if (CopyDllsFiles() == false) return "DLL copy error";
+
+                    File.Copy(Path.Combine(MFPath, @"Samraksh\Executables\Release\Samraksh_eMote\le", "Samraksh_eMote.dll"), Path.Combine(MFPath, @"BuildOutput\public\Debug\Client\dll", "Samraksh_eMote.dll"), true);
+                }
 
                 if (File.Exists(Path.Combine(workingDirectory, "testDefines.h")))
                 {
@@ -700,7 +727,7 @@ namespace TestRig
                                 currentTest.testSolutionType = "IBL";
                                 //if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) { return "MSBuild failed to build IBL"; }
                                 //if (File.Exists(workingDirectory + @"\IBL.axf")) { File.Delete(workingDirectory + @"\IBL.axf"); }
-                                //File.Move(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\IBL.axf");
+                                //File.Move(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\IBL.axf");
                             }
                             else
                             {
@@ -709,7 +736,8 @@ namespace TestRig
                                 currentTest.testSolutionType = "TinyBooter";
                                 if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) {return "MSBuild failed to build TinyBooter";}
                                 if (File.Exists(workingDirectory + @"\TinyBooter.axf")) { File.Delete(workingDirectory + @"\TinyBooter.axf"); }
-                                File.Move(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\TinyBooter.axf");
+                                if (debugBuildTinyBooterOnly) return "Only building TinyBooter";
+                                File.Move(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\TinyBooter.axf");
                             }
                             currentTest.testState = "Building TinyCLR";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
@@ -719,11 +747,11 @@ namespace TestRig
                             {
                                 if (currentTest.testSolution.Equals("SmartFusion2"))
                                 {
-                                    File.Move(workingDirectory + @"\IBL.axf", MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\IBL.axf");
+                                    File.Move(workingDirectory + @"\IBL.axf", MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\IBL.axf");
                                 }
                                 else
                                 {
-                                    File.Move(workingDirectory + @"\TinyBooter.axf", MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\TinyBooter.axf");
+                                    File.Move(workingDirectory + @"\TinyBooter.axf", MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\TinyBooter.axf");
                                 }
                             }
                             catch (Exception ex)
@@ -752,7 +780,7 @@ namespace TestRig
                                 currentTest.testSolutionType = "TinyBooter";
                                 if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build TinyBooter";
                                 if (File.Exists(workingDirectory + @"\TinyBooter.axf")) { File.Delete(workingDirectory + @"\TinyBooter.axf"); }
-                                File.Move(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\TinyBooter.axf");
+                                File.Move(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\TinyBooter.axf");
                             }
                             currentTest.testState = "Building native code";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
@@ -760,7 +788,7 @@ namespace TestRig
                             if (msbuild.BuildNativeProject(workingDirectory, currentTest.buildProj, currentTest) == false) return "MSBuild failed to build native project";
                             try
                             {
-                                File.Move(workingDirectory + @"\TinyBooter.axf", MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\TinyBooter.axf");
+                                File.Move(workingDirectory + @"\TinyBooter.axf", MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\TinyBooter.axf");
                             }
                             catch (Exception ex)
                             {
@@ -950,17 +978,17 @@ namespace TestRig
                                 currentTest.testState = "Loading TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
-                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                                 currentTest.testState = "Loading TinyCLR";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyCLR";
                                 if (mainHandle.textCodeBuildSelected.Contains("Release"))
                                 {
-                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                                 }
                                 else
                                 {
-                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                                 }
                             }
 
@@ -982,17 +1010,17 @@ namespace TestRig
                                 currentTest.testState = "Loading TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
-                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
+                                if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf") == false) return "GDB failed to load MF AXF file";
                                 currentTest.testState = "Loading native code";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyCLR";
                                 if (mainHandle.textCodeBuildSelected.Contains("Release"))
                                 {
-                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
                                 }
                                 else
                                 {
-                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\THUMB2\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
+                                    if (!debugDoNotProgram) if (gdb.Load(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin" + @"\" + strippedName + ".axf") == false) return "GDB failed to load compiled AXF";
                                 }
                             }
                         }

@@ -1353,6 +1353,11 @@ namespace TestRig
                     textSolution = "Austere";
                     textJTAGHarness = "Olimex";
                     break;
+                case 9:
+                    textHardware = "H7";
+                    textSolution = "STM32H743NUCLEO";
+                    textJTAGHarness = "Olimex";
+                    break;
                 default:
                     textHardware = "Emote v1";
                     textSolution = "STM32F10x";

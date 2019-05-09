@@ -302,6 +302,9 @@ namespace TestRig
                     case "Austere":
                         applicationStartAddress = "80A7000";
                         break;
+                    case "H7":
+                        applicationStartAddress = "80A7000";
+                        break;
                     default:
                         applicationStartAddress = "80A2000";
                         System.Diagnostics.Debug.WriteLine("WARNING: applicationStartAddress not found and no default is defined for project type " + currentTest.testSolution);
@@ -367,6 +370,9 @@ namespace TestRig
                     break;
                 case "Austere":
                     preprocessorString = "HARDWARE_AUSTERE";
+                    break;
+                case "H7":
+                    preprocessorString = "HARDWARE_H7";
                     break;
                 default:
                     preprocessorString = "HARDWARE_UNKNOWN";
@@ -461,6 +467,10 @@ namespace TestRig
                     break;
                 case "Austere":
                     preprocessorString = "HARDWARE_AUSTERE";
+                    //applicationStartAddress = "80A7000";
+                    break;
+                case "H7":
+                    preprocessorString = "HARDWARE_H7";
                     //applicationStartAddress = "80A7000";
                     break;
                 default:
@@ -564,6 +574,9 @@ namespace TestRig
                         applicationStartAddress = "00162000";
                         break;
                     case "Austere":
+                        applicationStartAddress = "80A7000";
+                        break;
+                    case "H7":
                         applicationStartAddress = "80A7000";
                         break;
                     default:
