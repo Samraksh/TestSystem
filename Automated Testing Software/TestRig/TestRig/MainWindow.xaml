@@ -472,6 +472,7 @@
                             <ComboBox Height="23" HorizontalAlignment="Right" Margin="10,10,10,10" x:Name="cbMFVersionPath" VerticalAlignment="Top" Width="Auto" SelectionChanged="cbMFVersionPath_SelectionChanged" Grid.Column="2" Grid.Row="1">
                                 <ComboBoxItem Content="MF 4.0" />
                                 <ComboBoxItem Content="MF 4.3" IsSelected="True" />
+                                <ComboBoxItem Content="H7 MF 4.3" />
                             </ComboBox>
                         </Grid>
                     </GroupBox>

@@ -125,5 +125,8 @@
     <Setting Name="OCDExeFlashPro4" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Microsemi\SoftConsole_v4.0\openocd\bin\openocd.exe</Value>
     </Setting>
+    <Setting Name="MFPath_H7_4_3" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Work\MF44\eMote44\</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

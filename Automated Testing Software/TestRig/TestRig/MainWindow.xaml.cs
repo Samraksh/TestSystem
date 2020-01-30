@@ -64,6 +64,7 @@ namespace TestRig
         public string textCompilerPath;
         public string textMFPath_4_0;
         public string textMFPath_4_3;
+        public string textMFPath_H7_4_3;
         public string textTestSourcePath;
         public string textTestReceiptPath;
         public JTAGInterface interfaceJTAG;
@@ -796,8 +797,10 @@ namespace TestRig
         {
             if (((ComboBoxItem)cbMFVersionPath.SelectedItem).Content.ToString().Equals("MF 4.0"))
                 textMFPath_4_0 = tbMFPath.Text;
-            else
+            else if (((ComboBoxItem)cbMFVersionPath.SelectedItem).Content.ToString().Equals("MF 4.3"))
                 textMFPath_4_3 = tbMFPath.Text;
+            else 
+                textMFPath_H7_4_3 = tbMFPath.Text;
         }
 
         private void tbTestReceiptPath_TextChanged(object sender, TextChangedEventArgs e)
@@ -924,8 +927,10 @@ namespace TestRig
             textMFPathSelection = ((ComboBoxItem)cbMFVersionPath.SelectedItem).Content.ToString();
             if (textMFPathSelection.Equals("MF 4.0"))
                 tbMFPath.Text = textMFPath_4_0;
-            else
+            else if (textMFPathSelection.Equals("MF 4.3"))
                 tbMFPath.Text = textMFPath_4_3;
+            else
+                tbMFPath.Text = textMFPath_H7_4_3;
 
             checkPaths();
         }   
@@ -1024,10 +1029,13 @@ namespace TestRig
                 cbMFVersionPath.SelectedIndex = Properties.Settings.Default.MFPathSelection;    
                 textMFPath_4_0 = Properties.Settings.Default.MFPath_4_0.ToString();
                 textMFPath_4_3 = Properties.Settings.Default.MFPath_4_3.ToString();
+                textMFPath_H7_4_3 = Properties.Settings.Default.MFPath_H7_4_3.ToString();
                 if (((ComboBoxItem)cbMFVersionPath.SelectedItem).Content.ToString().Equals("MF 4.0"))
                     tbMFPath.Text = textMFPath_4_0;
-                else
+                else if (((ComboBoxItem)cbMFVersionPath.SelectedItem).Content.ToString().Equals("MF 4.3"))
                     tbMFPath.Text = textMFPath_4_3;
+                else
+                    tbMFPath.Text = textMFPath_H7_4_3;
                 tbGitPath.Text = Properties.Settings.Default.GitPath.ToString();
                 tbTestSourcePath.Text = Properties.Settings.Default.TSPath.ToString();
                 tbTestReceiptPath.Text = Properties.Settings.Default.TRPath.ToString();
@@ -1151,6 +1159,7 @@ namespace TestRig
                 Properties.Settings.Default["CSPath"] = tbCompilerPath.Text;
                 Properties.Settings.Default["MFPath_4_0"] = textMFPath_4_0;
                 Properties.Settings.Default["MFPath_4_3"] = textMFPath_4_3;
+                Properties.Settings.Default["MFPath_H7_4_3"] = textMFPath_H7_4_3;
                 Properties.Settings.Default["MFPathSelection"] = cbMFVersionPath.SelectedIndex;
                 Properties.Settings.Default["COMPortPrimary"] = COMPortSelectionPrimary;
                 Properties.Settings.Default["COMPortSecondary1"] = COMPortSelectionSecondary1;

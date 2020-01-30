@@ -74,6 +74,9 @@ namespace TestRig
                 case "4.3":
                     MFPath = mainHandle.textMFPath_4_3;
                     break;
+                case "H7_4.3":
+                    MFPath = mainHandle.textMFPath_H7_4_3;
+                    break;
                 default:
                     MFPath = mainHandle.textMFPath_4_3;
                     break;
@@ -302,11 +305,11 @@ namespace TestRig
                     case "Austere":
                         applicationStartAddress = "80A7000";
                         break;
-                    case "H7":
-                        applicationStartAddress = "80A7000";
+                    case "STM32H743NUCLEO":
+                        applicationStartAddress = "80C0000";
                         break;
                     default:
-                        applicationStartAddress = "80A2000";
+                        applicationStartAddress = "80C0000";
                         System.Diagnostics.Debug.WriteLine("WARNING: applicationStartAddress not found and no default is defined for project type " + currentTest.testSolution);
                         break;
                 }
@@ -371,7 +374,7 @@ namespace TestRig
                 case "Austere":
                     preprocessorString = "HARDWARE_AUSTERE";
                     break;
-                case "H7":
+                case "STM32H743NUCLEO":
                     preprocessorString = "HARDWARE_H7";
                     break;
                 default:
@@ -469,7 +472,7 @@ namespace TestRig
                     preprocessorString = "HARDWARE_AUSTERE";
                     //applicationStartAddress = "80A7000";
                     break;
-                case "H7":
+                case "STM32H743NUCLEO":
                     preprocessorString = "HARDWARE_H7";
                     //applicationStartAddress = "80A7000";
                     break;
@@ -576,8 +579,8 @@ namespace TestRig
                     case "Austere":
                         applicationStartAddress = "80A7000";
                         break;
-                    case "H7":
-                        applicationStartAddress = "80A7000";
+                    case "STM32H743NUCLEO":
+                        applicationStartAddress = "80C0000";
                         break;
                     default:
                         applicationStartAddress = "80A2000";

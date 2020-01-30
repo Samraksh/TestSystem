@@ -40,9 +40,9 @@ namespace TestRig
         private bool debugDoNotBuild = false;
         private bool debugDoNotProgram = false;
         private string workingDirectory = null;
-        private bool cleanBuildNeeded = true;
-        private bool debugAlwaysCleanBuild = true;
-        private bool debugBuildTinyBooterOnly = true;
+        private bool cleanBuildNeeded = false;
+        private bool debugAlwaysCleanBuild = false;
+        private bool debugBuildTinyBooterOnly = false;
         private string sessionFileName = null;
         private bool sessionStarted = false;
         private bool testInitialTest = false;
@@ -598,23 +598,27 @@ namespace TestRig
                 workingDirectory = mainHandle.textTestSourcePath + @"\" + currentTest.testPath;
                 string ThumbStr = "THUMB2";
 
-                switch (currentTest.testMFVersionNum)
-                {
-                    case "4.0":
-                        MFPath = mainHandle.textMFPath_4_0;
-                        break;
-                    case "4.3":
-                        MFPath = mainHandle.textMFPath_4_3;
-                        break;
-                    default:
-                        MFPath = mainHandle.textMFPath_4_3;
-                        break;
-                }
-
                 if (currentTest.testSolution.Equals("STM32H743NUCLEO"))
+                {
                     ThumbStr = "THUMB2FP";
+                    MFPath = mainHandle.textMFPath_H7_4_3;
+                }
                 else
+                {
                     ThumbStr = "THUMB2";
+                    switch (currentTest.testMFVersionNum)
+                    {
+                        case "4.0":
+                            MFPath = mainHandle.textMFPath_4_0;
+                            break;
+                        case "4.3":
+                            MFPath = mainHandle.textMFPath_4_3;
+                            break;
+                        default:
+                            MFPath = mainHandle.textMFPath_4_3;
+                            break;
+                    }
+                }
 
                 /*if (currentTest.testSolution.Equals("EmoteDotNow"))
                 {
@@ -707,7 +711,11 @@ namespace TestRig
                     System.Diagnostics.Debug.WriteLine("Found existing msbuild process, killing it.");
                     msbuild.Kill();
                 }
-                msbuild = new MSBuild(mainHandle, currentTest.testMFVersionNum);
+
+                if (currentTest.testSolution.Equals("STM32H743NUCLEO"))
+                    msbuild = new MSBuild(mainHandle, "H7_4.3");
+                else
+                    msbuild = new MSBuild(mainHandle, currentTest.testMFVersionNum);
                 if (msbuild == null) return "MSBuild failed to load";
 
                 if (debugDoNotBuild == false)
@@ -731,13 +739,13 @@ namespace TestRig
                             }
                             else
                             {
-                                currentTest.testState = "Building TinyBooter";
+                                /*currentTest.testState = "Building TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
                                 if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) {return "MSBuild failed to build TinyBooter";}
                                 if (File.Exists(workingDirectory + @"\TinyBooter.axf")) { File.Delete(workingDirectory + @"\TinyBooter.axf"); }
-                                if (debugBuildTinyBooterOnly) return "Only building TinyBooter";
-                                File.Move(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\TinyBooter.axf");
+                                if (debugBuildTinyBooterOnly) return " ------------------- Only building TinyBooter ----------------";
+                                File.Move(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\TinyBooter.axf");*/
                             }
                             currentTest.testState = "Building TinyCLR";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
@@ -775,12 +783,12 @@ namespace TestRig
                             }
                             else
                             {
-                                currentTest.testState = "Building TinyBooter";
+                                /*currentTest.testState = "Building TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
                                 if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build TinyBooter";
                                 if (File.Exists(workingDirectory + @"\TinyBooter.axf")) { File.Delete(workingDirectory + @"\TinyBooter.axf"); }
-                                File.Move(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\TinyBooter.axf");
+                                File.Move(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\TinyBooter.axf");*/
                             }
                             currentTest.testState = "Building native code";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);

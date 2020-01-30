@@ -501,7 +501,22 @@ monitor reset halt
 monitor stm32f1x mass_erase 0
 monitor stm32f1x mass_erase 1
 monitor reset halt
+file D:\\Work\\eMote\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\TinyBooter.axf 
+load
 file D:\\Work\\eMote\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\EmoteDotNow\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty_Conv.s19
+end
+
+define program_emptyR
+set remotetimeout 10000
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+file D:\\Work\\eMote\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\TinyBooter.axf 
+load
+file D:\\Work\\eMote\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\EmoteDotNow\\bin\\tinyclr.axf 
 load
 monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty_Conv.s19
 end
@@ -806,6 +821,14 @@ load
 monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty_Conv.s19
 end
 
+define iblR
+file D:\\Work\\eMote\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\SmartFusion2\\bin\\IBL.axf 
+load
+file D:\\Work\\eMote\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\SmartFusion2\\bin\\tinyclr.axf 
+load
+monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty_Conv.s19
+end
+
 define sf2PingD
 file D:\\Work\\eMote\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\SmartFusion2\\bin\\IBL.axf 
 load
@@ -906,13 +929,92 @@ end
 define h7tb
 set remotetimeout 10000
 monitor reset halt
-file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC5.4\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinybooter.axf
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinybooter.axf
 load
 end
 
 define h7tc
 set remotetimeout 10000
 monitor reset halt
-file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC5.4\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinyclr.axf
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinyclr.axf
 load
 end
+
+define h7full
+set remotetimeout 10000
+monitor reset halt
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinybooter.axf
+load
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinyclr.axf
+load
+end
+
+define h7empty
+set remotetimeout 10000
+monitor reset halt
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinybooter.axf
+load
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinyclr.axf
+load
+monitor flash write_image D:\\Work\\TestSuite\\Empty\\Empty\\bin\\Release\\Empty_Conv.s19
+end
+
+define h7fullR
+set remotetimeout 10000
+monitor reset halt
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\release\\STM32H743NUCLEO\\bin\\tinybooter.axf
+load
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\release\\STM32H743NUCLEO\\bin\\tinyclr.axf
+load
+end
+
+
+define sf2_full
+file D:\\Test\\IBL.axf 
+load
+file D:\\Work\\eMote\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\SmartFusion2\\bin\\tinyclr.axf 
+load
+end
+
+define sf2r_full
+file D:\\Test\\IBL.axf 
+load
+file D:\\Work\\eMote\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\SmartFusion2\\bin\\tinyclr.axf 
+load
+end
+
+define sf2r_clr
+file D:\\Work\\eMote\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\release\\SmartFusion2\\bin\\SecureClr.axf 
+load
+monitor flash write_image arduino.hex 0x06007d000 ihex
+end
+
+define sf2d_clr
+file D:\\Work\\eMote\\MicroFrameworkPK_v4_3\\BuildOutput\\THUMB2\\GCC5.4\\le\\FLASH\\debug\\SmartFusion2\\bin\\SecureClr.axf 
+load
+monitor flash write_image arduino.hex 0x06007d000 ihex
+end
+
+define sf2di
+monitor dump_image dump.bin 0x6000000 524287
+end
+
+define sf2wi
+monitor reset halt
+monitor stm32f1x mass_erase 0
+monitor stm32f1x mass_erase 1
+monitor reset halt
+monitor flash write_image dump.bin 0x6000000 bin
+end
+
+define sf2bttest
+file D:\\Test\\IBL.axf 
+load
+file D:\\Test\\bluetooth\\tinyclr.axf 
+load
+end
+
+define wb
+monitor flash write_image ardunio.hex 0x06007d000 ihex
+end
+
