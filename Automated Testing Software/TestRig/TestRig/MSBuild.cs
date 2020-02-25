@@ -590,7 +590,7 @@ namespace TestRig
             }
             
             // convert to S19 record
-            if (RunCommand(@"binToSrec.exe -b " + applicationStartAddress + " -i " + buildOutput + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 10000) != CommandStatus.Done)
+            if (RunCommand(@"binToSrec.exe -b " + applicationStartAddress + " -i " + buildOutput + "\\le\\" + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 10000) != CommandStatus.Done)
             {
                 System.Diagnostics.Debug.WriteLine("MSBuild failed to convert to S19 step 1.");
                 return false;

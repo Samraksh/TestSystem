@@ -739,13 +739,13 @@ namespace TestRig
                             }
                             else
                             {
-                                /*currentTest.testState = "Building TinyBooter";
+                                currentTest.testState = "Building TinyBooter";
                                 mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
                                 currentTest.testSolutionType = "TinyBooter";
                                 if (msbuild.BuildTinyCLR(currentTest, cleanBuildNeeded) == false) {return "MSBuild failed to build TinyBooter";}
                                 if (File.Exists(workingDirectory + @"\TinyBooter.axf")) { File.Delete(workingDirectory + @"\TinyBooter.axf"); }
                                 if (debugBuildTinyBooterOnly) return " ------------------- Only building TinyBooter ----------------";
-                                File.Move(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\TinyBooter.axf");*/
+                                File.Move(MFPath + @"\" + @"BuildOutput\" + ThumbStr + @"\" + currentTest.testGCCVersion + @"\le\" + currentTest.testMemoryType + @"\" + currentTest.testBuild + @"\" + currentTest.testSolution + @"\bin\" + currentTest.testSolutionType + ".axf", workingDirectory + @"\TinyBooter.axf");
                             }
                             currentTest.testState = "Building TinyCLR";
                             mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
@@ -768,7 +768,7 @@ namespace TestRig
                         }
                         currentTest.testState = "Building managed code";
                         mainHandle.Dispatcher.BeginInvoke(mainHandle.updateDelegate);
-                        if (msbuild.BuildManagedProject(workingDirectory, currentTest.buildProj, currentTest, cleanBuildNeeded) == false) return "MSBuild failed to build managed project";
+                        if (msbuild.BuildManagedProject(workingDirectory, currentTest.buildProj, currentTest, true) == false) return "MSBuild failed to build managed project";
                     }
                     else
                     {

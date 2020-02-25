@@ -1018,3 +1018,56 @@ define wb
 monitor flash write_image ardunio.hex 0x06007d000 ihex
 end
 
+define h7test
+set remotetimeout 10000
+monitor reset halt
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinybooter.axf
+load
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinyclr.axf
+load
+monitor flash write_image d:\\test\\test4_4\\test_Conv.s19
+end
+
+define massh7
+monitor stm32h7x mass_erase 0
+monitor stm32h7x mass_erase 1
+end
+
+define h7omac
+set remotetimeout 10000
+monitor reset halt
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinybooter.axf
+load
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinyclr.axf
+load
+monitor flash write_image d:\\test\\test4_4\\omac_Conv.s19
+end
+
+define omac
+set remotetimeout 10000
+monitor reset halt
+monitor flash write_image d:\\test\\test4_4\\omac_Conv.s19
+end
+
+define h7otest
+set remotetimeout 10000
+monitor reset halt
+file D:\\Test\\testj\\tinybooter.axf
+load
+file D:\\Test\\testj\\nativetest.axf
+load
+end
+
+define dapp
+monitor dump_image user_app.bin 0x80C0000 80000
+end
+
+define h7fa
+set remotetimeout 10000
+monitor reset halt
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinybooter.axf
+load
+file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC6.3\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinyclr.axf
+load
+monitor flash write_image user_app.bin 0x80C0000 bin
+end
