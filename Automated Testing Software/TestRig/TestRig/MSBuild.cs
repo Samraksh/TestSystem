@@ -306,10 +306,10 @@ namespace TestRig
                         applicationStartAddress = "80A7000";
                         break;
                     case "STM32H743NUCLEO":
-                        applicationStartAddress = "80C0000";
+                        applicationStartAddress = "81E0000";
                         break;
                     default:
-                        applicationStartAddress = "80C0000";
+                        applicationStartAddress = "81E0000";
                         System.Diagnostics.Debug.WriteLine("WARNING: applicationStartAddress not found and no default is defined for project type " + currentTest.testSolution);
                         break;
                 }
@@ -580,7 +580,7 @@ namespace TestRig
                         applicationStartAddress = "80A7000";
                         break;
                     case "STM32H743NUCLEO":
-                        applicationStartAddress = "80C0000";
+                        applicationStartAddress = "81E0000";
                         break;
                     default:
                         applicationStartAddress = "80A2000";
