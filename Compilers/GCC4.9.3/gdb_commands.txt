@@ -917,15 +917,6 @@ monitor flash write_image D:\\Work\\TestSuite\\Demo\\Austere\\bin\\Release\\Aust
 end
 
 
-define h7empty
-set remotetimeout 10000
-monitor reset halt
-file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC5.4\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinybooter.axf
-load
-file D:\\Work\\MF44\\eMote44\\BuildOutput\\THUMB2FP\\GCC5.4\\le\\FLASH\\debug\\STM32H743NUCLEO\\bin\\tinyclr.axf
-load
-end
-
 define h7tb
 set remotetimeout 10000
 monitor reset halt

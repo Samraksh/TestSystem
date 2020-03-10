@@ -588,15 +588,27 @@ namespace TestRig
                         break;
                 }
             }
-            
+
             // convert to S19 record
-            if (RunCommand(@"binToSrec.exe -b " + applicationStartAddress + " -i " + buildOutput + "\\le\\" + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 10000) != CommandStatus.Done)
+            if (currentTest.testSolution == "STM32H743NUCLEO")
             {
-                System.Diagnostics.Debug.WriteLine("MSBuild failed to convert to S19 step 1.");
-                return false;
+                if (RunCommand(@"binToSrec.exe -b " + applicationStartAddress + " -i " + buildOutput + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 10000) != CommandStatus.Done)
+                {
+                    System.Diagnostics.Debug.WriteLine("MSBuild failed to convert to S19 step 1.");
+                    return false;
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("MSBuild project converted to S19 step 1.");
+            } else
+            {
+                if (RunCommand(@"binToSrec.exe -b " + applicationStartAddress + " -i " + buildOutput + "\\le\\" + strippedName + ".dat -o " + buildOutput + strippedName + ".s19", "Conversion is Successful", "FAILED", 10000) != CommandStatus.Done)
+                {
+                    System.Diagnostics.Debug.WriteLine("MSBuild failed to convert to S19 step 1.");
+                    return false;
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("MSBuild project converted to S19 step 1.");
             }
-            else
-                System.Diagnostics.Debug.WriteLine("MSBuild project converted to S19 step 1.");
             RunCommand(mainHandle.textCompilerPath + @"\" + compilerVersionPath + @"\bin\arm-none-eabi-objcopy.exe " + buildOutput + strippedName + @".s19 " + buildOutput + strippedName + @"_Conv.s19");
             Thread.Sleep(2000);
 
